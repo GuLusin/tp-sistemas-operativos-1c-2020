@@ -1,7 +1,7 @@
 POSICIONES_ENTRENADORES=[ [1, 2], [3, 7], [5, 5] ]
 POKEMON_ENTRENADORES=[[Pikachu, Squirtle, Pidgey], [Squirtle, Charmander], [Bulbasaur]]
 OBJETIVOS_ENTRENADORES=[[Pikachu, Pikachu, Squirtle, Pidgey], [Pikachu, Charmander, Charmander], [Squirtle, Bulbasaur]]
-TIEMPO_RECONEXION=30
+TIEMPO_RECONEXION=3
 RETARDO_CICLO_CPU=2
 ALGORITMO_PLANIFICACION=RR
 QUANTUM=2

@@ -1,10 +1,10 @@
 
 /*
- * ARCHIVO SOCKETS
+ * ARCHIVO CONEXIONES
  */
 
-#ifndef SOCKET_H_
-#define SOCKET_H_
+#ifndef CONEXIONES_H_
+#define CONEXIONES_H_
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,4 +44,4 @@ void esperar_cliente(int socket_servidor);
 int listen_to(char* ip,char* puerto);
 
 
-#endif /* SOCKET_H_ */
+#endif /* CONEXIONES_H_ */

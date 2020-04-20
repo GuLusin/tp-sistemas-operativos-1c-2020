@@ -10,7 +10,7 @@
 
 //CHEQUEAR DONDE SE CIERRA EL SOCKET_CLIENTE
 
-#include "socket.h"
+#include "conexiones.h"
 
 /* serializar_paquete
  * paquete = paquete armado sin serializar en un flujo continuo
