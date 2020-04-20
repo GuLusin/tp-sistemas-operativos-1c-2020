@@ -17,43 +17,44 @@ al proceso Team.
 #include<commons/config.h>
 //#include<readline/readline.h>
 
+//gcc broker.c -lpthread -lcommons -o broker
+//./broker
 
-void inicializar_team(){
+t_log* iniciar_logger(void)
+{
+	return log_create("team.log","log",1,LOG_LEVEL_INFO);
+}
+
+void inicializar_broker(){
 	t_config* config;
-	char *ip,*puerto;
-	int wait_time, socket_cola_localized,socket_cola_caught,socket_cola_appeared;
+    t_log* logger;
+	int socket_broker;
+	char * ip,*puerto;
+
+	logger = iniciar_logger();
 
 	if((config = config_create("config"))== NULL)
 		perror("Error al crear la config");
 
 	ip = config_get_string_value(config,"IP_BROKER");
+	log_info(logger,config_get_string_value(config,"IP_BROKER")); //pido y logueo ip
+
     puerto = config_get_string_value(config,"PUERTO_BROKER");
-    wait_time = config_get_int_value(config,"TIEMPO_RECONEXION");
+	log_info(logger,config_get_string_value(config,"PUERTO_BROKER")); //pido y logueo puerto
 
-	socket_cola_localized = connect_to(ip,puerto,wait_time);
-	enviar_mensaje(socket_cola_localized, "localized");
-	sleep(3);
+	socket_broker = listen_to(ip,puerto);
+	log_info(logger,"Socket: %d, escuchando",socket_broker);	//Socket queda escuchado
 
-	socket_cola_caught = connect_to(ip,puerto,wait_time);
-	enviar_mensaje(socket_cola_caught, "caught");
-	sleep(3);
-
-	socket_cola_appeared = connect_to(ip,puerto,wait_time);
-	enviar_mensaje(socket_cola_appeared, "appeared");
-	sleep(3);
+	recibir_cliente(socket_broker);
+	log_info(logger,"Recibi al cliente");	//Recibi al cliente
 }
 
-/*
- *Habria q hacerlo todo con funciones para conectar y enviar
- *Hacer un enum generico
- *En teoria habria q hacer un makefile donde esten todas las librerias a compilar
- *Q paso con la libreria que incluimos q tuvimos que poner .c en vez de .h?
- *Hacer un log para crear el "rastro" de las cosas realizadas
-*/
 
 int main(void) {
-	puts("Inicializando");
-	inicializar_team();
-	puts("Termino");
+	t_log* logger; //creo log
+	logger = iniciar_logger();
+	log_info(logger,"Inicio conexion del broker");
+	inicializar_broker();
+	log_info(logger,"Termino conexion del broker");
 	return EXIT_SUCCESS;
 }

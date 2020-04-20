@@ -1,0 +1,39 @@
+[INFO] 03:33:58:82 log/(24098:24098): Inicio conexion del broker
+[INFO] 03:33:58:82 log/(24098:24098): 127.0.0.1
+[INFO] 03:33:58:82 log/(24098:24098): 127.0.0.1
+[INFO] 03:34:17:386 log/(24114:24114): Inicio conexion del broker
+[INFO] 03:34:17:387 log/(24114:24114): 127.0.0.1
+[INFO] 03:34:17:387 log/(24114:24114): 127.0.0.1
+[INFO] 03:37:19:466 log/(24135:24135): Inicio conexion del broker
+[INFO] 03:37:19:466 log/(24135:24135): 127.0.0.1
+[INFO] 03:37:19:466 log/(24135:24135): 127.0.0.1
+[INFO] 03:37:24:200 log/(24142:24142): Inicio conexion del broker
+[INFO] 03:37:24:200 log/(24142:24142): 127.0.0.1
+[INFO] 03:37:24:200 log/(24142:24142): 127.0.0.1
+[INFO] 03:38:00:487 log/(24160:24160): Inicio conexion del broker
+[INFO] 03:38:00:487 log/(24160:24160): 127.0.0.1
+[INFO] 03:38:00:487 log/(24160:24160): 127.0.0.1
+[INFO] 03:38:54:392 log/(24188:24188): Inicio conexion del broker
+[INFO] 03:38:54:392 log/(24188:24188): 127.0.0.1
+[INFO] 03:38:54:392 log/(24188:24188): 5002
+[INFO] 03:42:42:73 log/(24272:24272): Inicio conexion del broker
+[INFO] 03:42:42:73 log/(24272:24272): 127.0.0.1
+[INFO] 03:42:42:73 log/(24272:24272): 5002
+[INFO] 03:46:06:629 log/(24456:24456): Inicio conexion del broker
+[INFO] 03:46:06:630 log/(24456:24456): 127.0.0.1
+[INFO] 03:46:06:630 log/(24456:24456): 5002
+[INFO] 03:48:43:686 log/(24544:24544): Inicio conexion del broker
+[INFO] 03:50:13:299 log/(24586:24586): Inicio conexion del broker
+[INFO] 03:50:13:299 log/(24586:24586): 127.0.0.1
+[INFO] 03:50:13:299 log/(24586:24586): 5002
+[INFO] 03:50:27:10 log/(24595:24595): Inicio conexion del broker
+[INFO] 03:50:27:11 log/(24595:24595): 127.0.0.1
+[INFO] 03:50:27:11 log/(24595:24595): 5002
+[INFO] 03:52:24:280 log/(24641:24641): Inicio conexion del broker
+[INFO] 03:52:24:280 log/(24641:24641): 127.0.0.1
+[INFO] 03:52:24:280 log/(24641:24641): 5002
+[INFO] 03:52:24:280 log/(24641:24641): Socket: 5, escuchando
+[INFO] 04:01:38:59 log/(24761:24761): Inicio conexion del broker
+[INFO] 04:01:38:59 log/(24761:24761): 127.0.0.1
+[INFO] 04:01:38:60 log/(24761:24761): 5002
+[INFO] 04:01:38:60 log/(24761:24761): Socket: 5, escuchando
