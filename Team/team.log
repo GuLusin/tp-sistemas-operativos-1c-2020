@@ -32,3 +32,10 @@
 [INFO] 04:02:27:925 log/(24880:24880): Mensaje caught enviado, al socket: 7.
 [INFO] 04:02:30:925 log/(24880:24880): Mensaje appeared enviado, al socket: 8.
 [INFO] 04:02:33:925 log/(24880:24880): Termino conexion con el broker
+[INFO] 05:49:13:589 log/(13603:13603): Inicio conexion con el broker
+[INFO] 05:49:13:589 log/(13603:13603): 127.0.0.1
+[INFO] 05:49:13:589 log/(13603:13603): 5002
+[INFO] 05:51:34:598 log/(13603:13603): Mensaje localized enviado, al socket: 5.
+[INFO] 05:51:37:599 log/(13603:13603): Mensaje caught enviado, al socket: 6.
+[INFO] 05:51:40:599 log/(13603:13603): Mensaje appeared enviado, al socket: 7.
+[INFO] 05:51:43:599 log/(13603:13603): Termino conexion con el broker

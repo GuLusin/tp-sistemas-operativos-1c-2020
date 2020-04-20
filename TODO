@@ -1,0 +1,9 @@
+
+PROCESO TEAM:
+
+ *Habria q hacerlo todo con funciones para conectar y enviar
+ *Hacer un enum generico
+ *En teoria habria q hacer un makefile donde esten todas las librerias a compilar
+ *Q paso con la libreria que incluimos q tuvimos que poner .c en vez de .h?
+ *  	(ARREGLE QUE SE PUEDA ACCEDER DESDE CUALQUIER UBICACION. TODAVIA NO RECONOCE EL . H
+ *Hacer un log para crear el "rastro" de las cosas realizadas -> (hecho)

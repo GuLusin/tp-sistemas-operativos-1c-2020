@@ -9,20 +9,15 @@ Proceso GameBoy: Permitir el envío de varios mensajes al proceso Broker y el me
 al proceso Team.
 */
 
-#include "/home/utnso/workspace/tp-2020-1c-cumpleDeFabian/utils/conexiones.c"
-#include<stdio.h>
-#include<stdlib.h>
-#include<commons/log.h>
-#include<commons/string.h>
-#include<commons/config.h>
+#include "broker.h"
+
 //#include<readline/readline.h>
 
 //gcc broker.c -lpthread -lcommons -o broker
 //./broker
 
-t_log* iniciar_logger(void)
-{
-	return log_create("team.log","log",1,LOG_LEVEL_INFO);
+t_log* iniciar_logger(void){
+	return log_create("broker.log","log",1,LOG_LEVEL_INFO);
 }
 
 void inicializar_broker(){
@@ -51,7 +46,8 @@ void inicializar_broker(){
 
 
 int main(void) {
-	t_log* logger; //creo log
+	t_log* logger; 
+	//creo log
 	logger = iniciar_logger();
 	log_info(logger,"Inicio conexion del broker");
 	inicializar_broker();

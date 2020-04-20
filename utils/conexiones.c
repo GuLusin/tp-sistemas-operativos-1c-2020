@@ -10,7 +10,7 @@
 
 //CHEQUEAR DONDE SE CIERRA EL SOCKET_CLIENTE
 
-#include "conexiones.h"
+#include "../utils/conexiones.h"
 
 /* serializar_paquete
  * paquete = paquete armado sin serializar en un flujo continuo
@@ -44,7 +44,7 @@ void enviar_mensaje(int socket_cliente, char* mensaje){
 	buffer->stream = stream;
 	t_paquete* paquete = malloc(sizeof(t_paquete)); //ARMADO DEL PAQUETE
 
-	paquete->codigo_operacion = MENSAJE;
+	paquete->codigo_operacion = STRING;
 	paquete->buffer = buffer;
 
 	int tam_paquete = paquete->buffer->size + 2*sizeof(uint32_t);
@@ -105,8 +105,8 @@ void recibir_cliente(int socket_servidor){
 void deserializar_buffer(int codigo_operacion, t_buffer* buffer){
 	void* mensaje = malloc(buffer->size);
 	switch(codigo_operacion){
-		case MENSAJE:
-			puts("Entra a MENSAJE");
+		case STRING:
+			puts("Entra a STRING");
 			memcpy(mensaje,buffer->stream, buffer->size);
 			puts((char *)mensaje);
 			break;

@@ -1,10 +1,12 @@
-
 /*
- * ARCHIVO CONEXIONES
+ * conexiones.h
+ *
+ *  Created on: Apr 20, 2020
+ *      Author: madd
  */
 
-#ifndef CONEXIONES_H_
-#define CONEXIONES_H_
+#ifndef CONEXIONES_H
+#define CONEXIONES_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,8 +20,12 @@
 
 typedef enum
 {
-	MENSAJE = 1,
-}op_code;
+	STRING = 0,
+	LOCALIZED_POKEMON = 1,
+	CAUGHT_POKEMON = 2,
+	APPEARED_POKEMON = 3,
+} op_code;
+
 
 typedef struct{
 	uint32_t size;
@@ -44,4 +50,4 @@ void esperar_cliente(int socket_servidor);
 int listen_to(char* ip,char* puerto);
 
 
-#endif /* CONEXIONES_H_ */
+#endif /* CONEXIONES_H */
