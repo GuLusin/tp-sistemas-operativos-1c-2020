@@ -10,7 +10,7 @@
 
 //CHEQUEAR DONDE SE CIERRA EL SOCKET_CLIENTE
 
-#include "../utils/conexiones.h"
+#include "conexiones.h"
 
 /* serializar_paquete
  * paquete = paquete armado sin serializar en un flujo continuo
@@ -35,7 +35,7 @@ void* serializar_paquete(t_paquete* paquete, int tam_paquete){
  * mensaje = mensaje normal, sin serializacion ni empaquetado
  */
 
-void enviar_mensaje(int socket_a_enviar, ){
+void enviar_mensaje(int socket_a_enviar, char* mensaje){
 	t_buffer* buffer = malloc(sizeof(t_buffer));
 
 	buffer->size = strlen(mensaje) + 1;

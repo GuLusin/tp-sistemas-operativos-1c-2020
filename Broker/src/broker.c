@@ -30,8 +30,6 @@ t_config* iniciar_config(void){
 	return config;
 }
 
-void
-
 void inicializar_broker(){
 	//creo log
     t_log* logger;

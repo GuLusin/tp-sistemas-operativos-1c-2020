@@ -9,6 +9,24 @@ Proceso GameBoy: Permitir el envío de varios mensajes al proceso Broker y el me
 al proceso Team.
 */
 
+/*
+ * team.c: In function ‘iniciar_logger’:
+team.c:21:10: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
+  if((log = log_create("broker.log","log",1,LOG_LEVEL_DEBUG)==NULL))
+          ^
+team.c: In function ‘subscribirse_a_colas’:
+team.c:46:17: warning: implicit declaration of function ‘serializar_subscripcion’ [-Wimplicit-function-declaration]
+  void* stream = serializar_subscripcion(2);
+                 ^~~~~~~~~~~~~~~~~~~~~~~
+team.c:46:17: warning: initialization makes pointer from integer without a cast [-Wint-conversion]
+/tmp/ccdsswnv.o: In function `subscribirse_a_colas':
+team.c:(.text+0x705): undefined reference to `serializar_subscripcion'
+collect2: error: ld returned 1 exit status
+ *
+ */
+
+
+
 #include "team.h"
 
 //#include<readline/readline.h>
@@ -30,7 +48,7 @@ t_config* iniciar_config(void){
 	return config;
 }
 
-
+/*
 void subscribirse_a_colas(t_log* logger, t_config* config){
 	char *ip,*puerto;
 	int wait_time,socket_broker, socket_cola_localized,socket_cola_caught,socket_cola_appeared;
@@ -48,7 +66,7 @@ void subscribirse_a_colas(t_log* logger, t_config* config){
 	send(socket_broker, stream, sizeof(uint32_t)*2, 0);
 
 
-}
+}*/
 
 void inicializar_team(){
 	t_config* config;
@@ -57,11 +75,11 @@ void inicializar_team(){
 	logger = iniciar_logger();
 	config = iniciar_config();
 
-	subscribirse_a_colas(logger,config);
+	//subscribirse_a_colas(logger,config);
 
 
 
-
+	/*
 	enviar_mensaje(socket_cola_localized, "localized");
 	log_debug(logger,"Mensaje %s enviado, al socket: %d.","localized",socket_cola_localized);	//Logueo envio de mensaje
 	sleep(3);
@@ -74,7 +92,7 @@ void inicializar_team(){
 	socket_cola_appeared = connect_to(ip,puerto,wait_time);
 	enviar_mensaje(socket_cola_appeared, "appeared");
 	log_debug(logger,"Mensaje %s enviado, al socket: %d.","appeared",socket_cola_appeared);	//Logueo envio de mensaje
-	sleep(3);
+	sleep(3);*/
 }
 
 

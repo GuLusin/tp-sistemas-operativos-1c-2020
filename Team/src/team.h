@@ -5,7 +5,7 @@
 #ifndef TEAM_H
 #define TEAM_H
 
-#include "../utils/conexiones.c"
+#include "../../utils/conexiones.c"
 //#include "../utils/mensajes.h"
 #include <stdio.h>
 #include <stdlib.h>

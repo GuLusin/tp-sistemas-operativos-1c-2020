@@ -8,6 +8,7 @@
 #ifndef MENSAJES_H
 #define MENSAJES_H
 
+#include "conexiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
@@ -20,11 +21,11 @@
 
 typedef enum
 {
-	GET_POKEMON,
-	CATCH_POKEMON,
-	LOCALIZED_POKEMON,
-	CAUGHT_POKEMON,
-	APPEARED_POKEMON,
+	COLA_GET_POKEMON,
+	COLA_CATCH_POKEMON,
+	COLA_LOCALIZED_POKEMON,
+	COLA_CAUGHT_POKEMON,
+	COLA_APPEARED_POKEMON,
 } cola_code;
 
 

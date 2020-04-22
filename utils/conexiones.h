@@ -8,6 +8,7 @@
 #ifndef CONEXIONES_H
 #define CONEXIONES_H
 
+#include "mensajes.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
@@ -17,26 +18,6 @@
 #include <unistd.h>
 #include <netdb.h>
 #include <pthread.h>
-
-typedef enum
-{
-	GET_POKEMON,
-	CATCH_POKEMON,
-	LOCALIZED_POKEMON,
-	CAUGHT_POKEMON,
-	APPEARED_POKEMON,
-} cola_code;
-
-
-typedef enum
-{
-	STRING,
-	SUSCRIPCION,
-	LOCALIZED_POKEMON,
-	CAUGHT_POKEMON,
-	APPEARED_POKEMON,
-} op_code;
-
 
 
 typedef struct{
