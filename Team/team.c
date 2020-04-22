@@ -23,7 +23,7 @@ t_log* iniciar_logger(void)
 
 void inicializar_team(){
 	t_config* config;
-    t_log* logger;
+	t_log* logger;
 	char *ip,*puerto;
 	int wait_time, socket_cola_localized,socket_cola_caught,socket_cola_appeared;
 
@@ -35,10 +35,10 @@ void inicializar_team(){
 	ip = config_get_string_value(config,"IP_BROKER");
 	log_info(logger,config_get_string_value(config,"IP_BROKER")); //pido y logueo ip
 
-    puerto = config_get_string_value(config,"PUERTO_BROKER");
+	puerto = config_get_string_value(config,"PUERTO_BROKER");
 	log_info(logger,config_get_string_value(config,"PUERTO_BROKER")); //pido y logueo puerto
 
-    wait_time = config_get_int_value(config,"TIEMPO_RECONEXION");
+	wait_time = config_get_int_value(config,"TIEMPO_RECONEXION");
 
 	socket_cola_localized = connect_to(ip,puerto,wait_time);
 	enviar_mensaje(socket_cola_localized, "localized");
