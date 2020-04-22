@@ -20,11 +20,23 @@
 
 typedef enum
 {
-	STRING = 0,
-	LOCALIZED_POKEMON = 1,
-	CAUGHT_POKEMON = 2,
-	APPEARED_POKEMON = 3,
+	GET_POKEMON,
+	CATCH_POKEMON,
+	LOCALIZED_POKEMON,
+	CAUGHT_POKEMON,
+	APPEARED_POKEMON,
+} cola_code;
+
+
+typedef enum
+{
+	STRING,
+	SUSCRIPCION,
+	LOCALIZED_POKEMON,
+	CAUGHT_POKEMON,
+	APPEARED_POKEMON,
 } op_code;
+
 
 
 typedef struct{
@@ -41,11 +53,11 @@ pthread_t pthread;
 
 void esperar_cliente(int socket_servidor);
 void* serializar_paquete(t_paquete* paquete, int tam_paquete);
-void enviar_mensaje(int socket_cliente, char* mensaje);
+void enviar_mensaje(int socket_a_enviar, char* mensaje);
 int connect_to(char* ip, char* puerto,int wait_time);
 void recibir_cliente(int socket_servidor);
 void deserializar_buffer(int codigo_operacion, t_buffer* buffer);
-void recibir_mensaje(int *socket_cliente);
+void recibir_mensaje(int *socket_servidor);
 void esperar_cliente(int socket_servidor);
 int listen_to(char* ip,char* puerto);
 

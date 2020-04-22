@@ -31,11 +31,11 @@ void* serializar_paquete(t_paquete* paquete, int tam_paquete){
 }
 
 /* enviar_mensaje
- * socket_cliente = socket para enviar el mensaje
+ * socket_a_enviar = socket para enviar el mensaje
  * mensaje = mensaje normal, sin serializacion ni empaquetado
  */
 
-void enviar_mensaje(int socket_cliente, char* mensaje){
+void enviar_mensaje(int socket_a_enviar, ){
 	t_buffer* buffer = malloc(sizeof(t_buffer));
 
 	buffer->size = strlen(mensaje) + 1;
@@ -50,7 +50,7 @@ void enviar_mensaje(int socket_cliente, char* mensaje){
 	int tam_paquete = paquete->buffer->size + 2*sizeof(uint32_t);
 	void* data_a_enviar = serializar_paquete(paquete,tam_paquete);
 
-	int bytes_enviados = send(socket_cliente, data_a_enviar, tam_paquete, 0);
+	int bytes_enviados = send(socket_a_enviar, data_a_enviar, tam_paquete, 0);
 }
 
 /* connect_to
