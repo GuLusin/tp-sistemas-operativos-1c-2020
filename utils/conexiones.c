@@ -12,10 +12,36 @@
 
 #include "conexiones.h"
 
+/* sendall: funcion sacade de guia beej, asegura que se mande todo el paquete o devuelve error.
+ * s = socket al cual enviar
+ * buf = stream a enviar
+ * len = size del stream
+ */
+
+int sendall(int s, void *buf, int *len)
+{
+    int total = 0;        // cuantos bytes ya enviamos
+    int bytesleft = *len; // cuantos bytes nos quedan enviar
+    int n;
+
+    while(total < *len) {
+        n = send(s, buf+total, bytesleft, 0);
+        if (n == -1) { break; }
+        total += n;
+        bytesleft -= n;
+    }
+
+    *len = total; // devuelve el numero total de
+
+    return n==-1?-1:0; // return -1 si falla, 0 si tiene exito
+}
+
+
 /* serializar_paquete
  * paquete = paquete armado sin serializar en un flujo continuo
  * tam_paquete = tamaño del mismo y del futuro flujo
  */
+
 
 void* serializar_paquete(t_paquete* paquete, int tam_paquete){
 	void* stream = malloc(tam_paquete);
@@ -110,6 +136,15 @@ void deserializar_buffer(int codigo_operacion, t_buffer* buffer){
 			memcpy(mensaje,buffer->stream, buffer->size);
 			puts((char *)mensaje);
 			break;
+		case SUBSCRIPCION:
+			puts("Entra a SUBSCRIPCION\n");
+			//log_debug(logger,"Entra a SUBSCRIPCION") lo usariamos para informar que llega una subscripcion, no se puede usar log ya que esta en otro .h
+			cola_code cola_recibida = deserializar_subscripcion(buffer->stream);
+			puts("sale de deserializar");
+
+			printf("size:%d\n cola: %d\n", buffer->size, cola_recibida);
+			break;
+
 		default:
 			puts("default");
 			break;
@@ -134,7 +169,7 @@ void recibir_mensaje(int *socket_cliente){
 		perror("Falla recv() buffer->size");
 	}
 
-	char* stream = malloc(size);
+	void* stream = malloc(size);
 
 	if(recv(*socket_cliente, stream, size, MSG_WAITALL) == -1){
 		perror("Falla recv() buffer->stream");

@@ -7,7 +7,6 @@
 
 #ifndef MENSAJES_H
 #define MENSAJES_H
-
 #include "conexiones.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,8 +18,7 @@
 #include <netdb.h>
 #include <pthread.h>
 
-typedef enum
-{
+typedef enum {
 	COLA_GET_POKEMON,
 	COLA_CATCH_POKEMON,
 	COLA_LOCALIZED_POKEMON,
@@ -32,13 +30,17 @@ typedef enum
 typedef enum
 {
 	STRING,
-	SUSCRIPCION,
+	SUBSCRIPCION,
 	LOCALIZED_POKEMON,
 	CAUGHT_POKEMON,
 	APPEARED_POKEMON,
+	GET_POKEMON,
+	CATCH_POKEMON,
 } op_code;
 
-pthread_t pthread;
+
+void* serializar_subscripcion(cola_code cola);
+cola_code deserializar_subscripcion(void* stream);
 
 
 #endif /* MENSAJES_H */
