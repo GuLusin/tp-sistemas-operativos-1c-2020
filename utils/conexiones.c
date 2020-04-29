@@ -113,15 +113,7 @@ int connect_to(char* ip, char* puerto,int wait_time){
 	return socket_cliente;
 }
 
-/* recibir_cliente
- * socket_servidor = socket del cual se esperara la solicitud de conexion
- */
 
-void recibir_cliente(int socket_servidor){
-	while(1){
-		esperar_cliente(socket_servidor);
-	}
-}
 
 /* deserializar_buffer
  * codigo_operacion = codigo sobre el cual se decidira que accion tomar
@@ -151,47 +143,20 @@ void deserializar_buffer(int codigo_operacion, t_buffer* buffer){
 	}
 }
 
-/* recibir_cliente
- * socket_cliente = socket de la cual se recibiran datos
- */
 
-void recibir_mensaje(int *socket_cliente){
-
-	int codigo_operacion;
-
-	if(recv(*socket_cliente, &(codigo_operacion),sizeof(uint32_t), MSG_WAITALL)==-1){
-		perror("Falla recv() op_code");
-	}
-
-	int size;
-
-	if(recv(*socket_cliente, &(size), sizeof(uint32_t), MSG_WAITALL) == -1){
-		perror("Falla recv() buffer->size");
-	}
-
-	void* stream = malloc(size);
-
-	if(recv(*socket_cliente, stream, size, MSG_WAITALL) == -1){
-		perror("Falla recv() buffer->stream");
-	}
-
-	t_buffer* buffer= malloc(sizeof(t_buffer));
-	buffer->size=size;
-	buffer->stream=stream;
-    deserializar_buffer(codigo_operacion,buffer);
-}
 
 /* esperar_cliente
  * socket_servidor = socket en la cual se aceptaran comunicaciones
+ * funcion_recibir = funcion especifica que maneja la recepcion del mensaje segun el modulo
  */
 
-void esperar_cliente(int socket_servidor){
+void esperar_cliente(int socket_servidor,void* funcion_recibir){
 	struct sockaddr_in dir_cliente;
 	int tam_direccion = sizeof(struct sockaddr_in);
 
 	int socket_cliente = accept(socket_servidor, (void*) &dir_cliente, &tam_direccion);
 
-	pthread_create(&pthread, NULL, (void*)recibir_mensaje, &socket_cliente);
+	pthread_create(&pthread, NULL, funcion_recibir, &socket_cliente);
 	pthread_detach(pthread);
 }
 

@@ -16,6 +16,10 @@ al proceso Team.
 //gcc broker.c -lpthread -lcommons -o broker
 //./broker
 
+void manejar_subscripcion(){
+
+}
+
 t_config* iniciar_config(void){
 	t_config* config;
 	if((config = config_create("config")) == 0)
@@ -23,10 +27,23 @@ t_config* iniciar_config(void){
 	return config;
 }
 
-void inicializar_broker(t_config* config){
+void inicializar_broker(){
 	//creo log
 	int socket_broker;
 	char *ip,*puerto;
+
+	logger = log_create("broker.log", "log", true, LOG_LEVEL_DEBUG);
+	config = iniciar_config();
+
+	sockets_cola_new = list_create();
+	sockets_cola_get = list_create();
+	sockets_cola_catch = list_create();
+	sockets_cola_localized = list_create();
+	sockets_cola_caught = list_create();
+	sockets_cola_appeared = list_create();
+
+
+
 
 
 
@@ -48,10 +65,9 @@ void inicializar_broker(t_config* config){
 
 int main(void) {
 
-	logger = log_create("broker.log", "log", true, LOG_LEVEL_DEBUG);
-	config = iniciar_config();
 
-	inicializar_broker(config);
+
+	inicializar_broker();
 
 	return EXIT_SUCCESS;
 }
