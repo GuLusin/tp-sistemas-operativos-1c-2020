@@ -8,3 +8,4 @@ PROCESO TEAM:
  *  	(ARREGLE QUE SE PUEDA ACCEDER DESDE CUALQUIER UBICACION. TODAVIA NO RECONOCE EL . H
  *Hacer un log para crear el "rastro" de las cosas realizadas -> (hecho)
  *Hacer un utils con funcion log y config que esta en team.c y hacerla generica, pasando ubicacion como parametro.
+ *hay que chequear, o se podria ver, que cuando un TEAM manda un mensaje, si se corta la conexion lo reintente. // ES NECESARIO??
