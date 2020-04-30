@@ -13,26 +13,55 @@
 #include "conexiones.h"
 #include <errno.h>
 
-/* sendall: funcion sacade de guia beej, asegura que se mande todo el paquete o devuelve error.
+
+// ACKNOWLEDGEMENT= RECONOCIMIENTO DEL MENSAJE DE PARTE DEL BROKER
+
+/* send_ack: manda el ACK para confirmacion del mensaje enviado
+ * socket_cliente = socket al cual enviar el ecknowledgment
+ *
+ * CAPAZ DEBERIA CHEQUEAR CON EL ID DEL MENSAJE!!
+ */
+
+
+void send_ack(int socket_cliente){
+	int ack = ACK;
+	while((send(socket_cliente,&ack,sizeof(int), 0))==-1);
+		send(socket_cliente,&ack,sizeof(int), 0);
+}
+
+/* wait_ack: espera el ACK para confirmacion del mensaje recibido
+ * socket_cliente = socket del cual esperar el ecknowledgment
+ *
+ * CAPAZ DEBERIA CHEQUEAR CON EL ID DEL MENSAJE!!
+ */
+
+bool wait_ack(int socket_cliente){
+	int ack;
+	recv(socket_cliente, &(ack),sizeof(int), MSG_WAITALL);
+	return ack==ACK;
+}
+
+
+/* sendall: funcion sacada de de guia beej, asegura que se mande todo el paquete o devuelve error.
  * s = socket al cual enviar
  * buf = stream a enviar
  * len = size del stream
  */
 
-int sendall(int s, void *buf, int *len)
+int sendall(int s, void *buf, int len)
 {
     int total = 0;        // cuantos bytes ya enviamos
-    int bytesleft = *len; // cuantos bytes nos quedan enviar
+    int bytesleft = len; // cuantos bytes nos quedan enviar
     int n;
 
-    while(total < *len) {
+    while(total < len) {
         n = send(s, buf+total, bytesleft, 0);
         if (n == -1) { break; }
         total += n;
         bytesleft -= n;
     }
 
-    *len = total; // devuelve el numero total de
+    //len = total; // devuelve el numero total de
 
     return n==-1?-1:0; // return -1 si falla, 0 si tiene exito
 }
@@ -116,6 +145,53 @@ int connect_to(char* ip, char* puerto,int wait_time){
 }
 
 
+/* crear_mensaje
+ *
+ * funcion de argumentos variables, se usa para crear todos los tipos de mensaje. Se le pasa el
+ * codigo de operacion y los argumentos para completar los campos de cada mensaje.
+ *
+ * SUBSCRIPCION : se pasa primero el socket que se subscribe y como segundo argumento la cola a la cual
+ * suscribirse.
+ *
+ *
+ *
+ *
+ * codigo_operacion = codigo sobre el cual se decidira que accion tomar
+ * ... = lista variable, depende del codigo de operacion que hacer
+ *
+ *
+ * TENER EN CUENTA QUE SE MALLOCKEAN T_MENSAJES!! HAY QUE VER DONDE HACERLES FREE.
+ *
+ *
+ * Deberia ir en mensajes.c???
+ */
+
+
+
+t_mensaje* crear_mensaje(int argc, ...){
+	va_list args;
+	va_start(args, argc);
+
+	t_mensaje* mensaje = malloc(sizeof(t_mensaje));
+
+	mensaje->codigo_operacion = va_arg(args, int);
+
+	switch(mensaje->codigo_operacion){
+		case SUBSCRIPCION:
+			mensaje->contenido.subscripcion.socket = va_arg(args, int);
+			mensaje->contenido.subscripcion.cola = va_arg(args, int);
+			va_end(args);
+			return mensaje;
+			break;
+
+
+
+	}
+
+
+
+}
+
 
 /* deserializar_buffer
  * codigo_operacion = codigo sobre el cual se decidira que accion tomar
@@ -123,7 +199,7 @@ int connect_to(char* ip, char* puerto,int wait_time){
  * socket_cliente = socket del cliente que mando el buffer
  */
 
-void deserializar_buffer(int codigo_operacion, t_buffer* buffer, int socket_cliente){
+t_mensaje* deserializar_buffer(int codigo_operacion, t_buffer* buffer, int socket_cliente){
 	void* mensaje = malloc(buffer->size);
 	switch(codigo_operacion){
 		case STRING:
@@ -131,15 +207,15 @@ void deserializar_buffer(int codigo_operacion, t_buffer* buffer, int socket_clie
 			memcpy(mensaje,buffer->stream, buffer->size);
 			puts((char *)mensaje);
 			break;
-		case SUBSCRIPCION:
-			puts("Entra a SUBSCRIPCION\n");
+		case SUBSCRIPCION: ;
 			//log_debug(logger,"Entra a SUBSCRIPCION") lo usariamos para informar que llega una subscripcion, no se puede usar log ya que esta en otro .h
-			cola_code cola_recibida = deserializar_subscripcion(buffer->stream);
-			puts("sale de deserializar");
-
-
+			int cola_recibida = deserializar_subscripcion(buffer->stream);
 			printf("size:%d\n cola: %d\n", buffer->size, cola_recibida);
+			t_mensaje* un_mensaje = crear_mensaje(3, codigo_operacion, socket_cliente, cola_recibida);
+			return un_mensaje;
 			break;
+		case APPEARED_POKEMON:
+
 
 		default:
 			puts("default");

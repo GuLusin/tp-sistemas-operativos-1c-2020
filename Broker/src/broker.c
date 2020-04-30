@@ -16,21 +16,53 @@ al proceso Team.
 //gcc broker.c -lpthread -lcommons -o broker
 //./broker
 
-void manejar_subscripcion(){
+void manejar_subscripcion(t_mensaje* mensaje){
+	cola_code cola = mensaje->contenido.subscripcion.cola;
+	int socket_cliente  = mensaje->contenido.subscripcion.socket;
 
+	switch(cola){
+		case COLA_APPEARED_POKEMON:
+			list_add(sockets_cola_appeared, (void*)socket_cliente);
+			break;
+		case COLA_CAUGHT_POKEMON:
+			list_add(sockets_cola_caught, (void*)socket_cliente);
+			break;
+		case COLA_LOCALIZED_POKEMON:
+			list_add(sockets_cola_localized, (void*)socket_cliente);
+			break;
+
+	}
+	puts("mensaje recibido con exito!");
+}
+
+bool manejar_mensaje(t_mensaje* mensaje){
+    switch(mensaje->codigo_operacion){
+    	case SUBSCRIPCION:
+    		manejar_subscripcion(mensaje);
+    		return true;
+
+
+
+    }
 }
 
 
-void recibir_mensaje(int *socket_cliente){
+/* recibir_mensaje
+ * socket_cliente = socket del cual hace recv para obtener el mensaje que llega.
+ *
+ * Primero delega a serializar buffer el cual devuelve un t_mensaje* el cual luego es pasado a
+ * manejar mensaje que se encarga de procesarlo.
+ */
 
-	printf("a recibir mensaje le llega el socket %d\n",*socket_cliente);
+
+
+void recibir_mensaje(int *socket_cliente){
+	//printf("a recibir mensaje le llega el socket %d\n",*socket_cliente);
 	int codigo_operacion;
 
 	if(recv(*socket_cliente, &(codigo_operacion),sizeof(uint32_t), MSG_WAITALL)==-1){
 		perror("Falla recv() op_code");
 	}
-
-	//if(cod=bus)
 
 	int size;
 
@@ -43,11 +75,14 @@ void recibir_mensaje(int *socket_cliente){
 	if(recv(*socket_cliente, stream, size, MSG_WAITALL) == -1){
 		perror("Falla recv() buffer->stream");
 	}
-
 	t_buffer* buffer= malloc(sizeof(t_buffer));
 	buffer->size=size;
 	buffer->stream=stream;
-    deserializar_buffer(codigo_operacion,buffer,*socket_cliente);
+    t_mensaje* mensaje = deserializar_buffer(codigo_operacion,buffer,*socket_cliente);
+    if(manejar_mensaje(mensaje))
+    	send_ack(*socket_cliente);
+
+
 }
 
 
@@ -61,14 +96,11 @@ void recibir_cliente(int *socket_servidor){
 	}
 }
 
-
-
-
 void inicializar_broker(){
 
 	int socket_broker;
 	char *ip,*puerto;
-	pthread_t pthreadew;
+	pthread_t pthread_atender_cliente;
 
 	logger = log_create("broker.log", "log", true, LOG_LEVEL_DEBUG);
 	config = config_create("config");
@@ -95,11 +127,13 @@ void inicializar_broker(){
 
 	sleep(5);
 
-	pthread_create(&pthreadew, NULL,(void*)recibir_cliente, &socket_broker);
-	pthread_detach(pthreadew);
+	pthread_create(&pthread_atender_cliente, NULL,(void*)recibir_cliente, &socket_broker);
+	pthread_detach(pthread_atender_cliente);
 	log_debug(logger,"Recibi al cliente");	//Recibi al cliente
 
 	getchar();
+
+	printf("cola appeared: %d\ncola caught: %d\ncola localized: %d\n", (int)list_get(sockets_cola_appeared,0),(int)list_get(sockets_cola_caught,0),(int)list_get(sockets_cola_localized,0));
 	close(socket_broker);
 
 
