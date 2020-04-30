@@ -41,9 +41,9 @@ t_config* iniciar_config(void){
 	return config;
 }
 
-void subscribirse_a_colas(t_log* logger, t_config* config){
+void subscribirse_a_colas(){
 	char *ip,*puerto;
-	int wait_time, socket_broker, socket_cola_localized, socket_cola_caught, socket_cola_appeared, total_enviado;
+	int wait_time, socket_broker, socket_cola_localized, socket_cola_caught, socket_cola_appeared;
 
 	//Obtiene los datos IP,PUERTO WAIT_TIME desde la config
 
@@ -81,11 +81,11 @@ void subscribirse_a_colas(t_log* logger, t_config* config){
 	//se subscribe a COLA_GET_POKEMON y sale
 }
 
-void inicializar_team(t_config* config){
+void inicializar_team(){
 
 
 
-	subscribirse_a_colas(logger,config);
+	subscribirse_a_colas();
 
 
 
@@ -108,9 +108,9 @@ void inicializar_team(t_config* config){
 
 int main(void) {
 
-	logger = log_create("broker.log","log",1,LOG_LEVEL_DEBUG);
+	logger = log_create("team.log","log",1,LOG_LEVEL_DEBUG);
 	config = iniciar_config();
-	inicializar_team(config);
+	inicializar_team();
 
 	return EXIT_SUCCESS;
 }

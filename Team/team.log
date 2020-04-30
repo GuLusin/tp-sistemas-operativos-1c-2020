@@ -39,3 +39,7 @@
 [INFO] 05:51:37:599 log/(13603:13603): Mensaje caught enviado, al socket: 6.
 [INFO] 05:51:40:599 log/(13603:13603): Mensaje appeared enviado, al socket: 7.
 [INFO] 05:51:43:599 log/(13603:13603): Termino conexion con el broker
+[DEBUG] 02:53:17:825 log/(9739:9739): 127.0.0.1
+[DEBUG] 02:53:17:825 log/(9739:9739): 5005
+[DEBUG] 02:53:31:315 log/(9751:9751): 127.0.0.1
+[DEBUG] 02:53:31:315 log/(9751:9751): 5005
