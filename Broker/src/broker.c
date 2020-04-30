@@ -28,9 +28,10 @@ t_config* iniciar_config(void){
 }
 
 void inicializar_broker(){
-	//creo log
+
 	int socket_broker;
 	char *ip,*puerto;
+	pthread_t pthread;
 
 	logger = log_create("broker.log", "log", true, LOG_LEVEL_DEBUG);
 	config = iniciar_config();
@@ -42,11 +43,6 @@ void inicializar_broker(){
 	sockets_cola_caught = list_create();
 	sockets_cola_appeared = list_create();
 
-
-
-
-
-
 	ip = config_get_string_value(config,"IP_BROKER");
 	log_debug(logger,ip); //pido y logueo ip
 
@@ -56,9 +52,23 @@ void inicializar_broker(){
 	socket_broker = listen_to(ip,puerto);
 	log_debug(logger,"Socket: %d, escuchando",socket_broker);	//Socket queda escuchado
 
+	//.............................
 
-	recibir_cliente(socket_broker);
+	puts("Esto se esta por descontrolar:");
+
+	sleep(5);
+
+	pthread_create(&pthread, NULL,(void*)recibir_cliente, &socket_broker);
+	pthread_detach(pthread);
 	log_debug(logger,"Recibi al cliente");	//Recibi al cliente
+
+	getchar();
+	close(socket_broker);
+
+
+
+
+
 
 }
 

@@ -11,6 +11,7 @@
 //CHEQUEAR DONDE SE CIERRA EL SOCKET_CLIENTE
 
 #include "conexiones.h"
+#include <errno.h>
 
 /* sendall: funcion sacade de guia beej, asegura que se mande todo el paquete o devuelve error.
  * s = socket al cual enviar
@@ -76,7 +77,8 @@ void enviar_mensaje(int socket_a_enviar, char* mensaje){
 	int tam_paquete = paquete->buffer->size + 2*sizeof(uint32_t);
 	void* data_a_enviar = serializar_paquete(paquete,tam_paquete);
 
-	int bytes_enviados = send(socket_a_enviar, data_a_enviar, tam_paquete, 0);
+
+	send(socket_a_enviar, data_a_enviar, tam_paquete, 0);
 }
 
 /* connect_to
@@ -156,7 +158,7 @@ void esperar_cliente(int socket_servidor,void* funcion_recibir){
 
 	int socket_cliente = accept(socket_servidor, (void*) &dir_cliente, &tam_direccion);
 
-	pthread_create(&pthread, NULL, funcion_recibir, &socket_cliente);
+	pthread_create(&pthread, NULL,funcion_recibir, &socket_cliente);
 	pthread_detach(pthread);
 }
 
@@ -182,7 +184,7 @@ int listen_to(char* ip,char* puerto){
 		perror("No se pudo crear socket");
 		return -1;
 	}
-
+	printf("El socket que se creo es %d\n", socket_servidor);
 	if (bind(socket_servidor, servinfo->ai_addr, servinfo->ai_addrlen) == -1) {
 		perror("No se pudo bindear el socket");
 		close(socket_servidor);

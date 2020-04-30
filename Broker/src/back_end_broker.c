@@ -40,6 +40,6 @@ void recibir_mensaje(int *socket_cliente){
 
 void recibir_cliente(int socket_servidor){
 	while(1){
-		//esperar_cliente(socket_servidor,recibir_mensaje);
+		esperar_cliente(socket_servidor,recibir_mensaje);
 	}
 }
