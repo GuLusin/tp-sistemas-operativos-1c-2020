@@ -20,21 +20,58 @@ void manejar_subscripcion(){
 
 }
 
-t_config* iniciar_config(void){
-	t_config* config;
-	if((config = config_create("config")) == 0)
-		perror("Error al crear la config");
-	return config;
+
+void recibir_mensaje(int *socket_cliente){
+
+	printf("a recibir mensaje le llega el socket %d\n",*socket_cliente);
+	int codigo_operacion;
+
+	if(recv(*socket_cliente, &(codigo_operacion),sizeof(uint32_t), MSG_WAITALL)==-1){
+		perror("Falla recv() op_code");
+	}
+
+	//if(cod=bus)
+
+	int size;
+
+	if(recv(*socket_cliente, &(size), sizeof(uint32_t), MSG_WAITALL) == -1){
+		perror("Falla recv() buffer->size");
+	}
+
+	void* stream = malloc(size);
+
+	if(recv(*socket_cliente, stream, size, MSG_WAITALL) == -1){
+		perror("Falla recv() buffer->stream");
+	}
+
+	t_buffer* buffer= malloc(sizeof(t_buffer));
+	buffer->size=size;
+	buffer->stream=stream;
+    deserializar_buffer(codigo_operacion,buffer,*socket_cliente);
 }
+
+
+/* recibir_cliente
+ * socket_servidor = socket del cual se esperara la solicitud de conexion
+ */
+
+void recibir_cliente(int *socket_servidor){
+	while(1){
+		esperar_cliente(*socket_servidor,recibir_mensaje);
+	}
+}
+
+
+
 
 void inicializar_broker(){
 
 	int socket_broker;
 	char *ip,*puerto;
-	pthread_t pthread;
+	pthread_t pthreadew;
 
 	logger = log_create("broker.log", "log", true, LOG_LEVEL_DEBUG);
-	config = iniciar_config();
+	config = config_create("config");
 
 	sockets_cola_new = list_create();
 	sockets_cola_get = list_create();
@@ -58,8 +95,8 @@ void inicializar_broker(){
 
 	sleep(5);
 
-	pthread_create(&pthread, NULL,(void*)recibir_cliente, &socket_broker);
-	pthread_detach(pthread);
+	pthread_create(&pthreadew, NULL,(void*)recibir_cliente, &socket_broker);
+	pthread_detach(pthreadew);
 	log_debug(logger,"Recibi al cliente");	//Recibi al cliente
 
 	getchar();

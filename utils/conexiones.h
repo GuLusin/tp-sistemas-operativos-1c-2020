@@ -37,7 +37,7 @@ void* serializar_paquete(t_paquete* paquete, int tam_paquete);
 void enviar_mensaje(int socket_a_enviar, char* mensaje);
 int connect_to(char* ip, char* puerto,int wait_time);
 
-void deserializar_buffer(int codigo_operacion, t_buffer* buffer);
+void deserializar_buffer(int codigo_operacion, t_buffer* buffer,int socket_cliente);
 
 void esperar_cliente(int socket_servidor,void* funcion_recibir);
 int listen_to(char* ip,char* puerto);

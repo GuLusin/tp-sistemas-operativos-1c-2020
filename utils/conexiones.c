@@ -120,9 +120,10 @@ int connect_to(char* ip, char* puerto,int wait_time){
 /* deserializar_buffer
  * codigo_operacion = codigo sobre el cual se decidira que accion tomar
  * buffer = donde esta contenida la informacion
+ * socket_cliente = socket del cliente que mando el buffer
  */
 
-void deserializar_buffer(int codigo_operacion, t_buffer* buffer){
+void deserializar_buffer(int codigo_operacion, t_buffer* buffer, int socket_cliente){
 	void* mensaje = malloc(buffer->size);
 	switch(codigo_operacion){
 		case STRING:
@@ -135,6 +136,7 @@ void deserializar_buffer(int codigo_operacion, t_buffer* buffer){
 			//log_debug(logger,"Entra a SUBSCRIPCION") lo usariamos para informar que llega una subscripcion, no se puede usar log ya que esta en otro .h
 			cola_code cola_recibida = deserializar_subscripcion(buffer->stream);
 			puts("sale de deserializar");
+
 
 			printf("size:%d\n cola: %d\n", buffer->size, cola_recibida);
 			break;
@@ -157,6 +159,9 @@ void esperar_cliente(int socket_servidor,void* funcion_recibir){
 	int tam_direccion = sizeof(struct sockaddr_in);
 
 	int socket_cliente = accept(socket_servidor, (void*) &dir_cliente, &tam_direccion);
+
+	printf("leyo un socket cliente aqui xd %d\n",socket_cliente);
+	printf("y el numero de error fue: %d\n",errno);
 
 	pthread_create(&pthread, NULL,funcion_recibir, &socket_cliente);
 	pthread_detach(pthread);

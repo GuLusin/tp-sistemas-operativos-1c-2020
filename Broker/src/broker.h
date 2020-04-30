@@ -1,7 +1,15 @@
 #ifndef BROKER_H
 #define BROKER_H
 
-#include "back_end_broker.c"
+#include "../../utils/conexiones.c"
+#include "../../utils/mensajes.c"
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <commons/log.h>
+#include <commons/string.h>
+#include <commons/config.h>
+#include <commons/collections/list.h>
 #include <pthread.h>
 
 
@@ -14,6 +22,9 @@ t_list* sockets_cola_catch;
 t_list* sockets_cola_localized;
 t_list* sockets_cola_caught;
 t_list* sockets_cola_appeared;
+
+
+
 
 
 #endif /* BROKER_H */

@@ -108,7 +108,7 @@ void inicializar_team(){
 
 int main(void) {
 
-	logger = log_create("broker.log","log",1,LOG_LEVEL_DEBUG);
+	logger = log_create("team.log","log",1,LOG_LEVEL_DEBUG);
 	config = iniciar_config();
 	inicializar_team();
 
