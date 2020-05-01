@@ -7,6 +7,10 @@ Aceptar suscripciones a una cola de mensajes específica.
 
 Proceso GameBoy: Permitir el envío de varios mensajes al proceso Broker y el mensaje Appeared Pokemon
 al proceso Team.
+
+    delimitador[] = ",";
+    string_split(cadena, delimitador);
+
 */
 
 #include "broker.h"
@@ -120,6 +124,7 @@ void inicializar_broker(){
 
 	int socket_broker;
 	char *ip,*puerto;
+
 	pthread_t pthread_atender_cliente;
 	pthread_mutex_init(&mutex_cola_new, NULL);
 	pthread_mutex_init(&mutex_cola_get, NULL);

@@ -659,3 +659,7 @@
 [DEBUG] 00:52:48:302 log/(6701:6701): 5005
 [DEBUG] 00:52:48:303 log/(6701:6701): Socket: 4, escuchando
 [DEBUG] 00:52:53:303 log/(6701:6701): Recibi al cliente
+[DEBUG] 01:21:57:966 log/(5852:5852): 127.0.0.1
+[DEBUG] 01:21:57:966 log/(5852:5852): 5005
+[DEBUG] 01:21:57:966 log/(5852:5852): Socket: 4, escuchando
+[DEBUG] 01:22:02:967 log/(5852:5852): Recibi al cliente

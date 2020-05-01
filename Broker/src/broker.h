@@ -12,6 +12,7 @@
 #include <commons/collections/list.h>
 #include <pthread.h>
 
+
 pthread_mutex_t mutex_cola_new;
 pthread_mutex_t mutex_cola_get;
 pthread_mutex_t mutex_cola_catch;
