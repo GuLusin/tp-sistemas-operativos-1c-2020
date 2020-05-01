@@ -1,16 +1,10 @@
 
 PROCESO TEAM:
 
- *Habria q hacerlo todo con funciones para conectar y enviar
- *Hacer un enum generico
- *En teoria habria q hacer un makefile donde esten todas las librerias a compilar
  *Q paso con la libreria que incluimos q tuvimos que poner .c en vez de .h?
  *  	(ARREGLE QUE SE PUEDA ACCEDER DESDE CUALQUIER UBICACION. TODAVIA NO RECONOCE EL . H
- *Hacer un log para crear el "rastro" de las cosas realizadas -> (hecho)
  *Hacer un utils con funcion log y config que esta en team.c y hacerla generica, pasando ubicacion como parametro.
  *hay que chequear, o se podria ver, que cuando un TEAM manda un mensaje, si se corta la conexion lo reintente. // ES NECESARIO??
- *hay que arreglar error de enviar mensajes desde team. Si no hay un sleep o usleep, del lado del broker tira seg fault
- *creo que es porq la sincronizacion del recv. Funcionaria con un mutex o un semaforo?
  *revisar funcionalidades del send_ack y el wait_ack en conexiones capaz no sirvan como estan 
  ahora pero creo que es un prototipo para algo que podriamos usar en el futuro.
  *hacer funcion para destruir mutex si es necesario pthread_mutex_destroy()

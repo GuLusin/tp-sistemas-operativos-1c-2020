@@ -16,10 +16,12 @@ typedef struct {
    int posicion_y;
    t_list *pokemones;
    t_list *objetivos;
-}entrenador;
+}t_entrenador;
 
 t_config* config;
 t_log* logger;
+
+t_list* entrenadores;
 
 char *ip_broker,*puerto_broker;
 
