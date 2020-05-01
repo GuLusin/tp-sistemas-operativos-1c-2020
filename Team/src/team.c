@@ -88,11 +88,11 @@ void subscribirse_a_colas(){
 	//se subscribe a COLA_GET_POKEMON y sale
 
 /**/
-	int a=100;
+	//int a=100;
 	subscribirse_a_cola(COLA_APPEARED_POKEMON);
-	usleep(a);
+	//usleep(a);
 	subscribirse_a_cola(COLA_LOCALIZED_POKEMON);
-	usleep(a);
+	//usleep(a);
 	subscribirse_a_cola(COLA_CAUGHT_POKEMON);
 
 

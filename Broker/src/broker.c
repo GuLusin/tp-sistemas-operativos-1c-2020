@@ -22,15 +22,35 @@ void manejar_subscripcion(t_mensaje* mensaje){
 
 	switch(cola){
 		case COLA_APPEARED_POKEMON:
+			pthread_mutex_lock(&mutex_cola_appeared);
 			list_add(sockets_cola_appeared, (void*)socket_cliente);
+			pthread_mutex_unlock(&mutex_cola_appeared);
 			break;
 		case COLA_CAUGHT_POKEMON:
+			pthread_mutex_lock(&mutex_cola_caught);
 			list_add(sockets_cola_caught, (void*)socket_cliente);
+			pthread_mutex_unlock(&mutex_cola_caught);
 			break;
 		case COLA_LOCALIZED_POKEMON:
+			pthread_mutex_lock(&mutex_cola_localized);
 			list_add(sockets_cola_localized, (void*)socket_cliente);
+			pthread_mutex_unlock(&mutex_cola_localized);
 			break;
-
+		case COLA_CATCH_POKEMON:
+			pthread_mutex_lock(&mutex_cola_catch);
+			list_add(sockets_cola_catch, (void*)socket_cliente);
+			pthread_mutex_unlock(&mutex_cola_catch);
+			break;
+		case COLA_GET_POKEMON:
+			pthread_mutex_lock(&mutex_cola_get);
+			list_add(sockets_cola_get, (void*)socket_cliente);
+			pthread_mutex_unlock(&mutex_cola_get);
+			break;
+		case COLA_NEW_POKEMON:
+			pthread_mutex_lock(&mutex_cola_new);
+			list_add(sockets_cola_new, (void*)socket_cliente);
+			pthread_mutex_unlock(&mutex_cola_new);
+			break;
 	}
 	puts("mensaje recibido con exito!");
 }
@@ -101,6 +121,12 @@ void inicializar_broker(){
 	int socket_broker;
 	char *ip,*puerto;
 	pthread_t pthread_atender_cliente;
+	pthread_mutex_init(&mutex_cola_new, NULL);
+	pthread_mutex_init(&mutex_cola_get, NULL);
+	pthread_mutex_init(&mutex_cola_catch, NULL);
+	pthread_mutex_init(&mutex_cola_localized, NULL);
+	pthread_mutex_init(&mutex_cola_caught, NULL);
+	pthread_mutex_init(&mutex_cola_appeared, NULL);
 
 	logger = log_create("broker.log", "log", true, LOG_LEVEL_DEBUG);
 	config = config_create("config");
