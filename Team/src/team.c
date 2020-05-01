@@ -34,28 +34,35 @@ collect2: error: ld returned 1 exit status
 //gcc team.c -lpthread -lcommons -o team
 //./team
 
-t_config* iniciar_config(void){
-	t_config* config;
-	if((config = config_create("config"))== NULL)
-		perror("Error al crear la config");
-	return config;
+
+
+int subscribirse_a_cola(cola_code cola){
+	int socket_broker = connect_to(ip_broker,puerto_broker,wait_time);
+	void* stream = serializar_subscripcion(cola);
+	sendall(socket_broker, stream, sizeof(uint32_t)*3);
+	free(stream);
+	if(wait_ack(socket_broker)){
+		puts("recibio acknowlegment del mensaje");
+	}
+	//close(socket_broker);
+	return socket_broker;
 }
 
 void subscribirse_a_colas(){
-	char *ip,*puerto;
-	int wait_time, socket_broker, socket_cola_localized, socket_cola_caught, socket_cola_appeared;
+
+	int socket_broker, socket_cola_localized, socket_cola_caught, socket_cola_appeared;
 
 	//Obtiene los datos IP,PUERTO WAIT_TIME desde la config
 
-	ip = config_get_string_value(config,"IP_BROKER");
+	ip_broker = config_get_string_value(config,"IP_BROKER");
 	log_debug(logger,config_get_string_value(config,"IP_BROKER")); //pido y logueo ip
-	puerto = config_get_string_value(config,"PUERTO_BROKER");
+	puerto_broker = config_get_string_value(config,"PUERTO_BROKER");
 	log_debug(logger,config_get_string_value(config,"PUERTO_BROKER")); //pido y logueo puerto
 	wait_time = config_get_int_value(config,"TIEMPO_RECONEXION");
 
 	// Intenta conexion con el broker y envia la serializacion
-
-	socket_broker = connect_to(ip,puerto,wait_time);
+/*
+	socket_broker = connect_to(ip_broker,puerto_broker,wait_time);
 
 	void* stream = serializar_subscripcion(COLA_APPEARED_POKEMON);
 
@@ -65,20 +72,30 @@ void subscribirse_a_colas(){
 	//close(socket_broker);
 
 	sleep(3);
-	socket_broker = connect_to(ip,puerto,wait_time);
+	socket_broker = connect_to(ip_broker,puerto_broker,wait_time);
 	stream = serializar_subscripcion(COLA_LOCALIZED_POKEMON);
 	send(socket_broker, stream, sizeof(uint32_t)*3, 0);
 	free(stream);
 	//close(socket_broker);
 
 	sleep(3);
-	socket_broker = connect_to(ip,puerto,wait_time);
+	socket_broker = connect_to(ip_broker,puerto_broker, wait_time);
 	stream = serializar_subscripcion(COLA_CAUGHT_POKEMON);
 	send(socket_broker, stream, sizeof(uint32_t)*3, 0);
 	free(stream);
 	//close(socket_broker);
 
 	//se subscribe a COLA_GET_POKEMON y sale
+
+/**/
+	//int a=100;
+	subscribirse_a_cola(COLA_APPEARED_POKEMON);
+	//usleep(a);
+	subscribirse_a_cola(COLA_LOCALIZED_POKEMON);
+	//usleep(a);
+	subscribirse_a_cola(COLA_CAUGHT_POKEMON);
+
+
 }
 
 void inicializar_team(){
@@ -109,7 +126,7 @@ void inicializar_team(){
 int main(void) {
 
 	logger = log_create("team.log","log",1,LOG_LEVEL_DEBUG);
-	config = iniciar_config();
+	config = config_create("config");
 	inicializar_team();
 
 	return EXIT_SUCCESS;
