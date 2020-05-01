@@ -100,7 +100,9 @@ void subscribirse_a_colas(){
 
 void inicializar_team(){
 
-	t_list *lista_de_posiciones, *lista_de_pokemones, *lista_de_objetivos,*entrenadores;
+	puts ("lala");
+	t_list *entrenadores;
+	char **lista_de_objetivos, **lista_de_pokemones, **lista_de_posiciones;
 	int cantidad_entrenadores;
 	entrenador entrenador;
 
@@ -123,21 +125,21 @@ void inicializar_team(){
 		int *x, *y;
 		char **auxiliar = string_split(lista_de_posiciones[i],"|");
 
-		entrenador.posicionx = (int)auxiliar[0];
-		entrenador->posiciony = (int)auxiliar[1];
+		entrenador.posicion_x = (int)auxiliar[0];
+		entrenador.posicion_y = (int)auxiliar[1];
 
 		auxiliar = string_split(lista_de_pokemones[i],"|"); //ultima posicion tiene null
 
-		entrenador->pokemones = list_create();
+		entrenador.pokemones = list_create();
 		while(*auxiliar){
-		  t_list_add(entrenador.pokemones,(void *) *auxiliar);
+		  list_add(entrenador.pokemones,(void *) *auxiliar);
 	      auxiliar++; //sigue hasta encontrar null
 		}
 
 		auxiliar = string_split(lista_de_objetivos[i],"|"); //ultima posicion tiene null
-		entrenador->objetivos= list_create();
+		entrenador.objetivos= list_create();
 		while(*auxiliar){
-		  t_list_add(entrenador.objetivos,(void *) *auxiliar);
+		  list_add(entrenador.objetivos,(void *) *auxiliar);
 		  auxiliar++; //sigue hasta encontrar null
 		}
 	    //destruir listas
