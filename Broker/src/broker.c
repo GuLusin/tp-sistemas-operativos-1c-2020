@@ -150,7 +150,7 @@ void inicializar_broker(){
 	log_debug(logger,puerto); //pido y logueo puerto
 
 	socket_broker = listen_to(ip,puerto);
-	log_debug(logger,"Socket: %d, escuchando",socket_broker);	//Socket queda escuchado
+	log_debug(logger,"Socket: %d, escuchando",socket_broker);	//Socket queda escuchando
 
 	//.............................
 
@@ -167,17 +167,10 @@ void inicializar_broker(){
 	printf("cola appeared: %d\ncola caught: %d\ncola localized: %d\n", (int)list_get(sockets_cola_appeared,0),(int)list_get(sockets_cola_caught,0),(int)list_get(sockets_cola_localized,0));
 	close(socket_broker);
 
-
-
-
-
-
 }
 
 
 int main(void) {
-
-
 
 	inicializar_broker();
 

@@ -11,11 +11,20 @@
 #include <pthread.h>
 #include <commons/collections/list.h>}
 
+typedef enum {
+	NEW,
+	READY,
+	EXEC,
+	BLOCK,
+	EXIT,
+}estado_entrenador;
+
 typedef struct {
    int posicion_x;
    int posicion_y;
    t_list *pokemones;
    t_list *objetivos;
+   estado_entrenador estado;
 }t_entrenador;
 
 t_config* config;

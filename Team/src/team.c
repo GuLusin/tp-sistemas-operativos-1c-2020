@@ -9,35 +9,14 @@ Proceso GameBoy: Permitir el envío de varios mensajes al proceso Broker y el me
 al proceso Team.
 */
 
-/*
- * team.c: In function ‘iniciar_logger’:
-team.c:21:10: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
-  if((log = log_create("broker.log","log",1,LOG_LEVEL_DEBUG)==NULL))
-          ^
-team.c: In function ‘subscribirse_a_colas’:
-team.c:46:17: warning: implicit declaration of function ‘serializar_subscripcion’ [-Wimplicit-function-declaration]
-  void* stream = serializar_subscripcion(2);
-                 ^~~~~~~~~~~~~~~~~~~~~~~
-team.c:46:17: warning: initialization makes pointer from integer without a cast [-Wint-conversion]
-/tmp/ccdsswnv.o: In function `subscribirse_a_colas':
-team.c:(.text+0x705): undefined reference to `serializar_subscripcion'
-collect2: error: ld returned 1 exit status
- *
- */
-
-
-
 #include "team.h"
-
-//#include<readline/readline.h>
 
 //gcc team.c -lpthread -lcommons -o team
 //./team
 
-
-
 int subscribirse_a_cola(cola_code cola){
 	int socket_broker = connect_to(ip_broker,puerto_broker,wait_time);
+	//TODO agregar caso de error en la conexion
 	void* stream = serializar_subscripcion(cola);
 	sendall(socket_broker, stream, sizeof(uint32_t)*3);
 	free(stream);
@@ -59,41 +38,10 @@ void subscribirse_a_colas(){
 	puerto_broker = config_get_string_value(config,"PUERTO_BROKER");
 	log_debug(logger,config_get_string_value(config,"PUERTO_BROKER")); //pido y logueo puerto
 	wait_time = config_get_int_value(config,"TIEMPO_RECONEXION");
-
-	// Intenta conexion con el broker y envia la serializacion
-/*
-	socket_broker = connect_to(ip_broker,puerto_broker,wait_time);
-
-	void* stream = serializar_subscripcion(COLA_APPEARED_POKEMON);
-
-
-	send(socket_broker, stream, sizeof(uint32_t)*3, 0);
-	free(stream);
-	//close(socket_broker);
-
-	sleep(3);
-	socket_broker = connect_to(ip_broker,puerto_broker,wait_time);
-	stream = serializar_subscripcion(COLA_LOCALIZED_POKEMON);
-	send(socket_broker, stream, sizeof(uint32_t)*3, 0);
-	free(stream);
-	//close(socket_broker);
-
-	sleep(3);
-	socket_broker = connect_to(ip_broker,puerto_broker, wait_time);
-	stream = serializar_subscripcion(COLA_CAUGHT_POKEMON);
-	send(socket_broker, stream, sizeof(uint32_t)*3, 0);
-	free(stream);
-	//close(socket_broker);
-
-	//se subscribe a COLA_GET_POKEMON y sale
-
-/**/
-
+  //suscribirse a cola devuelve un int y no lo usamos
 	subscribirse_a_cola(COLA_APPEARED_POKEMON);
 	subscribirse_a_cola(COLA_LOCALIZED_POKEMON);
 	subscribirse_a_cola(COLA_CAUGHT_POKEMON);
-
-
 }
 
 t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos){
@@ -104,6 +52,7 @@ t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos)
 	entrenador->posicion_x = atoi(auxiliar[0]);
 	entrenador->posicion_y = atoi(auxiliar[1]);
 
+	entrenador->estado = NEW;//los entrenadores entran al sistema en estado new
 
 	auxiliar = string_split(pokemones,"|"); //ultima posicion tiene null
 
@@ -121,7 +70,6 @@ t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos)
 		list_add(entrenador->objetivos,*auxiliar);
 		auxiliar++;
 	}
-
 	return entrenador;
 }
 
@@ -138,11 +86,11 @@ t_list* obtener_entrenadores(){
 
 
 	while(*lista_de_posiciones){
-	entrenador = crear_entrenador(*lista_de_posiciones, *lista_de_pokemones, *lista_de_objetivos);
-	list_add(entrenadores, entrenador);
-	lista_de_objetivos++;
-	lista_de_pokemones++;
-	lista_de_posiciones++;
+		entrenador = crear_entrenador(*lista_de_posiciones, *lista_de_pokemones, *lista_de_objetivos);
+		list_add(entrenadores, entrenador);
+		lista_de_objetivos++;
+		lista_de_pokemones++;
+		lista_de_posiciones++;
 	}
 
 	return entrenadores;
@@ -150,13 +98,15 @@ t_list* obtener_entrenadores(){
 
 void inicializar_team(){
 
-
 	entrenadores = obtener_entrenadores();
 
 	subscribirse_a_colas();
 
 }
 
+void cerrar_programa(t_config* config, t_log* log){
+
+}
 
 int main(void) {
 
@@ -164,5 +114,6 @@ int main(void) {
 	config = config_create("config");
 	inicializar_team();
 
+	cerrar_programa(logger, config);
 	return EXIT_SUCCESS;
 }
