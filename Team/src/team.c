@@ -34,10 +34,6 @@ collect2: error: ld returned 1 exit status
 //gcc team.c -lpthread -lcommons -o team
 //./team
 
-int distancia(int posicion_entrenador_x, int posicion_entrenador_y, int posicion_pokemon_x, int posicion_pokemon_y) {
-	return abs(posicion_entrenador_x - posicion_pokemon_x) + abs(posicion_entrenador_y - posicion_pokemon_y);
-}
-
 int subscribirse_a_cola(cola_code cola){
 	int socket_broker = connect_to(ip_broker,puerto_broker,wait_time);
 	void* stream = serializar_subscripcion(cola);
@@ -52,8 +48,10 @@ int subscribirse_a_cola(cola_code cola){
 
 
 
-t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos){
+t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos,int i){
 	t_entrenador* entrenador = malloc(sizeof(t_entrenador));
+
+	entrenador->id = i;
 
 	char **auxiliar = string_split(posicion,"|");
 
@@ -91,13 +89,14 @@ t_list* obtener_entrenadores(){
 
 	lista_de_objetivos = config_get_array_value(config,"OBJETIVOS_ENTRENADORES");
 
-
+    int i =0;
 	while(*lista_de_posiciones){
-		entrenador = crear_entrenador(*lista_de_posiciones, *lista_de_pokemones, *lista_de_objetivos);
+		entrenador = crear_entrenador(*lista_de_posiciones, *lista_de_pokemones, *lista_de_objetivos,i);
 		list_add(new_entrenadores, entrenador);
 		lista_de_objetivos++;
 		lista_de_pokemones++;
 		lista_de_posiciones++;
+		i++;
 	}
 
 	return new_entrenadores;

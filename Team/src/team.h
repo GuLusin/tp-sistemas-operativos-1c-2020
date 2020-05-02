@@ -3,6 +3,7 @@
 
 #include "../../utils/conexiones.c"
 #include "../../utils/mensajes.c"
+//#include "../../utils/planificacion.c"
 #include <stdio.h>
 #include <stdlib.h>
 #include <commons/log.h>
@@ -13,6 +14,7 @@
 
 
 typedef struct {
+   int id;
    int posicion_x;
    int posicion_y;
    t_list *pokemones;
