@@ -34,8 +34,6 @@ collect2: error: ld returned 1 exit status
 //gcc team.c -lpthread -lcommons -o team
 //./team
 
-
-
 int subscribirse_a_cola(cola_code cola){
 	int socket_broker = connect_to(ip_broker,puerto_broker,wait_time);
 	void* stream = serializar_subscripcion(cola);
@@ -50,14 +48,15 @@ int subscribirse_a_cola(cola_code cola){
 
 
 
-t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos){
+t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos,int i){
 	t_entrenador* entrenador = malloc(sizeof(t_entrenador));
+
+	entrenador->id = i;
 
 	char **auxiliar = string_split(posicion,"|");
 
 	entrenador->posicion_x = atoi(auxiliar[0]);
 	entrenador->posicion_y = atoi(auxiliar[1]);
-
 
 	auxiliar = string_split(pokemones,"|"); //ultima posicion tiene null
 
@@ -80,7 +79,7 @@ t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos)
 }
 
 t_list* obtener_entrenadores(){
-	entrenadores = list_create();
+	new_entrenadores = list_create();
 	char **lista_de_objetivos, **lista_de_pokemones, **lista_de_posiciones;
 	t_entrenador* entrenador;
 
@@ -90,16 +89,17 @@ t_list* obtener_entrenadores(){
 
 	lista_de_objetivos = config_get_array_value(config,"OBJETIVOS_ENTRENADORES");
 
-
+    int i =0;
 	while(*lista_de_posiciones){
-		entrenador = crear_entrenador(*lista_de_posiciones, *lista_de_pokemones, *lista_de_objetivos);
-		list_add(entrenadores, entrenador);
+		entrenador = crear_entrenador(*lista_de_posiciones, *lista_de_pokemones, *lista_de_objetivos,i);
+		list_add(new_entrenadores, entrenador);
 		lista_de_objetivos++;
 		lista_de_pokemones++;
 		lista_de_posiciones++;
+		i++;
 	}
 
-	return entrenadores;
+	return new_entrenadores;
 }
 
 void inicializar_team(){
@@ -110,7 +110,7 @@ void inicializar_team(){
 	config = config_create("config");
 
 
-	entrenadores = obtener_entrenadores();
+	new_entrenadores = obtener_entrenadores();
 
 	//Obtiene los datos IP,PUERTO WAIT_TIME desde la config
 
