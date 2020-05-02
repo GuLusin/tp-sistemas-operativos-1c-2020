@@ -78,6 +78,7 @@ t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos,
 	return entrenador;
 }
 
+
 t_list* obtener_entrenadores(){
 	new_entrenadores = list_create();
 	char **lista_de_objetivos, **lista_de_pokemones, **lista_de_posiciones;
@@ -102,15 +103,85 @@ t_list* obtener_entrenadores(){
 	return new_entrenadores;
 }
 
+
+//funcion para debug, eliminar
+void mostrar_lista(t_list* lista){
+	for (int i=0;i<list_size(lista);i++)
+		printf("Elemento n%d: %s\n",i,list_get(lista,i));
+}
+
+t_list* obtener_pokemones_objetivo(t_list* lista_de_entrenadores){
+
+	t_list* pokemones_ya_obtenidos = list_create();
+	t_list* pokemones_objetivo = list_create();
+	int i,j;
+
+	t_entrenador* aux;
+
+	for (i=0;i<list_size(lista_de_entrenadores);i++){
+		aux=list_get(lista_de_entrenadores,i);
+		list_add_all(pokemones_ya_obtenidos,aux->pokemones);
+		list_add_all(pokemones_objetivo,aux->objetivos);
+	}
+
+	for (i=0;i<list_size(pokemones_objetivo);i++){
+		for(j=0;j<list_size(pokemones_ya_obtenidos);j++){
+			if(!strcmp(list_get(pokemones_objetivo,i),list_get(pokemones_ya_obtenidos,j))){
+				list_remove(pokemones_objetivo,i);
+				list_remove(pokemones_ya_obtenidos,j);
+//				printf("Se remueve un pokemon que ya tenia: %s\n",list_get(pokemones_objetivo,i));
+				break;
+			}
+		}
+	}
+
+	list_destroy(pokemones_ya_obtenidos);
+//	mostrar_lista(pokemones_objetivo);
+
+	return pokemones_objetivo;
+
+}
+
+
+void enviar_un_mensaje_get(int socket_a_enviar,char* un_pokemon){
+
+}
+
+
+void enviar_mensajes_get(int socket_a_enviar,t_list* todos_los_pokemones_que_faltan){
+	t_list* ya_enviado = list_create();
+	int i;
+
+	bool es_el_mismo(void* un_pokemon){
+		return !strcmp((char*)un_pokemon,(char*)list_get(todos_los_pokemones_que_faltan,i));
+	}
+
+	for (i=0;i<list_size(todos_los_pokemones_que_faltan);i++){
+		if(list_any_satisfy(ya_enviado,(void*)es_el_mismo))
+			continue; //si ya fue enviado que no haga nada
+		printf("Tengo que enviar: %s\n",list_get(todos_los_pokemones_que_faltan,i));
+		list_add(ya_enviado,list_get(todos_los_pokemones_que_faltan,i));
+		enviar_un_mensaje_get(socket_a_enviar,list_get(todos_los_pokemones_que_faltan,i));
+	}
+}
+
+
+
+
+
+
+
 void inicializar_team(){
 
 	int socket_broker, socket_cola_localized, socket_cola_caught, socket_cola_appeared;
+	t_list* pokemones_objetivo;
 
 	logger = log_create("team.log","log",1,LOG_LEVEL_DEBUG);
 	config = config_create("config");
 
 
 	new_entrenadores = obtener_entrenadores();
+	pokemones_objetivo = obtener_pokemones_objetivo(new_entrenadores);
 
 	//Obtiene los datos IP,PUERTO WAIT_TIME desde la config
 
@@ -127,6 +198,7 @@ void inicializar_team(){
 	socket_cola_caught = subscribirse_a_cola(COLA_CAUGHT_POKEMON);
 
 
+	enviar_mensajes_get(socket_broker,pokemones_objetivo);
 
 
 
