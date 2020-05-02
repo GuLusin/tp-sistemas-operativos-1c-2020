@@ -11,18 +11,24 @@
 #include <pthread.h>
 #include <commons/collections/list.h>
 
+
 typedef struct {
    int posicion_x;
    int posicion_y;
    t_list *pokemones;
    t_list *objetivos;
-
 }t_entrenador;
+
+int mapa[25][25];
 
 t_config* config;
 t_log* logger;
 
-t_list* entrenadores;
+t_list* new_entrenadores;
+t_list* ready_entrenadores;
+t_list* exec_entrenadores;
+t_list* block_entrenadores;
+t_list* exit_entrenadores;
 
 char *ip_broker,*puerto_broker;
 

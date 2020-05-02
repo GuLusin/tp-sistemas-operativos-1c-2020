@@ -683,3 +683,15 @@
 [DEBUG] 23:33:31:427 log/(9170:9170): 5002
 [DEBUG] 23:33:31:427 log/(9170:9170): Socket: 4, escuchando
 [DEBUG] 23:33:36:428 log/(9170:9170): Recibi al cliente
+[DEBUG] 00:34:23:2 log/(4986:4986): 127.0.0.1
+[DEBUG] 00:34:23:2 log/(4986:4986): 5002
+[DEBUG] 00:34:23:2 log/(4986:4986): Socket: 4, escuchando
+[DEBUG] 00:34:29:3 log/(4986:4986): Recibi al cliente
+[DEBUG] 00:52:42:23 log/(5754:5754): 127.0.0.1
+[DEBUG] 00:52:42:23 log/(5754:5754): 5002
+[DEBUG] 00:52:42:24 log/(5754:5754): Socket: 4, escuchando
+[DEBUG] 00:52:47:25 log/(5754:5754): Recibi al cliente
+[DEBUG] 01:10:01:111 log/(6401:6401): 127.0.0.1
+[DEBUG] 01:10:01:112 log/(6401:6401): 5002
+[DEBUG] 01:10:01:112 log/(6401:6401): Socket: 4, escuchando
+[DEBUG] 01:10:06:113 log/(6401:6401): Recibi al cliente
