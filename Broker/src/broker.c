@@ -149,13 +149,15 @@ void inicializar_broker(){
     puerto = config_get_string_value(config,"PUERTO_BROKER");
 	log_debug(logger,puerto); //pido y logueo puerto
 
-	socket_broker = listen_to(ip,puerto);
+	//revisar esto:
+	if((socket_broker = listen_to(ip,puerto)) == -1)
+		return;
+
 	log_debug(logger,"Socket: %d, escuchando",socket_broker);	//Socket queda escuchado
 
 	//.............................
 
-	puts("Esto se esta por descontrolar:");
-
+	puts("Espera de 5s antes de comenzar a recibir sockets:\n");
 	sleep(5);
 
 	pthread_create(&pthread_atender_cliente, NULL,(void*)recibir_cliente, &socket_broker);

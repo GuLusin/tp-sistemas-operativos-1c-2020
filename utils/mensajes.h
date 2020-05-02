@@ -27,6 +27,19 @@ typedef enum {
 	COLA_APPEARED_POKEMON,
 } cola_code;
 
+typedef struct {
+	int socket;
+	int cola;
+}t_subscripcion;
+
+typedef struct{
+	int id;
+	int id_correlativo;
+	int codigo_operacion;
+	union{
+		t_subscripcion subscripcion;
+	}contenido;
+}t_mensaje;
 
 typedef enum
 {
@@ -40,9 +53,21 @@ typedef enum
 	CATCH_POKEMON,
 } op_code;
 
+typedef struct{
+	uint32_t size;
+	void* stream;
+} t_buffer;
+
+typedef struct{
+	op_code codigo_operacion;
+	t_buffer* buffer;
+} t_paquete;
+
 
 void* serializar_subscripcion(cola_code cola);
 cola_code deserializar_subscripcion(void* stream);
+t_mensaje* deserializar_buffer(int codigo_operacion, t_buffer* buffer,int socket_cliente);
+t_mensaje* crear_mensaje(int argc, ...);
 
 
 #endif /* MENSAJES_H */

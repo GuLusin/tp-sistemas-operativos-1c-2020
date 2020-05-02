@@ -9,13 +9,14 @@
 #include <commons/string.h>
 #include <commons/config.h>
 #include <pthread.h>
-#include <commons/collections/list.h>}
+#include <commons/collections/list.h>
 
 typedef struct {
    int posicion_x;
    int posicion_y;
    t_list *pokemones;
    t_list *objetivos;
+
 }t_entrenador;
 
 t_config* config;

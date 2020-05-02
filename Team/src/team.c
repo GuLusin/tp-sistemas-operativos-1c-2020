@@ -48,53 +48,7 @@ int subscribirse_a_cola(cola_code cola){
 	return socket_broker;
 }
 
-void subscribirse_a_colas(){
 
-	int socket_broker, socket_cola_localized, socket_cola_caught, socket_cola_appeared;
-
-	//Obtiene los datos IP,PUERTO WAIT_TIME desde la config
-
-	ip_broker = config_get_string_value(config,"IP_BROKER");
-	log_debug(logger,config_get_string_value(config,"IP_BROKER")); //pido y logueo ip
-	puerto_broker = config_get_string_value(config,"PUERTO_BROKER");
-	log_debug(logger,config_get_string_value(config,"PUERTO_BROKER")); //pido y logueo puerto
-	wait_time = config_get_int_value(config,"TIEMPO_RECONEXION");
-
-	// Intenta conexion con el broker y envia la serializacion
-/*
-	socket_broker = connect_to(ip_broker,puerto_broker,wait_time);
-
-	void* stream = serializar_subscripcion(COLA_APPEARED_POKEMON);
-
-
-	send(socket_broker, stream, sizeof(uint32_t)*3, 0);
-	free(stream);
-	//close(socket_broker);
-
-	sleep(3);
-	socket_broker = connect_to(ip_broker,puerto_broker,wait_time);
-	stream = serializar_subscripcion(COLA_LOCALIZED_POKEMON);
-	send(socket_broker, stream, sizeof(uint32_t)*3, 0);
-	free(stream);
-	//close(socket_broker);
-
-	sleep(3);
-	socket_broker = connect_to(ip_broker,puerto_broker, wait_time);
-	stream = serializar_subscripcion(COLA_CAUGHT_POKEMON);
-	send(socket_broker, stream, sizeof(uint32_t)*3, 0);
-	free(stream);
-	//close(socket_broker);
-
-	//se subscribe a COLA_GET_POKEMON y sale
-
-/**/
-
-	subscribirse_a_cola(COLA_APPEARED_POKEMON);
-	subscribirse_a_cola(COLA_LOCALIZED_POKEMON);
-	subscribirse_a_cola(COLA_CAUGHT_POKEMON);
-
-
-}
 
 t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos){
 	t_entrenador* entrenador = malloc(sizeof(t_entrenador));
@@ -138,11 +92,11 @@ t_list* obtener_entrenadores(){
 
 
 	while(*lista_de_posiciones){
-	entrenador = crear_entrenador(*lista_de_posiciones, *lista_de_pokemones, *lista_de_objetivos);
-	list_add(entrenadores, entrenador);
-	lista_de_objetivos++;
-	lista_de_pokemones++;
-	lista_de_posiciones++;
+		entrenador = crear_entrenador(*lista_de_posiciones, *lista_de_pokemones, *lista_de_objetivos);
+		list_add(entrenadores, entrenador);
+		lista_de_objetivos++;
+		lista_de_pokemones++;
+		lista_de_posiciones++;
 	}
 
 	return entrenadores;
@@ -150,19 +104,42 @@ t_list* obtener_entrenadores(){
 
 void inicializar_team(){
 
+	int socket_broker, socket_cola_localized, socket_cola_caught, socket_cola_appeared;
+
+	logger = log_create("team.log","log",1,LOG_LEVEL_DEBUG);
+	config = config_create("config");
+
 
 	entrenadores = obtener_entrenadores();
 
-	subscribirse_a_colas();
+	//Obtiene los datos IP,PUERTO WAIT_TIME desde la config
+
+
+
+	ip_broker = config_get_string_value(config,"IP_BROKER");
+	log_debug(logger,config_get_string_value(config,"IP_BROKER")); //pido y logueo ip
+	puerto_broker = config_get_string_value(config,"PUERTO_BROKER");
+	log_debug(logger,config_get_string_value(config,"PUERTO_BROKER")); //pido y logueo puerto
+	wait_time = config_get_int_value(config,"TIEMPO_RECONEXION");
+
+	socket_cola_appeared = subscribirse_a_cola(COLA_APPEARED_POKEMON);
+	socket_cola_localized = subscribirse_a_cola(COLA_LOCALIZED_POKEMON);
+	socket_cola_caught = subscribirse_a_cola(COLA_CAUGHT_POKEMON);
+
+
+
+
+
+//	enviar_mensajes_get();
 
 }
 
 
 int main(void) {
 
-	logger = log_create("team.log","log",1,LOG_LEVEL_DEBUG);
-	config = config_create("config");
+
 	inicializar_team();
+
 
 	return EXIT_SUCCESS;
 }
