@@ -197,6 +197,11 @@ void inicializar_team(){
 	socket_cola_localized = subscribirse_a_cola(COLA_LOCALIZED_POKEMON);
 	socket_cola_caught = subscribirse_a_cola(COLA_CAUGHT_POKEMON);
 
+	//1 thread por socket intentando recibir mensajes aca?
+	//1 thread por socket intentando recibir mensajes aca?
+	//1 thread por socket intentando recibir mensajes aca?
+
+
 
 	enviar_mensajes_get(socket_broker,pokemones_objetivo);
 

@@ -34,10 +34,10 @@ typedef struct {
 
 typedef struct{
 	int id;
-	int id_correlativo;
+//	int id_correlativo;
 	int codigo_operacion;
 	union{
-		t_subscripcion subscripcion;
+		t_subscripcion subscripcion; //para subscripcion
 	}contenido;
 }t_mensaje;
 

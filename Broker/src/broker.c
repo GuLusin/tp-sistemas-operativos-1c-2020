@@ -88,6 +88,8 @@ void recibir_mensaje(int *socket_cliente){
 		perror("Falla recv() op_code");
 	}
 
+	//Aca se implementaria deserializar_buffer para alternativa cod/buffer
+
 	int size;
 
 	if(recv(*socket_cliente, &(size), sizeof(uint32_t), MSG_WAITALL) == -1){
@@ -105,6 +107,7 @@ void recibir_mensaje(int *socket_cliente){
     t_mensaje* mensaje = deserializar_buffer(codigo_operacion,buffer,*socket_cliente);
     if(manejar_mensaje(mensaje))
     	send_ack(*socket_cliente);
+    //... y si no las hay, hacer free
 
 
 }
