@@ -172,11 +172,6 @@ void inicializar_broker(){
 	printf("cola appeared: %d\ncola caught: %d\ncola localized: %d\n", (int)list_get(sockets_cola_appeared,0),(int)list_get(sockets_cola_caught,0),(int)list_get(sockets_cola_localized,0));
 	close(socket_broker);
 
-
-
-
-
-
 }
 
 

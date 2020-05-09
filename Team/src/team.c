@@ -25,14 +25,51 @@ collect2: error: ld returned 1 exit status
  *
  */
 
-
-
 #include "team.h"
 
-//#include<readline/readline.h>
+//---------------------------------------PLANIFICACION---------------------------------------------------------------------
 
-//gcc team.c -lpthread -lcommons -o team
-//./team
+int distancia_menor(int posicion_pokemon_x,int posicion_pokemon_y){
+	int distancia(t_entrenador* entrenador){
+		return (abs(entrenador->posicion_x - posicion_pokemon_x) + abs(entrenador->posicion_y - posicion_pokemon_y));}
+
+	bool es_mayor(int numero1, int numero2){
+		return (numero2) >= (numero1);}
+
+	t_list* distancia_de_entrenadores =  list_map(new_entrenadores, distancia);
+    list_sort(distancia_de_entrenadores, es_mayor);
+	return list_get(distancia_de_entrenadores, 0);
+}
+
+t_entrenador *entrenador_mas_cerca(int posicion_pokemon_x,int posicion_pokemon_y){
+	int distancia(t_entrenador* entrenador){
+		return (abs(entrenador->posicion_x - posicion_pokemon_x) + abs(entrenador->posicion_y - posicion_pokemon_y));}
+
+	int dist_menor = distancia_menor(posicion_pokemon_x,posicion_pokemon_y);
+
+	bool es_igual_distancia(t_entrenador* entrenador){
+		int distancia1 = distancia(entrenador);
+		return (dist_menor == distancia1);}
+
+	t_list* entrenadores_mas_cerca = list_filter(new_entrenadores, es_igual_distancia);
+	return list_get(entrenadores_mas_cerca, 0);	//saco al primero por defecto si hay 2 a la misma distancia
+}
+
+void entrenador_a_ready(int posicion_pokemon_x,int posicion_pokemon_y){
+	t_entrenador *entrenador_elegido;
+    int index;
+    ready_entrenadores = list_create();// OJO
+	entrenador_elegido = entrenador_mas_cerca(posicion_pokemon_x, posicion_pokemon_y);
+	index = entrenador_elegido->id;
+    list_add(ready_entrenadores, entrenador_elegido);//PRIMERO: 7, SEGUNDO: 8, TERCERO: 9, CUARTO:1, QUINTO: 2
+	list_remove(new_entrenadores,index);
+}
+
+//FIFO => 7,8,9,1,2 => 8,9,1,2 => 9,1,2 => 1,2 => 2 => :)
+//SJF (Sin desalojo) => 7,8,9,1,2 => 7,8,9,2 => 7,8,9 => 8,9 => 9 => :)
+//RR => 7,8,9,1,2 => 8,9,1,2,5 => 9,1,2,5,6 => 1,2,5,6,7 => 2,5,6,7 => 5,6,7 => 6,7,3 => 7,3,5 => 3,5,5 => 5,5,1 etc...
+
+// FIN planificacion ..........................................
 
 int subscribirse_a_cola(cola_code cola){
 	int socket_broker = connect_to(ip_broker,puerto_broker,wait_time);
@@ -193,6 +230,7 @@ void inicializar_team(){
 	log_debug(logger,config_get_string_value(config,"PUERTO_BROKER")); //pido y logueo puerto
 	wait_time = config_get_int_value(config,"TIEMPO_RECONEXION");
 
+	//estas subscripciones se harian en los threads de abajo
 	socket_cola_appeared = subscribirse_a_cola(COLA_APPEARED_POKEMON);
 	socket_cola_localized = subscribirse_a_cola(COLA_LOCALIZED_POKEMON);
 	socket_cola_caught = subscribirse_a_cola(COLA_CAUGHT_POKEMON);

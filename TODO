@@ -13,13 +13,16 @@ PROCESO TEAM:
  Temas a charlar:
  * Bibliotecas compartidas, convienen? como hacerlas, a que partes aplicar (mensajes, conexiones, etc)
  * Un proyecto por modulo? O todo junto?
+ 
  * Que mensajes usan acknowledgment: Subscripcion? Para que? 
  * Subscripciones se guardan en una lista de SOLO sockets?
+ 
  * serializacion: cod/size/buffer vs cod/buffer evaluando si existe size, segun el cod leido
  * La opcion cod/buffer seguiria haciendo recv dentro de funcion deserealizar_buffer(cod,socket)
- * accept tiene espera activa? alternativa?
+ 
+ + accept y recv tienen espera activa? alternativa?
  * Cerrar socket_broker es necesario cuando finaliza broker?
- * Broker tiene un solo socket de escucha que se encarga de TODO?
+ + Broker tiene un solo socket de escucha que se encarga de TODO?
  * Compartesn algo los distintos teams? //..............
  * logs en modo debug podemos anotar lo que nos pinte?
- * Los teams guardan un socket por subscripcion (3 sockets) y se queda haciendo recv?
+ + Los teams guardan un socket por subscripcion (3 sockets) y se queda haciendo recv?
