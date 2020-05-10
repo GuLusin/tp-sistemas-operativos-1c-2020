@@ -53,6 +53,50 @@ t_mensaje* crear_mensaje(int argc, ...){
 }
 
 
+/* enviar_mensaje
+ * socket_a_enviar = socket para enviar el mensaje
+ * mensaje = mensaje normal, sin serializacion ni empaquetado
+ */
+
+void enviar_mensaje(int socket_a_enviar, char* mensaje){
+	t_buffer* buffer = malloc(sizeof(t_buffer));
+
+	buffer->size = strlen(mensaje) + 1;
+	void* stream = malloc(buffer->size);
+	memcpy(stream, mensaje, buffer->size);
+	buffer->stream = stream;
+	t_paquete* paquete = malloc(sizeof(t_paquete)); //ARMADO DEL PAQUETE
+
+	paquete->codigo_operacion = STRING;
+	paquete->buffer = buffer;
+
+	int tam_paquete = paquete->buffer->size + 2*sizeof(uint32_t);
+	void* data_a_enviar = serializar_paquete(paquete,tam_paquete);
+
+
+	send(socket_a_enviar, data_a_enviar, tam_paquete, 0);
+}
+
+/* serializar_paquete
+ * paquete = paquete armado sin serializar en un flujo continuo
+ * tam_paquete = tamaño del mismo y del futuro flujo
+ */
+
+
+void* serializar_paquete(t_paquete* paquete, int tam_paquete){
+	void* stream = malloc(tam_paquete);
+	int offset = 0;
+
+	memcpy(stream + offset, &(paquete->codigo_operacion), sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(stream + offset, &(paquete->buffer->size), sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(stream + offset, (paquete->buffer->stream), paquete->buffer->size);
+
+	return stream;
+}
+
+
 
 
 /* deserializar_buffer

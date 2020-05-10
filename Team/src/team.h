@@ -1,8 +1,8 @@
 #ifndef TEAM_H
 #define TEAM_H
 
-#include "../../utils/conexiones.c"
-#include "../../utils/mensajes.c"
+#include <utils/conexiones.h>
+#include <utils/mensajes.h>
 //#include "../../utils/planificacion.c"
 #include <stdio.h>
 #include <stdlib.h>

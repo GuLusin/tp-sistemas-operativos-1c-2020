@@ -11,7 +11,6 @@
 #include "mensajes.h"
 
 #include <stdarg.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -39,8 +38,8 @@ bool wait_ack(int socket_cliente);
 int sendall(int s, void *buf, int len);
 
 void esperar_cliente(int socket_servidor,void* funcion_recibir);
-void* serializar_paquete(t_paquete* paquete, int tam_paquete);
-void enviar_mensaje(int socket_a_enviar, char* mensaje);
+
+
 int connect_to(char* ip, char* puerto,int wait_time);
 
 

@@ -239,6 +239,27 @@ void inicializar_team(){
 	//1 thread por socket intentando recibir mensajes aca?
 	//1 thread por socket intentando recibir mensajes aca?
 
+	/*
+	entrenador1 ={pikachu} 1 2
+	entrenador2 ={squirtle} 5 7
+
+	sem_entrenadores[2]; //es dinamico, se puede?
+
+	t_list objetivos; // cada elemento es una lista de objetivos de cada entrenador
+	t_list adquiridos; // cada elemento es una lista de pokemons adquiridos por cada entrenador
+	t_list objetivos_temporales // cada elemento es un unico pokemon
+	pthread(entrenador1);
+	pthread(entrenador2);
+
+	//te olvidas de los entrenadores
+
+
+
+
+	*/
+
+
+
 
 
 	enviar_mensajes_get(socket_broker,pokemones_objetivo);
@@ -250,10 +271,100 @@ void inicializar_team(){
 }
 
 
+/*
+
+atrapar_pokemon(){
+	while(!esta_en_posicion_pokemon()){
+		acercar(pokemon);
+	}
+	catch_pokemon(pokemon);
+
+
+}
+
+entrenador(){
+		pokemon a atrapar = lista_pokemones temporales(id) = busca a su pokemon objetivo temporal que le asigna el planificador
+							// t_list global, por que?? porque el planificador le tiene que decir a cual atrapar, no se lo
+						   // puede pasar por parametro. o si?
+
+		int id;
+
+		while(!cumple_objetivo_entrenador()){
+			wait(sem_entrendaores(id);
+			atrapar_pokemon(pokemon a atrapar); // esto es pseudo codigo pokemon a atrapar se llama cada vez q entra al while
+
+
+		}
+
+	}
+
+
+planificacionFIFO(){
+
+
+
+}
+
+planificar(){
+
+	depende del tipo de implementacion //RR, SJF CON O SIN, FIFO
+	//PODRIAMOS HACER UN SWITCH PARA CADA TIPO => planificacion RR, planificiacion FIFO, ... SJF, con o sin desalojo
+	pokemon = agarra el primer pokemon de los recibidos
+	entrenador = elije entrenador optimo, el mas cercano.
+
+	//FIFO
+	// lista_planificacion = lista de ids, indican semaforos
+	agrega al entrenador a la lista de planificacion
+
+	int lista_corto_plazo[]; // {1} //new ponele
+
+	vacia de a uno => activa al 1
+
+	{1(10),2(3)} => activa al 1(10) y cuando termina => activa al 2(3)
+
+	//SJF
+	//sin desalojo
+
+	{1(10)}=> ejecuta al 1(10) => llega el 2(7) => {1(9), 2(7)} => {1(8), 2(7), 3(3)} reordena => {1(7),3(3), 2(7)}
+
+	//SJF
+	//con desalojo
+
+	{1(10)}=> ejecuta al 1(10) => llega el 2(7) => {1(9), 2(7)} desaloja y ejecuta => {2(6), 1(9)} y ejecuta => {2(5), 1(9)} y llega 3(3)
+
+	=> reordena y desaloja y ejecuta => {3(2),2(6), 1(9)}
+
+	//RR
+
+	{1(10)} => ejecuta Q cuantos al 1(10) => llega el 2(7) => {1(9-Q), 2(7)} desaloja y ejecuta => {2(7-Q), 1(10-Q)} y ejecuta
+
+			=> {1(10-2Q), 2(7-Q)} y llega 3(3)=> reordena y desaloja y ejecuta => {2(7-2Q),3(3), 1(10-2Q)}
+
+
+
+
+}
+
+planificador(){
+
+	while(!cumplio_objetivo()){
+		hacer_get_pokemons = llama a uno de cada especie de pokemones faltantes
+		while(pokemones_recibidos_is_empty()); //cambiar por un semaforo mejor, ver mejora de la implementacion
+		while(haya_pokemones_recibidos){
+			planificar();
+
+
+
+		}
+
+	}
+}
+*/
 int main(void) {
 
 
 	inicializar_team();
+	//planificador()
 
 
 	return EXIT_SUCCESS;

@@ -36,7 +36,7 @@ void manejar_mensaje(int argc, char** args){
 	case SUSCRIPTOR:
 		if(argc!=4){
 			perror("Cantidad de argumentos distinta de 3 para el tipo SUSCRIPTOR");
-			return -1;
+
 		}
 		else{
 			int cola = interpretar_cola_mensaje(args[2]);
@@ -71,6 +71,7 @@ void inicializar_gameboy(){
 
 int main(int argc, char**args) {
 	if(argc ==1){
+		puts("Nada");
 		return EXIT_SUCCESS;
 	}
 

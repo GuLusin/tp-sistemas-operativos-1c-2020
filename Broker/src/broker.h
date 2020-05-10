@@ -1,8 +1,8 @@
 #ifndef BROKER_H
 #define BROKER_H
 
-#include "../../utils/conexiones.c"
-#include "../../utils/mensajes.c"
+#include <utils/conexiones.h>
+#include <utils/mensajes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>

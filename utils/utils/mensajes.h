@@ -64,6 +64,8 @@ typedef struct{
 } t_paquete;
 
 
+void enviar_mensaje(int socket_a_enviar, char* mensaje);
+void* serializar_paquete(t_paquete* paquete, int tam_paquete);
 void* serializar_subscripcion(cola_code cola);
 cola_code deserializar_subscripcion(void* stream);
 t_mensaje* deserializar_buffer(int codigo_operacion, t_buffer* buffer,int socket_cliente);
