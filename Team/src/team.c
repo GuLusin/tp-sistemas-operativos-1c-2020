@@ -214,7 +214,7 @@ void inicializar_team(){
 	t_list* pokemones_objetivo;
 
 	logger = log_create("team.log","log",1,LOG_LEVEL_DEBUG);
-	config = config_create("config");
+	config = config_create("../config");
 
 
 	new_entrenadores = obtener_entrenadores();
@@ -262,7 +262,7 @@ void inicializar_team(){
 
 
 
-	enviar_mensajes_get(socket_broker,pokemones_objetivo);
+	//enviar_mensajes_get(socket_broker,pokemones_objetivo);
 
 
 
@@ -359,11 +359,14 @@ planificador(){
 
 	}
 }
+
 */
+
 int main(void) {
 
 
 	inicializar_team();
+
 	//planificador()
 
 

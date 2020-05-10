@@ -56,7 +56,7 @@ void manejar_mensaje(int argc, char** args){
 void inicializar_gameboy(){
 
 	logger = log_create("gameboy.log", "log", true, LOG_LEVEL_DEBUG);
-	config = config_create("config");
+	config = config_create("../config");
 
 	ip_broker = config_get_string_value(config,"IP_BROKER");
 	log_debug(logger,ip_broker); //pido y logueo ip
