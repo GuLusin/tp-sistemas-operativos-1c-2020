@@ -65,24 +65,20 @@ void entrenador_a_ready(int posicion_pokemon_x,int posicion_pokemon_y){
 	list_remove(new_entrenadores,index);
 }
 
+
 //FIFO => 7,8,9,1,2 => 8,9,1,2 => 9,1,2 => 1,2 => 2 => :)
 //SJF (Sin desalojo) => 7,8,9,1,2 => 7,8,9,2 => 7,8,9 => 8,9 => 9 => :)
 //RR => 7,8,9,1,2 => 8,9,1,2,5 => 9,1,2,5,6 => 1,2,5,6,7 => 2,5,6,7 => 5,6,7 => 6,7,3 => 7,3,5 => 3,5,5 => 5,5,1 etc...
 
 // FIN planificacion ..........................................
 
-int subscribirse_a_cola(cola_code cola, char* ip){
-	printf("ip entrada:%s\n",ip);
-	char* ip_broker = ip;
-	printf("ip broker:%s\n",ip_broker);
-	int socket_broker = connect_to(ip_broker, puerto_broker, wait_time);
-	//puts("conecta");
-
+int subscribirse_a_cola(cola_code cola){
+	int socket_aux = connect_to(ip_broker,puerto_broker,wait_time);
 	t_mensaje* mensaje = crear_mensaje(2, SUBSCRIPCION, cola);
-	//puts("crea mensaje");
-
-	enviar_mensaje(socket_broker, mensaje);
-	return socket_broker;
+	mensaje->id=ID_SUSCRIPCION;
+	//printf("op_code:%d\nid:%d\ncola contenido:%d\n", mensaje->codigo_operacion,mensaje->id,mensaje->contenido.subscripcion);
+	enviar_mensaje(socket_aux, mensaje);
+	uint32_t id = id_confirmation(socket_aux); // esta buena para implementar en la confirmacion del id.
 }
 
 
@@ -232,17 +228,19 @@ void inicializar_team(){
 	log_debug(logger,config_get_string_value(config,"PUERTO_BROKER")); //pido y logueo puerto
 	wait_time = config_get_int_value(config,"TIEMPO_RECONEXION");
 
-	puts("inicia bien");
 	//estas subscripciones se harian en los threads de abajo
-	socket_cola_appeared = subscribirse_a_cola(COLA_APPEARED_POKEMON,ip_broker);
-	puts("subscribe a cola");
-	//sleep(2);
-	socket_cola_localized = subscribirse_a_cola(COLA_LOCALIZED_POKEMON, ip_broker);
-	//puts("cola");
-	//sleep(2);
-	//socket_cola_caught = subscribirse_a_cola(COLA_CAUGHT_POKEMON);
-	//sleep(2);
-	puts("termina");
+
+
+	socket_cola_localized = subscribirse_a_cola(COLA_LOCALIZED_POKEMON);
+	socket_cola_appeared = subscribirse_a_cola(COLA_APPEARED_POKEMON);
+	socket_cola_caught = subscribirse_a_cola(COLA_CAUGHT_POKEMON);
+
+
+
+
+
+
+
 	//1 thread por socket intentando recibir mensajes aca?
 	//1 thread por socket intentando recibir mensajes aca?
 	//1 thread por socket intentando recibir mensajes aca?

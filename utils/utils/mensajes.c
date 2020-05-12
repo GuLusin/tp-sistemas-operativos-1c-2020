@@ -39,11 +39,11 @@ t_mensaje* crear_mensaje(int argc, ...){
 
 	t_mensaje* mensaje = malloc(sizeof(t_mensaje));
 
-	mensaje->codigo_operacion = va_arg(args, int);
+	mensaje->codigo_operacion = va_arg(args, uint32_t);
 
 	switch(mensaje->codigo_operacion){
 		case SUBSCRIPCION:// se le pasa el tipo y la cola a subscribirse
-			mensaje->contenido.subscripcion = va_arg(args, int);
+			mensaje->contenido.subscripcion = va_arg(args, uint32_t);
 			va_end(args);
 			return mensaje;
 			break;
@@ -69,7 +69,6 @@ int tamanio_contenido_mensaje(t_mensaje* mensaje){
 
 
 	}
-
 	return tamanio;
 }
 
@@ -101,13 +100,13 @@ void* serializar_get_pokemon(t_get_pokemon* get_pokemon){
 void* serializar_mensaje(t_mensaje* mensaje, int *ret_size){
 
 	int size_contenido_mensaje = tamanio_contenido_mensaje(mensaje);
-	uint32_t size = size_contenido_mensaje + sizeof(uint32_t)*3;
+	uint32_t size = size_contenido_mensaje + sizeof(uint32_t)*3; //op code, id, size_contenido_mensaje
 	void* magic = malloc(size);
 	int offset = 0;
 
-
 	memcpy(magic + offset, &(mensaje->codigo_operacion), sizeof(uint32_t));
 	offset += sizeof(uint32_t);
+
 	memcpy(magic + offset, &(mensaje->id), sizeof(uint32_t));
 	offset += sizeof(uint32_t);
 	memcpy(magic + offset, &(size_contenido_mensaje), sizeof(uint32_t));
@@ -144,6 +143,7 @@ void* serializar_mensaje(t_mensaje* mensaje, int *ret_size){
 void enviar_mensaje(int socket_a_enviar, t_mensaje* mensaje){
 	int size;
 	void* stream = serializar_mensaje(mensaje,&size);
+	printf("size:%d\n", size);
 	sendall(socket_a_enviar,stream, size);
 }
 

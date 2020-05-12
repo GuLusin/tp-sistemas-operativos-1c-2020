@@ -28,10 +28,34 @@ typedef enum {
 } cola_code;
 
 
+typedef struct {
+   char* nombre; // HACE FALTA UN SIZE PARA EL PUNTERO?
+   int pos_x;
+   int pos_y;
+}t_pokemon;
+
 typedef struct{
-	uint32_t size_pokemon;
+	t_pokemon* pokemon;
+}t_appeared_pokemon;
+
+typedef struct{
+	t_pokemon* pokemon;
+	uint32_t cantidad;
+}t_new_pokemon;
+
+typedef struct{
+	t_pokemon* pokemon;
+}t_catch_pokemon;
+
+typedef struct{
+	uint32_t id_correlativo;
+	bool caught_confirmation;
+}t_caught_pokemon;
+
+typedef struct{
+	uint32_t size_pokemon; //HACE FALTA?
 	char* pokemon;
-}t_get_pokemon;
+}t_get_pokemon; //ESTE MENSAJE ESPERA COMO CONFIRMACION UN ID QUE SERA EL CORRELATIVO PARA CONFIRMACION DE LA RECEPCION DE APPEARED O LOCALIZED
 
 typedef struct{
 	uint32_t id;
@@ -39,6 +63,11 @@ typedef struct{
 	union{
 		uint32_t subscripcion;
 		t_get_pokemon* get_pokemon;
+		t_appeared_pokemon* appeared_pokemon;
+		t_new_pokemon* new_pokemon;
+		t_catch_pokemon* catch_pokemon;
+		t_caught_pokemon* caught_pokemon;
+
 	}contenido;
 }t_mensaje;
 
@@ -54,16 +83,6 @@ typedef enum
 	GET_POKEMON,
 	CATCH_POKEMON,
 } op_code;
-
-typedef struct{
-	uint32_t size;
-	void* stream;
-} t_buffer;
-
-typedef struct{
-	op_code codigo_operacion;
-	t_buffer* buffer;
-} t_paquete;
 
 
 void enviar_mensaje(int socket_a_enviar, t_mensaje* mensaje);

@@ -13,6 +13,36 @@
 #include "conexiones.h"
 #include <errno.h>
 
+/* check_ack
+ * socket_cliente= socket del cual espera la recepcion de valor a confirmar
+ * value = valor con el que confirma la recepcion
+ * devuelve true en caso de que la recepcion haya sido buena
+ */
+
+bool check_ack(int socket_cliente, uint32_t value){
+	value=wait_ack(socket_cliente);
+	return value==ACK;
+}
+
+
+/* id_confirmation: implementa el protocolo de confirmacion de id de mensaje.
+ * socket_cliente = socket del cual recibir el id del mensaje. en caso que lo necesite
+ *
+ * !!!DEBE FUNCIONAR EN PARALELO CON LA IMPLEMENTACION DE id_validation EN EL BROKER!!!!
+ */
+
+uint32_t id_confirmation(int socket_aux) {
+	uint32_t id;
+	if (check_ack(socket_aux, ACK)) {
+		//TEAM espera el ACK
+		send_ack(socket_aux, ACK); //TEAM envia un ACK confirmando el previo
+		id = wait_ack(socket_aux);
+		send_ack(socket_aux, id - 1);
+	}
+	return id;
+}
+
+
 // ACKNOWLEDGEMENT= RECONOCIMIENTO DEL MENSAJE DE PARTE DEL BROKER
 
 /* send_ack: manda el ACK para confirmacion del mensaje enviado
@@ -21,10 +51,8 @@
  * CAPAZ DEBERIA CHEQUEAR CON EL ID DEL MENSAJE!!
  */
 
-
-void send_ack(int socket_cliente){
-	int ack = ACK;
-	while((send(socket_cliente,&ack,sizeof(int), 0))==-1);
+bool send_ack(int socket_cliente, uint32_t ack){
+	return ((send(socket_cliente,&ack,sizeof(uint32_t), 0))>0);
 }
 
 /* wait_ack: espera el ACK para confirmacion del mensaje recibido
@@ -33,10 +61,11 @@ void send_ack(int socket_cliente){
  * CAPAZ DEBERIA CHEQUEAR CON EL ID DEL MENSAJE!!
  */
 
-bool wait_ack(int socket_cliente){
-	int ack;
-	recv(socket_cliente, &(ack),sizeof(int), MSG_WAITALL);
-	return ack==ACK;
+
+uint32_t wait_ack(int socket_cliente){
+	uint32_t ack;
+	recv(socket_cliente, &(ack),sizeof(uint32_t), MSG_WAITALL);
+	return ack;
 }
 
 
@@ -71,7 +100,9 @@ int sendall(int s, void *buf, int len)
  * wait_time = tiempo de espera entre reintentos de conexion (en segundos), en caso de fallo
  */
 
-int connect_to(char* ip, char* puerto,int wait_time){
+int connect_to(char* ip_aux, char* puerto_aux,int wait_time){
+	char* ip = ip_aux;
+	char* puerto = puerto_aux;
 	struct addrinfo hints;
 	struct addrinfo* server_info;
 
@@ -82,11 +113,10 @@ int connect_to(char* ip, char* puerto,int wait_time){
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags=AI_PASSIVE;
 
-	getaddrinfo("127.0.0.1", puerto, &hints, &server_info);
-	printf("ip:%s\npuerto:%s\n", ip, puerto);
+	getaddrinfo(ip, puerto, &hints, &server_info);
+
 	if((socket_cliente=socket(server_info->ai_family,server_info->ai_socktype,server_info->ai_protocol)) == -1){
 		perror("No se pudo crear socket");
-		printf("socket broker:%d", errno);
 		return -1;
 	}
 

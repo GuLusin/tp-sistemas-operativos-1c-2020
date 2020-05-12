@@ -15,6 +15,13 @@ al proceso Team.
 
 #include "broker.h"
 
+bool id_validation(int socket_cliente) {
+	send_ack(socket_cliente, ACK); //Broker envia confirmacion del mensaje recibido
+	if(check_ack(socket_cliente, ACK))// Broker espera al team para que confirme la confirmacion
+		send_ack(socket_cliente, id_mensajes_globales++); // Broker le manda el id del mensaje
+		return check_ack(socket_cliente, id_mensajes_globales - 1); //Broker espera la confirmacion del id y sale si es correcta.}
+
+}
 //#include<readline/readline.h>
 
 //gcc broker.c -lpthread -lcommons -o broker
@@ -55,6 +62,9 @@ void manejar_subscripcion(cola_code cola,int socket_cliente){
 			break;
 	}
 	puts("Mensaje recibido con exito!");
+		id_validation(socket_cliente);
+			return;
+
 }
 
 bool manejar_mensaje(t_mensaje* mensaje){
@@ -84,29 +94,35 @@ bool manejar_mensaje(t_mensaje* mensaje){
 
 void recibir_mensaje(int *socket_cliente){
 	//printf("a recibir mensaje le llega el socket %d\n",*socket_cliente);
-	int codigo_operacion;
+	uint32_t codigo_operacion;
 
-	if(recv(*socket_cliente, &(codigo_operacion),sizeof(uint32_t), MSG_WAITALL)==-1){
+	if(recv(*socket_cliente, &(codigo_operacion),sizeof(uint32_t), 0)==-1){
 		perror("Falla recv() op_code");
 	}
 
-	int id;
+	printf("op_code: %d\n", codigo_operacion);
 
-	if(recv(*socket_cliente, &(id), sizeof(uint32_t), MSG_WAITALL) == -1){
+	uint32_t id;
+
+	if(recv(*socket_cliente, &(id), sizeof(uint32_t), 0) == -1){
 		perror("Falla recv() id");
 	}
 
-	//Aca se implementaria deserializar_buffer para alternativa cod/buffer
+	printf("id:%d\n", id);
 
-	int size_contenido_mensaje;
+	uint32_t size_contenido_mensaje;
 
-	if(recv(*socket_cliente, &(size_contenido_mensaje), sizeof(uint32_t), MSG_WAITALL) == -1){
+	if(recv(*socket_cliente, &(size_contenido_mensaje), sizeof(uint32_t), 0) == -1){
 		perror("Falla recv() size_contenido_mensaje");
 	}
 
+
+	printf("size contenido:%d\n", size_contenido_mensaje);
+
 	if(codigo_operacion==SUBSCRIPCION){
 		int cola;
-		recv(*socket_cliente, &(cola),size_contenido_mensaje, MSG_WAITALL);
+		recv(*socket_cliente, &(cola),size_contenido_mensaje, 0);
+		printf("cola:%d\n", cola);
 		manejar_subscripcion(cola, *socket_cliente);
 		//send_ack(socket_cliente);
 		return;
@@ -114,13 +130,13 @@ void recibir_mensaje(int *socket_cliente){
 
 	void* stream = malloc(size_contenido_mensaje);
 
-	if(recv(*socket_cliente, stream, size_contenido_mensaje, MSG_WAITALL) == -1){
+	if(recv(*socket_cliente, stream, size_contenido_mensaje, 0) == -1){
 		perror("Falla recv() contenido");
 	}
 
 	t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
 	mensaje->id=id_mensajes_globales++;
-	send(*socket_cliente, mensaje->id, sizeof(uint32_t),0);
+	//send(*socket_cliente, mensaje->id, sizeof(uint32_t),0);
 	manejar_mensaje(mensaje);
 
 
@@ -182,7 +198,7 @@ void inicializar_broker(){
 	//.............................
 
 	puts("Espera de 5s antes de comenzar a recibir sockets:\n");
-	sleep(5);
+	sleep(2);
 
 	pthread_create(&pthread_atender_cliente, NULL,(void*)recibir_cliente, &socket_broker);
 	pthread_detach(pthread_atender_cliente);
