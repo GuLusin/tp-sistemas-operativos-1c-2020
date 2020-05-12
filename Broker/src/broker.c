@@ -20,9 +20,7 @@ al proceso Team.
 //gcc broker.c -lpthread -lcommons -o broker
 //./broker
 
-void manejar_subscripcion(t_mensaje* mensaje){
-	cola_code cola = mensaje->contenido.subscripcion.cola;
-	int socket_cliente  = mensaje->contenido.subscripcion.socket;
+void manejar_subscripcion(cola_code cola,int socket_cliente){
 
 	switch(cola){
 		case COLA_APPEARED_POKEMON:
@@ -61,9 +59,7 @@ void manejar_subscripcion(t_mensaje* mensaje){
 
 bool manejar_mensaje(t_mensaje* mensaje){
     switch(mensaje->codigo_operacion){
-    	case SUBSCRIPCION:
-    		manejar_subscripcion(mensaje);
-    		return true;
+
 
 
 
@@ -89,6 +85,12 @@ void recibir_mensaje(int *socket_cliente){
 	}
 
 	//Aca se implementaria deserializar_buffer para alternativa cod/buffer
+	if(codigo_operacion==SUBSCRIPCION){
+		int cola;
+		recv(*socket_cliente, &(cola),sizeof(uint32_t), MSG_WAITALL);
+		manejar_subscripcion(cola, socket_cliente);
+	}
+
 
 	int size;
 

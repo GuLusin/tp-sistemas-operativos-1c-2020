@@ -66,12 +66,6 @@ int sendall(int s, void *buf, int len)
 }
 
 
-
-
-
-
-
-
 /* connect_to
  * ip = ip a conectarse
  * puerto = puerto del socket a conectarse
@@ -105,14 +99,6 @@ int connect_to(char* ip, char* puerto,int wait_time){
 	freeaddrinfo(server_info);
 	return socket_cliente;
 }
-
-
-
-
-
-
-
-
 
 /* esperar_cliente
  * socket_servidor = socket en la cual se aceptaran comunicaciones

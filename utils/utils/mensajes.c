@@ -42,40 +42,105 @@ t_mensaje* crear_mensaje(int argc, ...){
 	mensaje->codigo_operacion = va_arg(args, int);
 
 	switch(mensaje->codigo_operacion){
-		case SUBSCRIPCION:
+		/*case SUBSCRIPCION:
 			mensaje->contenido.subscripcion.socket = va_arg(args, int);
 			mensaje->contenido.subscripcion.cola = va_arg(args, int);
 			va_end(args);
 			return mensaje;
-			break;
+			break;*/
 
 	}
 }
 
+/* tamanio_contenido_mensaje
+ * mensaje = mensaje t_mensaje al que va obtiene el tamaño del contenido
+ * devuelve un int con el tamaño del contenido
+ */
+
+int tamanio_contenido_mensaje(t_mensaje* mensaje){
+	int tamanio=0;
+	switch(mensaje->codigo_operacion){
+		case GET_POKEMON:
+			tamanio += sizeof(uint32_t) + mensaje->contenido.get_pokemon->size_pokemon;
+			break;
+
+
+
+	}
+
+	return tamanio;
+}
+
+/* serializar_get_pokemon
+ * get_pokemon* = puntero de estructura get_pokemon
+ * devuelve un void* serializado con el get_pokemon
+ */
+
+void* serializar_get_pokemon(t_get_pokemon* get_pokemon){
+	void* magic = malloc(sizeof(uint32_t) + strlen(get_pokemon->pokemon) + 1);
+	int offset = 0;
+
+	memcpy(magic + offset, &(get_pokemon->size_pokemon), sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(magic + offset, &(get_pokemon->pokemon), get_pokemon->size_pokemon);
+	offset += get_pokemon->size_pokemon;
+
+	return magic;
+
+}
+
+/* serializar_mensaje
+ * ret_size* = puntero al que devuelve el tamaño del mensaje
+ * mensaje = mensaje t_mensaje al que va a serializar
+ * devuelve un void* serializado
+ */
+
+
+void* serializar_mensaje(t_mensaje* mensaje, int *ret_size){
+
+	int size_contenido_mensaje = tamanio_contenido_mensaje(mensaje);
+	uint32_t size = size_contenido_mensaje + sizeof(uint32_t)*2;
+	void* magic = malloc(size);
+	int offset = 0;
+
+
+	memcpy(magic + offset, &(mensaje->id), sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(magic + offset, &(mensaje->codigo_operacion), sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(magic + offset, &(size_contenido_mensaje), sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+
+	switch(mensaje->codigo_operacion){
+	case GET_POKEMON:;
+		void* stream = serializar_get_pokemon(mensaje->contenido.get_pokemon);
+		memcpy(magic + offset, stream, size);
+		offset += size;
+		break;
+
+
+	}
+	*ret_size=(int)size;
+	return magic;
+
+}
 
 /* enviar_mensaje
  * socket_a_enviar = socket para enviar el mensaje
- * mensaje = mensaje normal, sin serializacion ni empaquetado
+ * mensaje = mensaje t_mensaje
  */
 
-void enviar_mensaje(int socket_a_enviar, char* mensaje){
-	t_buffer* buffer = malloc(sizeof(t_buffer));
 
-	buffer->size = strlen(mensaje) + 1;
-	void* stream = malloc(buffer->size);
-	memcpy(stream, mensaje, buffer->size);
-	buffer->stream = stream;
-	t_paquete* paquete = malloc(sizeof(t_paquete)); //ARMADO DEL PAQUETE
-
-	paquete->codigo_operacion = STRING;
-	paquete->buffer = buffer;
-
-	int tam_paquete = paquete->buffer->size + 2*sizeof(uint32_t);
-	void* data_a_enviar = serializar_paquete(paquete,tam_paquete);
-
-
-	send(socket_a_enviar, data_a_enviar, tam_paquete, 0);
+int enviar_mensaje(int socket_a_enviar, t_mensaje* mensaje){
+	int size;
+	void* stream = serializar_mensaje(mensaje,&size);
+	sendall(socket_a_enviar,stream, size);
+	if(wait_ack(socket_a_enviar))
+		return 1;
+	else
+		perror("No se pudo enviar mensaje");
 }
+
 
 /* serializar_paquete
  * paquete = paquete armado sin serializar en un flujo continuo
@@ -96,23 +161,15 @@ void* serializar_paquete(t_paquete* paquete, int tam_paquete){
 	return stream;
 }
 
-
-
-
 /* deserializar_buffer
  * codigo_operacion = codigo sobre el cual se decidira que accion tomar
  * buffer = donde esta contenida la informacion
  * socket_cliente = socket del cliente que mando el buffer
  */
 
-t_mensaje* deserializar_buffer(int codigo_operacion, t_buffer* buffer, int socket_cliente){
-	void* mensaje = malloc(buffer->size);
+t_mensaje* deserializar_mensaje(int codigo_operacion, t_mensaje* mensaje){
+
 	switch(codigo_operacion){
-		case STRING:
-			puts("Entra a STRING");
-			memcpy(mensaje,buffer->stream, buffer->size);
-			puts((char *)mensaje);
-			break;
 		case SUBSCRIPCION: ;
 			//log_debug(logger,"Entra a SUBSCRIPCION") lo usariamos para informar que llega una subscripcion, no se puede usar log ya que esta en otro .h
 			int cola_recibida = deserializar_subscripcion(buffer->stream);
@@ -120,14 +177,16 @@ t_mensaje* deserializar_buffer(int codigo_operacion, t_buffer* buffer, int socke
 			t_mensaje* un_mensaje = crear_mensaje(3, codigo_operacion, socket_cliente, cola_recibida);
 			return un_mensaje;
 			break;
-		case APPEARED_POKEMON:
-
+		case APPEARED_POKEMON:;
+			break;
 
 		default:
 			puts("default");
 			break;
 	}
 }
+
+
 
 
 void* serializar_subscripcion(cola_code cola){
