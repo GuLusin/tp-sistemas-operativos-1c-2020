@@ -425,6 +425,7 @@ void inicializar_team(){
 
 
 	obtener_entrenadores();
+	crear_hilos_entrenadores();
 	inicializar_semaforo_entrenadores();
 
 	pokemones_objetivo = obtener_pokemones_objetivo();
