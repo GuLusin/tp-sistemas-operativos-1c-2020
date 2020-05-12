@@ -1,4 +1,4 @@
-*                                                  HITO 2
+/*                                                  HITO 2
  * Objetivos:
 Proceso Team: Permitir solamente planificar de forma FIFO un conjunto de entrenadores.
 
@@ -47,6 +47,14 @@ void crear_listas_globales(){
 	pokemons_recibidos=list_create();
 	cantidad_pokemons_globales=0;
 	cantidad_objetivos_globales=0;
+}
+
+void crear_hilos_entrenadores(){ //creamos todos los entrenadores, estos se quedan esperando la habilitacion del algoritmo para avanzar
+     for(int i=0, i > list_size(entrenadores);i++){
+        pthread_t hilo_entrenador;
+    	pthread_create(&hilo_entrenador, NULL, (void*)entrenador, NULL);
+    	pthread_detach(hilo_entrenador);
+     }
 }
 
 int distancia_menor(int posicion_pokemon_x,int posicion_pokemon_y){
