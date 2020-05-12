@@ -11,7 +11,7 @@
 //CHEQUEAR DONDE SE CIERRA EL SOCKET_CLIENTE
 
 #include "conexiones.h"
-
+#include <errno.h>
 
 // ACKNOWLEDGEMENT= RECONOCIMIENTO DEL MENSAJE DE PARTE DEL BROKER
 
@@ -25,7 +25,6 @@
 void send_ack(int socket_cliente){
 	int ack = ACK;
 	while((send(socket_cliente,&ack,sizeof(int), 0))==-1);
-		send(socket_cliente,&ack,sizeof(int), 0);
 }
 
 /* wait_ack: espera el ACK para confirmacion del mensaje recibido
@@ -83,12 +82,15 @@ int connect_to(char* ip, char* puerto,int wait_time){
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags=AI_PASSIVE;
 
-	getaddrinfo(ip, puerto, &hints, &server_info);
-
+	getaddrinfo("127.0.0.1", puerto, &hints, &server_info);
+	printf("ip:%s\npuerto:%s\n", ip, puerto);
 	if((socket_cliente=socket(server_info->ai_family,server_info->ai_socktype,server_info->ai_protocol)) == -1){
 		perror("No se pudo crear socket");
+		printf("socket broker:%d", errno);
 		return -1;
 	}
+
+
 
 	// INTENTA CONEXION INDEFINIDAMENTE
 	while(connect(socket_cliente,server_info->ai_addr,server_info->ai_addrlen)== -1){

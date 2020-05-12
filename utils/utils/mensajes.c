@@ -42,12 +42,11 @@ t_mensaje* crear_mensaje(int argc, ...){
 	mensaje->codigo_operacion = va_arg(args, int);
 
 	switch(mensaje->codigo_operacion){
-		/*case SUBSCRIPCION:
-			mensaje->contenido.subscripcion.socket = va_arg(args, int);
-			mensaje->contenido.subscripcion.cola = va_arg(args, int);
+		case SUBSCRIPCION:// se le pasa el tipo y la cola a subscribirse
+			mensaje->contenido.subscripcion = va_arg(args, int);
 			va_end(args);
 			return mensaje;
-			break;*/
+			break;
 
 	}
 }
@@ -60,6 +59,9 @@ t_mensaje* crear_mensaje(int argc, ...){
 int tamanio_contenido_mensaje(t_mensaje* mensaje){
 	int tamanio=0;
 	switch(mensaje->codigo_operacion){
+		case SUBSCRIPCION:
+			tamanio += sizeof(uint32_t);
+			break;
 		case GET_POKEMON:
 			tamanio += sizeof(uint32_t) + mensaje->contenido.get_pokemon->size_pokemon;
 			break;
@@ -99,27 +101,35 @@ void* serializar_get_pokemon(t_get_pokemon* get_pokemon){
 void* serializar_mensaje(t_mensaje* mensaje, int *ret_size){
 
 	int size_contenido_mensaje = tamanio_contenido_mensaje(mensaje);
-	uint32_t size = size_contenido_mensaje + sizeof(uint32_t)*2;
+	uint32_t size = size_contenido_mensaje + sizeof(uint32_t)*3;
 	void* magic = malloc(size);
 	int offset = 0;
 
 
-	memcpy(magic + offset, &(mensaje->id), sizeof(uint32_t));
-	offset += sizeof(uint32_t);
 	memcpy(magic + offset, &(mensaje->codigo_operacion), sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(magic + offset, &(mensaje->id), sizeof(uint32_t));
 	offset += sizeof(uint32_t);
 	memcpy(magic + offset, &(size_contenido_mensaje), sizeof(uint32_t));
 	offset += sizeof(uint32_t);
 
+	void* stream;
+
 	switch(mensaje->codigo_operacion){
+	case SUBSCRIPCION:;
+		uint32_t cola= mensaje->contenido.subscripcion;
+		memcpy(magic + offset, &cola, size_contenido_mensaje);
+		offset += size_contenido_mensaje;
+		break;
 	case GET_POKEMON:;
-		void* stream = serializar_get_pokemon(mensaje->contenido.get_pokemon);
-		memcpy(magic + offset, stream, size);
-		offset += size;
+		stream = serializar_get_pokemon(mensaje->contenido.get_pokemon);
+		memcpy(magic + offset, stream, size_contenido_mensaje);
+		offset += size_contenido_mensaje;
 		break;
 
 
 	}
+	free(stream);
 	*ret_size=(int)size;
 	return magic;
 
@@ -131,14 +141,10 @@ void* serializar_mensaje(t_mensaje* mensaje, int *ret_size){
  */
 
 
-int enviar_mensaje(int socket_a_enviar, t_mensaje* mensaje){
+void enviar_mensaje(int socket_a_enviar, t_mensaje* mensaje){
 	int size;
 	void* stream = serializar_mensaje(mensaje,&size);
 	sendall(socket_a_enviar,stream, size);
-	if(wait_ack(socket_a_enviar))
-		return 1;
-	else
-		perror("No se pudo enviar mensaje");
 }
 
 
@@ -167,16 +173,15 @@ void* serializar_paquete(t_paquete* paquete, int tam_paquete){
  * socket_cliente = socket del cliente que mando el buffer
  */
 
-t_mensaje* deserializar_mensaje(int codigo_operacion, t_mensaje* mensaje){
+t_mensaje* deserializar_mensaje(int codigo_operacion, void* stream){
 
 	switch(codigo_operacion){
-		case SUBSCRIPCION: ;
-			//log_debug(logger,"Entra a SUBSCRIPCION") lo usariamos para informar que llega una subscripcion, no se puede usar log ya que esta en otro .h
+		/*case SUBSCRIPCION:;
 			int cola_recibida = deserializar_subscripcion(buffer->stream);
 			printf("size:%d\n cola: %d\n", buffer->size, cola_recibida);
 			t_mensaje* un_mensaje = crear_mensaje(3, codigo_operacion, socket_cliente, cola_recibida);
 			return un_mensaje;
-			break;
+			break;*/
 		case APPEARED_POKEMON:;
 			break;
 
@@ -185,34 +190,6 @@ t_mensaje* deserializar_mensaje(int codigo_operacion, t_mensaje* mensaje){
 			break;
 	}
 }
-
-
-
-
-void* serializar_subscripcion(cola_code cola){
-	void* magic = malloc(sizeof(uint32_t)*3);
-	op_code codigo_operacion = SUBSCRIPCION;
-	uint32_t size = sizeof(uint32_t);
-	int offset = 0;
-
-	memcpy(magic + offset, &(codigo_operacion), sizeof(uint32_t));
-	offset += sizeof(uint32_t);
-	memcpy(magic + offset, &(size), sizeof(uint32_t));
-	offset += sizeof(uint32_t);
-	memcpy(magic + offset, &(cola), size);
-
-	printf("%d,%d,%d\n", codigo_operacion, size, cola);
-	return magic;
-
-}
-
-cola_code deserializar_subscripcion(void* stream){
-	puts("ENTRA A DESERIALIZAR");
-	cola_code cola;
-	memcpy(&cola, stream, sizeof(uint32_t));
-	return cola;
-}
-
 
 /*
 int main(void) {

@@ -54,11 +54,17 @@ void manejar_subscripcion(cola_code cola,int socket_cliente){
 			pthread_mutex_unlock(&mutex_cola_new);
 			break;
 	}
-	puts("mensaje recibido con exito!");
+	puts("Mensaje recibido con exito!");
 }
 
 bool manejar_mensaje(t_mensaje* mensaje){
     switch(mensaje->codigo_operacion){
+    	case GET_POKEMON:;
+    		break;
+
+
+
+
 
 
 
@@ -84,33 +90,44 @@ void recibir_mensaje(int *socket_cliente){
 		perror("Falla recv() op_code");
 	}
 
+	int id;
+
+	if(recv(*socket_cliente, &(id), sizeof(uint32_t), MSG_WAITALL) == -1){
+		perror("Falla recv() id");
+	}
+
 	//Aca se implementaria deserializar_buffer para alternativa cod/buffer
+
+	int size_contenido_mensaje;
+
+	if(recv(*socket_cliente, &(size_contenido_mensaje), sizeof(uint32_t), MSG_WAITALL) == -1){
+		perror("Falla recv() size_contenido_mensaje");
+	}
+
 	if(codigo_operacion==SUBSCRIPCION){
 		int cola;
-		recv(*socket_cliente, &(cola),sizeof(uint32_t), MSG_WAITALL);
-		manejar_subscripcion(cola, socket_cliente);
+		recv(*socket_cliente, &(cola),size_contenido_mensaje, MSG_WAITALL);
+		manejar_subscripcion(cola, *socket_cliente);
+		//send_ack(socket_cliente);
+		return;
 	}
 
+	void* stream = malloc(size_contenido_mensaje);
 
-	int size;
-
-	if(recv(*socket_cliente, &(size), sizeof(uint32_t), MSG_WAITALL) == -1){
-		perror("Falla recv() buffer->size");
+	if(recv(*socket_cliente, stream, size_contenido_mensaje, MSG_WAITALL) == -1){
+		perror("Falla recv() contenido");
 	}
 
-	void* stream = malloc(size);
+	t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
+	mensaje->id=id_mensajes_globales++;
+	send(*socket_cliente, mensaje->id, sizeof(uint32_t),0);
+	manejar_mensaje(mensaje);
 
-	if(recv(*socket_cliente, stream, size, MSG_WAITALL) == -1){
-		perror("Falla recv() buffer->stream");
-	}
-	t_buffer* buffer= malloc(sizeof(t_buffer));
-	buffer->size=size;
-	buffer->stream=stream;
-    t_mensaje* mensaje = deserializar_buffer(codigo_operacion,buffer,*socket_cliente);
-    if(manejar_mensaje(mensaje))
+
+	/* if(manejar_mensaje(mensaje))
     	send_ack(*socket_cliente);
     //... y si no las hay, hacer free
-
+*/
 
 }
 
@@ -129,6 +146,8 @@ void inicializar_broker(){
 
 	int socket_broker;
 	char *ip,*puerto;
+
+	id_mensajes_globales=0;
 
 	pthread_t pthread_atender_cliente;
 	pthread_mutex_init(&mutex_cola_new, NULL);

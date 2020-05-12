@@ -37,9 +37,12 @@ typedef struct{
 	uint32_t id;
 	uint32_t codigo_operacion;
 	union{
+		uint32_t subscripcion;
 		t_get_pokemon* get_pokemon;
 	}contenido;
 }t_mensaje;
+
+//size se envia en la serializacion aunque no este en el struct
 
 typedef enum
 {
@@ -63,11 +66,11 @@ typedef struct{
 } t_paquete;
 
 
-int enviar_mensaje(int socket_a_enviar, t_mensaje* mensaje);
+void enviar_mensaje(int socket_a_enviar, t_mensaje* mensaje);
 void* serializar_paquete(t_paquete* paquete, int tam_paquete);
 void* serializar_subscripcion(cola_code cola);
 cola_code deserializar_subscripcion(void* stream);
-t_mensaje* deserializar_mensaje(int codigo_operacion, t_mensaje* mensaje);
+t_mensaje* deserializar_mensaje(int codigo_operacion, void* stream);
 t_mensaje* crear_mensaje(int argc, ...);
 
 

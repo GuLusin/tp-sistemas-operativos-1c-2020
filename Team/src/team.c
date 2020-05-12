@@ -71,21 +71,23 @@ void entrenador_a_ready(int posicion_pokemon_x,int posicion_pokemon_y){
 
 // FIN planificacion ..........................................
 
-int subscribirse_a_cola(cola_code cola){
-	int socket_broker = connect_to(ip_broker,puerto_broker,wait_time);
-	void* stream = serializar_subscripcion(cola);
-	sendall(socket_broker, stream, sizeof(uint32_t)*3);
-	free(stream);
-	if(wait_ack(socket_broker)){
-		puts("recibio acknowlegment del mensaje");
-	}
-	//close(socket_broker);
+int subscribirse_a_cola(cola_code cola, char* ip){
+	printf("ip entrada:%s\n",ip);
+	char* ip_broker = ip;
+	printf("ip broker:%s\n",ip_broker);
+	int socket_broker = connect_to(ip_broker, puerto_broker, wait_time);
+	//puts("conecta");
+
+	t_mensaje* mensaje = crear_mensaje(2, SUBSCRIPCION, cola);
+	//puts("crea mensaje");
+
+	enviar_mensaje(socket_broker, mensaje);
 	return socket_broker;
 }
 
 
 
-t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos,int i){
+t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos, int i){
 	t_entrenador* entrenador = malloc(sizeof(t_entrenador));
 
 	entrenador->id = i;
@@ -230,11 +232,17 @@ void inicializar_team(){
 	log_debug(logger,config_get_string_value(config,"PUERTO_BROKER")); //pido y logueo puerto
 	wait_time = config_get_int_value(config,"TIEMPO_RECONEXION");
 
+	puts("inicia bien");
 	//estas subscripciones se harian en los threads de abajo
-	socket_cola_appeared = subscribirse_a_cola(COLA_APPEARED_POKEMON);
-	socket_cola_localized = subscribirse_a_cola(COLA_LOCALIZED_POKEMON);
-	socket_cola_caught = subscribirse_a_cola(COLA_CAUGHT_POKEMON);
-
+	socket_cola_appeared = subscribirse_a_cola(COLA_APPEARED_POKEMON,ip_broker);
+	puts("subscribe a cola");
+	//sleep(2);
+	socket_cola_localized = subscribirse_a_cola(COLA_LOCALIZED_POKEMON, ip_broker);
+	//puts("cola");
+	//sleep(2);
+	//socket_cola_caught = subscribirse_a_cola(COLA_CAUGHT_POKEMON);
+	//sleep(2);
+	puts("termina");
 	//1 thread por socket intentando recibir mensajes aca?
 	//1 thread por socket intentando recibir mensajes aca?
 	//1 thread por socket intentando recibir mensajes aca?
