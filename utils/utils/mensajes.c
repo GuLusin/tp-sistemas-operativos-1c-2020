@@ -47,7 +47,46 @@ t_mensaje* crear_mensaje(int argc, ...){
 			va_end(args);
 			return mensaje;
 			break;
-
+		case NEW_POKEMON:
+			t_pokemon* pokemon = malloc(sizeof(t_pokemon));
+			pokemon->nombre = va_arg(args, char*);
+			pokemon->pos_x = va_arg(args, uint32_t);
+			pokemon->pos_y = va_arg(args, uint32_t);
+			mensaje->contenido.new_pokemon->pokemon;
+			mensaje->contenido.new_pokemon->cantidad = va_arg(args,uint32_t);
+			va_end(args);
+			return mensaje;
+			break;
+		case APPEARED_POKEMON:
+			t_pokemon* pokemon = malloc(sizeof(t_pokemon));
+			pokemon->nombre = va_arg(args, char*);
+			pokemon->pos_x = va_arg(args, uint32_t);
+			pokemon->pos_y = va_arg(args, uint32_t);
+			mensaje->contenido.appeared_pokemon->pokemon;
+			mensaje->contenido.appeared_pokemon = va_arg(args,uint32_t);
+			va_end(args);
+			return mensaje;
+			break;
+		case CATCH_POKEMON:
+			t_pokemon* pokemon = malloc(sizeof(t_pokemon));
+			pokemon->nombre = va_arg(args, char*);
+			pokemon->pos_x = va_arg(args, uint32_t);
+			pokemon->pos_y = va_arg(args, uint32_t);
+			mensaje->contenido.new_pokemon->pokemon;
+			va_end(args);
+			return mensaje;
+			break;
+		case CAUGHT_POKEMON:
+			mensaje->contenido.caught_pokemon->id_correlativo= va_arg(args,uint32_t);
+			mensaje->contenido.caught_pokemon->caught_confirmation = va_arg(args, bool);
+			va_end(args);
+			return mensaje;
+			break;
+		case GET_POKEMON:
+			mensaje->contenido.get_pokemon->pokemon= va_arg(args, char*);
+			mensaje->contenido.get_pokemon->size_pokemon = strlen(mensaje->contenido.get_pokemon->pokemon) + 1;
+			va_end(args);
+			break;
 	}
 }
 
@@ -148,29 +187,10 @@ void enviar_mensaje(int socket_a_enviar, t_mensaje* mensaje){
 }
 
 
-/* serializar_paquete
- * paquete = paquete armado sin serializar en un flujo continuo
- * tam_paquete = tamaño del mismo y del futuro flujo
- */
-
-
-void* serializar_paquete(t_paquete* paquete, int tam_paquete){
-	void* stream = malloc(tam_paquete);
-	int offset = 0;
-
-	memcpy(stream + offset, &(paquete->codigo_operacion), sizeof(uint32_t));
-	offset += sizeof(uint32_t);
-	memcpy(stream + offset, &(paquete->buffer->size), sizeof(uint32_t));
-	offset += sizeof(uint32_t);
-	memcpy(stream + offset, (paquete->buffer->stream), paquete->buffer->size);
-
-	return stream;
-}
-
-/* deserializar_buffer
+/* deserializar_mensaje
  * codigo_operacion = codigo sobre el cual se decidira que accion tomar
- * buffer = donde esta contenida la informacion
- * socket_cliente = socket del cliente que mando el buffer
+ * stream = donde esta contenida la informacion
+ *
  */
 
 t_mensaje* deserializar_mensaje(int codigo_operacion, void* stream){

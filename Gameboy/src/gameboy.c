@@ -12,42 +12,80 @@ int subscribirse_a_cola(cola_code cola){
 	return socket_broker;
 }
 
-int interpretar_tipo_mensaje(char* tipo){
-	if(!strcmp(tipo,"SUSCRIPTOR"))
-		return SUSCRIPTOR;
-
-
-
+op_code interpretar_tipo_mensaje(char* tipo){
+	if(!strcmp(tipo,"APPEARED_POKEMON"))
+		return APPEARED_POKEMON;
+	if(!strcmp(tipo,"NEW_POKEMON"))
+		return NEW_POKEMON;
+	if(!strcmp(tipo,"CATCH_POKEMON"))
+		return CATCH_POKEMON;
+	if(!strcmp(tipo,"CAUGHT_POKEMON"))
+		return CAUGHT_POKEMON;
+	if(!strcmp(tipo,"GET_POKEMON"))
+		return GET_POKEMON;
 }
 
-int interpretar_cola_mensaje(char* tipo){
+tipo_proceso_gameboy interpretar_tipo_proceso(char* proceso){
+	if(!strcmp(proceso,"BROKER"))
+		return BROKER;
+	if(!strcmp(proceso,"GAMECARD"))
+		return GAMECARD;
+	if(!strcmp(proceso,"TEAM"))
+		return TEAM;
+	if(!strcmp(proceso,"SUSCRIPTOR"))
+		return SUSCRIPTOR;
+}
+
+cola_code interpretar_cola_mensaje(char* tipo){
 	if(!strcmp(tipo,"COLA_LOCALIZED_POKEMON"))
 		return COLA_LOCALIZED_POKEMON;
-
-
-
+	if(!strcmp(tipo,"COLA_GET_POKEMON"))
+		return COLA_GET_POKEMON;
+	if(!strcmp(tipo,"COLA_NEW_POKEMON"))
+		return COLA_NEW_POKEMON;
+	if(!strcmp(tipo,"COLA_APPEARED_POKEMON"))
+		return COLA_APPEARED_POKEMON;
+	if(!strcmp(tipo,"COLA_CAUGHT_POKEMON"))
+		return COLA_CAUGHT_POKEMON;
+	if(!strcmp(tipo,"COLA_CATCH_POKEMON"))
+		return COLA_CATCH_POKEMON;
 }
 
 
 void manejar_mensaje(int argc, char** args){
 	puts("entra a manejar_mensaje");
-	int tipo_mensaje = interpretar_tipo_mensaje(args[1]);
-	switch(tipo_mensaje){
-	case SUSCRIPTOR:
-		if(argc!=4){
-			perror("Cantidad de argumentos distinta de 3 para el tipo SUSCRIPTOR");
+	tipo_proceso_gameboy proceso = interpretar_tipo_proceso(args[1]);
+	op_code tipo_mensaje = interpretar_tipo_mensaje(args[2]);
+	t_mensaje* mensaje;
+	switch(proceso){
+	case BROKER:
+		switch(tipo_mensaje){
+		case NEW_POKEMON:;
+				mensaje = crear_mensaje(argc,args[3],args[4],args[5],args[6]);
+				socket_broker = connect_to(ip_broker, puerto_broker, wait_time);
+				enviar_mensaje(socket_broker, mensaje);
+				break;
+
+		case APPEARED_POKEMON:;
+
+			break;
+		case CATCH_POKEMON:;
+
+			break;
+		case CAUGHT_POKEMON:;
+
+			break;
+		case GET_POKEMON:;
+			break;
 
 		}
-		else{
-			int cola = interpretar_cola_mensaje(args[2]);
-			int tiempo = args[3];
-			int socket_cliente = subscribirse_a_cola(cola);
-			puts("ksuscrito a cola");
-			//pthread_create(&pthread, NULL, recibir_mensaje, &socket_cliente);
-			//pthread_detach(pthread);
 
-		}
-
+	case TEAM:;
+		break;
+	case GAMECARD:;
+		break;
+	case SUSCRIPTOR:;
+		break;
 	}
 }
 
@@ -74,8 +112,6 @@ int main(int argc, char**args) {
 		puts("Nada");
 		return EXIT_SUCCESS;
 	}
-
-	printf("argc=%d", COLA_LOCALIZED_POKEMON);
 
 	inicializar_gameboy();
 

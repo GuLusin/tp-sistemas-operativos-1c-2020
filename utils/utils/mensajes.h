@@ -36,6 +36,7 @@ typedef struct {
 
 typedef struct{
 	t_pokemon* pokemon;
+	uint32_t id_correlativo;
 }t_appeared_pokemon;
 
 typedef struct{
@@ -49,7 +50,7 @@ typedef struct{
 
 typedef struct{
 	uint32_t id_correlativo;
-	bool caught_confirmation;
+	uint32_t caught_confirmation;
 }t_caught_pokemon;
 
 typedef struct{
@@ -86,7 +87,6 @@ typedef enum
 
 
 void enviar_mensaje(int socket_a_enviar, t_mensaje* mensaje);
-void* serializar_paquete(t_paquete* paquete, int tam_paquete);
 void* serializar_subscripcion(cola_code cola);
 cola_code deserializar_subscripcion(void* stream);
 t_mensaje* deserializar_mensaje(int codigo_operacion, void* stream);
