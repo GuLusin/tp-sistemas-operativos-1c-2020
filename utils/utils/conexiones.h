@@ -29,7 +29,7 @@ pthread_t pthread;
 
 
 uint32_t id_confirmation(int socket_aux);
-bool send_ack(int socket_cliente,uint32_t ack);
+bool send_ack(int socket_cliente, uint32_t ack);
 bool check_ack(int socket_cliente, uint32_t value);
 uint32_t wait_ack(int socket_cliente);
 int sendall(int s, void *buf, int len);

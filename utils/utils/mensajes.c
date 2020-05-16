@@ -37,6 +37,7 @@ t_mensaje* crear_mensaje(int argc, ...){
 	va_list args;
 	va_start(args, argc);
 
+	t_pokemon* pokemon;
 	t_mensaje* mensaje = malloc(sizeof(t_mensaje));
 
 	mensaje->codigo_operacion = va_arg(args, uint32_t);
@@ -47,27 +48,27 @@ t_mensaje* crear_mensaje(int argc, ...){
 			va_end(args);
 			return mensaje;
 			break;
-		case NEW_POKEMON:
-			t_pokemon* pokemon = malloc(sizeof(t_pokemon));
+		case NEW_POKEMON:;
+			pokemon = malloc(sizeof(t_pokemon));
 			pokemon->nombre = va_arg(args, char*);
 			pokemon->pos_x = va_arg(args, uint32_t);
 			pokemon->pos_y = va_arg(args, uint32_t);
-			mensaje->contenido.new_pokemon->pokemon;
+			mensaje->contenido.new_pokemon->pokemon=pokemon;
 			mensaje->contenido.new_pokemon->cantidad = va_arg(args,uint32_t);
 			va_end(args);
 			return mensaje;
 			break;
-		case APPEARED_POKEMON:
-			t_pokemon* pokemon = malloc(sizeof(t_pokemon));
+		case APPEARED_POKEMON:;
+			pokemon = malloc(sizeof(t_pokemon));
 			pokemon->nombre = va_arg(args, char*);
 			pokemon->pos_x = va_arg(args, uint32_t);
 			pokemon->pos_y = va_arg(args, uint32_t);
-			mensaje->contenido.appeared_pokemon->pokemon;
+			mensaje->contenido.appeared_pokemon->pokemon = pokemon;
 			mensaje->contenido.appeared_pokemon = va_arg(args,uint32_t);
 			va_end(args);
 			return mensaje;
 			break;
-		case CATCH_POKEMON:
+		case CATCH_POKEMON:;
 			t_pokemon* pokemon = malloc(sizeof(t_pokemon));
 			pokemon->nombre = va_arg(args, char*);
 			pokemon->pos_x = va_arg(args, uint32_t);
@@ -88,6 +89,36 @@ t_mensaje* crear_mensaje(int argc, ...){
 			va_end(args);
 			break;
 	}
+}
+
+void printear_pokemon(t_pokemon* pokemon){
+	printf("nombre:%s\npos x:%d\npos y:%d\n", pokemon->nombre,pokemon->pos_x,pokemon->pos_y);
+}
+
+void printear_mensaje(t_mensaje* mensaje){
+	printf("MENSAJE\n");
+	printf("id:%d\nop_code:%d\n", mensaje->id,mensaje->codigo_operacion);
+	switch(mensaje->codigo_operacion){
+		case SUBSCRIPCION:// se le pasa el tipo y la cola a subscribirse
+			printf("suscripcion:%d\n",mensaje->contenido.subscripcion);
+			break;
+		case NEW_POKEMON:;
+			break;
+		case APPEARED_POKEMON:;
+			printear_pokemon(mensaje->contenido.appeared_pokemon->pokemon);
+			printf("id correlativo:%d\n", mensaje->contenido.appeared_pokemon->id_correlativo);
+			printf(":%d\n",mensaje->contenido.subscripcion);
+			break;
+		case CATCH_POKEMON:;
+			break;
+		case CAUGHT_POKEMON:
+			break;
+		case GET_POKEMON:
+			break;
+	}
+
+
+
 }
 
 /* tamanio_contenido_mensaje
@@ -182,7 +213,7 @@ void* serializar_mensaje(t_mensaje* mensaje, int *ret_size){
 void enviar_mensaje(int socket_a_enviar, t_mensaje* mensaje){
 	int size;
 	void* stream = serializar_mensaje(mensaje,&size);
-	printf("size:%d\n", size);
+	//printear_mensaje(mensaje);
 	sendall(socket_a_enviar,stream, size);
 }
 

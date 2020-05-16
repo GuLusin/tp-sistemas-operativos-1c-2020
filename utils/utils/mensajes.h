@@ -18,6 +18,8 @@
 #include <netdb.h>
 #include <pthread.h>
 
+#define ID_SUSCRIPCION 999999
+
 typedef enum {
 	COLA_NEW_POKEMON,
 	COLA_GET_POKEMON,
@@ -26,6 +28,7 @@ typedef enum {
 	COLA_CAUGHT_POKEMON,
 	COLA_APPEARED_POKEMON,
 } cola_code;
+
 
 
 typedef struct {

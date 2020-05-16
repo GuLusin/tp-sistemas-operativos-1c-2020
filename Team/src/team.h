@@ -11,7 +11,6 @@
 #include <pthread.h>
 #include <commons/collections/list.h>
 
-#define ID_SUSCRIPCION 999999
 
 typedef struct {
    int id;

@@ -62,8 +62,10 @@ void manejar_subscripcion(cola_code cola,int socket_cliente){
 			break;
 	}
 	puts("Mensaje recibido con exito!");
-		id_validation(socket_cliente);
-			return;
+	send_ack(socket_cliente,ACK);
+	puts("Aviso de retorno con exito!");
+	//id_validation(socket_cliente);
+	return;
 
 }
 

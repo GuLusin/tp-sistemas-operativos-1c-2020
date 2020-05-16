@@ -4,12 +4,58 @@
 #include "gameboy.h"
 
 int subscribirse_a_cola(cola_code cola){
-	int socket_broker = connect_to(ip_broker,puerto_broker,wait_time);
-	void* stream = serializar_subscripcion(cola);
-	sendall(socket_broker, stream, sizeof(uint32_t)*3);
-	free(stream);
-	//close(socket_broker);
-	return socket_broker;
+	int socket_aux = connect_to(ip_broker,puerto_broker,wait_time);
+	t_mensaje* mensaje = crear_mensaje(2, SUBSCRIPCION, cola);
+	mensaje->id=ID_SUSCRIPCION;
+	//printf("op_code:%d\nid:%d\ncola contenido:%d\n", mensaje->codigo_operacion,mensaje->id,mensaje->contenido.subscripcion);
+	enviar_mensaje(socket_aux, mensaje);
+	printf("espera id:%d",cola);
+	check_ack(socket_aux, ACK);
+	return socket_aux;
+}
+
+void escuchar_broker(int *socket_servidor){
+	while(true){
+		//puts("escuchar_broker");
+		uint32_t codigo_operacion;
+
+		if(recv(*socket_servidor, &(codigo_operacion),sizeof(uint32_t), 0)==-1){
+			perror("Falla recv() op_code");
+		}
+
+		printf("op_code: %d\n", codigo_operacion);
+
+		uint32_t id;
+
+		if(recv(*socket_servidor, &(id), sizeof(uint32_t), 0) == -1){
+			perror("Falla recv() id");
+		}
+
+		printf("id:%d\n", id);
+
+		uint32_t size_contenido_mensaje;
+
+		if(recv(*socket_servidor, &(size_contenido_mensaje), sizeof(uint32_t), 0) == -1){
+			perror("Falla recv() size_contenido_mensaje");
+		}
+
+
+		printf("size contenido:%d\n", size_contenido_mensaje);
+
+		void* stream = malloc(size_contenido_mensaje);
+
+		if(recv(*socket_servidor, stream, size_contenido_mensaje, 0) == -1){
+			perror("Falla recv() contenido");
+		}
+
+		t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
+	}
+}
+
+void subscripcion_temporal_a_cola(cola_code cola, int wait_time){
+	int socket_broker = subscribirse_a_cola(cola);
+	printf("subscrito a cola:%d",cola);
+
 }
 
 op_code interpretar_tipo_mensaje(char* tipo){
@@ -36,18 +82,18 @@ tipo_proceso_gameboy interpretar_tipo_proceso(char* proceso){
 		return SUSCRIPTOR;
 }
 
-cola_code interpretar_cola_mensaje(char* tipo){
-	if(!strcmp(tipo,"COLA_LOCALIZED_POKEMON"))
+cola_code interpretar_cola_mensaje(char* cola){
+	if(!strcmp(cola,"COLA_LOCALIZED_POKEMON"))
 		return COLA_LOCALIZED_POKEMON;
-	if(!strcmp(tipo,"COLA_GET_POKEMON"))
+	if(!strcmp(cola,"COLA_GET_POKEMON"))
 		return COLA_GET_POKEMON;
-	if(!strcmp(tipo,"COLA_NEW_POKEMON"))
+	if(!strcmp(cola,"COLA_NEW_POKEMON"))
 		return COLA_NEW_POKEMON;
-	if(!strcmp(tipo,"COLA_APPEARED_POKEMON"))
+	if(!strcmp(cola,"COLA_APPEARED_POKEMON"))
 		return COLA_APPEARED_POKEMON;
-	if(!strcmp(tipo,"COLA_CAUGHT_POKEMON"))
+	if(!strcmp(cola,"COLA_CAUGHT_POKEMON"))
 		return COLA_CAUGHT_POKEMON;
-	if(!strcmp(tipo,"COLA_CATCH_POKEMON"))
+	if(!strcmp(cola,"COLA_CATCH_POKEMON"))
 		return COLA_CATCH_POKEMON;
 }
 
@@ -61,7 +107,7 @@ void manejar_mensaje(int argc, char** args){
 	case BROKER:
 		switch(tipo_mensaje){
 		case NEW_POKEMON:;
-				mensaje = crear_mensaje(argc,args[3],args[4],args[5],args[6]);
+				mensaje = crear_mensaje(4,args[3],args[4],args[5],args[6]);
 				socket_broker = connect_to(ip_broker, puerto_broker, wait_time);
 				enviar_mensaje(socket_broker, mensaje);
 				break;
@@ -85,6 +131,11 @@ void manejar_mensaje(int argc, char** args){
 	case GAMECARD:;
 		break;
 	case SUSCRIPTOR:;
+		cola_code cola = interpretar_cola_mensaje(args[2]);
+		printf("cola:%d", cola);
+		int wait_time = atoi(args[3]);
+		printf("wait_time:%d", wait_time);
+		subscripcion_temporal_a_cola(cola, wait_time);
 		break;
 	}
 }

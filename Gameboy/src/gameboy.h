@@ -11,11 +11,13 @@
 #include <string.h>
 #include <commons/log.h>
 #include <commons/config.h>
+#include <commons/collections/list.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <unistd.h>
 #include <netdb.h>
 #include <pthread.h>
+#include <semaphore.h>
 
 
 
@@ -34,7 +36,7 @@ char *ip_broker,*puerto_broker;
 int wait_time=3, socket_broker;
 
 
-pthread_t thread;
+pthread_t pthread_recibir_mensajes_broker;
 
 #endif /* CONEXIONES_H */
 

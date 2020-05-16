@@ -78,7 +78,9 @@ int subscribirse_a_cola(cola_code cola){
 	mensaje->id=ID_SUSCRIPCION;
 	//printf("op_code:%d\nid:%d\ncola contenido:%d\n", mensaje->codigo_operacion,mensaje->id,mensaje->contenido.subscripcion);
 	enviar_mensaje(socket_aux, mensaje);
-	uint32_t id = id_confirmation(socket_aux); // esta buena para implementar en la confirmacion del id.
+	//uint32_t id = id_confirmation(socket_aux); // esta buena para implementar en la confirmacion del id.
+	check_ack(socket_aux, ACK);
+	return socket_aux;
 }
 
 
