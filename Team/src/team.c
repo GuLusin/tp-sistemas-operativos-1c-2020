@@ -237,7 +237,7 @@ t_entrenador *entrenador_mas_cerca(int posicion_pokemon_x,int posicion_pokemon_y
 void entrenador_mas_cerca_a_lista_corto_plazo(t_pokemon* pokemon){
 	t_entrenador *entrenador_elegido;
 	entrenador_elegido = entrenador_mas_cerca(pokemon->pos_x, pokemon->pos_y);
-	entrenador_elegido->objetivo_temporal=malloc(sizeof(t_pokemon));
+	//entrenador_elegido->objetivo_temporal=malloc(sizeof(t_pokemon));
 	entrenador_elegido->objetivo_temporal=pokemon;
     list_add(lista_corto_plazo, entrenador_elegido);
     sem_post(&hay_entrenador_corto_plazo);
@@ -256,16 +256,14 @@ int cantidad_necesitada(){
 //-------------------------------------- ---PLANIFICAR----------------------------------------------------
 
 void planificar(){
-	t_pokemon *pokemon = list_get(pokemons_recibidos,0);
-	//mostrar_pokemon(pokemon);
-	list_remove(pokemons_recibidos,0);
+	t_pokemon *pokemon = list_remove(pokemons_recibidos,0);
 	entrenador_mas_cerca_a_lista_corto_plazo(pokemon);
 }
 
 //------------------------------------------ALGORITMOS-------------------------------------------------------
 
-void retirar_entrenador(t_entrenador * entrenador){
-	free(entrenador->objetivo_temporal->nombre);
+void retirar_entrenador(t_entrenador *entrenador){
+	    free(entrenador->objetivo_temporal->nombre);
 		free(entrenador->objetivo_temporal);
 		entrenador->objetivo_temporal = NULL;
 		puts("");
@@ -274,6 +272,7 @@ void retirar_entrenador(t_entrenador * entrenador){
 		mostrar_entrenador(entrenador);
 		puts("------------------------------------------------------------");
 		list_remove(lista_corto_plazo,0);
+		getchar();
 }
 
 void planificacionFIFO(){
@@ -596,21 +595,18 @@ void inicializar_team(){
 
 	int socket_broker, socket_cola_localized, socket_cola_caught, socket_cola_appeared;
 	t_list* pokemones_objetivo;
-
 	//----------------planificacion
     crear_listas_globales();
     //------------------
-
 	logger = log_create("team.log","log",1,LOG_LEVEL_DEBUG);
 	config = config_create("../config");
 	retardo = config_get_int_value(config,"RETARDO_CICLO_CPU");
-
 	obtener_entrenadores();
-
 	//----------------planificacion
 	inicializar_semaforo_entrenadores();
     crear_hilos_entrenadores();
     //--------------------------
+    planificador();
 
 	//Obtiene los datos IP,PUERTO WAIT_TIME desde la config
 	pokemones_objetivo = obtener_pokemones_objetivo();
@@ -635,7 +631,7 @@ int main(void) {
 
 	inicializar_team();
 
-	planificador();
+	//planificador();
     //deadlock();
     //liberar_recursos();
 
