@@ -465,15 +465,14 @@ void planificador(){
 //------------------------------------- FIN DE PLANIFICACION ---------------------------------------------------
 
 int subscribirse_a_cola(cola_code cola){
-	int socket_broker = connect_to(ip_broker,puerto_broker,wait_time);
-	void* stream = serializar_subscripcion(cola);
-	sendall(socket_broker, stream, sizeof(uint32_t)*3);
-	free(stream);
-	if(wait_ack(socket_broker)){
-		puts("recibio acknowlegment del mensaje");
-	}
-	//close(socket_broker);
-	return socket_broker;
+	int socket_aux = connect_to(ip_broker,puerto_broker,wait_time);
+	t_mensaje* mensaje = crear_mensaje(2, SUBSCRIPCION, cola);
+	mensaje->id=ID_SUSCRIPCION;
+	//printf("op_code:%d\nid:%d\ncola contenido:%d\n", mensaje->codigo_operacion,mensaje->id,mensaje->contenido.subscripcion);
+	enviar_mensaje(socket_aux, mensaje);
+	//uint32_t id = id_confirmation(socket_aux); // esta buena para implementar en la confirmacion del id.
+	check_ack(socket_aux, ACK);
+	return socket_aux;
 }
 
 t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos,int i){
@@ -603,16 +602,14 @@ void inicializar_team(){
     //------------------
 
 	logger = log_create("team.log","log",1,LOG_LEVEL_DEBUG);
-	config = config_create("config");
+	config = config_create("../config");
+	retardo = config_get_int_value(config,"RETARDO_CICLO_CPU");
 
 	obtener_entrenadores();
 
 	//----------------planificacion
 	inicializar_semaforo_entrenadores();
     crear_hilos_entrenadores();
-    retardo = config_get_int_value(config,"RETARDO_CICLO_CPU");
-    planificador(); //TENDRIA QUE ESTAR ABAJO, LUEGO DE SUSCRIBIRSE A LAS COLAS TENDRIAN Q HABER HILOS ACTIVOS A LA
-    //ESPERA DE UN MENSAJE Y ACTUALIZAR LAS COLAS, ASI EL PLANIFICADOR PUEDE ACTUAR BIEN EN INDEPENDENCIA
     //--------------------------
 
 	//Obtiene los datos IP,PUERTO WAIT_TIME desde la config
@@ -638,7 +635,7 @@ int main(void) {
 
 	inicializar_team();
 
-	//planificador();
+	planificador();
     //deadlock();
     //liberar_recursos();
 

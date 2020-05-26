@@ -13,12 +13,6 @@
 #include <commons/collections/list.h>
 
 typedef struct {
-   char* nombre;
-   int pos_x;
-   int pos_y;
-}t_pokemon;
-
-typedef struct {
    int id;
    int posicion_x;
    int posicion_y;

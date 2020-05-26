@@ -32,7 +32,7 @@ t_list* sockets_cola_caught;
 t_list* sockets_cola_appeared;
 
 
-
+int id_mensajes_globales;
 
 
 #endif /* BROKER_H */

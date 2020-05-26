@@ -18,6 +18,8 @@
 #include <netdb.h>
 #include <pthread.h>
 
+#define ID_SUSCRIPCION 999999
+
 typedef enum {
 	COLA_NEW_POKEMON,
 	COLA_GET_POKEMON,
@@ -27,23 +29,55 @@ typedef enum {
 	COLA_APPEARED_POKEMON,
 } cola_code;
 
+
+
 typedef struct {
-	int socket;
-	int cola;
-}t_subscripcion;
+   char* nombre; // HACE FALTA UN SIZE PARA EL PUNTERO?
+   int pos_x;
+   int pos_y;
+}t_pokemon;
 
 typedef struct{
-	int id;
-//	int id_correlativo;
-	int codigo_operacion;
+	t_pokemon* pokemon;
+	uint32_t id_correlativo;
+}t_appeared_pokemon;
+
+typedef struct{
+	t_pokemon* pokemon;
+	uint32_t cantidad;
+}t_new_pokemon;
+
+typedef struct{
+	t_pokemon* pokemon;
+}t_catch_pokemon;
+
+typedef struct{
+	uint32_t id_correlativo;
+	uint32_t caught_confirmation;
+}t_caught_pokemon;
+
+typedef struct{
+	uint32_t size_pokemon; //HACE FALTA?
+	char* pokemon;
+}t_get_pokemon; //ESTE MENSAJE ESPERA COMO CONFIRMACION UN ID QUE SERA EL CORRELATIVO PARA CONFIRMACION DE LA RECEPCION DE APPEARED O LOCALIZED
+
+typedef struct{
+	uint32_t id;
+	uint32_t codigo_operacion;
 	union{
-		t_subscripcion subscripcion; //para subscripcion
+		uint32_t subscripcion;
+		t_get_pokemon* get_pokemon;
+		t_appeared_pokemon* appeared_pokemon;
+		t_new_pokemon* new_pokemon;
+		t_catch_pokemon* catch_pokemon;
+		t_caught_pokemon* caught_pokemon;
 	}contenido;
 }t_mensaje;
 
+//size se envia en la serializacion aunque no este en el struct
+
 typedef enum
 {
-	STRING,
 	SUBSCRIPCION,
 	NEW_POKEMON,
 	LOCALIZED_POKEMON,
@@ -53,23 +87,13 @@ typedef enum
 	CATCH_POKEMON,
 } op_code;
 
-typedef struct{
-	uint32_t size;
-	void* stream;
-} t_buffer;
 
-typedef struct{
-	op_code codigo_operacion;
-	t_buffer* buffer;
-} t_paquete;
-
-
-void enviar_mensaje(int socket_a_enviar, char* mensaje);
-void* serializar_paquete(t_paquete* paquete, int tam_paquete);
+void enviar_mensaje(int socket_a_enviar, t_mensaje* mensaje);
 void* serializar_subscripcion(cola_code cola);
 cola_code deserializar_subscripcion(void* stream);
-t_mensaje* deserializar_buffer(int codigo_operacion, t_buffer* buffer,int socket_cliente);
+t_mensaje* deserializar_mensaje(int codigo_operacion, void* stream);
 t_mensaje* crear_mensaje(int argc, ...);
 
 
 #endif /* MENSAJES_H */
+
