@@ -27,7 +27,181 @@ collect2: error: ld returned 1 exit status
 
 #include "team.h"
 
+void mostrar_entrenador(t_entrenador *t){
+	printf("EN x :%d ",t->posicion_x);
+	printf("y En y :%d ",t->posicion_y);
+	printf("| Entrenador id :%d\n",t->id);
+}
+
+void mostrar_pokemon(t_pokemon *pokemon){
+	printf("nombre:%s\nposx:%d\npos y:%d\n",pokemon->nombre,pokemon->pos_x,pokemon->pos_y);
+}
+
 //---------------------------------------PLANIFICACION---------------------------------------------------------------------
+
+void inicializar_semaforo_entrenadores(){
+	ejecutar_entrenador = malloc(sizeof(sem_t)*list_size(entrenadores));
+	for (int i=0;i<list_size(entrenadores);i++){
+		sem_init(&(ejecutar_entrenador[i]), 0,0);
+	}
+	sem_init(&activar_algoritmo, 0,0);
+	sem_init(&hay_pokemones, 0, 0);
+	sem_init(&hay_entrenador_corto_plazo,0,0);
+}
+
+void crear_listas_globales(){
+	entrenadores = list_create();
+	lista_corto_plazo=list_create();
+	pokemons_recibidos=list_create();
+	cantidad_pokemons_globales=0;
+	cantidad_objetivos_globales=0;
+}
+
+/*
+bool cumplio_objetivo_entrenador(int id){ //verifica si las listas de objetivos y pokemones son iguales
+	t_entrenador *entrenador = list_get(entrenadores, id);
+	int exito;
+	t_list* pokemones_ya_obtenidos = list_create();
+	t_list* pokemones_objetivo = list_create();
+	int i,j;
+
+	list_add_all(pokemones_ya_obtenidos,entrenador->pokemones);
+	list_add_all(pokemones_objetivo,entrenador->objetivos);
+
+	for (i=0;i<list_size(pokemones_objetivo);i++){
+		for(j=0;j<list_size(pokemones_ya_obtenidos);j++){
+			if(!strcmp(list_get(pokemones_objetivo,i),list_get(pokemones_ya_obtenidos,j))){
+				list_remove(pokemones_objetivo,i);
+				list_remove(pokemones_ya_obtenidos,j);
+//				printf("Se remueve un pokemon que ya tenia: %s\n",list_get(pokemones_objetivo,i));
+				break;
+			}
+		}
+	}
+
+	if(list_is_empty(pokemones_objetivo))
+		exito = true;
+	else
+		exito = false;
+
+	list_destroy(pokemones_ya_obtenidos);
+	list_destroy(pokemones_objetivo);
+	return exito;
+}*/
+
+void deadlock(){
+	/*int index = 0;
+	while(entrenadores){
+		while(tiene_pokemons_faltantes(list_get(entrenador,index)){
+			entrenador_actual = list_get(entrenador,index);
+			entrenador_a_buscar = entrenador_que_le_sobra_este_pokemon(pokemon_faltante(entrenador_actual));
+		    ir_a_buscar_al_entrenador(entrenador_actual->id,entrenador_a_buscar->id);
+		    intercambiar(entrenador_actual->id,entrenador_a_buscar->id);
+		}
+		//habilitar semaforo
+		entrenadores++;
+		index++;
+	}*/
+
+	//PREGUNTAR
+	//leee de la config
+	//tarda 4 ciclos
+	//intercambia
+	//vuelve a preguntar
+}
+
+/*
+void inicializar_deadlock_entrenadores(){
+	deadlock_entrenador = malloc(sizeof(sem_t)*list_size(entrenadores));
+	for(int i=0;i<list_size(entrenadores);i++){
+		sem_init(&(dead_lock[i]), 0,0);
+	}
+	sem_init(&activar_algoritmo, 0,0);
+}
+*/
+
+//---------------------------------------------- ENTRENADOR ----------------------------------------------------
+
+bool tiene_cantidad(int id){
+	t_entrenador *entrenador = list_get(entrenadores, id);
+	return (list_size(entrenador->pokemones) == list_size(entrenador->objetivos));
+}
+
+bool llego_al_objetivo(t_entrenador *entrenador){
+	return ((entrenador->posicion_x == entrenador->objetivo_temporal->pos_x) && (entrenador->posicion_y == entrenador->objetivo_temporal->pos_y));
+}
+
+void atrapar_pokemon(int id){
+	//QUE INCREMENTE LA VARIABLE POKEMONS Y PONGA EN NULL EL TEMPORAL
+	//envia mensaje catch_pokemon(pokemon);
+	//guarda el id para ver si el id correlativo corresponde
+	//si recibe confirmacion lo agrego a la lista de pokemons y se queda en esta posicion
+	//sino nada, queda en esta posicion pero no se agrega el pokemon
+	t_entrenador *entrenador = list_get(entrenadores,id);
+	char* nombre = malloc(sizeof(char) * 15);
+	strcpy(nombre,entrenador->objetivo_temporal->nombre);
+	list_add(entrenador->pokemones, nombre);
+	printf("Cantidades Globales: cantidad_pokemons_globales %d ", cantidad_pokemons_globales);
+	printf("cantidad_pokemons_globales %d \n", cantidad_objetivos_globales);
+	cantidad_pokemons_globales++;
+	printf("Incremento la cantidad global de pokemones: ");
+	printf("cantidad_pokemons_globales %d ", cantidad_pokemons_globales);
+	printf("cantidad_pokemons_globales %d\n", cantidad_objetivos_globales);
+	puts("ATRAPE POKEMON");
+}
+
+void avanzar(int id){
+	t_entrenador *entrenador = list_get(entrenadores, id);
+	int distancia_x = entrenador->objetivo_temporal->pos_x - entrenador->posicion_x;
+	int distancia_y = entrenador->objetivo_temporal->pos_y - entrenador->posicion_y;
+
+	if(distancia_x>0)
+		entrenador->posicion_x++;
+	else if(distancia_x<0)
+		entrenador->posicion_x--;
+	else if(distancia_y>0)
+		entrenador->posicion_y++;
+	else if(distancia_y<0)
+		entrenador->posicion_y--;
+}
+
+void entrenador(int id){
+	//deadlock?
+	while(!tiene_cantidad(id)){
+		sem_wait(&(ejecutar_entrenador[id]));
+		sleep(retardo);
+		avanzar(id);
+		printf("Avance -> ");
+		mostrar_entrenador(list_get(entrenadores,id));
+		sem_post(&activar_algoritmo);
+		if(llego_al_objetivo(list_get(entrenadores,id)))
+		  {atrapar_pokemon(id);
+		  //deadlock si entras en deadlock, solo se ejecuta todo el deadlock hasta terminar el intercambio?
+		  //o tambien se puede hacer actuar el planificador? es monoprocesador no?
+		  }
+	}
+
+	/*
+	while(!cumplio_objetivo_entrenador(id)){ //hilo de deadlock que verifique para hacer el intercambio
+    wait(deadlock); //segun su id
+	}*/
+
+	printf("CUMPLI MI OBJETIVO Y SOY FELIZ, MIS POKEMONS: ");
+	t_entrenador *entrenador = list_get(entrenadores,id);
+	for(int i=0; i < list_size(entrenador->pokemones); i++){
+		printf("Pokemon numero: %d %s | ",i+1,list_get(entrenador->pokemones,i));
+	}
+}
+
+void crear_hilos_entrenadores(){ //creamos todos los entrenadores, estos se quedan esperando la habilitacion del algoritmo para avanzar
+	pthread_t *hilo_entrenador = malloc(sizeof(pthread_t)*list_size(entrenadores));
+	for(int i=0; i < list_size(entrenadores);i++){
+    	pthread_create(&(hilo_entrenador[i]), NULL, (void*)entrenador, i); //OJOOOOO
+    	pthread_detach(hilo_entrenador[i]);
+     }
+}
+
+//------------------------------FUNCION LARGA PARA ENCONTRAR EL MAS CERCANO------------------------------
 
 int distancia_menor(int posicion_pokemon_x,int posicion_pokemon_y){
 	int distancia(t_entrenador* entrenador){
@@ -36,12 +210,17 @@ int distancia_menor(int posicion_pokemon_x,int posicion_pokemon_y){
 	bool es_mayor(int numero1, int numero2){
 		return (numero2) >= (numero1);}
 
-	t_list* distancia_de_entrenadores =  list_map(new_entrenadores, distancia);
+	bool disponible(t_entrenador* entrenador){
+		return (entrenador->objetivo_temporal == NULL);
+	}
+
+	t_list* distancia_disponibles = list_filter(entrenadores, disponible);
+	t_list* distancia_de_entrenadores =  list_map(distancia_disponibles, distancia);
     list_sort(distancia_de_entrenadores, es_mayor);
 	return list_get(distancia_de_entrenadores, 0);
 }
 
-t_entrenador *entrenador_mas_cerca(int posicion_pokemon_x,int posicion_pokemon_y){
+t_entrenador *entrenador_mas_cerca(int posicion_pokemon_x,int posicion_pokemon_y){ //verifica que no tenga un objetivo
 	int distancia(t_entrenador* entrenador){
 		return (abs(entrenador->posicion_x - posicion_pokemon_x) + abs(entrenador->posicion_y - posicion_pokemon_y));}
 
@@ -49,27 +228,241 @@ t_entrenador *entrenador_mas_cerca(int posicion_pokemon_x,int posicion_pokemon_y
 
 	bool es_igual_distancia(t_entrenador* entrenador){
 		int distancia1 = distancia(entrenador);
-		return (dist_menor == distancia1);}
+		return ((dist_menor == distancia1) && (entrenador->objetivo_temporal == NULL));}
 
-	t_list* entrenadores_mas_cerca = list_filter(new_entrenadores, es_igual_distancia);
+	t_list* entrenadores_mas_cerca = list_filter(entrenadores, es_igual_distancia);
 	return list_get(entrenadores_mas_cerca, 0);	//saco al primero por defecto si hay 2 a la misma distancia
 }
 
-void entrenador_a_ready(int posicion_pokemon_x,int posicion_pokemon_y){
+void entrenador_mas_cerca_a_lista_corto_plazo(t_pokemon* pokemon){
 	t_entrenador *entrenador_elegido;
-    int index;
-    ready_entrenadores = list_create();// OJO
-	entrenador_elegido = entrenador_mas_cerca(posicion_pokemon_x, posicion_pokemon_y);
-	index = entrenador_elegido->id;
-    list_add(ready_entrenadores, entrenador_elegido);//PRIMERO: 7, SEGUNDO: 8, TERCERO: 9, CUARTO:1, QUINTO: 2
-	list_remove(new_entrenadores,index);
+	entrenador_elegido = entrenador_mas_cerca(pokemon->pos_x, pokemon->pos_y);
+	entrenador_elegido->objetivo_temporal=malloc(sizeof(t_pokemon));
+	entrenador_elegido->objetivo_temporal=pokemon;
+    list_add(lista_corto_plazo, entrenador_elegido);
+    sem_post(&hay_entrenador_corto_plazo);
 }
 
-//FIFO => 7,8,9,1,2 => 8,9,1,2 => 9,1,2 => 1,2 => 2 => :)
-//SJF (Sin desalojo) => 7,8,9,1,2 => 7,8,9,2 => 7,8,9 => 8,9 => 9 => :)
-//RR => 7,8,9,1,2 => 8,9,1,2,5 => 9,1,2,5,6 => 1,2,5,6,7 => 2,5,6,7 => 5,6,7 => 6,7,3 => 7,3,5 => 3,5,5 => 5,5,1 etc...
+//--------------------------------------FUNCIONES GENERALES ----------------------------------------------
 
-// FIN planificacion ..........................................
+bool cumplio_cantidad_global(){
+     return cantidad_pokemons_globales == cantidad_objetivos_globales;
+}
+
+int cantidad_necesitada(){
+	return cantidad_objetivos_globales - cantidad_pokemons_globales;
+}
+
+//-------------------------------------- ---PLANIFICAR----------------------------------------------------
+
+void planificar(){
+	t_pokemon *pokemon = list_get(pokemons_recibidos,0);
+	//mostrar_pokemon(pokemon);
+	list_remove(pokemons_recibidos,0);
+	entrenador_mas_cerca_a_lista_corto_plazo(pokemon);
+}
+
+//------------------------------------------ALGORITMOS-------------------------------------------------------
+
+void retirar_entrenador(t_entrenador * entrenador){
+	free(entrenador->objetivo_temporal->nombre);
+		free(entrenador->objetivo_temporal);
+		entrenador->objetivo_temporal = NULL;
+		puts("");
+		puts("------------------------------------------------------------");
+		puts("Llego a su objetivo y su nueva posicion es: ");
+		mostrar_entrenador(entrenador);
+		puts("------------------------------------------------------------");
+		list_remove(lista_corto_plazo,0);
+}
+
+void planificacionFIFO(){
+	while(!cumplio_cantidad_global()){
+	sem_wait(&hay_entrenador_corto_plazo);
+	puts("                               SACO A UN ENTRENADOR");
+	t_entrenador *entrenador = list_get(lista_corto_plazo,0);
+	puts("------------------------------------------------------------------------------------------");
+	mostrar_entrenador(entrenador);
+	puts("------------------------------------------------------------------------------------------");
+	while(!llego_al_objetivo(entrenador)){
+	sem_post(&(ejecutar_entrenador[entrenador->id]));
+    sem_wait(&activar_algoritmo);
+	}
+	retirar_entrenador(entrenador);}
+	puts("CUMPLIO EL TEAM SU OBJETIVO, IUPIIIII");}
+
+void planificacionRR(){
+	int quantum = config_get_int_value(config,"QUANTUM");
+	int cantidad = 0;
+	while(!cumplio_cantidad_global()){
+	sem_wait(&hay_entrenador_corto_plazo);
+	puts("                               SACO A UN ENTRENADOR");
+	t_entrenador *entrenador = list_get(lista_corto_plazo,0);
+	puts("------------------------------------------------------------------------------------------");
+	mostrar_entrenador(entrenador);
+	puts("------------------------------------------------------------------------------------------");
+	while(!llego_al_objetivo(entrenador) && (cantidad < quantum)){
+    sem_post(&(ejecutar_entrenador[entrenador->id]));
+	sem_wait(&activar_algoritmo);
+	cantidad++;
+    }
+	cantidad = 0;
+	if(llego_al_objetivo(entrenador))
+	    retirar_entrenador(entrenador);
+	else{
+		list_remove(lista_corto_plazo,0);
+	    list_add(lista_corto_plazo,entrenador);
+	    sem_post(&hay_entrenador_corto_plazo);}}
+	puts("CUMPLIO EL TEAM SU OBJETIVO, IUPIIIII");}
+
+//---
+bool llego_uno_nuevo(){
+	return list_size(lista_corto_plazo) != largo_lista_conocida;
+}
+
+int distancia(t_entrenador* entrenador){
+int x = (abs(entrenador->posicion_x - entrenador->objetivo_temporal->pos_x) + abs(entrenador->posicion_y - entrenador->objetivo_temporal->pos_y));
+return x;}
+
+void ordenar_lista(){
+	bool es_mayor(t_entrenador *entrenador1, t_entrenador *entrenador2){
+		return (distancia(entrenador1) <= distancia(entrenador2));}
+    list_sort(lista_corto_plazo, es_mayor);
+}
+//---
+
+void planificacionSJF_CD(){
+	t_entrenador *entrenador2;
+	t_entrenador *entrenador;
+	bool sin_cambio = true;
+	while(!cumplio_cantidad_global()){
+		sem_wait(&hay_entrenador_corto_plazo);
+		ordenar_lista();
+		largo_lista_conocida = list_size(lista_corto_plazo);
+		sin_cambio = true;
+		puts("                               PLANIFICO A UN ENTRENADOR");
+		entrenador = list_get(lista_corto_plazo,0);
+		puts("------------------------------------------------------------------------------------------");
+		mostrar_entrenador(entrenador);
+		puts("------------------------------------------------------------------------------------------");
+		while(!llego_al_objetivo(entrenador)){
+		sem_post(&(ejecutar_entrenador[entrenador->id]));
+	    sem_wait(&activar_algoritmo);
+	    if(llego_uno_nuevo()){ //variable global tamaño_list para ver si cambio la lista
+	    	if(llego_al_objetivo(entrenador))
+	    	  {retirar_entrenador(entrenador);
+	    	  break;}
+		  puts("                               CAMBIO A UN ENTRENADOR");
+		  puts("------------------------------------------------------------------------------------------");
+		  mostrar_entrenador(entrenador);
+		  puts("------------------------------------------------------------------------------------------");
+	      ordenar_lista();
+	      entrenador2 = list_get(lista_corto_plazo,0);
+		  puts("                               POR ESTE ENTRENADOR");
+		  puts("------------------------------------------------------------------------------------------");
+		  mostrar_entrenador(entrenador2);
+		  puts("------------------------------------------------------------------------------------------");
+	      sin_cambio = false;
+	      sem_post(&hay_entrenador_corto_plazo);
+		  break;}
+        }
+		if(llego_al_objetivo(entrenador) && sin_cambio)
+			retirar_entrenador(entrenador);}
+	puts("CUMPLIO EL TEAM SU OBJETIVO, IUPIIIII");}
+
+void planificacionSJF_SD(){
+	while(!cumplio_cantidad_global()){
+	sem_wait(&hay_entrenador_corto_plazo);
+	ordenar_lista();
+	puts("                               SACO A UN ENTRENADOR");
+	t_entrenador *entrenador = list_get(lista_corto_plazo,0);
+	puts("------------------------------------------------------------------------------------------");
+	mostrar_entrenador(entrenador);
+	puts("------------------------------------------------------------------------------------------");
+	while(!llego_al_objetivo(entrenador)){
+	sem_post(&(ejecutar_entrenador[entrenador->id]));
+    sem_wait(&activar_algoritmo);
+	}
+	retirar_entrenador(entrenador);}
+	puts("CUMPLIO EL TEAM SU OBJETIVO, IUPIIIII");}
+
+int convertir(char* algoritmo_nombre){
+	if (!strcmp(algoritmo_nombre,"FIFO")) return FIFO;
+	if (!strcmp(algoritmo_nombre,"RR")) return RR;
+	if (!strcmp(algoritmo_nombre,"SJF_SD")) return SJF_SD;
+	if (!strcmp(algoritmo_nombre,"SJF_CD")) return SJF_CD;
+	return -1;
+}
+
+void leer_algoritmo(){
+	char* algoritmo_nombre = config_get_string_value(config,"ALGORITMO_PLANIFICACION");
+	int algoritmo = convertir(algoritmo_nombre);
+	pthread_t hilo_planificacion;
+    switch(algoritmo){
+    	case FIFO:
+    		{pthread_create(&hilo_planificacion, NULL, (void*)planificacionFIFO, NULL); break;}
+    	case RR:
+    		{pthread_create(&hilo_planificacion, NULL, (void*)planificacionRR, NULL); break;}
+    	case SJF_CD:
+    	    {pthread_create(&hilo_planificacion, NULL, (void*)planificacionSJF_CD, NULL); break;}
+    	case SJF_SD:
+    		{pthread_create(&hilo_planificacion, NULL, (void*)planificacionSJF_SD, NULL); break;}
+    	default:
+    	    {puts("--------------------------------ERROR EN ALGORTIMO DE PLANIFICACION-----------------------------\n");
+    	    break;}
+    }
+    pthread_detach(hilo_planificacion);
+}
+
+//-------------------------------------------POKEMONES PRUEBA------------------------------------------------
+
+void probar_pokemones(){
+    t_pokemon* pokemon = malloc(sizeof(t_pokemon));
+    pokemon->nombre=malloc(sizeof(char) * 15);
+    strcpy(pokemon->nombre,"Pikachu");
+    pokemon->pos_x=-1;
+    pokemon->pos_y=2;
+    list_add(pokemons_recibidos,pokemon);
+    sem_post(&hay_pokemones);
+
+    t_pokemon* pokemon2 = malloc(sizeof(t_pokemon));
+    pokemon2->nombre=malloc(sizeof(char) * 15);
+    strcpy(pokemon2->nombre,"Bulbasaur");
+    pokemon2->pos_x=9;
+    pokemon2->pos_y=5;
+    list_add(pokemons_recibidos,pokemon2);
+    sem_post(&hay_pokemones);
+}
+
+void probar_pokemon_SJF_CD(){
+    sleep(5);
+    t_pokemon* pokemon1 = malloc(sizeof(t_pokemon));
+    pokemon1->nombre=malloc(sizeof(char) * 15);
+    strcpy(pokemon1->nombre,"Squirtle");
+    pokemon1->pos_x=4;
+    pokemon1->pos_y=7;
+    list_add(pokemons_recibidos,pokemon1);
+    sem_post(&hay_pokemones);
+}
+
+//-------------------------------------------PLANIFICADOR------------------------------------------------
+
+void planificador(){
+	leer_algoritmo();
+	probar_pokemones();
+    int cantidad = 0;
+    int cantidad_maxima = cantidad_necesitada();
+	while(cantidad < cantidad_maxima){ //cada entrenador tiene sus *cantidades* deseadas (no hace falta q coincidan)!
+		if(cantidad == 2)
+			probar_pokemon_SJF_CD();
+		sem_wait(&hay_pokemones);
+		planificar();
+
+		cantidad++;
+	}
+}
+
+//------------------------------------- FIN DE PLANIFICACION ---------------------------------------------------
 
 int subscribirse_a_cola(cola_code cola){
 	int socket_broker = connect_to(ip_broker,puerto_broker,wait_time);
@@ -83,12 +476,11 @@ int subscribirse_a_cola(cola_code cola){
 	return socket_broker;
 }
 
-
-
 t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos,int i){
 	t_entrenador* entrenador = malloc(sizeof(t_entrenador));
 
 	entrenador->id = i;
+	entrenador->objetivo_temporal=NULL;
 
 	char **auxiliar = string_split(posicion,"|");
 
@@ -101,6 +493,7 @@ t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos,
 
 	while(*auxiliar){
 		list_add(entrenador->pokemones,*auxiliar);
+		cantidad_pokemons_globales++;
 		auxiliar++;
 	}
 
@@ -109,6 +502,7 @@ t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos,
 	entrenador->objetivos = list_create();
 	while(*auxiliar){
 		list_add(entrenador->objetivos,*auxiliar);
+		cantidad_objetivos_globales++;
 		auxiliar++;
 	}
 
@@ -116,8 +510,7 @@ t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos,
 }
 
 
-t_list* obtener_entrenadores(){
-	new_entrenadores = list_create();
+void obtener_entrenadores(){
 	char **lista_de_objetivos, **lista_de_pokemones, **lista_de_posiciones;
 	t_entrenador* entrenador;
 
@@ -130,14 +523,12 @@ t_list* obtener_entrenadores(){
     int i =0;
 	while(*lista_de_posiciones){
 		entrenador = crear_entrenador(*lista_de_posiciones, *lista_de_pokemones, *lista_de_objetivos,i);
-		list_add(new_entrenadores, entrenador);
+		list_add(entrenadores, entrenador);
 		lista_de_objetivos++;
 		lista_de_pokemones++;
 		lista_de_posiciones++;
 		i++;
 	}
-
-	return new_entrenadores;
 }
 
 
@@ -147,7 +538,7 @@ void mostrar_lista(t_list* lista){
 		printf("Elemento n%d: %s\n",i,list_get(lista,i));
 }
 
-t_list* obtener_pokemones_objetivo(t_list* lista_de_entrenadores){
+t_list* obtener_pokemones_objetivo(){
 
 	t_list* pokemones_ya_obtenidos = list_create();
 	t_list* pokemones_objetivo = list_create();
@@ -155,8 +546,8 @@ t_list* obtener_pokemones_objetivo(t_list* lista_de_entrenadores){
 
 	t_entrenador* aux;
 
-	for (i=0;i<list_size(lista_de_entrenadores);i++){
-		aux=list_get(lista_de_entrenadores,i);
+	for (i=0;i<list_size(entrenadores);i++){
+		aux=list_get(entrenadores,i);
 		list_add_all(pokemones_ya_obtenidos,aux->pokemones);
 		list_add_all(pokemones_objetivo,aux->objetivos);
 	}
@@ -202,27 +593,30 @@ void enviar_mensajes_get(int socket_a_enviar,t_list* todos_los_pokemones_que_fal
 	}
 }
 
-
-
-
-
-
-
 void inicializar_team(){
 
 	int socket_broker, socket_cola_localized, socket_cola_caught, socket_cola_appeared;
 	t_list* pokemones_objetivo;
 
+	//----------------planificacion
+    crear_listas_globales();
+    //------------------
+
 	logger = log_create("team.log","log",1,LOG_LEVEL_DEBUG);
-	config = config_create("../config");
+	config = config_create("config");
 
+	obtener_entrenadores();
 
-	new_entrenadores = obtener_entrenadores();
-	pokemones_objetivo = obtener_pokemones_objetivo(new_entrenadores);
+	//----------------planificacion
+	inicializar_semaforo_entrenadores();
+    crear_hilos_entrenadores();
+    retardo = config_get_int_value(config,"RETARDO_CICLO_CPU");
+    planificador(); //TENDRIA QUE ESTAR ABAJO, LUEGO DE SUSCRIBIRSE A LAS COLAS TENDRIAN Q HABER HILOS ACTIVOS A LA
+    //ESPERA DE UN MENSAJE Y ACTUALIZAR LAS COLAS, ASI EL PLANIFICADOR PUEDE ACTUAR BIEN EN INDEPENDENCIA
+    //--------------------------
 
 	//Obtiene los datos IP,PUERTO WAIT_TIME desde la config
-
-
+	pokemones_objetivo = obtener_pokemones_objetivo();
 
 	ip_broker = config_get_string_value(config,"IP_BROKER");
 	log_debug(logger,config_get_string_value(config,"IP_BROKER")); //pido y logueo ip
@@ -238,137 +632,15 @@ void inicializar_team(){
 	//1 thread por socket intentando recibir mensajes aca?
 	//1 thread por socket intentando recibir mensajes aca?
 	//1 thread por socket intentando recibir mensajes aca?
-
-	/*
-	entrenador1 ={pikachu} 1 2
-	entrenador2 ={squirtle} 5 7
-
-	sem_entrenadores[2]; //es dinamico, se puede?
-
-	t_list objetivos; // cada elemento es una lista de objetivos de cada entrenador
-	t_list adquiridos; // cada elemento es una lista de pokemons adquiridos por cada entrenador
-	t_list objetivos_temporales // cada elemento es un unico pokemon
-	pthread(entrenador1);
-	pthread(entrenador2);
-
-	//te olvidas de los entrenadores
-
-
-
-
-	*/
-
-
-
-
-
-	//enviar_mensajes_get(socket_broker,pokemones_objetivo);
-
-
-
-//	enviar_mensajes_get();
-
 }
-
-
-/*
-
-atrapar_pokemon(){
-	while(!esta_en_posicion_pokemon()){
-		acercar(pokemon);
-	}
-	catch_pokemon(pokemon);
-
-
-}
-
-entrenador(){
-		pokemon a atrapar = lista_pokemones temporales(id) = busca a su pokemon objetivo temporal que le asigna el planificador
-							// t_list global, por que?? porque el planificador le tiene que decir a cual atrapar, no se lo
-						   // puede pasar por parametro. o si?
-
-		int id;
-
-		while(!cumple_objetivo_entrenador()){
-			wait(sem_entrendaores(id);
-			atrapar_pokemon(pokemon a atrapar); // esto es pseudo codigo pokemon a atrapar se llama cada vez q entra al while
-
-
-		}
-
-	}
-
-
-planificacionFIFO(){
-
-
-
-}
-
-planificar(){
-
-	depende del tipo de implementacion //RR, SJF CON O SIN, FIFO
-	//PODRIAMOS HACER UN SWITCH PARA CADA TIPO => planificacion RR, planificiacion FIFO, ... SJF, con o sin desalojo
-	pokemon = agarra el primer pokemon de los recibidos
-	entrenador = elije entrenador optimo, el mas cercano.
-
-	//FIFO
-	// lista_planificacion = lista de ids, indican semaforos
-	agrega al entrenador a la lista de planificacion
-
-	int lista_corto_plazo[]; // {1} //new ponele
-
-	vacia de a uno => activa al 1
-
-	{1(10),2(3)} => activa al 1(10) y cuando termina => activa al 2(3)
-
-	//SJF
-	//sin desalojo
-
-	{1(10)}=> ejecuta al 1(10) => llega el 2(7) => {1(9), 2(7)} => {1(8), 2(7), 3(3)} reordena => {1(7),3(3), 2(7)}
-
-	//SJF
-	//con desalojo
-
-	{1(10)}=> ejecuta al 1(10) => llega el 2(7) => {1(9), 2(7)} desaloja y ejecuta => {2(6), 1(9)} y ejecuta => {2(5), 1(9)} y llega 3(3)
-
-	=> reordena y desaloja y ejecuta => {3(2),2(6), 1(9)}
-
-	//RR
-
-	{1(10)} => ejecuta Q cuantos al 1(10) => llega el 2(7) => {1(9-Q), 2(7)} desaloja y ejecuta => {2(7-Q), 1(10-Q)} y ejecuta
-
-			=> {1(10-2Q), 2(7-Q)} y llega 3(3)=> reordena y desaloja y ejecuta => {2(7-2Q),3(3), 1(10-2Q)}
-
-
-
-
-}
-
-planificador(){
-
-	while(!cumplio_objetivo()){
-		hacer_get_pokemons = llama a uno de cada especie de pokemones faltantes
-		while(pokemones_recibidos_is_empty()); //cambiar por un semaforo mejor, ver mejora de la implementacion
-		while(haya_pokemones_recibidos){
-			planificar();
-
-
-
-		}
-
-	}
-}
-
-*/
 
 int main(void) {
 
-
 	inicializar_team();
 
-	//planificador()
-
+	//planificador();
+    //deadlock();
+    //liberar_recursos();
 
 	return EXIT_SUCCESS;
 }

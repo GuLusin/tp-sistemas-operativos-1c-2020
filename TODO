@@ -26,3 +26,7 @@ PROCESO TEAM:
  * Compartesn algo los distintos teams? //..............
  * logs en modo debug podemos anotar lo que nos pinte?
  + Los teams guardan un socket por subscripcion (3 sockets) y se queda haciendo recv?
+ 
+ ---PLANIFICACION---
+ *el deadlock puede estar al final? o la idea es q sea otro hilo q pregunte y cuando haga match intercambie sus pokemons?
+ *ya arranca con deadlock
