@@ -10,8 +10,6 @@
 
 #include "mensajes.h"
 
-
-
 /* crear_mensaje
  *
  * funcion de argumentos variables, se usa para crear todos los tipos de mensaje. Se le pasa el
@@ -20,7 +18,7 @@
  * SUBSCRIPCION : se pasa primero el socket que se subscribe y como segundo argumento la cola a la cual
  * suscribirse.
  *
- *
+ * APPEARED_POKEMON:
  *
  *
  * codigo_operacion = codigo sobre el cual se decidira que accion tomar
@@ -33,17 +31,24 @@
  * Deberia ir en mensajes.c???
  */
 
-t_mensaje* crear_mensaje(int argc, ...){
-	va_list args;
-	va_start(args, argc);
+//t_mensaje* mensaje = crear_mensaje(5, APPEARED_POKEMON, pokemon->nombre, pokemon->pos_x, pokemon->pos_y, id_correlativo);
 
+t_mensaje* crear_mensaje(int num, ...){
+	va_list args;
+	va_start(args, num);
+
+	int aux;
+	char* str_aux;
 	t_pokemon* pokemon;
 	t_mensaje* mensaje = malloc(sizeof(t_mensaje));
 
+	mensaje->id=ID_DEFAULT;
 	mensaje->codigo_operacion = va_arg(args, uint32_t);
+
 
 	switch(mensaje->codigo_operacion){
 		case SUBSCRIPCION:// se le pasa el tipo y la cola a subscribirse
+			mensaje->id=ID_SUSCRIPCION;
 			mensaje->contenido.subscripcion = va_arg(args, uint32_t);
 			va_end(args);
 			return mensaje;
@@ -61,10 +66,10 @@ t_mensaje* crear_mensaje(int argc, ...){
 		case APPEARED_POKEMON:;
 			pokemon = malloc(sizeof(t_pokemon));
 			pokemon->nombre = va_arg(args, char*);
-			pokemon->pos_x = va_arg(args, uint32_t);
+			pokemon->pos_x= va_arg(args, uint32_t);
 			pokemon->pos_y = va_arg(args, uint32_t);
-			mensaje->contenido.appeared_pokemon->pokemon = pokemon;
-			mensaje->contenido.appeared_pokemon = va_arg(args,uint32_t);
+			mensaje->contenido.appeared_pokemon.id_correlativo=va_arg(args,uint32_t);
+			mensaje->contenido.appeared_pokemon.pokemon=pokemon;
 			va_end(args);
 			return mensaje;
 			break;
@@ -85,18 +90,26 @@ t_mensaje* crear_mensaje(int argc, ...){
 			break;
 		case GET_POKEMON:
 			mensaje->contenido.get_pokemon->pokemon= va_arg(args, char*);
-			mensaje->contenido.get_pokemon->size_pokemon = strlen(mensaje->contenido.get_pokemon->pokemon) + 1;
 			va_end(args);
 			break;
 	}
 }
+
+t_pokemon* crear_pokemon(char* nombre,int px, int py){
+	t_pokemon* pokemon = malloc(sizeof(t_pokemon));
+	pokemon->nombre=strdup(nombre);
+	pokemon->pos_x=px;
+	pokemon->pos_y=py;
+	return pokemon;
+}
+
 
 void printear_pokemon(t_pokemon* pokemon){
 	printf("nombre:%s\npos x:%d\npos y:%d\n", pokemon->nombre,pokemon->pos_x,pokemon->pos_y);
 }
 
 void printear_mensaje(t_mensaje* mensaje){
-	printf("MENSAJE\n");
+	printf("----------------------------------------\nMENSAJE\n");
 	printf("id:%d\nop_code:%d\n", mensaje->id,mensaje->codigo_operacion);
 	switch(mensaje->codigo_operacion){
 		case SUBSCRIPCION:// se le pasa el tipo y la cola a subscribirse
@@ -105,9 +118,8 @@ void printear_mensaje(t_mensaje* mensaje){
 		case NEW_POKEMON:;
 			break;
 		case APPEARED_POKEMON:;
-			printear_pokemon(mensaje->contenido.appeared_pokemon->pokemon);
-			printf("id correlativo:%d\n", mensaje->contenido.appeared_pokemon->id_correlativo);
-			printf(":%d\n",mensaje->contenido.subscripcion);
+			printear_pokemon(mensaje->contenido.appeared_pokemon.pokemon);
+			printf("id correlativo:%d\n", mensaje->contenido.appeared_pokemon.id_correlativo);
 			break;
 		case CATCH_POKEMON:;
 			break;
@@ -117,9 +129,54 @@ void printear_mensaje(t_mensaje* mensaje){
 			break;
 	}
 
-
+	printf("----------------------------------------\n");
 
 }
+
+int tamanio_pokemon(t_pokemon* pokemon){
+	return strlen(pokemon->nombre) + 1 + sizeof(uint32_t)*2;
+}
+
+void* serializar_pokemon(t_pokemon* pokemon){
+	void* magic = malloc(tamanio_pokemon(pokemon));
+	int offset=0;
+
+	memcpy(magic+offset,pokemon->nombre,strlen(pokemon->nombre)+1);
+	offset += strlen(pokemon->nombre)+1;
+	memcpy(magic+offset,&(pokemon->pos_x),sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(magic+offset,&(pokemon->pos_y),sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	return magic;
+}
+
+t_pokemon* deserializar_pokemon(void* stream){
+	t_pokemon* pokemon = malloc(sizeof(t_pokemon));
+	int offset=0;
+
+	pokemon->nombre = strdup(stream);
+	offset += strlen(pokemon->nombre)+1;
+	memcpy(&(pokemon->pos_x),stream+offset, sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(&(pokemon->pos_y),stream+offset, sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+
+	return pokemon;
+}
+
+
+t_appeared_pokemon deserializar_appeared_pokemon(void* stream){
+	t_appeared_pokemon appeared_pokemon;
+	int offset=0;
+	memcpy(&appeared_pokemon.id_correlativo,stream,sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	appeared_pokemon.pokemon = deserializar_pokemon(stream+offset);
+
+	return appeared_pokemon;
+
+}
+
+
 
 /* tamanio_contenido_mensaje
  * mensaje = mensaje t_mensaje al que va obtiene el tamaño del contenido
@@ -133,13 +190,44 @@ int tamanio_contenido_mensaje(t_mensaje* mensaje){
 			tamanio += sizeof(uint32_t);
 			break;
 		case GET_POKEMON:
-			tamanio += sizeof(uint32_t) + mensaje->contenido.get_pokemon->size_pokemon;
+			tamanio += strlen(mensaje->contenido.get_pokemon->pokemon) + 1;
 			break;
-
+		case APPEARED_POKEMON:
+			tamanio += sizeof(uint32_t) + tamanio_pokemon(mensaje->contenido.appeared_pokemon.pokemon); //tamanio sin auxiliares a enviar
+			break;
+		case NEW_POKEMON:
+			tamanio += sizeof(uint32_t) + tamanio_pokemon(mensaje->contenido.get_pokemon->pokemon);
+			break;
+		case CATCH_POKEMON:
+			tamanio += tamanio_pokemon(mensaje->contenido.get_pokemon->pokemon);
+			break;
+		case CAUGHT_POKEMON:
+			tamanio += sizeof(uint32_t)*2;
+			break;
+		case LOCALIZED_POKEMON:
+			break;
 
 
 	}
 	return tamanio;
+}
+
+/* serializar_appeared_pokemon
+ * t_appeared_pokemon* = puntero de estructura get_pokemon
+ * devuelve un void* serializado con el appeared_pokemon
+ */
+
+void* serializar_appeared_pokemon(t_appeared_pokemon appeared_pokemon){
+	void* magic = malloc(sizeof(uint32_t) + tamanio_pokemon(appeared_pokemon.pokemon));
+	int size_pokemon=tamanio_pokemon(appeared_pokemon.pokemon);
+	void* pokemon_stream = serializar_pokemon(appeared_pokemon.pokemon);
+	int offset = 0;
+	memcpy(magic + offset, &appeared_pokemon.id_correlativo, sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(magic + offset, pokemon_stream, size_pokemon);
+	offset += size_pokemon;
+
+	return magic;
 }
 
 /* serializar_get_pokemon
@@ -147,7 +235,7 @@ int tamanio_contenido_mensaje(t_mensaje* mensaje){
  * devuelve un void* serializado con el get_pokemon
  */
 
-void* serializar_get_pokemon(t_get_pokemon* get_pokemon){
+/*void* serializar_get_pokemon(t_get_pokemon* get_pokemon){
 	void* magic = malloc(sizeof(uint32_t) + strlen(get_pokemon->pokemon) + 1);
 	int offset = 0;
 
@@ -157,8 +245,7 @@ void* serializar_get_pokemon(t_get_pokemon* get_pokemon){
 	offset += get_pokemon->size_pokemon;
 
 	return magic;
-
-}
+}*/
 
 /* serializar_mensaje
  * ret_size* = puntero al que devuelve el tamaño del mensaje
@@ -186,19 +273,24 @@ void* serializar_mensaje(t_mensaje* mensaje, int *ret_size){
 
 	switch(mensaje->codigo_operacion){
 	case SUBSCRIPCION:;
-		uint32_t cola= mensaje->contenido.subscripcion;
-		memcpy(magic + offset, &cola, size_contenido_mensaje);
+		memcpy(magic + offset, &mensaje->contenido.subscripcion, size_contenido_mensaje);
 		offset += size_contenido_mensaje;
 		break;
 	case GET_POKEMON:;
-		stream = serializar_get_pokemon(mensaje->contenido.get_pokemon);
+		//stream = serializar_get_pokemon(mensaje->contenido.get_pokemon);
 		memcpy(magic + offset, stream, size_contenido_mensaje);
 		offset += size_contenido_mensaje;
+		free(stream);
+		break;
+	case APPEARED_POKEMON:;
+		stream = serializar_appeared_pokemon(mensaje->contenido.appeared_pokemon);
+		memcpy(magic + offset, stream, size_contenido_mensaje);
+		offset += size_contenido_mensaje;
+		free(stream);
 		break;
 
 
 	}
-	free(stream);
 	*ret_size=(int)size;
 	return magic;
 
@@ -213,9 +305,10 @@ void* serializar_mensaje(t_mensaje* mensaje, int *ret_size){
 void enviar_mensaje(int socket_a_enviar, t_mensaje* mensaje){
 	int size;
 	void* stream = serializar_mensaje(mensaje,&size);
-	//printear_mensaje(mensaje);
 	sendall(socket_a_enviar,stream, size);
 }
+
+
 
 
 /* deserializar_mensaje
@@ -225,7 +318,8 @@ void enviar_mensaje(int socket_a_enviar, t_mensaje* mensaje){
  */
 
 t_mensaje* deserializar_mensaje(int codigo_operacion, void* stream){
-
+	t_mensaje* mensaje = malloc(sizeof(t_mensaje));
+	mensaje->codigo_operacion=codigo_operacion;
 	switch(codigo_operacion){
 		/*case SUBSCRIPCION:;
 			int cola_recibida = deserializar_subscripcion(buffer->stream);
@@ -234,12 +328,14 @@ t_mensaje* deserializar_mensaje(int codigo_operacion, void* stream){
 			return un_mensaje;
 			break;*/
 		case APPEARED_POKEMON:;
+			mensaje->contenido.appeared_pokemon=deserializar_appeared_pokemon(stream);
 			break;
 
 		default:
 			puts("default");
 			break;
 	}
+	return mensaje;
 }
 
 /*

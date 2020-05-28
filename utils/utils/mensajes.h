@@ -17,8 +17,10 @@
 #include <unistd.h>
 #include <netdb.h>
 #include <pthread.h>
+#include <commons/collections/list.h>
 
 #define ID_SUSCRIPCION 999999
+#define ID_DEFAULT 888888
 
 typedef enum {
 	COLA_NEW_POKEMON,
@@ -32,9 +34,9 @@ typedef enum {
 
 
 typedef struct {
-   char* nombre; // HACE FALTA UN SIZE PARA EL PUNTERO?
-   int pos_x;
-   int pos_y;
+	char* nombre; // SE USA STRDUP
+	uint32_t pos_x;
+	uint32_t pos_y;
 }t_pokemon;
 
 typedef struct{
@@ -57,9 +59,12 @@ typedef struct{
 }t_caught_pokemon;
 
 typedef struct{
-	uint32_t size_pokemon; //HACE FALTA?
 	char* pokemon;
 }t_get_pokemon; //ESTE MENSAJE ESPERA COMO CONFIRMACION UN ID QUE SERA EL CORRELATIVO PARA CONFIRMACION DE LA RECEPCION DE APPEARED O LOCALIZED
+
+typedef struct{
+
+}t_localized_pokemon;
 
 typedef struct{
 	uint32_t id;
@@ -67,10 +72,11 @@ typedef struct{
 	union{
 		uint32_t subscripcion;
 		t_get_pokemon* get_pokemon;
-		t_appeared_pokemon* appeared_pokemon;
+		t_appeared_pokemon appeared_pokemon;
 		t_new_pokemon* new_pokemon;
 		t_catch_pokemon* catch_pokemon;
 		t_caught_pokemon* caught_pokemon;
+		t_localized_pokemon* localized_pokemon;
 	}contenido;
 }t_mensaje;
 
@@ -81,8 +87,8 @@ typedef enum
 	SUBSCRIPCION,
 	NEW_POKEMON,
 	LOCALIZED_POKEMON,
-	CAUGHT_POKEMON,
 	APPEARED_POKEMON,
+	CAUGHT_POKEMON,
 	GET_POKEMON,
 	CATCH_POKEMON,
 } op_code;

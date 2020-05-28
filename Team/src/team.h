@@ -12,6 +12,8 @@
 #include <semaphore.h>
 #include <commons/collections/list.h>
 
+#define CODIGO_OPERACION_DEFAULT -1
+
 typedef struct {
    int id;
    int posicion_x;
@@ -59,6 +61,9 @@ t_list* lista_corto_plazo; //lista de entrenadores para moverse
 t_list* pokemons_recibidos;
 sem_t hay_pokemones;
 sem_t hay_entrenador_corto_plazo;
+
+pthread_mutex_t mutex_pokemones_recibidos;
+
 
 int cantidad_pokemons_globales;
 int cantidad_objetivos_globales;

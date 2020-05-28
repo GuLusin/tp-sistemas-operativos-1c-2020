@@ -1,31 +1,18 @@
 
 PROCESO TEAM:
 
- *Q paso con la libreria que incluimos q tuvimos que poner .c en vez de .h?
- *  	(ARREGLE QUE SE PUEDA ACCEDER DESDE CUALQUIER UBICACION. TODAVIA NO RECONOCE EL . H
- *Hacer un utils con funcion log y config que esta en team.c y hacerla generica, pasando ubicacion como parametro.
- *hay que chequear, o se podria ver, que cuando un TEAM manda un mensaje, si se corta la conexion lo reintente. // ES NECESARIO??
- *revisar funcionalidades del send_ack y el wait_ack en conexiones capaz no sirvan como estan 
- ahora pero creo que es un prototipo para algo que podriamos usar en el futuro.
+
  *hacer funcion para destruir mutex si es necesario pthread_mutex_destroy()
+ *completar los otros hilos pendientes caught y localized para adaptarlos al nuevo protocolo
+
  
  
  Temas a charlar:
- * Bibliotecas compartidas, convienen? como hacerlas, a que partes aplicar (mensajes, conexiones, etc)
- * Un proyecto por modulo? O todo junto?
- 
- * Que mensajes usan acknowledgment: Subscripcion? Para que? 
- * Subscripciones se guardan en una lista de SOLO sockets?
- 
- * serializacion: cod/size/buffer vs cod/buffer evaluando si existe size, segun el cod leido
- * La opcion cod/buffer seguiria haciendo recv dentro de funcion deserealizar_buffer(cod,socket)
- 
- + accept y recv tienen espera activa? alternativa?
- * Cerrar socket_broker es necesario cuando finaliza broker?
- + Broker tiene un solo socket de escucha que se encarga de TODO?
- * Compartesn algo los distintos teams? //..............
+
+ *Preguntar porque se guardan las variables en protocolo_recibir_mensaje y porque sigue entrando si rompe?
+ *porque para al momento de planificar??
  * logs en modo debug podemos anotar lo que nos pinte?
- + Los teams guardan un socket por subscripcion (3 sockets) y se queda haciendo recv?
+
  
  ---PLANIFICACION---
  *el deadlock puede estar al final? o la idea es q sea otro hilo q pregunte y cuando haga match intercambie sus pokemons?

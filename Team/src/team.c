@@ -57,6 +57,13 @@ void crear_listas_globales(){
 	cantidad_objetivos_globales=0;
 }
 
+void agregar_pokemon_recibido(t_pokemon *pokemon){
+	pthread_mutex_lock(&mutex_pokemones_recibidos);
+    list_add(pokemons_recibidos,pokemon);
+    pthread_mutex_unlock(&mutex_pokemones_recibidos);
+    sem_post(&hay_pokemones);
+}
+
 /*
 bool cumplio_objetivo_entrenador(int id){ //verifica si las listas de objetivos y pokemones son iguales
 	t_entrenador *entrenador = list_get(entrenadores, id);
@@ -448,13 +455,16 @@ void probar_pokemon_SJF_CD(){
 
 void planificador(){
 	leer_algoritmo();
-	probar_pokemones();
+	//probar_pokemones();
+	puts("hasta aca");
     int cantidad = 0;
     int cantidad_maxima = cantidad_necesitada();
 	while(cantidad < cantidad_maxima){ //cada entrenador tiene sus *cantidades* deseadas (no hace falta q coincidan)!
-		if(cantidad == 2)
-			probar_pokemon_SJF_CD();
+		//if(cantidad == 2)
+			//probar_pokemon_SJF_CD();
+		puts("semaforo hay pokemones");
 		sem_wait(&hay_pokemones);
+		puts("planificar");
 		planificar();
 
 		cantidad++;
@@ -591,12 +601,85 @@ void enviar_mensajes_get(int socket_a_enviar,t_list* todos_los_pokemones_que_fal
 	}
 }
 
+
+
+int recibir_appeared(int* socket_broker){
+
+
+	uint32_t codigo_operacion=CODIGO_OPERACION_DEFAULT;
+
+
+	if(recv(*socket_broker, &(codigo_operacion),sizeof(uint32_t), 0)==-1){
+		perror("Falla recv() op_code");
+		return 0;
+	}
+
+	printf("op_code:%d\n", codigo_operacion);
+
+	if(codigo_operacion==CODIGO_OPERACION_DEFAULT){
+		return 0;
+	}
+	uint32_t id;
+
+	if(recv(*socket_broker, &(id), sizeof(uint32_t), 0) == -1){
+		perror("Falla recv() id");
+		return 0;
+	}
+
+	printf("id:%d\n", id);
+
+	uint32_t size_contenido_mensaje;
+
+	if(recv(*socket_broker, &(size_contenido_mensaje), sizeof(uint32_t), 0) == -1){
+		perror("Falla recv() size_contenido_mensaje");
+		return 0;
+	}
+
+	printf("size contenido:%d\n", size_contenido_mensaje);
+
+
+	void* stream = malloc(size_contenido_mensaje);
+
+	if(recv(*socket_broker, stream, size_contenido_mensaje, 0) == -1){
+		perror("Falla recv() contenido");
+		return 0;
+	}
+
+	t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
+	mensaje->id=id;
+	//ya tendriamos el appeared
+
+	send_ack(*socket_broker,ACK);
+	printf("envio ACK\n");
+
+	//printear_mensaje(mensaje);
+	printf("Se recibio el mensaje\n");
+
+	agregar_pokemon_recibido(mensaje->contenido.appeared_pokemon.pokemon);
+	return 1;
+
+}
+
+void protocolo_recibir_mensaje(cola_code cola){
+	int socket_cola = subscribirse_a_cola(cola);
+	switch(cola){
+		case COLA_APPEARED_POKEMON:;
+			while(recibir_appeared(&socket_cola));
+			protocolo_recibir_mensaje(cola);
+			break;
+		default:
+			break;
+	}
+
+}
+
 void inicializar_team(){
 
-	int socket_broker, socket_cola_localized, socket_cola_caught, socket_cola_appeared;
 	t_list* pokemones_objetivo;
+
 	//----------------planificacion
     crear_listas_globales();
+    pthread_mutex_init(&mutex_pokemones_recibidos, NULL);
     //------------------
 	logger = log_create("team.log","log",1,LOG_LEVEL_DEBUG);
 	config = config_create("../config");
@@ -606,7 +689,6 @@ void inicializar_team(){
 	inicializar_semaforo_entrenadores();
     crear_hilos_entrenadores();
     //--------------------------
-    planificador();
 
 	//Obtiene los datos IP,PUERTO WAIT_TIME desde la config
 	pokemones_objetivo = obtener_pokemones_objetivo();
@@ -618,20 +700,38 @@ void inicializar_team(){
 	wait_time = config_get_int_value(config,"TIEMPO_RECONEXION");
 
 	//estas subscripciones se harian en los threads de abajo
-	socket_cola_appeared = subscribirse_a_cola(COLA_APPEARED_POKEMON);
-	socket_cola_localized = subscribirse_a_cola(COLA_LOCALIZED_POKEMON);
-	socket_cola_caught = subscribirse_a_cola(COLA_CAUGHT_POKEMON);
+	//socket_cola_appeared = subscribirse_a_cola(COLA_APPEARED_POKEMON);
+	int socket_cola_localized = subscribirse_a_cola(COLA_LOCALIZED_POKEMON);
+	int socket_cola_caught = subscribirse_a_cola(COLA_CAUGHT_POKEMON);
 
-	//1 thread por socket intentando recibir mensajes aca?
-	//1 thread por socket intentando recibir mensajes aca?
-	//1 thread por socket intentando recibir mensajes aca?
+	//------Se crean 3 threads para escuchar las notificaciones del broker-----
+
+	pthread_t recibir_cola_appeared;
+	pthread_t recibir_cola_caught;
+	pthread_t recibir_cola_localized;
+
+
+	pthread_create(&recibir_cola_appeared, NULL, (void*)protocolo_recibir_mensaje, COLA_APPEARED_POKEMON);
+	//pthread_create(&recibir_cola_caught, NULL, (void*)recibir_mensaje, &socket_cola_caught);
+	//pthread_create(&recibir_cola_localized, NULL, (void*)recibir_mensaje, &socket_cola_localized);
+	puts("crear hilo");
+	pthread_detach(recibir_cola_appeared);
+	//pthread_detach(recibir_cola_caught);
+	//pthread_detach(recibir_cola_localized);
 }
 
 int main(void) {
 
 	inicializar_team();
-
-	//planificador();
+	/*sem_wait(&hay_pokemones);
+	sem_wait(&hay_pokemones);
+	sem_wait(&hay_pokemones);
+	int tamanio = list_size(pokemons_recibidos);
+	for(int i=0;i<tamanio;i++){
+		printear_pokemon(list_get(pokemons_recibidos,i));
+	}*/
+	planificador();
+	while(true);
     //deadlock();
     //liberar_recursos();
 

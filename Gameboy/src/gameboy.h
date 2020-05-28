@@ -38,9 +38,11 @@ int wait_time=3, socket_broker;
 
 pthread_t pthread_recibir_mensajes_broker;
 
-#endif /* CONEXIONES_H */
+
 
 
 op_code interpretar_tipo_mensaje(char* tipo);
 cola_code interpretar_cola_mensaje(char* tipo);
 tipo_proceso_gameboy interpretar_tipo_proceso(char* tipo);
+
+#endif /* CONEXIONES_H */

@@ -102,7 +102,7 @@ void recibir_mensaje(int *socket_cliente){
 		perror("Falla recv() op_code");
 	}
 
-	printf("op_code: %d\n", codigo_operacion);
+	//printf("op_code: %d\n", codigo_operacion);
 
 	uint32_t id;
 
@@ -110,7 +110,7 @@ void recibir_mensaje(int *socket_cliente){
 		perror("Falla recv() id");
 	}
 
-	printf("id:%d\n", id);
+	//printf("id:%d\n", id);
 
 	uint32_t size_contenido_mensaje;
 
@@ -119,7 +119,7 @@ void recibir_mensaje(int *socket_cliente){
 	}
 
 
-	printf("size contenido:%d\n", size_contenido_mensaje);
+	//printf("size contenido:%d\n", size_contenido_mensaje);
 
 	if(codigo_operacion==SUBSCRIPCION){
 		int cola;
@@ -138,15 +138,7 @@ void recibir_mensaje(int *socket_cliente){
 
 	t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
 	mensaje->id=id_mensajes_globales++;
-	//send(*socket_cliente, mensaje->id, sizeof(uint32_t),0);
 	manejar_mensaje(mensaje);
-
-
-	/* if(manejar_mensaje(mensaje))
-    	send_ack(*socket_cliente);
-    //... y si no las hay, hacer free
-*/
-
 }
 
 
@@ -158,6 +150,17 @@ void recibir_cliente(int *socket_servidor){
 	while(1){
 		esperar_cliente(*socket_servidor,recibir_mensaje);
 	}
+}
+
+void enviar_appeared_pokemon(t_pokemon* pokemon){
+	int id_correlativo = 455;
+	t_mensaje* mensaje = crear_mensaje(5, APPEARED_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,id_correlativo);
+	int socket_aux = list_get(sockets_cola_appeared,0);
+	printear_mensaje(mensaje);
+	enviar_mensaje(socket_aux,mensaje);
+	printf("Se envio el mensaje al socket:%d\n", socket_aux);
+	check_ack(socket_aux,ACK);
+	puts("ACK con exito\n");
 }
 
 void inicializar_broker(){
@@ -207,7 +210,25 @@ void inicializar_broker(){
 	log_debug(logger,"Recibi al cliente");	//Recibi al cliente
 
 	getchar();
+	t_pokemon* pokemon;
+    pokemon = crear_pokemon("Pikachu",-1,2);
+    puts("envia appeared pokemon");
+    enviar_appeared_pokemon(pokemon);
 
+    pokemon = crear_pokemon("Bulbasaur",9,5);
+    puts("envia appeared pokemon");
+    enviar_appeared_pokemon(pokemon);
+
+    pokemon = crear_pokemon("Squirtle",4,7);
+    puts("envia appeared pokemon");
+    enviar_appeared_pokemon(pokemon);
+
+
+
+
+
+	getchar();
+	sleep(30);
 	printf("cola appeared: %d\ncola caught: %d\ncola localized: %d\n", (int)list_get(sockets_cola_appeared,0),(int)list_get(sockets_cola_caught,0),(int)list_get(sockets_cola_localized,0));
 	close(socket_broker);
 
