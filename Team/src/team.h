@@ -61,6 +61,9 @@ t_list* lista_corto_plazo; //lista de entrenadores para moverse
 t_list* pokemons_recibidos;
 sem_t hay_pokemones;
 sem_t hay_entrenador_corto_plazo;
+sem_t cumplio_objetivo_global;
+
+//Bool vectorConfirmacionCatch;
 
 pthread_mutex_t mutex_pokemones_recibidos;
 

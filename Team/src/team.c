@@ -45,6 +45,7 @@ void inicializar_semaforo_entrenadores(){
 		sem_init(&(ejecutar_entrenador[i]), 0,0);
 	}
 	sem_init(&activar_algoritmo, 0,0);
+	sem_init(&cumplio_objetivo_global, 0,0);
 	sem_init(&hay_pokemones, 0, 0);
 	sem_init(&hay_entrenador_corto_plazo,0,0);
 }
@@ -115,6 +116,8 @@ void deadlock(){
 	//tarda 4 ciclos
 	//intercambia
 	//vuelve a preguntar
+	sleep(25);
+	sem_post(&cumplio_objetivo_global);
 }
 
 /*
@@ -144,6 +147,7 @@ void atrapar_pokemon(int id){
 	//guarda el id para ver si el id correlativo corresponde
 	//si recibe confirmacion lo agrego a la lista de pokemons y se queda en esta posicion
 	//sino nada, queda en esta posicion pero no se agrega el pokemon
+
 	t_entrenador *entrenador = list_get(entrenadores,id);
 	char* nombre = malloc(sizeof(char) * 15);
 	strcpy(nombre,entrenador->objetivo_temporal->nombre);
@@ -279,7 +283,7 @@ void retirar_entrenador(t_entrenador *entrenador){
 		mostrar_entrenador(entrenador);
 		puts("------------------------------------------------------------");
 		list_remove(lista_corto_plazo,0);
-		getchar();
+		//getchar();
 }
 
 void planificacionFIFO(){
@@ -456,18 +460,10 @@ void probar_pokemon_SJF_CD(){
 void planificador(){
 	leer_algoritmo();
 	//probar_pokemones();
-	puts("hasta aca");
-    int cantidad = 0;
-    int cantidad_maxima = cantidad_necesitada();
-	while(cantidad < cantidad_maxima){ //cada entrenador tiene sus *cantidades* deseadas (no hace falta q coincidan)!
-		//if(cantidad == 2)
-			//probar_pokemon_SJF_CD();
-		puts("semaforo hay pokemones");
-		sem_wait(&hay_pokemones);
-		puts("planificar");
-		planificar();
 
-		cantidad++;
+	while(cantidad_necesitada()){ //cada entrenador tiene sus *cantidades* deseadas (no hace falta q coincidan)!
+		sem_wait(&hay_pokemones);
+		planificar();
 	}
 }
 
@@ -673,6 +669,13 @@ void protocolo_recibir_mensaje(cola_code cola){
 
 }
 
+void crear_hilos_planificar_recursos(){
+	pthread_t hilo_planificador;
+	pthread_t hilo_deadlock;
+	pthread_create(&hilo_planificador, NULL, (void*)planificador, NULL); //OJOOOOO
+	pthread_create(&hilo_deadlock, NULL, (void*)deadlock, NULL); //OJOOOOO
+}
+
 void inicializar_team(){
 
 	t_list* pokemones_objetivo;
@@ -688,6 +691,7 @@ void inicializar_team(){
 	//----------------planificacion
 	inicializar_semaforo_entrenadores();
     crear_hilos_entrenadores();
+    crear_hilos_planificar_recursos();
     //--------------------------
 
 	//Obtiene los datos IP,PUERTO WAIT_TIME desde la config
@@ -720,19 +724,12 @@ void inicializar_team(){
 	//pthread_detach(recibir_cola_localized);
 }
 
+
 int main(void) {
 
 	inicializar_team();
-	/*sem_wait(&hay_pokemones);
-	sem_wait(&hay_pokemones);
-	sem_wait(&hay_pokemones);
-	int tamanio = list_size(pokemons_recibidos);
-	for(int i=0;i<tamanio;i++){
-		printear_pokemon(list_get(pokemons_recibidos,i));
-	}*/
-	planificador();
-	while(true);
-    //deadlock();
+
+	sem_wait(&cumplio_objetivo_global);
     //liberar_recursos();
 
 	return EXIT_SUCCESS;

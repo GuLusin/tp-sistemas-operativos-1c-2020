@@ -11,6 +11,7 @@
 #include <commons/config.h>
 #include <commons/collections/list.h>
 #include <pthread.h>
+#include <semaphore.h>
 
 
 pthread_mutex_t mutex_cola_new;

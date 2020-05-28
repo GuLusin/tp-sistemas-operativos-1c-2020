@@ -210,6 +210,7 @@ void inicializar_broker(){
 	log_debug(logger,"Recibi al cliente");	//Recibi al cliente
 
 	getchar();
+
 	t_pokemon* pokemon;
     pokemon = crear_pokemon("Pikachu",-1,2);
     puts("envia appeared pokemon");
@@ -226,9 +227,9 @@ void inicializar_broker(){
 
 
 
-
-	getchar();
-	sleep(30);
+    sem_t esperar;
+    sem_init(&esperar, 0,0);
+	sem_wait(&esperar);
 	printf("cola appeared: %d\ncola caught: %d\ncola localized: %d\n", (int)list_get(sockets_cola_appeared,0),(int)list_get(sockets_cola_caught,0),(int)list_get(sockets_cola_localized,0));
 	close(socket_broker);
 
