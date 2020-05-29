@@ -40,8 +40,13 @@ typedef struct {
 }t_pokemon;
 
 typedef struct{
+	uint32_t id_correlativo;
 	t_pokemon* pokemon;
 }t_appeared_pokemon;
+
+typedef struct{
+	char* pokemon;
+}t_get_pokemon; //ESTE MENSAJE ESPERA COMO CONFIRMACION UN ID QUE SERA EL CORRELATIVO PARA CONFIRMACION DE LA RECEPCION DE APPEARED O LOCALIZED
 
 typedef struct{
 	t_pokemon* pokemon;
@@ -58,14 +63,11 @@ typedef struct{
 }t_caught_pokemon;
 
 typedef struct{
-	char* pokemon;
-}t_get_pokemon; //ESTE MENSAJE ESPERA COMO CONFIRMACION UN ID QUE SERA EL CORRELATIVO PARA CONFIRMACION DE LA RECEPCION DE APPEARED O LOCALIZED
-
-typedef struct{
 	uint32_t* id_correlativo;
 	//t_cantidadxpos*
 
 }t_localized_pokemon;
+
 
 typedef struct{
 	uint32_t id;
@@ -103,4 +105,6 @@ t_mensaje* crear_mensaje(int argc, ...);
 
 
 #endif /* MENSAJES_H */
+
+
 
