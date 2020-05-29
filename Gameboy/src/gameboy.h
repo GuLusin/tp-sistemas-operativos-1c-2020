@@ -31,9 +31,7 @@ typedef enum {
 t_log* logger;
 t_config* config;
 
-char *ip_broker,*puerto_broker;
-
-int wait_time=3, socket_broker;
+int wait_time=3;
 
 
 pthread_t pthread_recibir_mensajes_broker;
