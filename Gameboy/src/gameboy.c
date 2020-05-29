@@ -4,18 +4,19 @@
 #include "gameboy.h"
 
 int subscribirse_a_cola(cola_code cola){
-	/*
-	int socket_aux = connect_to(ip_broker,puerto_broker,wait_time);
+	char *ip_send = config_get_string_value(config,"IP_BROKER");
+	char *puerto_send = config_get_string_value(config,"PUERTO_BROKER");
+	int socket_aux = connect_to(ip_send,puerto_send,wait_time);
 	t_mensaje* mensaje = crear_mensaje(2, SUBSCRIPCION, cola);
 	mensaje->id=ID_SUSCRIPCION;
-	//printf("op_code:%d\nid:%d\ncola contenido:%d\n", mensaje->codigo_operacion,mensaje->id,mensaje->contenido.subscripcion);
 	enviar_mensaje(socket_aux, mensaje);
-	printf("espera id:%d",cola);
 	check_ack(socket_aux,ACK);
+	log_debug(logger,"Subscrito a cola %d",cola);
 	return socket_aux;
-	*/
+
 }
 
+/*
 void escuchar_broker(int *socket_servidor){
 	while(true){
 		//puts("escuchar_broker");
@@ -53,11 +54,8 @@ void escuchar_broker(int *socket_servidor){
 		t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
 	}
 }
+*/
 
-void subscripcion_temporal_a_cola(cola_code cola, int wait_time){
-	int socket_broker = subscribirse_a_cola(cola);
-	printf("subscrito a cola:%d",cola);
-}
 
 op_code interpretar_tipo_mensaje(char* tipo){
 	if(!strcmp(tipo,"APPEARED_POKEMON"))
@@ -70,7 +68,8 @@ op_code interpretar_tipo_mensaje(char* tipo){
 		return CAUGHT_POKEMON;
 	if(!strcmp(tipo,"GET_POKEMON"))
 		return GET_POKEMON;
-
+	perror("Falla interpretar_tipo_mensaje");
+	return -1;
 }
 
 tipo_proceso_gameboy interpretar_tipo_proceso(char* proceso){
@@ -82,6 +81,8 @@ tipo_proceso_gameboy interpretar_tipo_proceso(char* proceso){
 		return TEAM;
 	if(!strcmp(proceso,"SUSCRIPTOR"))
 		return SUSCRIPTOR;
+	perror("Falla interpretar_tipo_proceso");
+	return -1;
 }
 
 cola_code interpretar_cola_mensaje(char* cola){
@@ -97,13 +98,14 @@ cola_code interpretar_cola_mensaje(char* cola){
 		return COLA_CAUGHT_POKEMON;
 	if(!strcmp(cola,"COLA_CATCH_POKEMON"))
 		return COLA_CATCH_POKEMON;
+	perror("Falla interpretar_cola_mensaje");
+	return -1;
 }
 
 
 void manejar_mensaje(int argc, char** args){
 
 	char *ip_send, *puerto_send;
-	char *aux; //ver si puede no ser necesario!
 
 	tipo_proceso_gameboy proceso = interpretar_tipo_proceso(args[1]);
 	op_code tipo_mensaje = interpretar_tipo_mensaje(args[2]);
@@ -116,7 +118,7 @@ void manejar_mensaje(int argc, char** args){
 	case BROKER:
 		ip_send = config_get_string_value(config,"IP_BROKER");
 	    puerto_send = config_get_string_value(config,"PUERTO_BROKER");
-	//	socket_aux = connect_to(ip_send,puerto_send,wait_time);
+		socket_aux = connect_to(ip_send,puerto_send,wait_time);
 		log_debug(logger,"Conectado a proceso BROKER ip:%s	puerto:%s",ip_send,puerto_send);
 
 		switch(tipo_mensaje){
@@ -130,13 +132,12 @@ void manejar_mensaje(int argc, char** args){
 			mensaje = crear_mensaje(4,CATCH_POKEMON,args[3],atoi(args[4]),atoi(args[5]));
 			break;
 		case CAUGHT_POKEMON:
-			aux = strdup(args[4]);
-			if(!strcmp(aux,"OK")){
-				mensaje = crear_mensaje(3,CAUGHT_POKEMON,atoi(args[3]),true);
+			if(!strcmp(strdup(args[4]),"OK")){
+				mensaje = crear_mensaje(3,CAUGHT_POKEMON,atoi(args[3]),1);
 				break;
 			}
-			if(!strcmp(aux,"FAIL")){
-				mensaje = crear_mensaje(3,CAUGHT_POKEMON,atoi(args[3]),false);
+			if(!strcmp(strdup(args[4]),"FAIL")){
+				mensaje = crear_mensaje(3,CAUGHT_POKEMON,atoi(args[3]),0);
 				break;
 			}
 			printf("Mensaje invalido\n");
@@ -188,26 +189,20 @@ void manejar_mensaje(int argc, char** args){
 		}
 		break;
 
-	case SUSCRIPTOR:;
-		//VERSION VIEJA
-		cola_code cola = interpretar_cola_mensaje(args[2]);
-		printf("cola:%d", cola);
-		int wait_time = atoi(args[3]);
-		printf("wait_time:%d", wait_time);
-		subscripcion_temporal_a_cola(cola, wait_time);
-		break;
+	case SUSCRIPTOR:
+		socket_aux = subscribirse_a_cola(interpretar_cola_mensaje(args[2]));
+		sleep(atoi(args[3]));
+		close(socket_aux);
+		return;
 	}
 
-
-	printear_mensaje(mensaje);
-	/*
 	enviar_mensaje(socket_aux,mensaje);
 	check_ack(socket_aux,ACK);
 	printf("ACK recibido con exito\n");
 
 	free(mensaje);
 	close(socket_aux);
-*/
+	return;
 
 }
 
@@ -223,10 +218,8 @@ int main(int argc, char**args) {
 	logger = log_create("gameboy.log", "log", true, LOG_LEVEL_DEBUG);
 	config = config_create("../config");
 
-	//manejar_mensaje(argc,args);
+	manejar_mensaje(argc,args);
 
-	t_mensaje* mensaje = crear_mensaje(5,NEW_POKEMON,"PIKACHU",5,6,7);//posx=5 posy=6 cantidad=7
-	printear_mensaje(mensaje);
 
 
 
