@@ -28,16 +28,24 @@
  * TENER EN CUENTA QUE SE MALLOCKEAN T_MENSAJES!! HAY QUE VER DONDE HACERLES FREE.
  *
  *
- * Deberia ir en mensajes.c???
+ *
  */
 
 //t_mensaje* mensaje = crear_mensaje(5, APPEARED_POKEMON, pokemon->nombre, pokemon->pos_x, pokemon->pos_y, id_correlativo);
+
+t_pokemon* crear_pokemon(char* nombre,uint32_t px, uint32_t py){
+	t_pokemon* pokemon = malloc(sizeof(t_pokemon));
+	pokemon->nombre=strdup(nombre);
+	pokemon->pos_x=px;
+	pokemon->pos_y=py;
+	return pokemon;
+}
 
 t_mensaje* crear_mensaje(int num, ...){
 	va_list args;
 	va_start(args, num);
 
-	int aux;
+	int auxa,auxb;
 	char* str_aux;
 	t_pokemon* pokemon;
 	t_mensaje* mensaje = malloc(sizeof(t_mensaje));
@@ -54,54 +62,47 @@ t_mensaje* crear_mensaje(int num, ...){
 			return mensaje;
 			break;
 		case NEW_POKEMON:;
-			pokemon = malloc(sizeof(t_pokemon));
-			pokemon->nombre = va_arg(args, char*);
-			pokemon->pos_x = va_arg(args, uint32_t);
-			pokemon->pos_y = va_arg(args, uint32_t);
-			mensaje->contenido.new_pokemon->pokemon=pokemon;
-			mensaje->contenido.new_pokemon->cantidad = va_arg(args,uint32_t);
+			str_aux = va_arg(args, char*);
+			auxa = va_arg(args, uint32_t);
+			auxb = va_arg(args, uint32_t);
+			pokemon = crear_pokemon(str_aux, auxa,auxb);
+			mensaje->contenido.new_pokemon.pokemon=pokemon;
+			mensaje->contenido.new_pokemon.cantidad = va_arg(args,uint32_t);
 			va_end(args);
 			return mensaje;
 			break;
 		case APPEARED_POKEMON:;
-			pokemon = malloc(sizeof(t_pokemon));
-			pokemon->nombre = va_arg(args, char*);
-			pokemon->pos_x= va_arg(args, uint32_t);
-			pokemon->pos_y = va_arg(args, uint32_t);
-			mensaje->contenido.appeared_pokemon.id_correlativo=va_arg(args,uint32_t);
+			str_aux = va_arg(args, char*);
+			auxa = va_arg(args, uint32_t);
+			auxb = va_arg(args, uint32_t);
+			pokemon = crear_pokemon(str_aux, auxa,auxb);
 			mensaje->contenido.appeared_pokemon.pokemon=pokemon;
 			va_end(args);
 			return mensaje;
 			break;
 		case CATCH_POKEMON:;
-			t_pokemon* pokemon = malloc(sizeof(t_pokemon));
-			pokemon->nombre = va_arg(args, char*);
-			pokemon->pos_x = va_arg(args, uint32_t);
-			pokemon->pos_y = va_arg(args, uint32_t);
-			mensaje->contenido.new_pokemon->pokemon;
+			str_aux = va_arg(args, char*);
+			auxa = va_arg(args, uint32_t);
+			auxb = va_arg(args, uint32_t);
+			pokemon = crear_pokemon(str_aux, auxa,auxb);
+			mensaje->contenido.new_pokemon.pokemon = pokemon;
 			va_end(args);
 			return mensaje;
 			break;
 		case CAUGHT_POKEMON:
-			mensaje->contenido.caught_pokemon->id_correlativo= va_arg(args,uint32_t);
-			mensaje->contenido.caught_pokemon->caught_confirmation = va_arg(args, bool);
+			mensaje->contenido.caught_pokemon.id_correlativo= va_arg(args,uint32_t);
+			mensaje->contenido.caught_pokemon.caught_confirmation = va_arg(args, bool);
 			va_end(args);
 			return mensaje;
 			break;
 		case GET_POKEMON:
-			mensaje->contenido.get_pokemon->pokemon= va_arg(args, char*);
+			mensaje->contenido.get_pokemon.pokemon= va_arg(args, char*);
 			va_end(args);
 			break;
 	}
 }
 
-t_pokemon* crear_pokemon(char* nombre,int px, int py){
-	t_pokemon* pokemon = malloc(sizeof(t_pokemon));
-	pokemon->nombre=strdup(nombre);
-	pokemon->pos_x=px;
-	pokemon->pos_y=py;
-	return pokemon;
-}
+
 
 
 void printear_pokemon(t_pokemon* pokemon){
@@ -119,9 +120,10 @@ void printear_mensaje(t_mensaje* mensaje){
 			break;
 		case APPEARED_POKEMON:;
 			printear_pokemon(mensaje->contenido.appeared_pokemon.pokemon);
-			printf("id correlativo:%d\n", mensaje->contenido.appeared_pokemon.id_correlativo);
+			//printf("id correlativo:%d\n", mensaje->contenido.appeared_pokemon.id_correlativo);
 			break;
 		case CATCH_POKEMON:;
+			printear_pokemon(mensaje->contenido.catch_pokemon.pokemon);
 			break;
 		case CAUGHT_POKEMON:
 			break;
@@ -168,8 +170,7 @@ t_pokemon* deserializar_pokemon(void* stream){
 t_appeared_pokemon deserializar_appeared_pokemon(void* stream){
 	t_appeared_pokemon appeared_pokemon;
 	int offset=0;
-	memcpy(&appeared_pokemon.id_correlativo,stream,sizeof(uint32_t));
-	offset += sizeof(uint32_t);
+
 	appeared_pokemon.pokemon = deserializar_pokemon(stream+offset);
 
 	return appeared_pokemon;
@@ -190,16 +191,16 @@ int tamanio_contenido_mensaje(t_mensaje* mensaje){
 			tamanio += sizeof(uint32_t);
 			break;
 		case GET_POKEMON:
-			tamanio += strlen(mensaje->contenido.get_pokemon->pokemon) + 1;
+			tamanio += strlen(mensaje->contenido.get_pokemon.pokemon) + 1;
 			break;
 		case APPEARED_POKEMON:
-			tamanio += sizeof(uint32_t) + tamanio_pokemon(mensaje->contenido.appeared_pokemon.pokemon); //tamanio sin auxiliares a enviar
+			tamanio += tamanio_pokemon(mensaje->contenido.appeared_pokemon.pokemon);
 			break;
 		case NEW_POKEMON:
-			tamanio += sizeof(uint32_t) + tamanio_pokemon(mensaje->contenido.get_pokemon->pokemon);
+			tamanio += sizeof(uint32_t) + tamanio_pokemon(mensaje->contenido.get_pokemon.pokemon);
 			break;
 		case CATCH_POKEMON:
-			tamanio += tamanio_pokemon(mensaje->contenido.get_pokemon->pokemon);
+			tamanio += tamanio_pokemon(mensaje->contenido.get_pokemon.pokemon);
 			break;
 		case CAUGHT_POKEMON:
 			tamanio += sizeof(uint32_t)*2;
@@ -222,8 +223,6 @@ void* serializar_appeared_pokemon(t_appeared_pokemon appeared_pokemon){
 	int size_pokemon=tamanio_pokemon(appeared_pokemon.pokemon);
 	void* pokemon_stream = serializar_pokemon(appeared_pokemon.pokemon);
 	int offset = 0;
-	memcpy(magic + offset, &appeared_pokemon.id_correlativo, sizeof(uint32_t));
-	offset += sizeof(uint32_t);
 	memcpy(magic + offset, pokemon_stream, size_pokemon);
 	offset += size_pokemon;
 
@@ -321,12 +320,6 @@ t_mensaje* deserializar_mensaje(int codigo_operacion, void* stream){
 	t_mensaje* mensaje = malloc(sizeof(t_mensaje));
 	mensaje->codigo_operacion=codigo_operacion;
 	switch(codigo_operacion){
-		/*case SUBSCRIPCION:;
-			int cola_recibida = deserializar_subscripcion(buffer->stream);
-			printf("size:%d\n cola: %d\n", buffer->size, cola_recibida);
-			t_mensaje* un_mensaje = crear_mensaje(3, codigo_operacion, socket_cliente, cola_recibida);
-			return un_mensaje;
-			break;*/
 		case APPEARED_POKEMON:;
 			mensaje->contenido.appeared_pokemon=deserializar_appeared_pokemon(stream);
 			break;

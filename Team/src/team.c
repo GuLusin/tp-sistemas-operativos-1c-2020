@@ -597,11 +597,7 @@ void enviar_mensajes_get(int socket_a_enviar,t_list* todos_los_pokemones_que_fal
 	}
 }
 
-
-
-int recibir_appeared(int* socket_broker){
-
-
+t_mensaje* recibir_mensaje(int* socket_broker){
 	uint32_t codigo_operacion=CODIGO_OPERACION_DEFAULT;
 
 
@@ -643,7 +639,16 @@ int recibir_appeared(int* socket_broker){
 
 	t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
 	mensaje->id=id;
+	return mensaje;
+}
+
+int recibir_appeared(int* socket_broker){
+
+
+	t_mensaje* mensaje = recibir_mensaje(socket_broker);
+
 	//ya tendriamos el appeared
+	// hace ACK del mensaje recibido
 
 	send_ack(*socket_broker,ACK);
 	printf("envio ACK\n");
@@ -656,11 +661,62 @@ int recibir_appeared(int* socket_broker){
 
 }
 
+int recibir_localized(int* socket_broker){
+
+	t_mensaje* mensaje = recibir_mensaje(socket_broker);
+
+	//ya tendriamos el appeared
+
+	send_ack(*socket_broker,ACK);
+	printf("envio ACK\n");
+
+	//printear_mensaje(mensaje);
+	printf("Se recibio el mensaje\n");
+
+	//MANEJAR MENSAJE LOCALIZED
+
+
+	return 1;
+
+}
+
+int recibir_caught(int* socket_broker){
+
+	t_mensaje* mensaje = recibir_mensaje(socket_broker);
+
+	//ya tendriamos el appeared
+
+	send_ack(*socket_broker,ACK);
+	printf("envio ACK\n");
+
+	//printear_mensaje(mensaje);
+	printf("Se recibio el mensaje\n");
+
+	//MANEJAR MENSAJE CAUGHT
+
+
+	return 1;
+
+}
+
+
+
 void protocolo_recibir_mensaje(cola_code cola){
 	int socket_cola = subscribirse_a_cola(cola);
 	switch(cola){
 		case COLA_APPEARED_POKEMON:;
+			puts("appearedd");
 			while(recibir_appeared(&socket_cola));
+			protocolo_recibir_mensaje(cola);
+			break;
+		case COLA_LOCALIZED_POKEMON:;
+			puts("localized");
+			while(recibir_localized(&socket_cola));
+			protocolo_recibir_mensaje(cola);
+			break;
+		case COLA_CAUGHT_POKEMON:;
+			puts("caught");
+			while(recibir_caught(&socket_cola));
 			protocolo_recibir_mensaje(cola);
 			break;
 		default:
@@ -681,17 +737,23 @@ void inicializar_team(){
 	t_list* pokemones_objetivo;
 
 	//----------------planificacion
+
     crear_listas_globales();
     pthread_mutex_init(&mutex_pokemones_recibidos, NULL);
+
     //------------------
+
 	logger = log_create("team.log","log",1,LOG_LEVEL_DEBUG);
 	config = config_create("../config");
 	retardo = config_get_int_value(config,"RETARDO_CICLO_CPU");
 	obtener_entrenadores();
+
 	//----------------planificacion
+
 	inicializar_semaforo_entrenadores();
     crear_hilos_entrenadores();
     crear_hilos_planificar_recursos();
+
     //--------------------------
 
 	//Obtiene los datos IP,PUERTO WAIT_TIME desde la config
@@ -705,8 +767,8 @@ void inicializar_team(){
 
 	//estas subscripciones se harian en los threads de abajo
 	//socket_cola_appeared = subscribirse_a_cola(COLA_APPEARED_POKEMON);
-	int socket_cola_localized = subscribirse_a_cola(COLA_LOCALIZED_POKEMON);
-	int socket_cola_caught = subscribirse_a_cola(COLA_CAUGHT_POKEMON);
+	//int socket_cola_localized = subscribirse_a_cola(COLA_LOCALIZED_POKEMON);
+	//int socket_cola_caught = subscribirse_a_cola(COLA_CAUGHT_POKEMON);
 
 	//------Se crean 3 threads para escuchar las notificaciones del broker-----
 
@@ -716,8 +778,8 @@ void inicializar_team(){
 
 
 	pthread_create(&recibir_cola_appeared, NULL, (void*)protocolo_recibir_mensaje, COLA_APPEARED_POKEMON);
-	//pthread_create(&recibir_cola_caught, NULL, (void*)recibir_mensaje, &socket_cola_caught);
-	//pthread_create(&recibir_cola_localized, NULL, (void*)recibir_mensaje, &socket_cola_localized);
+	//pthread_create(&recibir_cola_caught, NULL, (void*)protocolo_recibir_mensaje, COLA_CAUGHT_POKEMON);
+	//pthread_create(&recibir_cola_localized, NULL, (void*)protocolo_recibir_mensaje, COLA_LOCALIZED_POKEMON);
 	puts("crear hilo");
 	pthread_detach(recibir_cola_appeared);
 	//pthread_detach(recibir_cola_caught);

@@ -41,7 +41,6 @@ typedef struct {
 
 typedef struct{
 	t_pokemon* pokemon;
-	uint32_t id_correlativo;
 }t_appeared_pokemon;
 
 typedef struct{
@@ -63,6 +62,8 @@ typedef struct{
 }t_get_pokemon; //ESTE MENSAJE ESPERA COMO CONFIRMACION UN ID QUE SERA EL CORRELATIVO PARA CONFIRMACION DE LA RECEPCION DE APPEARED O LOCALIZED
 
 typedef struct{
+	uint32_t* id_correlativo;
+	//t_cantidadxpos*
 
 }t_localized_pokemon;
 
@@ -71,12 +72,12 @@ typedef struct{
 	uint32_t codigo_operacion;
 	union{
 		uint32_t subscripcion;
-		t_get_pokemon* get_pokemon;
+		t_get_pokemon get_pokemon;
 		t_appeared_pokemon appeared_pokemon;
-		t_new_pokemon* new_pokemon;
-		t_catch_pokemon* catch_pokemon;
-		t_caught_pokemon* caught_pokemon;
-		t_localized_pokemon* localized_pokemon;
+		t_new_pokemon new_pokemon;
+		t_catch_pokemon catch_pokemon;
+		t_caught_pokemon caught_pokemon;
+		t_localized_pokemon localized_pokemon;
 	}contenido;
 }t_mensaje;
 
