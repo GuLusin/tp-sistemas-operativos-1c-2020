@@ -92,13 +92,14 @@ t_mensaje* crear_mensaje(int num, ...){
 			break;
 		case CAUGHT_POKEMON:
 			mensaje->contenido.caught_pokemon.id_correlativo= va_arg(args,uint32_t);
-			mensaje->contenido.caught_pokemon.caught_confirmation = va_arg(args, bool);
+			mensaje->contenido.caught_pokemon.caught_confirmation = va_arg(args, uint32_t);
 			va_end(args);
 			return mensaje;
 			break;
 		case GET_POKEMON:
 			mensaje->contenido.get_pokemon.pokemon= va_arg(args, char*);
 			va_end(args);
+			return mensaje;
 			break;
 		case LOCALIZED_POKEMON:;
 
