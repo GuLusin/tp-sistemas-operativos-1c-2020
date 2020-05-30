@@ -17,5 +17,6 @@ t_log* logger;
 int tiempo_reintento_conexion;
 int tiempo_reintento_operacion;
 char *ip_broker, *puerto_broker, *punto_montaje;
+int socket_broker, socket_cola_new, socket_cola_catch, socket_cola_get;
 
 #endif /* GAMECARD_H*/

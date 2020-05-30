@@ -22,15 +22,24 @@ void leer_config() {
 }
 
 void inicializar_gamecard() { // Suscribirse a NEW_POKEMON, CATCH_POKEMON, GET_POKEMON
-	int socket_broker, socket_cola_new, socket_cola_catch, socket_cola_get;
-	logger = log_create("gamecard.log","log",1,LOG_LEVEL_DEBUG);
+	logger = log_create("../gamecard.log","log",1,LOG_LEVEL_DEBUG);
 	leer_config();
+
 	socket_cola_new = subscribirse_a_cola(COLA_NEW_POKEMON);
+
 	socket_cola_catch = subscribirse_a_cola(COLA_CATCH_POKEMON);
+
 	socket_cola_get = subscribirse_a_cola(COLA_GET_POKEMON);
+}
+
+void cerrar_gamecard(){
+	log_destroy(logger);
+	config_destroy(config);
+	close(socket_cola_new);
 }
 
 int main(void) {
 	inicializar_gamecard();
+	cerrar_gamecard();
 	return EXIT_SUCCESS;
 }
