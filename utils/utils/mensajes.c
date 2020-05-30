@@ -194,11 +194,10 @@ void* serializar_mensaje(t_mensaje* mensaje, int *ret_size){
 		stream = serializar_get_pokemon(mensaje->contenido.get_pokemon);
 		memcpy(magic + offset, stream, size_contenido_mensaje);
 		offset += size_contenido_mensaje;
+		free(stream);
 		break;
-
-
 	}
-	free(stream);
+
 	*ret_size=(int)size;
 	return magic;
 
