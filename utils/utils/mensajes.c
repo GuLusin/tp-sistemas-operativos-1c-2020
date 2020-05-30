@@ -282,7 +282,6 @@ void* serializar_new_pokemon(t_new_pokemon new_pokemon){
 t_new_pokemon deserializar_new_pokemon(void* stream){
 	t_new_pokemon new_pokemon;
 	int offset=0;
-
 	new_pokemon.pokemon = deserializar_pokemon(stream+offset);
 	offset += tamanio_pokemon(new_pokemon.pokemon);
 	memcpy(&(new_pokemon.cantidad),stream+offset, sizeof(uint32_t));
@@ -305,10 +304,8 @@ void* serializar_localized_pokemon(t_localized_pokemon localized_pokemon){
 t_localized_pokemon deserializar_localized_pokemon(void* stream){
 	t_localized_pokemon localized_pokemon;
 	int offset = 0;
-	puts("des_loc");
 	memcpy(&localized_pokemon.id_correlativo, stream, sizeof(uint32_t));
 	offset += sizeof(uint32_t);
-	printf("id_corr:%d\n", localized_pokemon.id_correlativo);
 	localized_pokemon.pokemon_especie = deserializar_pokemon_especie((stream + offset));
 	return localized_pokemon;
 }
@@ -345,9 +342,7 @@ int tamanio_contenido_mensaje(t_mensaje* mensaje){
 			tamanio += sizeof(uint32_t)*2;
 			break;
 		case LOCALIZED_POKEMON:
-			puts("tamanio localized");
 			tamanio += sizeof(uint32_t) + tamanio_pokemon_especie(mensaje->contenido.localized_pokemon.pokemon_especie);
-			printf("tamanio:%d\n", tamanio);
 			break;
 
 
@@ -366,12 +361,10 @@ int tamanio_contenido_mensaje(t_mensaje* mensaje){
 
 
 void* serializar_mensaje(t_mensaje* mensaje, int *ret_size){
-	puts("hasta aca");
 	int size_contenido_mensaje = tamanio_contenido_mensaje(mensaje);
 	uint32_t size = size_contenido_mensaje + sizeof(uint32_t)*3; //op code, id, size_contenido_mensaje
 	void* magic = malloc(size);
 	int offset = 0;
-	puts("hasta aca");
 	memcpy(magic + offset, &(mensaje->codigo_operacion), sizeof(uint32_t));
 	offset += sizeof(uint32_t);
 	memcpy(magic + offset, &(mensaje->id), sizeof(uint32_t));
@@ -449,7 +442,6 @@ void enviar_mensaje(int socket_a_enviar, t_mensaje* mensaje){
 
 t_mensaje* deserializar_mensaje(int codigo_operacion, void* stream){
 	t_mensaje* mensaje = malloc(sizeof(t_mensaje));
-	printf("codigo:%d\n", codigo_operacion);
 	mensaje->codigo_operacion=codigo_operacion;
 	switch(codigo_operacion){
 		case APPEARED_POKEMON:;
@@ -468,11 +460,8 @@ t_mensaje* deserializar_mensaje(int codigo_operacion, void* stream){
 			mensaje->contenido.new_pokemon=deserializar_new_pokemon(stream);
 			break;
 		case LOCALIZED_POKEMON:;
-			puts("entra a deserializar");
 			mensaje->contenido.localized_pokemon = deserializar_localized_pokemon(stream);
-			puts("sale a deserializar");
 			break;
-
 		default:
 			puts("default");
 			break;
@@ -568,25 +557,22 @@ void printear_posicion(char* key, void* value){
 }
 
 void printear_pokemon_especie(t_pokemon_especie* pokemon_especie){
-	printf("Especie:%snombre\n[", pokemon_especie->nombre_especie);
+	printf("Especie:%s\n[", pokemon_especie->nombre_especie);
 	dictionary_iterator(pokemon_especie->posiciones_especie,printear_posicion);
 	printf("]\n");
 }
 
 char* posiciones_a_string(t_dictionary* posiciones){
-	char* string = string_new();
-	string_append(&string,"[");
+	char* string_pos=string_new();
 	void posicion_a_string(char* key, void* value){
-		string_append_with_format(&string,"[%s|%d]", key, (int)value);
+		string_append_with_format(&string_pos,"%s|%d,", key, value);
 	}
 	dictionary_iterator(posiciones,posicion_a_string);
-	string_append(&string,"]");
-	return string;
+	return string_pos;
 }
-
 char* especie_pokemon_a_string(t_pokemon_especie* pokemon_especie){
 	char* string = string_new();
-	string_append_with_format(&string,"%s|",pokemon_especie->nombre_especie);
+	string_append_with_format(&string,"%s,",pokemon_especie->nombre_especie);
 	char* posiciones = posiciones_a_string(pokemon_especie->posiciones_especie);
 	string_append(&string,posiciones);
 	return string;
@@ -595,7 +581,6 @@ char* especie_pokemon_a_string(t_pokemon_especie* pokemon_especie){
 t_pokemon_especie* string_a_pokemon_especie(char* string){
 	char** main_str = string_split(string,",");
 	t_pokemon_especie* especie_pokemon = crear_pokemon_especie(main_str[0]);
-	printear_pokemon_especie(especie_pokemon);
 	t_pokemon pokemon_aux;
 	int i = 1;
 	char** posiciones;
@@ -608,26 +593,26 @@ t_pokemon_especie* string_a_pokemon_especie(char* string){
 		pokemon_aux.nombre = main_str[0];
 		pokemon_aux.pos_x = atoi(posiciones[0]);
 		pokemon_aux.pos_y = atoi(posiciones[1]);
-		printear_pokemon(&pokemon_aux);
 		for(int j = 0; j<int_aux;j++){
 			agregar_pokemon_a_especie(especie_pokemon, &pokemon_aux);
 		}
 		i++;
 	}
-
-	/*free(str_aux);
-	while(strs_aux[i]!=NULL)
-		free(strs_aux[i++]);
 	i=0;
-	while(str[i]!=NULL)
-		free(str[i++]);
-	free(str);
-	*/
+	free(str_aux);
+	while(posiciones[i]!=NULL)
+		free(posiciones[i++]);
+	i=0;
+	while(main_str[i]!=NULL)
+		free(main_str[i++]);
+	free(main_str);
+
 	return especie_pokemon;
 }
 
-t_pokemon_especie* deserializar_pokemon_especie(char* string){
-	return string_a_pokemon_especie(string);
+t_pokemon_especie* deserializar_pokemon_especie(void* string){
+	t_pokemon_especie* especie_pokemon = string_a_pokemon_especie((char*)string);
+	return especie_pokemon;
 }
 
 

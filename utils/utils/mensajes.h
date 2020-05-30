@@ -118,7 +118,7 @@ int tamanio_pokemon(t_pokemon* pokemon);
 
 void* serializar_pokemon(t_pokemon* pokemon);
 t_pokemon* deserializar_pokemon(void* stream);
-t_pokemon_especie* deserializar_pokemon_especie(char* string);
+t_pokemon_especie* deserializar_pokemon_especie(void* string);
 
 #endif /* MENSAJES_H */
 

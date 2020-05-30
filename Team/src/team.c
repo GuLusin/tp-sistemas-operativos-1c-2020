@@ -639,7 +639,6 @@ t_mensaje* recibir_mensaje(int* socket_broker){
 
 	t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
 	mensaje->id=id;
-	puts("sale de serializar");
 	return mensaje;
 }
 
