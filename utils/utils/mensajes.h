@@ -18,6 +18,8 @@
 #include <netdb.h>
 #include <pthread.h>
 #include <commons/collections/list.h>
+#include <commons/collections/dictionary.h>
+#include <commons/string.h>
 
 #define ID_SUSCRIPCION 999999
 #define ID_DEFAULT 888888
@@ -31,8 +33,6 @@ typedef enum {
 	COLA_APPEARED_POKEMON,
 } cola_code;
 
-
-
 typedef struct {
 	char* nombre; // SE USA STRDUP
 	uint32_t pos_x;
@@ -40,12 +40,17 @@ typedef struct {
 }t_pokemon;
 
 typedef struct{
+	char* nombre_especie;
+	t_dictionary* posiciones_especie;
+}t_pokemon_especie;
+
+typedef struct{
 	uint32_t id_correlativo;
 	t_pokemon* pokemon;
 }t_appeared_pokemon;
 
 typedef struct{
-	char* pokemon;
+	char* nombre_pokemon;
 }t_get_pokemon; //ESTE MENSAJE ESPERA COMO CONFIRMACION UN ID QUE SERA EL CORRELATIVO PARA CONFIRMACION DE LA RECEPCION DE APPEARED O LOCALIZED
 
 typedef struct{
@@ -64,8 +69,7 @@ typedef struct{
 
 typedef struct{
 	uint32_t* id_correlativo;
-	//t_cantidadxpos*
-
+	t_pokemon_especie* pokemon_especie;
 }t_localized_pokemon;
 
 
@@ -103,6 +107,18 @@ cola_code deserializar_subscripcion(void* stream);
 t_mensaje* deserializar_mensaje(int codigo_operacion, void* stream);
 t_mensaje* crear_mensaje(int argc, ...);
 
+char* especie_pokemon_a_string(t_pokemon_especie* pokemon_especie);
+char* posiciones_a_string(t_dictionary* posiciones);
+t_pokemon* crear_pokemon(char* nombre,uint32_t px, uint32_t py);
+t_mensaje* crear_mensaje(int num, ...);
+void printear_pokemon(t_pokemon* pokemon);
+void printear_mensaje(t_mensaje* mensaje);
+
+int tamanio_pokemon(t_pokemon* pokemon);
+
+void* serializar_pokemon(t_pokemon* pokemon);
+t_pokemon* deserializar_pokemon(void* stream);
+t_pokemon_especie* deserializar_pokemon_especie(char* string);
 
 #endif /* MENSAJES_H */
 

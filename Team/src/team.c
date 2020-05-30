@@ -639,6 +639,7 @@ t_mensaje* recibir_mensaje(int* socket_broker){
 
 	t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
 	mensaje->id=id;
+	puts("sale de serializar");
 	return mensaje;
 }
 
@@ -665,12 +666,12 @@ int recibir_localized(int* socket_broker){
 
 	t_mensaje* mensaje = recibir_mensaje(socket_broker);
 
-	//ya tendriamos el appeared
+	//ya tendriamos el localized
 
 	send_ack(*socket_broker,ACK);
 	printf("envio ACK\n");
 
-	//printear_mensaje(mensaje);
+	printear_mensaje(mensaje);
 	printf("Se recibio el mensaje\n");
 
 	//MANEJAR MENSAJE LOCALIZED
@@ -703,6 +704,7 @@ int recibir_caught(int* socket_broker){
 
 void protocolo_recibir_mensaje(cola_code cola){
 	int socket_cola = subscribirse_a_cola(cola);
+	printf("socket_suscripcion:%d\n",socket_cola);
 	switch(cola){
 		case COLA_APPEARED_POKEMON:;
 			puts("appearedd");
@@ -777,13 +779,13 @@ void inicializar_team(){
 	pthread_t recibir_cola_localized;
 
 
-	pthread_create(&recibir_cola_appeared, NULL, (void*)protocolo_recibir_mensaje, COLA_APPEARED_POKEMON);
+	//pthread_create(&recibir_cola_appeared, NULL, (void*)protocolo_recibir_mensaje, COLA_APPEARED_POKEMON);
 	//pthread_create(&recibir_cola_caught, NULL, (void*)protocolo_recibir_mensaje, COLA_CAUGHT_POKEMON);
-	//pthread_create(&recibir_cola_localized, NULL, (void*)protocolo_recibir_mensaje, COLA_LOCALIZED_POKEMON);
+	pthread_create(&recibir_cola_localized, NULL, (void*)protocolo_recibir_mensaje, COLA_LOCALIZED_POKEMON);
 	puts("crear hilo");
-	pthread_detach(recibir_cola_appeared);
+	//pthread_detach(recibir_cola_appeared);
 	//pthread_detach(recibir_cola_caught);
-	//pthread_detach(recibir_cola_localized);
+	pthread_detach(recibir_cola_localized);
 }
 
 

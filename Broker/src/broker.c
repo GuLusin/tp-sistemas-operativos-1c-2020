@@ -211,6 +211,7 @@ void inicializar_broker(){
 
 	getchar();
 
+	/*
 	t_pokemon* pokemon;
     pokemon = crear_pokemon("Pikachu",-1,2);
     puts("envia appeared pokemon");
@@ -223,8 +224,35 @@ void inicializar_broker(){
     pokemon = crear_pokemon("Squirtle",4,7);
     puts("envia appeared pokemon");
     enviar_appeared_pokemon(pokemon);
+*/
 
+    puts("Localized");
+    //------SE CREA UN LOCALIZED----------
+	t_pokemon* pokemon1;
+	t_pokemon* pokemon2;
+	t_pokemon* pokemon3;
+	t_pokemon* pokemon4;
+    pokemon1 = crear_pokemon("Pikachu",-1,2);
+    pokemon2 = crear_pokemon("Pikachu",9,5);
+    pokemon3 = crear_pokemon("Pikachu",-1,2);
+    pokemon4 = crear_pokemon("Pikachu",-1,4);
+    t_pokemon_especie* especie_pikachu = crear_pokemon_especie("Pikachu");
+    agregar_pokemon_a_especie(especie_pikachu,pokemon1);
+    agregar_pokemon_a_especie(especie_pikachu,pokemon2);
+    agregar_pokemon_a_especie(especie_pikachu,pokemon3);
+    agregar_pokemon_a_especie(especie_pikachu,pokemon4);
 
+    t_mensaje* mensaje_aux = crear_mensaje(3, LOCALIZED_POKEMON, 3, especie_pikachu);
+    mensaje_aux->id=ID_DEFAULT;
+
+	int socket_aux = list_get(sockets_cola_localized,0);
+	printear_mensaje(mensaje_aux);
+	enviar_mensaje(socket_aux,mensaje_aux);
+	printf("Se envio el mensaje al socket:%d\n", socket_aux);
+	check_ack(socket_aux,ACK);
+	puts("ACK con exito\n");
+
+    //-------------------------------------------
 
 
     sem_t esperar;
