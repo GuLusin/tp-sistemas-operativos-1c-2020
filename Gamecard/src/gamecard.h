@@ -12,6 +12,9 @@
 #include <semaphore.h>
 #include <commons/collections/list.h>
 
+
+#define CODIGO_OPERACION_DEFAULT -1
+
 t_config* config;
 t_log* logger;
 int tiempo_reintento_conexion;
