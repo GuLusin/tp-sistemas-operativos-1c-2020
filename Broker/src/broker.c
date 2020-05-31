@@ -211,7 +211,7 @@ void inicializar_broker(){
 
 	getchar();
 
-	/*
+
 	t_pokemon* pokemon;
     pokemon = crear_pokemon("Pikachu",-1,2);
     puts("envia appeared pokemon");
@@ -224,7 +224,7 @@ void inicializar_broker(){
     pokemon = crear_pokemon("Squirtle",4,7);
     puts("envia appeared pokemon");
     enviar_appeared_pokemon(pokemon);
-*/
+
 
     puts("Localized");
     //------SE CREA UN LOCALIZED----------

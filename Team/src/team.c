@@ -116,8 +116,8 @@ void deadlock(){
 	//tarda 4 ciclos
 	//intercambia
 	//vuelve a preguntar
-	sleep(25);
-	sem_post(&cumplio_objetivo_global);
+	//sleep(25);
+	//sem_post(&cumplio_objetivo_global);
 }
 
 /*
@@ -702,11 +702,13 @@ int recibir_caught(int* socket_broker){
 
 
 void protocolo_recibir_mensaje(cola_code cola){
+	pthread_mutex_lock(&mutex_recibir, NULL);
 	int socket_cola = subscribirse_a_cola(cola);
+	pthread_mutex_unlock(&mutex_recibir, NULL);
 	printf("socket_suscripcion:%d\n",socket_cola);
 	switch(cola){
 		case COLA_APPEARED_POKEMON:;
-			puts("appearedd");
+			puts("appeared");
 			while(recibir_appeared(&socket_cola));
 			protocolo_recibir_mensaje(cola);
 			break;
@@ -741,6 +743,7 @@ void inicializar_team(){
 
     crear_listas_globales();
     pthread_mutex_init(&mutex_pokemones_recibidos, NULL);
+    pthread_mutex_init(&mutex_recibir, NULL);
 
     //------------------
 
@@ -778,12 +781,12 @@ void inicializar_team(){
 	pthread_t recibir_cola_localized;
 
 
-	//pthread_create(&recibir_cola_appeared, NULL, (void*)protocolo_recibir_mensaje, COLA_APPEARED_POKEMON);
-	//pthread_create(&recibir_cola_caught, NULL, (void*)protocolo_recibir_mensaje, COLA_CAUGHT_POKEMON);
+	pthread_create(&recibir_cola_appeared, NULL, (void*)protocolo_recibir_mensaje, COLA_APPEARED_POKEMON);
+	pthread_create(&recibir_cola_caught, NULL, (void*)protocolo_recibir_mensaje, COLA_CAUGHT_POKEMON);
 	pthread_create(&recibir_cola_localized, NULL, (void*)protocolo_recibir_mensaje, COLA_LOCALIZED_POKEMON);
 	puts("crear hilo");
-	//pthread_detach(recibir_cola_appeared);
-	//pthread_detach(recibir_cola_caught);
+	pthread_detach(recibir_cola_appeared);
+	pthread_detach(recibir_cola_caught);
 	pthread_detach(recibir_cola_localized);
 }
 
