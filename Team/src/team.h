@@ -39,6 +39,7 @@ char *ip_broker,*puerto_broker;
 int wait_time;
 
 pthread_mutex_t send_mutex;
+pthread_mutex_t mutex_recibir;
 
 //---------------------------------- PLANIFICACION -----------------------------------------------
 
