@@ -27,6 +27,31 @@ collect2: error: ld returned 1 exit status
 
 #include "team.h"
 
+void debug_dic(t_dictionary* pokemones_deseados){
+
+	void leeeer(char* key, void* count){
+	//	enviar_get(key);
+		printf("Nombre: %s    Cantidad:%d\n",key,(int)count);
+	}
+
+	printf("Lectura diccionario:\n");
+	dictionary_iterator(pokemones_deseados,(void*)leeeer);
+	printf("-------------------------------------------\n");
+}
+
+void debug_leer_lista(t_list* lista){
+	printf("Comienza lectura de lista:\n");
+	t_pokemon* aux;
+	for (int i=0;i<list_size(lista);i++){
+		aux = list_get(lista,i);
+		printf("Pokemon %s, posx %d, posy %d\n",aux->nombre,aux->pos_x,aux->pos_y);
+	}
+	printf("----------------------------------------");
+
+}
+
+
+
 void mostrar_entrenador(t_entrenador *t){
 	printf("EN x :%d ",t->posicion_x);
 	printf("y En y :%d ",t->posicion_y);
@@ -335,8 +360,8 @@ int x = (abs(entrenador->posicion_x - entrenador->objetivo_temporal->pos_x) + ab
 return x;}
 
 void ordenar_lista(){
-	bool es_mayor(t_entrenador *entrenador1, t_entrenador *entrenador2){
-		return (distancia(entrenador1) <= distancia(entrenador2));}
+	bool es_mayor(void* entrenador1,void* entrenador2){
+		return (distancia((t_entrenador *)entrenador1) <= distancia((t_entrenador *)entrenador2));}
     list_sort(lista_corto_plazo, es_mayor);
 }
 //---
@@ -356,29 +381,31 @@ void planificacionSJF_CD(){
 		mostrar_entrenador(entrenador);
 		puts("------------------------------------------------------------------------------------------");
 		while(!llego_al_objetivo(entrenador)){
-		sem_post(&(ejecutar_entrenador[entrenador->id]));
-	    sem_wait(&activar_algoritmo);
-	    if(llego_uno_nuevo()){ //variable global tamaño_list para ver si cambio la lista
-	    	if(llego_al_objetivo(entrenador))
-	    	  {retirar_entrenador(entrenador);
-	    	  break;}
-		  puts("                               CAMBIO A UN ENTRENADOR");
-		  puts("------------------------------------------------------------------------------------------");
-		  mostrar_entrenador(entrenador);
-		  puts("------------------------------------------------------------------------------------------");
-	      ordenar_lista();
-	      entrenador2 = list_get(lista_corto_plazo,0);
-		  puts("                               POR ESTE ENTRENADOR");
-		  puts("------------------------------------------------------------------------------------------");
-		  mostrar_entrenador(entrenador2);
-		  puts("------------------------------------------------------------------------------------------");
-	      sin_cambio = false;
-	      sem_post(&hay_entrenador_corto_plazo);
-		  break;}
+			sem_post(&(ejecutar_entrenador[entrenador->id]));
+			sem_wait(&activar_algoritmo);
+			if(llego_uno_nuevo()){ //variable global tamaño_list para ver si cambio la lista
+				if(llego_al_objetivo(entrenador)){
+					retirar_entrenador(entrenador);
+					break;
+				}
+				puts("                               CAMBIO A UN ENTRENADOR");
+				puts("------------------------------------------------------------------------------------------");
+				mostrar_entrenador(entrenador);
+				puts("------------------------------------------------------------------------------------------");
+				ordenar_lista();
+				entrenador2 = list_get(lista_corto_plazo,0);
+				puts("                               POR ESTE ENTRENADOR");
+				puts("------------------------------------------------------------------------------------------");
+				mostrar_entrenador(entrenador2);
+				puts("------------------------------------------------------------------------------------------");
+				sin_cambio = false;
+				sem_post(&hay_entrenador_corto_plazo);
+				break;
+			}
         }
 		if(llego_al_objetivo(entrenador) && sin_cambio)
 			retirar_entrenador(entrenador);}
-	puts("CUMPLIO EL TEAM SU OBJETIVO, IUPIIIII");}
+		puts("CUMPLIO EL TEAM SU OBJETIVO, IUPIIIII");}
 
 void planificacionSJF_SD(){
 	while(!cumplio_cantidad_global()){
@@ -390,8 +417,8 @@ void planificacionSJF_SD(){
 	mostrar_entrenador(entrenador);
 	puts("------------------------------------------------------------------------------------------");
 	while(!llego_al_objetivo(entrenador)){
-	sem_post(&(ejecutar_entrenador[entrenador->id]));
-    sem_wait(&activar_algoritmo);
+		sem_post(&(ejecutar_entrenador[entrenador->id]));
+		sem_wait(&activar_algoritmo);
 	}
 	retirar_entrenador(entrenador);}
 	puts("CUMPLIO EL TEAM SU OBJETIVO, IUPIIIII");}
@@ -488,8 +515,9 @@ int cantidad_entrenadores_disponibles(){
 	t_entrenador *entrenador;
 
 	for(int i=0;i<list_size(entrenadores);i++){
+		entrenador = list_get(entrenadores,i);
 		if(entrenador->objetivo_temporal == NULL)
-		cantidad++;
+			cantidad++;
 	}
 	return cantidad;
 }
@@ -498,7 +526,7 @@ int cantidad_entrenadores_disponibles(){
 //------------------------------------------------------
 
 
-int distanciaaa(t_entrenador *entrenador, t_pokemon *pokemon){
+int distancia_pokemon_entrenador(t_pokemon *pokemon,t_entrenador *entrenador){
 	return (abs(entrenador->posicion_x - pokemon->pos_x) + abs(entrenador->posicion_y - pokemon->pos_y));
 }
 
@@ -508,18 +536,22 @@ int encontrar_distancia_minima(t_pokemon *pokemon){
 	for(int i=0;i<list_size(entrenadores);i++){
 		entrenador_aux = list_get(entrenadores,i);
 		if(!entrenador_aux->objetivo_temporal){
-			if(distancia < distanciaaa(entrenador_aux,pokemon))
-				distancia = distanciaaa(entrenador_aux,pokemon);
+			if(distancia > distancia_pokemon_entrenador(pokemon,entrenador_aux))
+				distancia = distancia_pokemon_entrenador(pokemon,entrenador_aux);
 		}
-
+	}
 	return distancia;
-}}
+}
 
-t_list* ordenar_lista_new(){
+t_list* ordenar_lista_new(){  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
+
+	//return list_duplicate(list_pok_new);
+
+
 	t_list *pokemones_aux = list_duplicate(list_pok_new);
 
-	bool distancia_mas_cercana(t_pokemon *pokemon1, t_pokemon *pokemon2){
-	    return encontrar_distancia_minima(pokemon1) > encontrar_distancia_minima(pokemon2);//ojo los signos
+	bool distancia_mas_cercana(void* pokemon1,void* pokemon2){
+	    return encontrar_distancia_minima((t_pokemon*)pokemon1) < encontrar_distancia_minima((t_pokemon*)pokemon2);//ojo los signos
 	}
 
 	list_sort(pokemones_aux, distancia_mas_cercana);
@@ -545,13 +577,12 @@ t_pokemon* remover_pokemon(t_list* una_lista, t_pokemon* un_pokemon){
 			return aux;
 		}
 	}
-	return aux;
+	return NULL;
 }
 
 
 void mover_a_ready(t_pokemon* un_pokemon){
 	t_pokemon* aux = remover_pokemon(list_pok_new, un_pokemon);
-	printf("Se mueve a la lista de ready al pokemon %s %d %d\n",un_pokemon->nombre,un_pokemon->pos_x,un_pokemon->pos_y);
 	list_add(list_pok_ready,aux);
 	agregar_a_diccionario(dic_pok_ready, un_pokemon->nombre);
 }
@@ -560,14 +591,13 @@ void mover_a_ready(t_pokemon* un_pokemon){
 bool me_sirve(t_pokemon* un_pokemon){
 	//Para que un pokemon me sirva, la cantidad objetivo > (cantidad exec + cantidad ready)
 	if(dictionary_has_key(dic_pok_obj,un_pokemon->nombre)){
-		if(dictionary_has_key(dic_pok_exec,un_pokemon->nombre)){//
-			if(dictionary_has_key(dic_pok_ready,un_pokemon->nombre)){ //
-				// q_ready + q_exec < q_obj
-				printf("entre al caos\n");
+		if(dictionary_has_key(dic_pok_exec,un_pokemon->nombre)){
+			if(dictionary_has_key(dic_pok_ready,un_pokemon->nombre))
 				return ((int) dictionary_get(dic_pok_ready,un_pokemon->nombre)+((int) dictionary_get(dic_pok_exec,un_pokemon->nombre))) < ((int) dictionary_get(dic_pok_obj,un_pokemon->nombre));
-			}
 			return ((int) dictionary_get(dic_pok_exec,un_pokemon->nombre) < (int) dictionary_get(dic_pok_obj,un_pokemon->nombre));
 		}
+		if(dictionary_has_key(dic_pok_ready,un_pokemon->nombre))
+			return ((int) dictionary_get(dic_pok_ready,un_pokemon->nombre) < (int) dictionary_get(dic_pok_obj,un_pokemon->nombre));
 		return true;
 	}
 	return false;
@@ -580,6 +610,7 @@ bool ya_no_me_sirve(t_pokemon* un_pokemon){
 
 bool me_puede_servir(t_pokemon* un_pokemon){
 	//Para que un pokemon me pueda servir, la cantidad obj debe ser igual a la cantidad en exec+ready
+	printf("entra a me_puede_servir\n");
 	if(dictionary_has_key(dic_pok_obj,un_pokemon->nombre)){
 		if(dictionary_has_key(dic_pok_exec,un_pokemon->nombre)){
 			if(dictionary_has_key(dic_pok_ready,un_pokemon->nombre))
@@ -607,10 +638,11 @@ void pasar_a_ready_al_pokemon_adecuado(t_list* pokemons, int interacion){
 		return;
 	}
 
+	printf("ESTA POR entraR a ya_no_me_sirve con %s\n",aux->nombre);
 	if (ya_no_me_sirve(aux)){
 		printf("entra a ya_no_me_sirve con %s\n",aux->nombre);
-		free(remover_pokemon(list_pok_new, aux));
 		pasar_a_ready_al_pokemon_adecuado(pokemons,interacion+1);
+		free(remover_pokemon(list_pok_new, aux));
 		return;
 	}
 
@@ -625,9 +657,10 @@ void pasar_a_ready_al_pokemon_adecuado(t_list* pokemons, int interacion){
 
 
 void exec_algoritmo_largo_plazo(){ //llamar con 0
-	t_list* pokemon_aux = list_duplicate(list_pok_new);
-			//ordenar_lista_new(); //pokemones_ordenados() devuelve una lista de los pokemones ordenados por conveniencia en relacion a los entrenadores disponibles
+	t_list* pokemon_aux = ordenar_lista_new(); //pokemones_ordenados() devuelve una lista de los pokemones ordenados por conveniencia en relacion a los entrenadores disponibles
 
+	printf("lista_ordenada: \n");
+	debug_leer_lista(pokemon_aux);
 
 	pasar_a_ready_al_pokemon_adecuado(pokemon_aux,0);
 	return;
@@ -733,28 +766,6 @@ void obtener_entrenadores(){
 
 //-------------------------------------------------------------
 
-void debug_dic(t_dictionary* pokemones_deseados){
-
-	void leeeer(char* key, void* count){
-	//	enviar_get(key);
-		printf("Nombre: %s    Cantidad:%d\n",key,(int)count);
-	}
-
-	printf("Lectura diccionario:\n");
-	dictionary_iterator(pokemones_deseados,(void*)leeeer);
-	printf("-------------------------------------------\n");
-}
-
-void debug_leer_lista(t_list* lista){
-	printf("Comienza lectura de lista:\n");
-	t_pokemon* aux;
-	for (int i=0;i<list_size(lista);i++){
-		aux = list_get(lista,i);
-		printf("Pokemon %s, posx %d, posy %d\n",aux->nombre,aux->pos_x,aux->pos_y);
-	}
-	printf("----------------------------------------");
-
-}
 
 
 
@@ -1038,15 +1049,24 @@ int main(void) {
 	dic_pok_obj = obtener_pokemones_objetivo();
 	debug_dic(dic_pok_obj);
 
-	list_add(list_pok_new,crear_pokemon("Nicolas madeo",1,2));
-	list_add(list_pok_new,crear_pokemon("Charmander",30,54));
-	list_add(list_pok_new,crear_pokemon("Bulbasor",5,7));
-	list_add(list_pok_new,crear_pokemon("Pikachu",1,5));
+	list_add(list_pok_new,crear_pokemon("Pikachu",1,2));
+	list_add(list_pok_new,crear_pokemon("PikaGSSDFchu",30,54));
+	list_add(list_pok_new,crear_pokemon("CACA",5,7));
+	list_add(list_pok_new,crear_pokemon("CACA",1,5));
+	list_add(list_pok_new,crear_pokemon("Charmander",14,9));
+	list_add(list_pok_new,crear_pokemon("CACA",1,2));
+	list_add(list_pok_new,crear_pokemon("CACA",30,54));
+	list_add(list_pok_new,crear_pokemon("CACA",5,7));
+	list_add(list_pok_new,crear_pokemon("CACA",1,5));
 	list_add(list_pok_new,crear_pokemon("Pikachu",14,9));
+
+	agregar_a_diccionario(dic_pok_exec,"Pikachu");
 
 	printf("Lista de new antes del algoritmo:\n");
 	debug_leer_lista(list_pok_new);
-	exec_algoritmo_largo_plazo();
+
+	for(int i=0;i<2;i++)
+		exec_algoritmo_largo_plazo();
 
 	printf("Lista de new:\n");
 	debug_leer_lista(list_pok_new);
