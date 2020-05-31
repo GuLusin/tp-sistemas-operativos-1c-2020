@@ -23,25 +23,6 @@ bool check_ack(int socket_cliente, uint32_t value){
 	return value==ACK;
 }
 
-
-/* id_confirmation: implementa el protocolo de confirmacion de id de mensaje.
- * socket_cliente = socket del cual recibir el id del mensaje. en caso que lo necesite
- *
- * !!!DEBE FUNCIONAR EN PARALELO CON LA IMPLEMENTACION DE id_validation EN EL BROKER!!!!
- */
-
-uint32_t id_confirmation(int socket_aux) {
-	uint32_t id;
-	if (check_ack(socket_aux, ACK)) {
-		//TEAM espera el ACK
-		send_ack(socket_aux, ACK); //TEAM envia un ACK confirmando el previo
-		id = wait_ack(socket_aux);
-		send_ack(socket_aux, id - 1);
-	}
-	return id;
-}
-
-
 // ACKNOWLEDGEMENT= RECONOCIMIENTO DEL MENSAJE DE PARTE DEL BROKER
 
 /* send_ack: manda el ACK para confirmacion del mensaje enviado

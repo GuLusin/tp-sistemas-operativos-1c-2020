@@ -30,9 +30,8 @@ t_list* list_pok_new;
 t_list* list_pok_ready;
 
 t_dictionary* dic_pok_obj;
-t_dictionary* dic_pok_exec;
-t_dictionary* dic_pok_ready; //se puede unificar con la lista
-
+t_dictionary* dic_pok_ready_o_exec;
+t_dictionary* ids_a_esperar;
 
 char *ip_broker,*puerto_broker;
 

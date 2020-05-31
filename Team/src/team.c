@@ -578,20 +578,15 @@ t_pokemon* remover_pokemon(t_list* una_lista, t_pokemon* un_pokemon){
 void mover_a_ready(t_pokemon* un_pokemon){
 	t_pokemon* aux = remover_pokemon(list_pok_new, un_pokemon);
 	list_add(list_pok_ready,aux);
-	agregar_a_diccionario(dic_pok_ready, un_pokemon->nombre);
+	agregar_a_diccionario(dic_pok_ready_o_exec, un_pokemon->nombre);
 }
 
 
 bool me_sirve(t_pokemon* un_pokemon){
 	//Para que un pokemon me sirva, la cantidad objetivo > (cantidad exec + cantidad ready)
 	if(dictionary_has_key(dic_pok_obj,un_pokemon->nombre)){
-		if(dictionary_has_key(dic_pok_exec,un_pokemon->nombre)){
-			if(dictionary_has_key(dic_pok_ready,un_pokemon->nombre))
-				return ((int) dictionary_get(dic_pok_ready,un_pokemon->nombre)+((int) dictionary_get(dic_pok_exec,un_pokemon->nombre))) < ((int) dictionary_get(dic_pok_obj,un_pokemon->nombre));
-			return ((int) dictionary_get(dic_pok_exec,un_pokemon->nombre) < (int) dictionary_get(dic_pok_obj,un_pokemon->nombre));
-		}
-		if(dictionary_has_key(dic_pok_ready,un_pokemon->nombre))
-			return ((int) dictionary_get(dic_pok_ready,un_pokemon->nombre) < (int) dictionary_get(dic_pok_obj,un_pokemon->nombre));
+		if(dictionary_has_key(dic_pok_ready_o_exec,un_pokemon->nombre))
+			return ((int) dictionary_get(dic_pok_ready_o_exec,un_pokemon->nombre) < (int) dictionary_get(dic_pok_obj,un_pokemon->nombre));
 		return true;
 	}
 	return false;
@@ -603,15 +598,10 @@ bool ya_no_me_sirve(t_pokemon* un_pokemon){
 }
 
 bool me_puede_servir(t_pokemon* un_pokemon){
-	//Para que un pokemon me pueda servir, la cantidad obj debe ser igual a la cantidad en exec+ready
-	printf("entra a me_puede_servir\n");
+	//Para que un pokemon me pueda servir, la cantidad obj debe ser igual a la cantidad en exec+ready;
 	if(dictionary_has_key(dic_pok_obj,un_pokemon->nombre)){
-		if(dictionary_has_key(dic_pok_exec,un_pokemon->nombre)){
-			if(dictionary_has_key(dic_pok_ready,un_pokemon->nombre))
-				// q_ready + q_exec == q_obj
-				return ((int) dictionary_get(dic_pok_ready,un_pokemon->nombre)+((int) dictionary_get(dic_pok_exec,un_pokemon->nombre))) == ((int) dictionary_get(dic_pok_obj,un_pokemon->nombre));
-			return ((int) dictionary_get(dic_pok_exec,un_pokemon->nombre) == (int) dictionary_get(dic_pok_obj,un_pokemon->nombre));
-		}
+		if(dictionary_has_key(dic_pok_ready_o_exec,un_pokemon->nombre))
+			return ((int) dictionary_get(dic_pok_ready_o_exec,un_pokemon->nombre) == (int) dictionary_get(dic_pok_obj,un_pokemon->nombre));
 		return true;
 	}
 	return false;
@@ -619,7 +609,7 @@ bool me_puede_servir(t_pokemon* un_pokemon){
 
 
 void pasar_a_ready_al_pokemon_adecuado(t_list* pokemons, int interacion){
-	printf("Se ejecuta pasar_a_ready_al_pokemon_adecuado iteracion %d\n",interacion);
+//	printf("Se ejecuta pasar_a_ready_al_pokemon_adecuado iteracion %d\n",interacion);
 
 	if (interacion == list_size(pokemons) || interacion < 0)
 		return;
@@ -627,21 +617,20 @@ void pasar_a_ready_al_pokemon_adecuado(t_list* pokemons, int interacion){
 	t_pokemon* aux = list_get(pokemons,interacion);
 
 	if (me_sirve(aux)){
-		printf("entra a me_sirve con el pokemon %s\n",aux->nombre);
+//		printf("entra a me_sirve con el pokemon %s\n",aux->nombre);
 		mover_a_ready(aux); //hace signal de pokemones en ready y lo agrega a la t_list pokemones_ready
 		return;
 	}
 
-	printf("ESTA POR entraR a ya_no_me_sirve con %s\n",aux->nombre);
 	if (ya_no_me_sirve(aux)){
-		printf("entra a ya_no_me_sirve con %s\n",aux->nombre);
+//		printf("entra a ya_no_me_sirve con %s\n",aux->nombre);
 		pasar_a_ready_al_pokemon_adecuado(pokemons,interacion+1);
 		free(remover_pokemon(list_pok_new, aux));
 		return;
 	}
 
 	if(me_puede_servir(aux)){
-		printf("entra a me_puede_servir con %s\n", aux->nombre);
+//		printf("entra a me_puede_servir con %s\n", aux->nombre);
 		pasar_a_ready_al_pokemon_adecuado(pokemons,interacion+1);
 	}
 
@@ -798,28 +787,21 @@ t_dictionary* obtener_pokemones_objetivo(){
 
 
 
+void enviar_mensajes_get(int socket_a_enviar){
 
-void enviar_un_mensaje_get(int socket_a_enviar,char* un_pokemon){
+	void enviar_un_mensaje_get(char* nombre_pokemon, void* data){
+		int socket_broker = connect_to(ip_broker,puerto_broker,wait_time);
+		t_mensaje* mensaje = crear_mensaje(2,GET_POKEMON,nombre_pokemon);
+		enviar_mensaje(socket_broker,mensaje);
+		int id_correlativo = wait_ack(socket_broker);
+		dictionary_put(ids_a_esperar,string_itoa(id_correlativo),(void*)GET_POKEMON);
 
-}
-
-
-void enviar_mensajes_get(int socket_a_enviar,t_list* todos_los_pokemones_que_faltan){
-	t_list* ya_enviado = list_create();
-	int i;
-
-	bool es_el_mismo(void* un_pokemon){
-		return !strcmp((char*)un_pokemon,(char*)list_get(todos_los_pokemones_que_faltan,i));
+		close(socket_broker);
 	}
 
-	for (i=0;i<list_size(todos_los_pokemones_que_faltan);i++){
-		if(list_any_satisfy(ya_enviado,(void*)es_el_mismo))
-			continue; //si ya fue enviado que no haga nada
-		printf("Tengo que enviar: %s\n",list_get(todos_los_pokemones_que_faltan,i));
-		list_add(ya_enviado,list_get(todos_los_pokemones_que_faltan,i));
-		enviar_un_mensaje_get(socket_a_enviar,list_get(todos_los_pokemones_que_faltan,i));
-	}
+	dictionary_iterator(dic_pok_obj,enviar_un_mensaje_get);
 }
+
 
 t_mensaje* recibir_mensaje(int* socket_broker){
 	uint32_t codigo_operacion=CODIGO_OPERACION_DEFAULT;
@@ -961,9 +943,6 @@ void crear_hilos_planificar_recursos(){
 
 void inicializar_team(){
 
-	t_list* pokemones_objetivo;
-	t_dictionary* pokemones_obj;
-
 	//----------------planificacion
 
     crear_listas_globales();
@@ -986,7 +965,7 @@ void inicializar_team(){
     //--------------------------
 
 	//Obtiene los datos IP,PUERTO WAIT_TIME desde la config
-    pokemones_obj = obtener_pokemones_objetivo();
+    dic_pok_obj = obtener_pokemones_objetivo();
 
 
 
@@ -1008,9 +987,9 @@ void inicializar_team(){
 	pthread_t recibir_cola_localized;
 
 
-	pthread_create(&recibir_cola_appeared, NULL, (void*)protocolo_recibir_mensaje, COLA_APPEARED_POKEMON);
-	pthread_create(&recibir_cola_caught, NULL, (void*)protocolo_recibir_mensaje, COLA_CAUGHT_POKEMON);
-	pthread_create(&recibir_cola_localized, NULL, (void*)protocolo_recibir_mensaje, COLA_LOCALIZED_POKEMON);
+	pthread_create(&recibir_cola_appeared, NULL, (void*)protocolo_recibir_mensaje,(void*) COLA_APPEARED_POKEMON);
+	pthread_create(&recibir_cola_caught, NULL, (void*)protocolo_recibir_mensaje,(void*) COLA_CAUGHT_POKEMON);
+	pthread_create(&recibir_cola_localized, NULL, (void*)protocolo_recibir_mensaje, (void*)COLA_LOCALIZED_POKEMON);
 	puts("crear hilo");
 	pthread_detach(recibir_cola_appeared);
 	pthread_detach(recibir_cola_caught);
@@ -1034,8 +1013,8 @@ int main(void) {
     list_pok_new = list_create();
     list_pok_ready = list_create();
 
-    dic_pok_exec = dictionary_create();
-    dic_pok_ready = dictionary_create();
+    dic_pok_ready_o_exec = dictionary_create();
+    ids_a_esperar = dictionary_create();
 
 
 	config = config_create("../config");
@@ -1056,7 +1035,7 @@ int main(void) {
 	list_add(list_pok_new,crear_pokemon("CACA",1,5));
 	list_add(list_pok_new,crear_pokemon("Pikachu",14,9));
 
-	agregar_a_diccionario(dic_pok_exec,"Pikachu");
+	agregar_a_diccionario(dic_pok_ready_o_exec,"Pikachu");
 
 	printf("Lista de new antes del algoritmo:\n");
 	debug_leer_lista(list_pok_new);
