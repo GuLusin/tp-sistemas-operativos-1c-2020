@@ -424,6 +424,33 @@ void leer_algoritmo(){
     pthread_detach(hilo_planificacion);
 }
 
+//------------------------------------------------------------
+
+void agregar_a_diccionario(t_dictionary* pokemones_deseados,char* un_pokemon){
+	int count;
+	if(dictionary_has_key(pokemones_deseados,un_pokemon)){
+		count = (int) dictionary_remove(pokemones_deseados,un_pokemon);
+		count++;
+	}
+	else
+		count = 1;
+	dictionary_put(pokemones_deseados,un_pokemon,(void*)count);
+}
+
+void remover_de_diccionario(t_dictionary* pokemones_deseados,char* un_pokemon){
+	int count;
+	if(dictionary_has_key(pokemones_deseados,un_pokemon)){
+		count = (int) dictionary_remove(pokemones_deseados,un_pokemon);
+		if(count > 1){
+			count--;
+			dictionary_put(pokemones_deseados,un_pokemon,(void*)count);
+		}
+		return;
+	}
+	printf("ERROR, se intenta sacar del diccionario a un pokemon que no estaba\n");
+}
+
+
 //-------------------------------------------POKEMONES PRUEBA------------------------------------------------
 
 void probar_pokemones(){
@@ -454,6 +481,174 @@ void probar_pokemon_SJF_CD(){
     list_add(pokemons_recibidos,pokemon1);
     sem_post(&hay_pokemones);
 }
+
+
+int cantidad_entrenadores_disponibles(){
+	int cantidad=0;
+	t_entrenador *entrenador;
+
+	for(int i=0;i<list_size(entrenadores);i++){
+		if(entrenador->objetivo_temporal == NULL)
+		cantidad++;
+	}
+	return cantidad;
+}
+
+
+//------------------------------------------------------
+
+
+int distanciaaa(t_entrenador *entrenador, t_pokemon *pokemon){
+	return (abs(entrenador->posicion_x - pokemon->pos_x) + abs(entrenador->posicion_y - pokemon->pos_y));
+}
+
+int encontrar_distancia_minima(t_pokemon *pokemon){
+	int distancia = 10000;
+	t_entrenador *entrenador_aux;
+	for(int i=0;i<list_size(entrenadores);i++){
+		entrenador_aux = list_get(entrenadores,i);
+		if(!entrenador_aux->objetivo_temporal){
+			if(distancia < distanciaaa(entrenador_aux,pokemon))
+				distancia = distanciaaa(entrenador_aux,pokemon);
+		}
+
+	return distancia;
+}}
+
+t_list* ordenar_lista_new(){
+	t_list *pokemones_aux = list_duplicate(list_pok_new);
+
+	bool distancia_mas_cercana(t_pokemon *pokemon1, t_pokemon *pokemon2){
+	    return encontrar_distancia_minima(pokemon1) > encontrar_distancia_minima(pokemon2);//ojo los signos
+	}
+
+	list_sort(pokemones_aux, distancia_mas_cercana);
+	return pokemones_aux;
+}
+
+
+
+t_pokemon* remover_pokemon(t_list* una_lista, t_pokemon* un_pokemon){
+	t_pokemon* aux;
+
+	bool es_el_mismo_pokemon(t_pokemon* uno, t_pokemon* otro){
+		if(!strcmp(uno->nombre,otro->nombre))
+			if(uno->pos_x == otro->pos_x)
+				if(uno->pos_y == otro->pos_y)
+					return true;
+		return false;
+	}
+
+	for (int i=0 ; i<list_size(una_lista) ; i++){
+		if(es_el_mismo_pokemon(list_get(una_lista,i),un_pokemon)){
+			aux = list_remove(una_lista,i);
+			return aux;
+		}
+	}
+	return aux;
+}
+
+
+void mover_a_ready(t_pokemon* un_pokemon){
+	t_pokemon* aux = remover_pokemon(list_pok_new, un_pokemon);
+	printf("Se mueve a la lista de ready al pokemon %s %d %d\n",un_pokemon->nombre,un_pokemon->pos_x,un_pokemon->pos_y);
+	list_add(list_pok_ready,aux);
+	agregar_a_diccionario(dic_pok_ready, un_pokemon->nombre);
+}
+
+
+bool me_sirve(t_pokemon* un_pokemon){
+	//Para que un pokemon me sirva, la cantidad objetivo > (cantidad exec + cantidad ready)
+	if(dictionary_has_key(dic_pok_obj,un_pokemon->nombre)){
+		if(dictionary_has_key(dic_pok_exec,un_pokemon->nombre)){//
+			if(dictionary_has_key(dic_pok_ready,un_pokemon->nombre)){ //
+				// q_ready + q_exec < q_obj
+				printf("entre al caos\n");
+				return ((int) dictionary_get(dic_pok_ready,un_pokemon->nombre)+((int) dictionary_get(dic_pok_exec,un_pokemon->nombre))) < ((int) dictionary_get(dic_pok_obj,un_pokemon->nombre));
+			}
+			return ((int) dictionary_get(dic_pok_exec,un_pokemon->nombre) < (int) dictionary_get(dic_pok_obj,un_pokemon->nombre));
+		}
+		return true;
+	}
+	return false;
+}
+
+bool ya_no_me_sirve(t_pokemon* un_pokemon){
+	//Para que un pokemon ya no me sirva, no debe seguir existiendo en el diccionario de pokemones objetivo
+	return !dictionary_has_key(dic_pok_obj,un_pokemon->nombre);
+}
+
+bool me_puede_servir(t_pokemon* un_pokemon){
+	//Para que un pokemon me pueda servir, la cantidad obj debe ser igual a la cantidad en exec+ready
+	if(dictionary_has_key(dic_pok_obj,un_pokemon->nombre)){
+		if(dictionary_has_key(dic_pok_exec,un_pokemon->nombre)){
+			if(dictionary_has_key(dic_pok_ready,un_pokemon->nombre))
+				// q_ready + q_exec == q_obj
+				return ((int) dictionary_get(dic_pok_ready,un_pokemon->nombre)+((int) dictionary_get(dic_pok_exec,un_pokemon->nombre))) == ((int) dictionary_get(dic_pok_obj,un_pokemon->nombre));
+			return ((int) dictionary_get(dic_pok_exec,un_pokemon->nombre) == (int) dictionary_get(dic_pok_obj,un_pokemon->nombre));
+		}
+		return true;
+	}
+	return false;
+}
+
+
+void pasar_a_ready_al_pokemon_adecuado(t_list* pokemons, int interacion){
+	printf("Se ejecuta pasar_a_ready_al_pokemon_adecuado iteracion %d\n",interacion);
+
+	if (interacion == list_size(pokemons) || interacion < 0)
+		return;
+
+	t_pokemon* aux = list_get(pokemons,interacion);
+
+	if (me_sirve(aux)){
+		printf("entra a me_sirve con el pokemon %s\n",aux->nombre);
+		mover_a_ready(aux); //hace signal de pokemones en ready y lo agrega a la t_list pokemones_ready
+		return;
+	}
+
+	if (ya_no_me_sirve(aux)){
+		printf("entra a ya_no_me_sirve con %s\n",aux->nombre);
+		free(remover_pokemon(list_pok_new, aux));
+		pasar_a_ready_al_pokemon_adecuado(pokemons,interacion+1);
+		return;
+	}
+
+	if(me_puede_servir(aux)){
+		printf("entra a me_puede_servir con %s\n", aux->nombre);
+		pasar_a_ready_al_pokemon_adecuado(pokemons,interacion+1);
+	}
+
+	return;
+
+}
+
+
+void exec_algoritmo_largo_plazo(){ //llamar con 0
+	t_list* pokemon_aux = list_duplicate(list_pok_new);
+			//ordenar_lista_new(); //pokemones_ordenados() devuelve una lista de los pokemones ordenados por conveniencia en relacion a los entrenadores disponibles
+
+
+	pasar_a_ready_al_pokemon_adecuado(pokemon_aux,0);
+	return;
+
+}
+
+/*
+void planificador_largo_plazo(){
+	while(1){
+		wait(llega_un_pokemon_a_cola_new);
+		wait(hayentrenadorlibre);
+		exec_algoritmo_largo_plazo;
+	}
+}
+*/
+
+
+
+
+
+
 
 //-------------------------------------------PLANIFICADOR------------------------------------------------
 
@@ -536,43 +731,67 @@ void obtener_entrenadores(){
 }
 
 
-//funcion para debug, eliminar
-void mostrar_lista(t_list* lista){
-	for (int i=0;i<list_size(lista);i++)
-		printf("Elemento n%d: %s\n",i,list_get(lista,i));
+//-------------------------------------------------------------
+
+void debug_dic(t_dictionary* pokemones_deseados){
+
+	void leeeer(char* key, void* count){
+	//	enviar_get(key);
+		printf("Nombre: %s    Cantidad:%d\n",key,(int)count);
+	}
+
+	printf("Lectura diccionario:\n");
+	dictionary_iterator(pokemones_deseados,(void*)leeeer);
+	printf("-------------------------------------------\n");
 }
 
-t_list* obtener_pokemones_objetivo(){
+void debug_leer_lista(t_list* lista){
+	printf("Comienza lectura de lista:\n");
+	t_pokemon* aux;
+	for (int i=0;i<list_size(lista);i++){
+		aux = list_get(lista,i);
+		printf("Pokemon %s, posx %d, posy %d\n",aux->nombre,aux->pos_x,aux->pos_y);
+	}
+	printf("----------------------------------------");
 
+}
+
+
+
+
+t_dictionary* obtener_pokemones_objetivo(){
+
+	t_dictionary* pokemones_deseados = dictionary_create();
 	t_list* pokemones_ya_obtenidos = list_create();
 	t_list* pokemones_objetivo = list_create();
-	int i,j;
 
 	t_entrenador* aux;
 
-	for (i=0;i<list_size(entrenadores);i++){
+	for (int i=0;i<list_size(entrenadores);i++){
 		aux=list_get(entrenadores,i);
 		list_add_all(pokemones_ya_obtenidos,aux->pokemones);
 		list_add_all(pokemones_objetivo,aux->objetivos);
 	}
 
-	for (i=0;i<list_size(pokemones_objetivo);i++){
-		for(j=0;j<list_size(pokemones_ya_obtenidos);j++){
-			if(!strcmp(list_get(pokemones_objetivo,i),list_get(pokemones_ya_obtenidos,j))){
-				list_remove(pokemones_objetivo,i);
-				list_remove(pokemones_ya_obtenidos,j);
-//				printf("Se remueve un pokemon que ya tenia: %s\n",list_get(pokemones_objetivo,i));
-				break;
-			}
-		}
-	}
+	for (int i=0;i<list_size(pokemones_objetivo);i++)
+		agregar_a_diccionario(pokemones_deseados,list_get(pokemones_objetivo,i));
 
+	for (int i=0;i<list_size(pokemones_ya_obtenidos);i++)
+		remover_de_diccionario(pokemones_deseados,list_get(pokemones_ya_obtenidos,i));
+
+	list_destroy(pokemones_objetivo);
 	list_destroy(pokemones_ya_obtenidos);
-//	mostrar_lista(pokemones_objetivo);
 
-	return pokemones_objetivo;
+	return pokemones_deseados;
 
 }
+
+//----------------------------------------------
+
+
+
+
+
 
 
 void enviar_un_mensaje_get(int socket_a_enviar,char* un_pokemon){
@@ -737,6 +956,7 @@ void crear_hilos_planificar_recursos(){
 void inicializar_team(){
 
 	t_list* pokemones_objetivo;
+	t_dictionary* pokemones_obj;
 
 	//----------------planificacion
 
@@ -759,7 +979,9 @@ void inicializar_team(){
     //--------------------------
 
 	//Obtiene los datos IP,PUERTO WAIT_TIME desde la config
-	pokemones_objetivo = obtener_pokemones_objetivo();
+    pokemones_obj = obtener_pokemones_objetivo();
+
+
 
 	ip_broker = config_get_string_value(config,"IP_BROKER");
 	log_debug(logger,config_get_string_value(config,"IP_BROKER")); //pido y logueo ip
@@ -791,10 +1013,51 @@ void inicializar_team(){
 
 int main(void) {
 
-	inicializar_team();
+	//inicializar_team();
 
-	sem_wait(&cumplio_objetivo_global);
+	//sem_wait(&cumplio_objetivo_global);
     //liberar_recursos();
+
+
+	//-----------------DEBUG DE DICCIONARIOS-----------------
+	//-----------BORRAR DESDE ACA------------------
+
+
+    crear_listas_globales();
+    list_pok_new = list_create();
+    list_pok_ready = list_create();
+
+    dic_pok_exec = dictionary_create();
+    dic_pok_ready = dictionary_create();
+
+
+	config = config_create("../config");
+	obtener_entrenadores();
+
+
+	dic_pok_obj = obtener_pokemones_objetivo();
+	debug_dic(dic_pok_obj);
+
+	list_add(list_pok_new,crear_pokemon("Nicolas madeo",1,2));
+	list_add(list_pok_new,crear_pokemon("Charmander",30,54));
+	list_add(list_pok_new,crear_pokemon("Bulbasor",5,7));
+	list_add(list_pok_new,crear_pokemon("Pikachu",1,5));
+	list_add(list_pok_new,crear_pokemon("Pikachu",14,9));
+
+	printf("Lista de new antes del algoritmo:\n");
+	debug_leer_lista(list_pok_new);
+	exec_algoritmo_largo_plazo();
+
+	printf("Lista de new:\n");
+	debug_leer_lista(list_pok_new);
+
+	printf("Lista de ready:\n");
+	debug_leer_lista(list_pok_ready);
+
+	//------------HASTA ACA---------------
+
+
+
 
 	return EXIT_SUCCESS;
 }
