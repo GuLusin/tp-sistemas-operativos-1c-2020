@@ -26,6 +26,14 @@ typedef struct {
 t_config* config;
 t_log* logger;
 
+t_list* list_pok_new;
+t_list* list_pok_ready;
+
+t_dictionary* dic_pok_obj;
+t_dictionary* dic_pok_exec;
+t_dictionary* dic_pok_ready; //se puede unificar con la lista
+
+
 char *ip_broker,*puerto_broker;
 
 int wait_time;
