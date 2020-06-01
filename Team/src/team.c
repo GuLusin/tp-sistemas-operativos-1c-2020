@@ -802,136 +802,118 @@ void enviar_mensajes_get(int socket_a_enviar){
 	dictionary_iterator(dic_pok_obj,enviar_un_mensaje_get);
 }
 
-
-t_mensaje* recibir_mensaje(int* socket_broker){
-	uint32_t codigo_operacion=CODIGO_OPERACION_DEFAULT;
-
-
-	if(recv(*socket_broker, &(codigo_operacion),sizeof(uint32_t), 0)==-1){
-		perror("Falla recv() op_code");
-		return 0;
+bool comprobar_id_esperado(uint32_t id){
+	if(dictionary_has_key(ids_a_esperar,string_itoa(id))){
+		dictionary_remove(ids_a_esperar,string_itoa(id));
+		return true;
+	}else{
+		return false;
 	}
-
-	printf("op_code:%d\n", codigo_operacion);
-
-	if(codigo_operacion==CODIGO_OPERACION_DEFAULT){
-		return 0;
-	}
-	uint32_t id;
-
-	if(recv(*socket_broker, &(id), sizeof(uint32_t), 0) == -1){
-		perror("Falla recv() id");
-		return 0;
-	}
-
-	printf("id:%d\n", id);
-
-	uint32_t size_contenido_mensaje;
-
-	if(recv(*socket_broker, &(size_contenido_mensaje), sizeof(uint32_t), 0) == -1){
-		perror("Falla recv() size_contenido_mensaje");
-		return 0;
-	}
-
-	printf("size contenido:%d\n", size_contenido_mensaje);
-
-
-	void* stream = malloc(size_contenido_mensaje);
-
-	if(recv(*socket_broker, stream, size_contenido_mensaje, 0) == -1){
-		perror("Falla recv() contenido");
-		return 0;
-	}
-
-	t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
-	mensaje->id=id;
-	return mensaje;
 }
 
-int recibir_appeared(int* socket_broker){
-
-
-	t_mensaje* mensaje = recibir_mensaje(socket_broker);
-
-	//ya tendriamos el appeared
-	// hace ACK del mensaje recibido
-
-	send_ack(*socket_broker,ACK);
-	printf("envio ACK\n");
-
-	//printear_mensaje(mensaje);
-	printf("Se recibio el mensaje\n");
-
-	agregar_pokemon_recibido(mensaje->contenido.appeared_pokemon.pokemon);
-	return 1;
+void manejar_pokemon_especie(t_pokemon_especie* pokemon_especie){
+	t_pokemon* pokemon_aux;
+	char* str_aux;
+	int i=0;
+	void agregar_pokemon_a_new(char* key, void* value){
+		while(value--){
+			str_aux = string_new();
+			string_append_with_format(&str_aux,"%s,%s",pokemon_especie->nombre_especie,key);
+			pokemon_aux = string_a_pokemon(str_aux);
+			//printf("%p\n",pokemon_aux);
+			//printear_pokemon(pokemon_aux);
+			pthread_mutex_lock(&list_pok_new_mutex);
+			list_add(list_pok_new, pokemon_aux);
+			pthread_mutex_unlock(&list_pok_new_mutex);
+			i++;
+			free(str_aux);
+		}
+	}
+	printear_pokemon_especie(pokemon_especie);
+	dictionary_iterator(pokemon_especie->posiciones_especie,agregar_pokemon_a_new);
+	while(i--)
+		sem_post(&revisar_pokemones_new);
 
 }
 
-int recibir_localized(int* socket_broker){
-
-	t_mensaje* mensaje = recibir_mensaje(socket_broker);
-
-	//ya tendriamos el localized
-
-	send_ack(*socket_broker,ACK);
-	printf("envio ACK\n");
-
-	printear_mensaje(mensaje);
-	printf("Se recibio el mensaje\n");
-
-	//MANEJAR MENSAJE LOCALIZED
-
-
-	return 1;
-
+void manejar_appeared_pokemon(t_appeared_pokemon appeared_pokemon) {
+	pthread_mutex_lock(&list_pok_new_mutex);
+	puts("agrega a lista");
+	list_add(list_pok_new, appeared_pokemon.pokemon);
+	sem_post(&revisar_pokemones_new);
+	pthread_mutex_unlock(&list_pok_new_mutex);
 }
 
-int recibir_caught(int* socket_broker){
-
-	t_mensaje* mensaje = recibir_mensaje(socket_broker);
-
-	//ya tendriamos el appeared
-
-	send_ack(*socket_broker,ACK);
-	printf("envio ACK\n");
-
-	//printear_mensaje(mensaje);
-	printf("Se recibio el mensaje\n");
-
-	//MANEJAR MENSAJE CAUGHT
-
-
-	return 1;
-
-}
-
-
-
-void protocolo_recibir_mensaje(cola_code cola){
-	pthread_mutex_lock(&mutex_recibir);
-	int socket_cola = subscribirse_a_cola(cola);
-	pthread_mutex_unlock(&mutex_recibir);
-	printf("socket_suscripcion:%d\n",socket_cola);
-	switch(cola){
-		case COLA_APPEARED_POKEMON:;
+void manejar_mensaje(t_mensaje* mensaje){
+	puts("maneja mensaje");
+	switch(mensaje->codigo_operacion){
+		case APPEARED_POKEMON:
 			puts("appeared");
-			while(recibir_appeared(&socket_cola));
-			protocolo_recibir_mensaje(cola);
+			manejar_appeared_pokemon(mensaje->contenido.appeared_pokemon);
+			puts("sale de appeared");
 			break;
-		case COLA_LOCALIZED_POKEMON:;
+		case LOCALIZED_POKEMON:;
 			puts("localized");
-			while(recibir_localized(&socket_cola));
-			protocolo_recibir_mensaje(cola);
-			break;
-		case COLA_CAUGHT_POKEMON:;
-			puts("caught");
-			while(recibir_caught(&socket_cola));
-			protocolo_recibir_mensaje(cola);
+			if(comprobar_id_esperado(mensaje->contenido.localized_pokemon.id_correlativo)){
+				puts("maneja pokemon especie");
+				manejar_pokemon_especie(mensaje->contenido.localized_pokemon.pokemon_especie);
+				pthread_mutex_lock(&list_pok_new_mutex);
+				list_iterate(list_pok_new,printear_pokemon);
+				pthread_mutex_unlock(&list_pok_new_mutex);
+			}else{
+				puts("libera_mensaje");
+				liberar_mensaje(mensaje);
+			}
 			break;
 		default:
 			break;
 	}
+	puts("sale de manejar mensaje");
+}
 
+bool recibir_mensaje(int un_socket){
+	//printf("socket a recibir:%d\n",un_socket);
+	uint32_t codigo_operacion,id,size_contenido_mensaje;
+	if(recv(un_socket,&codigo_operacion,sizeof(uint32_t),0)<=0){
+		//printf("op code:%d\n", codigo_operacion);
+		return false;
+	}
+
+	if(recv(un_socket,&id,sizeof(uint32_t),0)<=0){
+		//printf("op id:%d\n", codigo_operacion);
+		return false;
+	}
+
+	if(recv(un_socket,&size_contenido_mensaje,sizeof(uint32_t),0)<=0){
+		//printf("op size_contenido_mensaje:%d\n", codigo_operacion);
+		return false;
+	}
+
+	void* stream = malloc(size_contenido_mensaje);
+
+	if(recv(un_socket, stream, size_contenido_mensaje, 0)<=0){
+		return false;
+	}
+
+	send_ack(un_socket,ACK);
+
+	t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
+	mensaje->id=id;
+	printear_mensaje(mensaje);
+	manejar_mensaje(mensaje);
+	return true;
+}
+
+
+void protocolo_recibir_mensaje(cola_code cola){
+	while(true){
+		pthread_mutex_lock(&mutex_recibir);
+		int socket_cola = subscribirse_a_cola(cola);
+		pthread_mutex_unlock(&mutex_recibir);
+		printf("socket_suscripcion:%d\n",socket_cola);
+		while(recibir_mensaje(socket_cola));
+		close(socket_cola);
+	}
 }
 
 void crear_hilos_planificar_recursos(){
@@ -946,8 +928,12 @@ void inicializar_team(){
 	//----------------planificacion
 
     crear_listas_globales();
+    list_pok_new = list_create();
     pthread_mutex_init(&mutex_pokemones_recibidos, NULL);
     pthread_mutex_init(&mutex_recibir, NULL);
+    pthread_mutex_init(&list_pok_new_mutex, NULL);
+    sem_init(&revisar_pokemones_new,0,0);
+    ids_a_esperar = dictionary_create();
 
     //------------------
 
@@ -975,11 +961,6 @@ void inicializar_team(){
 	log_debug(logger,config_get_string_value(config,"PUERTO_BROKER")); //pido y logueo puerto
 	wait_time = config_get_int_value(config,"TIEMPO_RECONEXION");
 
-	//estas subscripciones se harian en los threads de abajo
-	//socket_cola_appeared = subscribirse_a_cola(COLA_APPEARED_POKEMON);
-	//int socket_cola_localized = subscribirse_a_cola(COLA_LOCALIZED_POKEMON);
-	//int socket_cola_caught = subscribirse_a_cola(COLA_CAUGHT_POKEMON);
-
 	//------Se crean 3 threads para escuchar las notificaciones del broker-----
 
 	pthread_t recibir_cola_appeared;
@@ -988,26 +969,32 @@ void inicializar_team(){
 
 
 	pthread_create(&recibir_cola_appeared, NULL, (void*)protocolo_recibir_mensaje,(void*) COLA_APPEARED_POKEMON);
-	pthread_create(&recibir_cola_caught, NULL, (void*)protocolo_recibir_mensaje,(void*) COLA_CAUGHT_POKEMON);
-	pthread_create(&recibir_cola_localized, NULL, (void*)protocolo_recibir_mensaje, (void*)COLA_LOCALIZED_POKEMON);
-	puts("crear hilo");
 	pthread_detach(recibir_cola_appeared);
+	pthread_create(&recibir_cola_caught, NULL, (void*)protocolo_recibir_mensaje,(void*) COLA_CAUGHT_POKEMON);
 	pthread_detach(recibir_cola_caught);
+	pthread_create(&recibir_cola_localized, NULL, (void*)protocolo_recibir_mensaje, (void*)COLA_LOCALIZED_POKEMON);
 	pthread_detach(recibir_cola_localized);
+	puts("crear hilo");
+
+
+
 }
 
 
 int main(void) {
 
-	//inicializar_team();
+	inicializar_team();
+	dictionary_put(ids_a_esperar,"455",(void*)LOCALIZED_POKEMON);
+	dictionary_put(ids_a_esperar,"",(void*)LOCALIZED_POKEMON);
 
-	//sem_wait(&cumplio_objetivo_global);
+
+	sem_wait(&cumplio_objetivo_global);
     //liberar_recursos();
 
 
 	//-----------------DEBUG DE DICCIONARIOS-----------------
 	//-----------BORRAR DESDE ACA------------------
-
+	/*
 
     crear_listas_globales();
     list_pok_new = list_create();
@@ -1051,7 +1038,7 @@ int main(void) {
 
 	//------------HASTA ACA---------------
 
-
+	*/
 
 
 	return EXIT_SUCCESS;

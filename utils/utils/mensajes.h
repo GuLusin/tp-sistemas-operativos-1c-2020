@@ -23,6 +23,7 @@
 
 #define ID_SUSCRIPCION 999999
 #define ID_DEFAULT 888888
+#define CODIGO_OPERACION_DEFAULT -1
 
 typedef enum {
 	COLA_NEW_POKEMON,
@@ -68,7 +69,7 @@ typedef struct{
 }t_caught_pokemon;
 
 typedef struct{
-	uint32_t* id_correlativo;
+	uint32_t id_correlativo;
 	t_pokemon_especie* pokemon_especie;
 }t_localized_pokemon;
 
@@ -100,24 +101,26 @@ typedef enum
 	CATCH_POKEMON,
 } op_code;
 
-
-void enviar_mensaje(int socket_a_enviar, t_mensaje* mensaje);
+t_mensaje* crear_mensaje(int num, ...);
+int enviar_mensaje(int socket_a_enviar, t_mensaje* mensaje);
 void* serializar_subscripcion(cola_code cola);
 cola_code deserializar_subscripcion(void* stream);
 t_mensaje* deserializar_mensaje(int codigo_operacion, void* stream);
-t_mensaje* crear_mensaje(int argc, ...);
-
 char* especie_pokemon_a_string(t_pokemon_especie* pokemon_especie);
-char* posiciones_a_string(t_dictionary* posiciones);
-t_pokemon* crear_pokemon(char* nombre,uint32_t px, uint32_t py);
-t_mensaje* crear_mensaje(int num, ...);
+
 void printear_pokemon(t_pokemon* pokemon);
 void printear_mensaje(t_mensaje* mensaje);
 
-int tamanio_pokemon(t_pokemon* pokemon);
 
+t_pokemon* crear_pokemon(char* nombre,uint32_t px, uint32_t py);
 void* serializar_pokemon(t_pokemon* pokemon);
 t_pokemon* deserializar_pokemon(void* stream);
+int tamanio_pokemon(t_pokemon* pokemon);
+char* posiciones_a_string(t_dictionary* posiciones);
+char* posicion_string_pokemon(t_pokemon* pokemon);
+
+
+
 t_pokemon_especie* deserializar_pokemon_especie(void* string);
 
 #endif /* MENSAJES_H */

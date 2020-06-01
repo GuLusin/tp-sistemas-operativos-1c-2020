@@ -33,14 +33,6 @@
 
 //t_mensaje* mensaje = crear_mensaje(5, APPEARED_POKEMON, pokemon->nombre, pokemon->pos_x, pokemon->pos_y, id_correlativo);
 
-t_pokemon* crear_pokemon(char* nombre,uint32_t px, uint32_t py){
-	t_pokemon* pokemon = malloc(sizeof(t_pokemon));
-	pokemon->nombre=strdup(nombre);
-	pokemon->pos_x=px;
-	pokemon->pos_y=py;
-	return pokemon;
-}
-
 t_mensaje* crear_mensaje(int num, ...){
 	va_list args;
 	va_start(args, num);
@@ -111,6 +103,31 @@ t_mensaje* crear_mensaje(int num, ...){
 }
 
 
+void liberar_mensaje(t_mensaje* mensaje){
+
+	switch(mensaje->codigo_operacion){
+		case SUBSCRIPCION:
+			break;
+		case NEW_POKEMON:;
+			liberar_pokemon(mensaje->contenido.new_pokemon.pokemon);
+			break;
+		case APPEARED_POKEMON:;
+			liberar_pokemon(mensaje->contenido.appeared_pokemon.pokemon);
+			break;
+		case CATCH_POKEMON:;
+			liberar_pokemon(mensaje->contenido.catch_pokemon.pokemon);
+			break;
+		case CAUGHT_POKEMON:
+			break;
+		case GET_POKEMON:
+			free(mensaje->contenido.get_pokemon.nombre_pokemon);
+			break;
+		case LOCALIZED_POKEMON:;
+			liberar_pokemon_especie(mensaje->contenido.localized_pokemon.pokemon_especie);
+			break;
+	}
+}
+
 
 
 void printear_pokemon(t_pokemon* pokemon){
@@ -151,38 +168,6 @@ void printear_mensaje(t_mensaje* mensaje){
 
 }
 
-int tamanio_pokemon(t_pokemon* pokemon){
-	return strlen(pokemon->nombre) + 1 + sizeof(uint32_t)*2;
-}
-
-// ------------------- SERIALIZAR POKEMON ---------------------//
-
-void* serializar_pokemon(t_pokemon* pokemon){
-	void* magic = malloc(tamanio_pokemon(pokemon));
-	int offset=0;
-
-	memcpy(magic+offset,pokemon->nombre,strlen(pokemon->nombre)+1);
-	offset += strlen(pokemon->nombre)+1;
-	memcpy(magic+offset,&(pokemon->pos_x),sizeof(uint32_t));
-	offset += sizeof(uint32_t);
-	memcpy(magic+offset,&(pokemon->pos_y),sizeof(uint32_t));
-	offset += sizeof(uint32_t);
-	return magic;
-}
-
-t_pokemon* deserializar_pokemon(void* stream){
-	t_pokemon* pokemon = malloc(sizeof(t_pokemon));
-	int offset=0;
-
-	pokemon->nombre = strdup(stream);
-	offset += strlen(pokemon->nombre)+1;
-	memcpy(&(pokemon->pos_x),stream+offset, sizeof(uint32_t));
-	offset += sizeof(uint32_t);
-	memcpy(&(pokemon->pos_y),stream+offset, sizeof(uint32_t));
-	offset += sizeof(uint32_t);
-
-	return pokemon;
-}
 
 // ------------------- SERIALIZAR APPEARED_POKEMON ---------------------//
 
@@ -426,12 +411,14 @@ void* serializar_mensaje(t_mensaje* mensaje, int *ret_size){
 /* enviar_mensaje
  * socket_a_enviar = socket para enviar el mensaje
  * mensaje = mensaje t_mensaje
+ *
+ * devuelve 0 si tiene exito y -1 si falla
  */
 
-void enviar_mensaje(int socket_a_enviar, t_mensaje* mensaje){
+int enviar_mensaje(int socket_a_enviar, t_mensaje* mensaje){
 	int size;
 	void* stream = serializar_mensaje(mensaje,&size);
-	sendall(socket_a_enviar,stream, size);
+	return sendall(socket_a_enviar,stream, size);
 }
 
 /* deserializar_mensaje
@@ -471,6 +458,67 @@ t_mensaje* deserializar_mensaje(int codigo_operacion, void* stream){
 
 //---------------------POKEMON-------------------------------
 
+t_pokemon* crear_pokemon(char* nombre,uint32_t px, uint32_t py){
+	t_pokemon* pokemon = malloc(sizeof(t_pokemon));
+	pokemon->nombre=strdup(nombre);
+	pokemon->pos_x=px;
+	pokemon->pos_y=py;
+	return pokemon;
+}
+
+void liberar_pokemon(t_pokemon* pokemon){
+	free(pokemon->nombre);
+}
+
+int tamanio_pokemon(t_pokemon* pokemon){
+	return strlen(pokemon->nombre) + 1 + sizeof(uint32_t)*2;
+}
+
+char* crear_pokestring(t_pokemon* pokemon){
+	char* pokestring = string_new();
+	string_append(&pokestring,pokemon->nombre);
+	string_append(&pokestring,",");
+	string_append(&pokestring,posicion_string_pokemon(pokemon));
+
+	return pokestring;
+}
+
+t_pokemon* string_a_pokemon(char* pokestring){
+	char** params = string_split(pokestring,",");
+	char** posiciones = string_split(params[1],"|");
+	t_pokemon* pokemon = crear_pokemon(params[0],atoi(posiciones[0]),atoi(posiciones[1]));
+	return pokemon;
+}
+
+// ------------------- SERIALIZAR POKEMON ---------------------//
+
+
+void* serializar_pokemon(t_pokemon* pokemon){
+	void* magic = malloc(tamanio_pokemon(pokemon));
+	int offset=0;
+
+	memcpy(magic+offset,pokemon->nombre,strlen(pokemon->nombre)+1);
+	offset += strlen(pokemon->nombre)+1;
+	memcpy(magic+offset,&(pokemon->pos_x),sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(magic+offset,&(pokemon->pos_y),sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	return magic;
+}
+
+t_pokemon* deserializar_pokemon(void* stream){
+	t_pokemon* pokemon = malloc(sizeof(t_pokemon));
+	int offset=0;
+
+	pokemon->nombre = strdup(stream);
+	offset += strlen(pokemon->nombre)+1;
+	memcpy(&(pokemon->pos_x),stream+offset, sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(&(pokemon->pos_y),stream+offset, sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+
+	return pokemon;
+}
 
 char* posicion_string_pokemon(t_pokemon* pokemon){
 	char* posicion_string = string_new();
@@ -496,6 +544,11 @@ t_pokemon_especie* crear_pokemon_especie(char* nombre_especie){
 	string_append(&pokemon_especie->nombre_especie,nombre_especie);
 	pokemon_especie->posiciones_especie = dictionary_create();
 	return pokemon_especie;
+}
+
+void liberar_pokemon_especie(t_pokemon_especie* pokemon_especie){
+	free(pokemon_especie->nombre_especie);
+	dictionary_destroy(pokemon_especie->posiciones_especie);
 }
 
 /*

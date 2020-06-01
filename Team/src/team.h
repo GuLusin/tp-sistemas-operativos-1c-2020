@@ -12,7 +12,6 @@
 #include <semaphore.h>
 #include <commons/collections/list.h>
 
-#define CODIGO_OPERACION_DEFAULT -1
 
 typedef struct {
    int id;
@@ -39,6 +38,7 @@ int wait_time;
 
 pthread_mutex_t send_mutex;
 pthread_mutex_t mutex_recibir;
+pthread_mutex_t list_pok_new_mutex;
 
 //---------------------------------- PLANIFICACION -----------------------------------------------
 
@@ -67,6 +67,7 @@ t_list* lista_corto_plazo; //lista de entrenadores para moverse
 //t_list *faltan;
 
 t_list* pokemons_recibidos;
+sem_t revisar_pokemones_new;
 sem_t hay_pokemones;
 sem_t hay_entrenador_corto_plazo;
 sem_t cumplio_objetivo_global;
@@ -78,4 +79,5 @@ pthread_mutex_t mutex_pokemones_recibidos;
 
 int cantidad_pokemons_globales;
 int cantidad_objetivos_globales;
+
 #endif /* TEAM_H */

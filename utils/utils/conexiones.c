@@ -59,7 +59,7 @@ int sendall(int s, void *buf, int len)
 {
     int total = 0;        // cuantos bytes ya enviamos
     int bytesleft = len; // cuantos bytes nos quedan enviar
-    int n;
+    int n=0;
 
     while(total < len) {
         n = send(s, buf+total, bytesleft, 0);
@@ -70,7 +70,7 @@ int sendall(int s, void *buf, int len)
 
     //len = total; // devuelve el numero total de
 
-    return n==-1?-1:0; // return -1 si falla, 0 si tiene exito
+    return n==-1 ? 0:1; // return 0 si falla, 1 si tiene exito
 }
 
 

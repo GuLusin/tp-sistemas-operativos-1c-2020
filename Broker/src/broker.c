@@ -98,7 +98,7 @@ void recibir_mensaje(int *socket_cliente){
 	//printf("a recibir mensaje le llega el socket %d\n",*socket_cliente);
 	uint32_t codigo_operacion;
 
-	if(recv(*socket_cliente, &(codigo_operacion),sizeof(uint32_t), 0)==-1){
+	if(recv(*socket_cliente, &(codigo_operacion),sizeof(uint32_t), MSG_WAITALL)==-1){
 		perror("Falla recv() op_code");
 	}
 
@@ -106,7 +106,7 @@ void recibir_mensaje(int *socket_cliente){
 
 	uint32_t id;
 
-	if(recv(*socket_cliente, &(id), sizeof(uint32_t), 0) == -1){
+	if(recv(*socket_cliente, &(id), sizeof(uint32_t), MSG_WAITALL) == -1){
 		perror("Falla recv() id");
 	}
 
@@ -114,7 +114,7 @@ void recibir_mensaje(int *socket_cliente){
 
 	uint32_t size_contenido_mensaje;
 
-	if(recv(*socket_cliente, &(size_contenido_mensaje), sizeof(uint32_t), 0) == -1){
+	if(recv(*socket_cliente, &(size_contenido_mensaje), sizeof(uint32_t), MSG_WAITALL) == -1){
 		perror("Falla recv() size_contenido_mensaje");
 	}
 
@@ -123,7 +123,7 @@ void recibir_mensaje(int *socket_cliente){
 
 	if(codigo_operacion==SUBSCRIPCION){
 		int cola;
-		recv(*socket_cliente, &(cola),size_contenido_mensaje, 0);
+		recv(*socket_cliente, &(cola),size_contenido_mensaje, MSG_WAITALL);
 		printf("cola:%d\n", cola);
 		manejar_subscripcion(cola, *socket_cliente);
 		//send_ack(socket_cliente);
@@ -132,10 +132,9 @@ void recibir_mensaje(int *socket_cliente){
 
 	void* stream = malloc(size_contenido_mensaje);
 
-	if(recv(*socket_cliente, stream, size_contenido_mensaje, 0) == -1){
+	if(recv(*socket_cliente, stream, size_contenido_mensaje, MSG_WAITALL) == -1){
 		perror("Falla recv() contenido");
 	}
-
 	t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
 	mensaje->id=id_mensajes_globales++;
 	manejar_mensaje(mensaje);
@@ -152,10 +151,63 @@ void recibir_cliente(int *socket_servidor){
 	}
 }
 
+void remover_socket(t_list* lista, int un_socket){
+	int i=-1;
+	bool es_igual(void* otro_socket){
+		i++;
+		return un_socket==(int)otro_socket;
+	}
+	list_find(lista, (void*)es_igual);
+	printf("i:%\n",i);
+	int socket_desechado = (int)list_remove(lista, i);
+	printf("socket_desechado:%d\n", socket_desechado);
+	close(socket_desechado);
+}
+
+void notificar_mensaje(t_mensaje* mensaje){
+	int r=0;
+	switch(mensaje->codigo_operacion){
+		case APPEARED_POKEMON:;
+			void enviar_appeared(void* socket_cola){
+				r =(int) enviar_mensaje((int)socket_cola, mensaje);
+				if(r){
+					//printf("r:%d\n",r);
+					//puts("envio correcto");
+					check_ack((int)socket_cola, ACK);
+				}else{
+					printf("r:%d\n",r);
+					//puts("envio fallo");
+					remover_socket(sockets_cola_appeared,(int)socket_cola);
+				}
+			}
+			//puts("itera");
+			list_iterate(sockets_cola_appeared,enviar_appeared);
+			break;
+		case LOCALIZED_POKEMON:;
+			void enviar_localized(void* socket_cola){
+				if(r=enviar_mensaje((int)socket_cola, mensaje)){
+					//printf("r:%d\n",r);
+					check_ack((int)socket_cola, ACK);
+					//puts("envio correcto");
+				}else{
+					//todo funca joya, peeeeero si se cae un team, al segundo mensaje enviado falla
+
+					//puts("envio fallo");
+					//printf("r:%d\n",r);
+					remover_socket(sockets_cola_localized,(int)socket_cola);
+				}
+			}
+			list_iterate(sockets_cola_localized,enviar_localized);
+			break;
+	}
+
+}
+
 void enviar_appeared_pokemon(t_pokemon* pokemon){
+	puts("envia appeared");
 	int id_correlativo = 455;
 	t_mensaje* mensaje = crear_mensaje(5, APPEARED_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,id_correlativo);
-	int socket_aux = list_get(sockets_cola_appeared,0);
+	int socket_aux = (int)list_get(sockets_cola_appeared,0);
 	printear_mensaje(mensaje);
 	enviar_mensaje(socket_aux,mensaje);
 	printf("Se envio el mensaje al socket:%d\n", socket_aux);
@@ -163,9 +215,25 @@ void enviar_appeared_pokemon(t_pokemon* pokemon){
 	puts("ACK con exito\n");
 }
 
+void printear_lista(t_list* lista){
+	void printear_elemento(void* elem){
+		printf("%d,",(int)elem);
+	}
+	list_iterate(lista,printear_elemento);
+}
+
+void printear_estado(){
+	printf("sockets_cola_localized:");
+	printear_lista(sockets_cola_localized);
+	printf("\nsockets_cola_caught:");
+	printear_lista(sockets_cola_caught);
+	printf("\nsockets_cola_appeared:");
+	printear_lista(sockets_cola_appeared);
+	printf("\n");
+}
+
 void inicializar_broker(){
 
-	int socket_broker;
 	char *ip,*puerto;
 
 	id_mensajes_globales=0;
@@ -209,57 +277,110 @@ void inicializar_broker(){
 	pthread_detach(pthread_atender_cliente);
 	log_debug(logger,"Recibi al cliente");	//Recibi al cliente
 
-	getchar();
+	//getchar();
 
 
-	t_pokemon* pokemon;
-    pokemon = crear_pokemon("Pikachu",-1,2);
-    puts("envia appeared pokemon");
-    enviar_appeared_pokemon(pokemon);
-
-    pokemon = crear_pokemon("Bulbasaur",9,5);
-    puts("envia appeared pokemon");
-    enviar_appeared_pokemon(pokemon);
-
-    pokemon = crear_pokemon("Squirtle",4,7);
-    puts("envia appeared pokemon");
-    enviar_appeared_pokemon(pokemon);
-
-
-    puts("Localized");
-    //------SE CREA UN LOCALIZED----------
-	t_pokemon* pokemon1;
-	t_pokemon* pokemon2;
-	t_pokemon* pokemon3;
-	t_pokemon* pokemon4;
-    pokemon1 = crear_pokemon("Pikachu",-1,2);
-    pokemon2 = crear_pokemon("Pikachu",9,5);
-    pokemon3 = crear_pokemon("Pikachu",-1,2);
-    pokemon4 = crear_pokemon("Pikachu",-1,4);
-    t_pokemon_especie* especie_pikachu = crear_pokemon_especie("Pikachu");
-    agregar_pokemon_a_especie(especie_pikachu,pokemon1);
-    agregar_pokemon_a_especie(especie_pikachu,pokemon2);
-    agregar_pokemon_a_especie(especie_pikachu,pokemon3);
-    agregar_pokemon_a_especie(especie_pikachu,pokemon4);
-
-    t_mensaje* mensaje_aux = crear_mensaje(3, LOCALIZED_POKEMON, 3, especie_pikachu);
-    mensaje_aux->id=ID_DEFAULT;
-
-	int socket_aux = list_get(sockets_cola_localized,0);
-	printear_mensaje(mensaje_aux);
-	enviar_mensaje(socket_aux,mensaje_aux);
-	printf("Se envio el mensaje al socket:%d\n", socket_aux);
-	check_ack(socket_aux,ACK);
-	puts("ACK con exito\n");
 
     //-------------------------------------------
 
 
-    sem_t esperar;
-    sem_init(&esperar, 0,0);
-	sem_wait(&esperar);
-	printf("cola appeared: %d\ncola caught: %d\ncola localized: %d\n", (int)list_get(sockets_cola_appeared,0),(int)list_get(sockets_cola_caught,0),(int)list_get(sockets_cola_localized,0));
-	close(socket_broker);
+
+}
+
+void envio_mensaje(){
+	t_pokemon* pokemon;
+	t_pokemon* pokemon1;
+	t_pokemon* pokemon2;
+	t_pokemon* pokemon3;
+	t_pokemon* pokemon4;
+	t_mensaje* mensaje_aux;
+	t_pokemon_especie* especie_pikachu;
+	while(true){
+		int msg = getchar();
+		switch(msg){
+			case 'p':
+				pokemon = crear_pokemon("Pikachu",-1,2);
+				mensaje_aux = crear_mensaje(5, APPEARED_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,455);
+				puts("envia appeared pokemon");
+				notificar_mensaje(mensaje_aux);
+				break;
+			case 'P':
+				puts("Localized");
+				//------SE CREA UN LOCALIZED----------
+				pokemon1 = crear_pokemon("Pikachu",-1,2);
+				pokemon2 = crear_pokemon("Pikachu",9,5);
+				pokemon3 = crear_pokemon("Pikachu",-1,2);
+				pokemon4 = crear_pokemon("Pikachu",-1,4);
+				especie_pikachu = crear_pokemon_especie("Pikachu");
+				agregar_pokemon_a_especie(especie_pikachu,pokemon1);
+				agregar_pokemon_a_especie(especie_pikachu,pokemon2);
+				agregar_pokemon_a_especie(especie_pikachu,pokemon3);
+				agregar_pokemon_a_especie(especie_pikachu,pokemon4);
+
+				mensaje_aux = crear_mensaje(3, LOCALIZED_POKEMON, ID_DEFAULT, especie_pikachu);
+				mensaje_aux->id=ID_DEFAULT;
+
+				notificar_mensaje(mensaje_aux);
+				break;
+
+			case 'S':
+				puts("Localized");
+				//------SE CREA UN LOCALIZED----------
+
+				pokemon1 = crear_pokemon("Squirtle",-12,12);
+				pokemon2 = crear_pokemon("Squirtle",-12,12);
+				pokemon3 = crear_pokemon("Squirtle",-12,12);
+				pokemon4 = crear_pokemon("Squirtle",-12,12);
+				especie_pikachu = crear_pokemon_especie("Squirtle");
+				agregar_pokemon_a_especie(especie_pikachu,pokemon1);
+				agregar_pokemon_a_especie(especie_pikachu,pokemon2);
+				agregar_pokemon_a_especie(especie_pikachu,pokemon3);
+				agregar_pokemon_a_especie(especie_pikachu,pokemon4);
+
+				mensaje_aux = crear_mensaje(3, LOCALIZED_POKEMON, 455, especie_pikachu);
+				mensaje_aux->id=ID_DEFAULT;
+
+				notificar_mensaje(mensaje_aux);
+				break;
+			case 'B':
+				puts("Localized");
+				//------SE CREA UN LOCALIZED----------
+				pokemon1 = crear_pokemon("Bulbasaur",-2,7);
+				pokemon2 = crear_pokemon("Bulbasaur",6,3);
+				pokemon3 = crear_pokemon("Bulbasaur",-2,7);
+				pokemon4 = crear_pokemon("Bulbasaur",5,4);
+				especie_pikachu = crear_pokemon_especie("Bulbasaur");
+				agregar_pokemon_a_especie(especie_pikachu,pokemon1);
+				agregar_pokemon_a_especie(especie_pikachu,pokemon2);
+				agregar_pokemon_a_especie(especie_pikachu,pokemon3);
+				agregar_pokemon_a_especie(especie_pikachu,pokemon4);
+
+				mensaje_aux = crear_mensaje(3, LOCALIZED_POKEMON, 455, especie_pikachu);
+				mensaje_aux->id=ID_DEFAULT;
+
+				notificar_mensaje(mensaje_aux);
+				break;
+			case 'b':
+				pokemon = crear_pokemon("Bulbasaur",9,5);
+				mensaje_aux = crear_mensaje(5, APPEARED_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,455);
+				puts("envia appeared pokemon");
+				notificar_mensaje(mensaje_aux);
+				break;
+			case 's':
+				pokemon = crear_pokemon("Squirtle",4,7);
+				mensaje_aux = crear_mensaje(5, APPEARED_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,455);
+				puts("envia appeared pokemon");
+				notificar_mensaje(mensaje_aux);
+				break;
+			case 'r':
+				printear_estado();
+				break;
+
+			default:
+				break;
+		}
+
+	}
 
 }
 
@@ -269,6 +390,57 @@ int main(void) {
 
 
 	inicializar_broker();
+	sleep(2);
+
+	/*
+	t_pokemon* pokemon;
+	pokemon = crear_pokemon("Pikachu",-1,2);
+	puts("envia appeared pokemon");
+	enviar_appeared_pokemon(pokemon);
+
+	pokemon = crear_pokemon("Bulbasaur",9,5);
+	puts("envia appeared pokemon");
+	enviar_appeared_pokemon(pokemon);
+
+	pokemon = crear_pokemon("Squirtle",4,7);
+	puts("envia appeared pokemon");
+	enviar_appeared_pokemon(pokemon);
+
+
+	puts("Localized");
+	//------SE CREA UN LOCALIZED----------
+	t_pokemon* pokemon1;
+	t_pokemon* pokemon2;
+	t_pokemon* pokemon3;
+	t_pokemon* pokemon4;
+	pokemon1 = crear_pokemon("Pikachu",-1,2);
+	pokemon2 = crear_pokemon("Pikachu",9,5);
+	pokemon3 = crear_pokemon("Pikachu",-1,2);
+	pokemon4 = crear_pokemon("Pikachu",-1,4);
+	t_pokemon_especie* especie_pikachu = crear_pokemon_especie("Pikachu");
+	agregar_pokemon_a_especie(especie_pikachu,pokemon1);
+	agregar_pokemon_a_especie(especie_pikachu,pokemon2);
+	agregar_pokemon_a_especie(especie_pikachu,pokemon3);
+	agregar_pokemon_a_especie(especie_pikachu,pokemon4);
+
+	t_mensaje* mensaje_aux = crear_mensaje(3, LOCALIZED_POKEMON, 3, especie_pikachu);
+	mensaje_aux->id=ID_DEFAULT;
+
+	int socket_aux =(int)list_get(sockets_cola_localized,0);
+	printear_mensaje(mensaje_aux);
+	enviar_mensaje(socket_aux,mensaje_aux);
+	printf("Se envio el mensaje al socket:%d\n", socket_aux);
+	check_ack(socket_aux,ACK);
+	puts("ACK con exito\n");
+	*/
+	pthread_t envio_mensaje_t;
+	pthread_create(&envio_mensaje_t, NULL, (void*)envio_mensaje, NULL);
+	sem_t esperar;
+	sem_init(&esperar, 0,0);
+	sem_wait(&esperar);
+	printf("cola appeared: %d\ncola caught: %d\ncola localized: %d\n", (int)list_get(sockets_cola_appeared,0),(int)list_get(sockets_cola_caught,0),(int)list_get(sockets_cola_localized,0));
+	close(socket_broker);
+
 
 	return EXIT_SUCCESS;
 }
