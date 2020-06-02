@@ -158,46 +158,47 @@ void remover_socket(t_list* lista, int un_socket){
 		return un_socket==(int)otro_socket;
 	}
 	list_find(lista, (void*)es_igual);
-	printf("i:%\n",i);
-	int socket_desechado = (int)list_remove(lista, i);
+	printf("i:%d\n",i);
+	int socket_desechado = list_remove(lista, i);
 	printf("socket_desechado:%d\n", socket_desechado);
 	close(socket_desechado);
 }
 
 void notificar_mensaje(t_mensaje* mensaje){
-	int r=0;
+	bool r;
+	int *n;
+	int num;
 	switch(mensaje->codigo_operacion){
 		case APPEARED_POKEMON:;
 			void enviar_appeared(void* socket_cola){
-				r =(int) enviar_mensaje((int)socket_cola, mensaje);
+				num = socket_cola;
+				//num = *n;
+				printf("SOCKET: %d",num);
+				puts("MENSAJE");
+				enviar_mensaje((int)socket_cola, mensaje);
+				puts("CHECK");
+				r = check_ack((int)socket_cola, ACK);
 				if(r){
-					//printf("r:%d\n",r);
-					//puts("envio correcto");
-					check_ack((int)socket_cola, ACK);
+					puts("todo bien");
 				}else{
-					printf("r:%d\n",r);
-					//puts("envio fallo");
+					puts("envio fallo");
 					remover_socket(sockets_cola_appeared,(int)socket_cola);
 				}
 			}
-			//puts("itera");
 			list_iterate(sockets_cola_appeared,enviar_appeared);
 			break;
 		case LOCALIZED_POKEMON:;
 			void enviar_localized(void* socket_cola){
-				if(r=enviar_mensaje((int)socket_cola, mensaje)){
-					//printf("r:%d\n",r);
-					check_ack((int)socket_cola, ACK);
-					//puts("envio correcto");
+				enviar_mensaje((int)socket_cola, mensaje);
+				r = check_ack((int)socket_cola, ACK);
+				if(r){
+					puts("todo bien");
 				}else{
-					//todo funca joya, peeeeero si se cae un team, al segundo mensaje enviado falla
-
-					//puts("envio fallo");
-					//printf("r:%d\n",r);
+					puts("envio fallo");
 					remover_socket(sockets_cola_localized,(int)socket_cola);
 				}
-			}
-			list_iterate(sockets_cola_localized,enviar_localized);
+		}
+		list_iterate(sockets_cola_localized,enviar_localized);
 			break;
 	}
 

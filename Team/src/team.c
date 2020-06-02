@@ -906,6 +906,7 @@ bool recibir_mensaje(int un_socket){
 
 
 void protocolo_recibir_mensaje(cola_code cola){
+
 	while(true){
 		pthread_mutex_lock(&mutex_recibir);
 		int socket_cola = subscribirse_a_cola(cola);
@@ -975,9 +976,6 @@ void inicializar_team(){
 	pthread_create(&recibir_cola_localized, NULL, (void*)protocolo_recibir_mensaje, (void*)COLA_LOCALIZED_POKEMON);
 	pthread_detach(recibir_cola_localized);
 	puts("crear hilo");
-
-
-
 }
 
 
@@ -985,7 +983,7 @@ int main(void) {
 
 	inicializar_team();
 	dictionary_put(ids_a_esperar,"455",(void*)LOCALIZED_POKEMON);
-	dictionary_put(ids_a_esperar,"",(void*)LOCALIZED_POKEMON);
+	dictionary_put(ids_a_esperar,"888888",(void*)LOCALIZED_POKEMON);
 
 
 	sem_wait(&cumplio_objetivo_global);
