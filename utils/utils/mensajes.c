@@ -102,6 +102,15 @@ t_mensaje* crear_mensaje(int num, ...){
 	return mensaje;
 }
 
+void liberar_pokemon(t_pokemon* pokemon){
+	free(pokemon->nombre);
+	free(pokemon);
+}
+
+void liberar_pokemon_especie(t_pokemon_especie* pokemon_especie){
+	free(pokemon_especie->nombre_especie);
+	dictionary_destroy(pokemon_especie->posiciones_especie);
+}
 
 void liberar_mensaje(t_mensaje* mensaje){
 
@@ -128,10 +137,18 @@ void liberar_mensaje(t_mensaje* mensaje){
 	}
 }
 
-
-
 void printear_pokemon(t_pokemon* pokemon){
 	printf("nombre:%s\npos x:%d\npos y:%d\n", pokemon->nombre,pokemon->pos_x,pokemon->pos_y);
+}
+
+void printear_posicion(char* key, void* value){
+	printf("[%s|%d]",key, (int)value);
+}
+
+void printear_pokemon_especie(t_pokemon_especie* pokemon_especie){
+	printf("Especie:%s\n[", pokemon_especie->nombre_especie);
+	dictionary_iterator(pokemon_especie->posiciones_especie,printear_posicion);
+	printf("]\n");
 }
 
 void printear_mensaje(t_mensaje* mensaje){
@@ -159,7 +176,7 @@ void printear_mensaje(t_mensaje* mensaje){
 			printf("Pokemon:%s\n", mensaje->contenido.get_pokemon.nombre_pokemon);
 			break;
 		case LOCALIZED_POKEMON:;
-			printf("id_correlativo:%d\n"),mensaje->contenido.localized_pokemon.id_correlativo;
+			printf("id_correlativo:%d\n",mensaje->contenido.localized_pokemon.id_correlativo);
 			printear_pokemon_especie(mensaje->contenido.localized_pokemon.pokemon_especie);
 			break;
 	}
@@ -275,6 +292,10 @@ t_new_pokemon deserializar_new_pokemon(void* stream){
 }
 
 // ------------------- SERIALIZAR LOCALIZED_POKEMON ---------------------//
+
+int tamanio_pokemon_especie(t_pokemon_especie* especie_pokemon){
+	return strlen(especie_pokemon->nombre_especie) + 1 + strlen(posiciones_a_string(especie_pokemon->posiciones_especie)) + 1;
+}
 
 void* serializar_localized_pokemon(t_localized_pokemon localized_pokemon){
 	void* magic = malloc(sizeof(uint32_t) + tamanio_pokemon_especie(localized_pokemon.pokemon_especie));
@@ -466,10 +487,6 @@ t_pokemon* crear_pokemon(char* nombre,uint32_t px, uint32_t py){
 	return pokemon;
 }
 
-void liberar_pokemon(t_pokemon* pokemon){
-	free(pokemon->nombre);
-}
-
 int tamanio_pokemon(t_pokemon* pokemon){
 	return strlen(pokemon->nombre) + 1 + sizeof(uint32_t)*2;
 }
@@ -486,8 +503,7 @@ char* crear_pokestring(t_pokemon* pokemon){
 t_pokemon* string_a_pokemon(char* pokestring){
 	char** params = string_split(pokestring,",");
 	char** posiciones = string_split(params[1],"|");
-	t_pokemon* pokemon = crear_pokemon(params[0],atoi(posiciones[0]),atoi(posiciones[1]));
-	return pokemon;
+	return crear_pokemon(params[0],atoi(posiciones[0]),atoi(posiciones[1]));
 }
 
 // ------------------- SERIALIZAR POKEMON ---------------------//
@@ -546,11 +562,6 @@ t_pokemon_especie* crear_pokemon_especie(char* nombre_especie){
 	return pokemon_especie;
 }
 
-void liberar_pokemon_especie(t_pokemon_especie* pokemon_especie){
-	free(pokemon_especie->nombre_especie);
-	dictionary_destroy(pokemon_especie->posiciones_especie);
-}
-
 /*
  * agregar_pokemon_a_especie
  *
@@ -567,7 +578,7 @@ void agregar_pokemon_a_especie(t_pokemon_especie* pokemon_especie, t_pokemon* po
 	if(strcmp(pokemon_especie->nombre_especie,pokemon->nombre)==0){
 		posicion_pokemon = posicion_string_pokemon(pokemon);
 		if(dictionary_has_key(pokemon_especie->posiciones_especie, posicion_pokemon)){
-			cantidad = dictionary_remove(pokemon_especie->posiciones_especie, posicion_pokemon);
+			cantidad = (int) dictionary_remove(pokemon_especie->posiciones_especie, posicion_pokemon);
 			dictionary_put(pokemon_especie->posiciones_especie,posicion_pokemon,(void*)++cantidad);
 		}else{
 			dictionary_put(pokemon_especie->posiciones_especie,posicion_pokemon, (void*)1);
@@ -582,7 +593,7 @@ void sacar_pokemon_de_especie(t_pokemon_especie* pokemon_especie, t_pokemon* pok
 	if(strcmp(pokemon_especie->nombre_especie,pokemon->nombre)==0){
 		posicion_pokemon = posicion_string_pokemon(pokemon);
 		if(dictionary_has_key(pokemon_especie->posiciones_especie, posicion_pokemon)){
-			cantidad = dictionary_remove(pokemon_especie->posiciones_especie, posicion_pokemon);
+			cantidad = (int) dictionary_remove(pokemon_especie->posiciones_especie, posicion_pokemon);
 			if(--cantidad>0)
 				dictionary_put(pokemon_especie->posiciones_especie,posicion_pokemon,(void*)cantidad);
 		}
@@ -599,20 +610,6 @@ void sacar_pokemon_de_especie(t_pokemon_especie* pokemon_especie, t_pokemon* pok
 
 bool hay_pokemon_en_posicion(t_pokemon_especie* pokemon_especie, char* key){
 	return dictionary_has_key(pokemon_especie->posiciones_especie, key);
-}
-
-int tamanio_pokemon_especie(t_pokemon_especie* especie_pokemon){
-	return strlen(especie_pokemon->nombre_especie) + 1 + strlen(posiciones_a_string(especie_pokemon->posiciones_especie)) + 1;
-}
-
-void printear_posicion(char* key, void* value){
-	printf("[%s|%d]",key, (int)value);
-}
-
-void printear_pokemon_especie(t_pokemon_especie* pokemon_especie){
-	printf("Especie:%s\n[", pokemon_especie->nombre_especie);
-	dictionary_iterator(pokemon_especie->posiciones_especie,printear_posicion);
-	printf("]\n");
 }
 
 char* posiciones_a_string(t_dictionary* posiciones){

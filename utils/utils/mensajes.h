@@ -119,8 +119,6 @@ int tamanio_pokemon(t_pokemon* pokemon);
 char* posiciones_a_string(t_dictionary* posiciones);
 char* posicion_string_pokemon(t_pokemon* pokemon);
 
-
-
 t_pokemon_especie* deserializar_pokemon_especie(void* string);
 
 #endif /* MENSAJES_H */
