@@ -13,6 +13,7 @@ void leer_config() {
 	config = config_create("../config");
 	tiempo_reintento_conexion = config_get_int_value(config,"TIEMPO_DE_REINTENTO_CONEXION");
 	tiempo_reintento_operacion = config_get_int_value(config,"TIEMPO_DE_REINTENTO_OPERACION");
+	tiempo_retardo_operacion = config_get_int_value(config,"TIEMPO_RETARDO_OPERACION");
 	ip_broker = config_get_string_value(config,"IP_BROKER");
 	log_debug(logger,config_get_string_value(config,"IP_BROKER")); //pido y logueo ip
 	puerto_broker = config_get_string_value(config,"PUERTO_BROKER");
@@ -21,82 +22,80 @@ void leer_config() {
 	//log_debug(logger,config_get_string_value(config,"PUNTO_MONTAJE_TALLGRASS")); // Ver si es necesario loggear esto
 }
 
+void recibir_new(t_mensaje *mensaje){
 
-/*
+}
 
-t_mensaje* recibir_mensaje(){
-	uint32_t codigo_operacion=CODIGO_OPERACION_DEFAULT;
+void recibir_get(t_mensaje *mensaje){
 
 
-	if(recv(*socket_broker, &(codigo_operacion),sizeof(uint32_t), 0)==-1){
-		perror("Falla recv() op_code");
-		return 0;
+}
+
+void recibir_catch(t_mensaje *mensaje){
+
+
+}
+
+void manejar_mensaje(t_mensaje* mensaje){
+	puts("maneja mensaje");
+	switch(mensaje->codigo_operacion){
+		case NEW_POKEMON:;
+			//TODO implementar logica
+
+			break;
+		case CATCH_POKEMON:;
+		//TODO implementar logica
+
+			break;
+		case GET_POKEMON:;
+		//TODO implementar logica
+
+			break;
+		default:
+
+			break;
 	}
+	puts("sale de manejar mensaje");
+}
 
-	printf("op_code:%d\n", codigo_operacion);
+bool recibir_mensaje(int un_socket){
+	uint32_t codigo_operacion,id,size_contenido_mensaje;
+	if(recv(un_socket,&codigo_operacion,sizeof(uint32_t),0)<=0)
+		return false;
 
-	if(codigo_operacion==CODIGO_OPERACION_DEFAULT){
-		return 0;
-	}
-	uint32_t id;
+	if(recv(un_socket,&id,sizeof(uint32_t),0)<=0)
+		return false;
 
-	if(recv(*socket_broker, &(id), sizeof(uint32_t), 0) == -1){
-		perror("Falla recv() id");
-		return 0;
-	}
-
-	printf("id:%d\n", id);
-
-	uint32_t size_contenido_mensaje;
-
-	if(recv(*socket_broker, &(size_contenido_mensaje), sizeof(uint32_t), 0) == -1){
-		perror("Falla recv() size_contenido_mensaje");
-		return 0;
-	}
-
-	printf("size contenido:%d\n", size_contenido_mensaje);
-
+	if(recv(un_socket,&size_contenido_mensaje,sizeof(uint32_t),0)<=0)
+		return false;
 
 	void* stream = malloc(size_contenido_mensaje);
 
-	if(recv(*socket_broker, stream, size_contenido_mensaje, 0) == -1){
-		perror("Falla recv() contenido");
-		return 0;
-	}
+	if(recv(un_socket, stream, size_contenido_mensaje, 0)<=0)
+		return false;
+
+	send_ack(un_socket,ACK);
 
 	t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
 	mensaje->id=id;
-	return mensaje;
+	printear_mensaje(mensaje);
+	manejar_mensaje(mensaje);
+	return true;
 }
 
 
-*/
+void protocolo_recibir_mensaje(cola_code cola){
 
-void escuchar_cola_new(){
-	while(1){
-		printf("new \n");
-		//escucha el socket de la cola new y si llega algo
-		//crearia el hilo que atiende la peticion
-	}
-}
+	while(true){
+		pthread_mutex_lock(&mutex_recibir);
 
-void escuchar_cola_catch(){
-	while(1){
-		printf("catch \n");
-	}
-}
+		int socket_cola = subscribirse_a_cola(cola);
 
-void escuchar_cola_get(){
-	while(1){
-		printf("get \n");
+		pthread_mutex_unlock(&mutex_recibir);
 
-	}
-}
-
-void revisar_conexion_broker(){
-	while(1){
-		//estas ahi broker weon?
-		printf("brokeeer \n");
+		printf("socket_suscripcion:%d\n",socket_cola);
+		while(recibir_mensaje(socket_cola));
+		close(socket_cola);
 	}
 }
 
@@ -107,23 +106,16 @@ void inicializar_gamecard() { // Suscribirse a NEW_POKEMON, CATCH_POKEMON, GET_P
 	pthread_t pthread_cola_new;
 	pthread_t pthread_cola_catch;
 	pthread_t pthread_cola_get;
-	pthread_t pthread_conexion_broker;
 
-	socket_cola_get = subscribirse_a_cola(COLA_GET_POKEMON);
-	socket_cola_catch = subscribirse_a_cola(COLA_CATCH_POKEMON);
-	socket_cola_new = subscribirse_a_cola(COLA_NEW_POKEMON);
+    pthread_mutex_init(&mutex_recibir, NULL);
 
-	pthread_create(&pthread_conexion_broker, NULL, (void*)revisar_conexion_broker,NULL);
-	pthread_detach(pthread_conexion_broker);
-
-	pthread_create(&pthread_cola_new, NULL,(void*)escuchar_cola_new, NULL);
+	pthread_create(&pthread_cola_new, NULL,(void*)protocolo_recibir_mensaje, COLA_NEW_POKEMON);
 	pthread_detach(pthread_cola_new);
 
-
-	pthread_create(&pthread_cola_catch, NULL,(void*)escuchar_cola_catch, NULL);
+	pthread_create(&pthread_cola_catch, NULL,(void*)protocolo_recibir_mensaje, COLA_CATCH_POKEMON);
 	pthread_detach(pthread_cola_catch);
 
-	pthread_create(&pthread_cola_get, NULL,(void*)escuchar_cola_get, NULL);
+	pthread_create(&pthread_cola_get, NULL,(void*)protocolo_recibir_mensaje, COLA_GET_POKEMON);
 	pthread_detach(pthread_cola_get);
 }
 
@@ -133,8 +125,9 @@ void cerrar_gamecard(){
 	close(socket_cola_new);
 }
 
-int main(void) {
+int main() {
 	inicializar_gamecard();
+	getchar();
 	cerrar_gamecard();
 	return EXIT_SUCCESS;
 }
