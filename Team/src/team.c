@@ -629,8 +629,7 @@ void planificador(){
 	    sem_wait(&hay_pokemones);
 	    puts("HAY UN NUEVO POKEMON");
 	    printf("CANTIDAD: %d\n",list_size(list_pok_ready));
-	    t_pokemon *pokemon = list_get(list_pok_ready,0);
-	    mostrar_pokemon(pokemon);
+	    debug_leer_lista(list_pok_ready);
 	    puts("------------------------");
 	    //planificar();
 	}
