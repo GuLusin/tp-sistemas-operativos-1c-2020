@@ -143,6 +143,10 @@ bool cumplio_objetivo_entrenador(int id){ //verifica si las listas de objetivos 
 }*/
 
 void deadlock(){
+        sleep(30);
+        puts("\n------MOSTRAMOS LISTA DE NEW---------(es un sleep de control en hilo deadlock, sacarlo)---\n");
+		debug_leer_lista(list_pok_new);
+
 	/*int index = 0;
 	while(entrenadores){
 		while(tiene_pokemons_faltantes(list_get(entrenador,index)){
@@ -235,13 +239,14 @@ void entrenador(int id){
 		sem_post(&activar_algoritmo);
 		if(llego_al_objetivo(list_get(entrenadores,id)))
 		  {atrapar_pokemon(id);
-		  //deadlock si entras en deadlock, solo se ejecuta todo el deadlock hasta terminar el intercambio?
+		  //liberar(); o algo asi para el deadlock si entras en deadlock, solo se ejecuta todo el deadlock hasta terminar el intercambio?
 		  //o tambien se puede hacer actuar el planificador? es monoprocesador no?
 		  }
 	}
-
+	t_entrenador *entrenador = list_get(entrenadores, id);
+    entrenador->bloq_exec = 1;
 	printf("--------------------------- Termino entrenador -----------------------------\n");
-	t_entrenador *entrenador = list_get(entrenadores,id);
+	entrenador = list_get(entrenadores,id);
 	for(int i=0; i < list_size(entrenador->pokemones); i++){
 		printf("Pokemon numero: %d %s | ",i+1,(char *) list_get(entrenador->pokemones,i));
 	}
@@ -305,8 +310,9 @@ void entrenador_mas_cerca_a_lista_corto_plazo(t_pokemon* pokemon){
 void planificar(){
 	pthread_mutex_lock(&list_pok_ready_mutex);
 	t_pokemon *pokemon = list_remove(list_pok_ready,0);
+	debug_leer_lista(list_pok_ready);
 	pthread_mutex_unlock(&list_pok_ready_mutex);
-	puts("---------------POKEMON ELEGIDO POR EL PLANIFICADOR DE LARGO PLAZO------------------");
+	puts("---------------POKEMON ELEGIDO POR EL PLANIFICADOR DE CORTO PLAZO------------------");
 	printf("POKEMON -> POS X: %d POS Y: %d", pokemon->pos_x, pokemon->pos_y);
 	puts("-----------------------------------------------------------------------------------");
 	entrenador_mas_cerca_a_lista_corto_plazo(pokemon);
@@ -318,8 +324,8 @@ void retirar_entrenador(t_entrenador *entrenador){
 	    free(entrenador->objetivo_temporal->nombre);
 		free(entrenador->objetivo_temporal);
 		if(list_size(entrenador->objetivos)>list_size(entrenador->pokemones))
-			{sem_post(&hayentrenadorlibre);
-		     entrenador->bloq_exec = 1;}
+			sem_post(&hayentrenadorlibre);
+
 		entrenador->objetivo_temporal = NULL;
 		list_remove(lista_corto_plazo,0);
 		puts("LO REMUEVE");
@@ -334,7 +340,6 @@ void planificacionFIFO(){
 	mostrar_entrenador(entrenador);
 	puts("------------------------------------------------------------------------------------------");
 	while(!llego_al_objetivo(entrenador)){
-	puts("---------------------------------- CORRE COMO EL VIENTO ---------------------------");
 	sem_post(&(ejecutar_entrenador[entrenador->id]));
     sem_wait(&activar_algoritmo);
 	}
@@ -502,9 +507,9 @@ int encontrar_distancia_minima(t_pokemon *pokemon){
 t_list* ordenar_lista_new(){
 	pthread_mutex_lock(&list_pok_new_mutex);
 	t_list *pokemones_aux = list_duplicate(list_pok_new);
-	puts("POKEMON NEW");
+	/*puts("POKEMON NEW");
 	debug_leer_lista(list_pok_new);
-	puts("------------");
+	puts("------------");*/
 	pthread_mutex_unlock(&list_pok_new_mutex);
 
 	bool distancia_mas_cercana(void* pokemon1,void* pokemon2){
@@ -572,12 +577,14 @@ bool me_puede_servir(t_pokemon* un_pokemon){
 void pasar_a_ready_al_pokemon_adecuado(t_list* pokemons, int interacion){
 
 	if (interacion == list_size(pokemons) || interacion < 0)
-		return;
+		{sem_post(&hayentrenadorlibre);
+		return;}
 
 	t_pokemon* aux = list_get(pokemons,interacion);
 
 	if (me_sirve(aux)){
-		mover_a_ready(aux); //hace signal de pokemones en ready y lo agrega a la t_list pokemones_ready
+		mover_a_ready(aux);
+		sem_post(&hay_pokemones);//hace signal de pokemones en ready y lo agrega a la t_list pokemones_ready
 		return;
 	}
 
@@ -596,10 +603,11 @@ void pasar_a_ready_al_pokemon_adecuado(t_list* pokemons, int interacion){
 
 void exec_algoritmo_largo_plazo(){ //llamar con 0
 	t_list* pokemon_aux = ordenar_lista_new(); //pokemones_ordenados() devuelve una lista de los pokemones ordenados por conveniencia en relacion a los entrenadores disponibles
+	debug_leer_lista(pokemon_aux);
+
 	pthread_mutex_lock(&list_pok_ready_mutex);
 	pasar_a_ready_al_pokemon_adecuado(pokemon_aux,0);
 	pthread_mutex_unlock(&list_pok_ready_mutex);
-	sem_post(&hay_pokemones);
 	return;
 }
 
@@ -608,6 +616,7 @@ void planificador_largo_plazo(){
 		sem_wait(&revisar_pokemones_new);
 		sem_wait(&hayentrenadorlibre);
 		exec_algoritmo_largo_plazo();
+
 	}
 }
 
@@ -620,8 +629,9 @@ void planificador(){
 	    sem_wait(&hay_pokemones);
 	    puts("HAY UN NUEVO POKEMON");
 	    printf("CANTIDAD: %d\n",list_size(list_pok_ready));
-	    t_pokemon *pokemon = list_remove(list_pok_ready,0);
+	    t_pokemon *pokemon = list_get(list_pok_ready,0);
 	    mostrar_pokemon(pokemon);
+	    puts("------------------------");
 	    //planificar();
 	}
 }

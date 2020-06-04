@@ -367,6 +367,12 @@ void envio_mensaje(){
 				puts("envia appeared pokemon");
 				notificar_mensaje(mensaje_aux);
 				break;
+			case 'c':
+				pokemon = crear_pokemon("Charmander",4,7);
+				mensaje_aux = crear_mensaje(5, APPEARED_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,455);
+				puts("envia appeared pokemon");
+				notificar_mensaje(mensaje_aux);
+				break;
 			case 'r':
 				printear_estado();
 				break;
