@@ -279,13 +279,7 @@ void inicializar_broker(){
 	log_debug(logger,"Recibi al cliente");	//Recibi al cliente
 
 	//getchar();
-
-
-
     //-------------------------------------------
-
-
-
 }
 
 void envio_mensaje(){

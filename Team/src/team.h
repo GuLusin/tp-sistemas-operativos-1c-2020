@@ -17,6 +17,7 @@ typedef struct {
    int id;
    int posicion_x;
    int posicion_y;
+   int bloq_exec;
    t_pokemon *objetivo_temporal;
    t_list *pokemones;
    t_list *objetivos;
@@ -57,7 +58,6 @@ pthread_mutex_t send_mutex;
 pthread_mutex_t mutex_recibir;
 pthread_mutex_t list_pok_new_mutex;
 pthread_mutex_t list_pok_ready_mutex;
-
 t_list* entrenadores; //new - bloqueado - deadlock?
 t_list* lista_corto_plazo; //lista de entrenadores para moverse
 
