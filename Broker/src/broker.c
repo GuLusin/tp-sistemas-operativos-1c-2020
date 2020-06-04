@@ -376,6 +376,9 @@ void envio_mensaje(){
 			case 'r':
 				printear_estado();
 				break;
+			case 'z':
+				sem_post(&esperar);
+				break;
 
 			default:
 				break;
@@ -436,7 +439,7 @@ int main(void) {
 	*/
 	pthread_t envio_mensaje_t;
 	pthread_create(&envio_mensaje_t, NULL, (void*)envio_mensaje, NULL);
-	sem_t esperar;
+
 	sem_init(&esperar, 0,0);
 	sem_wait(&esperar);
 	printf("cola appeared: %d\ncola caught: %d\ncola localized: %d\n", (int)list_get(sockets_cola_appeared,0),(int)list_get(sockets_cola_caught,0),(int)list_get(sockets_cola_localized,0));

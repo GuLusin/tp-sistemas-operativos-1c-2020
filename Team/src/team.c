@@ -232,16 +232,24 @@ void entrenador(int id){
 	//deadlock?
 	while(!tiene_cantidad(id)){//con el deadlock tiene q ser q cumpla el objetivo
 		sem_wait(&(ejecutar_entrenador[id]));
+
 		sleep(retardo);
 		avanzar(id);
 		printf("Avance -> ");
 		mostrar_entrenador(list_get(entrenadores,id));
-		sem_post(&activar_algoritmo);
-		if(llego_al_objetivo(list_get(entrenadores,id)))
-		  {atrapar_pokemon(id);
+
+
+
+		if(llego_al_objetivo(list_get(entrenadores,id))){
+			atrapar_pokemon(id);
+
 		  //liberar(); o algo asi para el deadlock si entras en deadlock, solo se ejecuta todo el deadlock hasta terminar el intercambio?
 		  //o tambien se puede hacer actuar el planificador? es monoprocesador no?
-		  }
+		}
+
+		sem_post(&activar_algoritmo);
+
+
 	}
 	t_entrenador *entrenador = list_get(entrenadores, id);
     entrenador->bloq_exec = 1;
@@ -272,7 +280,7 @@ int distancia_menor(int posicion_pokemon_x,int posicion_pokemon_y){
 		return ((int)numero2) >= ((int)numero1);}
 
 	bool disponible(void * entrenador){
-		return (((t_entrenador *)entrenador)->objetivo_temporal == NULL);
+		return (((t_entrenador *)entrenador)->objetivo_temporal == NULL && ((t_entrenador*)entrenador)->bloq_exec == 0);
 	}
 
 	t_list* distancia_disponibles = list_filter(entrenadores, disponible);
@@ -292,6 +300,7 @@ t_entrenador *entrenador_mas_cerca(int posicion_pokemon_x,int posicion_pokemon_y
 		return ((((t_entrenador*)entrenador)->bloq_exec == 0) && (dist_menor == distancia1) && (((t_entrenador*)entrenador)->objetivo_temporal == NULL));
 	}
 
+
 	t_list* entrenadores_mas_cerca = list_filter(entrenadores, es_igual_distancia);
 	return list_get(entrenadores_mas_cerca, 0);	//saco al primero por defecto si hay 2 a la misma distancia
 }
@@ -299,7 +308,7 @@ t_entrenador *entrenador_mas_cerca(int posicion_pokemon_x,int posicion_pokemon_y
 void entrenador_mas_cerca_a_lista_corto_plazo(t_pokemon* pokemon){
 	t_entrenador *entrenador_elegido;
 	entrenador_elegido = entrenador_mas_cerca(pokemon->pos_x, pokemon->pos_y);
-	printf("ENTRENADOR POS X: %d POS Y: %d\n", entrenador_elegido->posicion_x,entrenador_elegido->posicion_y);
+	printf("ENTRENADOR ID:%d POS X: %d POS Y: %d\n", entrenador_elegido->id,entrenador_elegido->posicion_x,entrenador_elegido->posicion_y);
 	entrenador_elegido->objetivo_temporal=pokemon;
     list_add(lista_corto_plazo, entrenador_elegido);
     sem_post(&hay_entrenador_corto_plazo);
@@ -327,24 +336,29 @@ void retirar_entrenador(t_entrenador *entrenador){
 			sem_post(&hayentrenadorlibre);
 
 		entrenador->objetivo_temporal = NULL;
+
 		list_remove(lista_corto_plazo,0);
+
 		puts("LO REMUEVE");
 }
 
 void planificacionFIFO(){
 	while(!(dictionary_size(dic_pok_obj) == 0)){
-	sem_wait(&hay_entrenador_corto_plazo);
-	puts("                               SACO A UN ENTRENADOR");
-	t_entrenador *entrenador = list_get(lista_corto_plazo,0);
-	puts("------------------------------------------------------------------------------------------");
-	mostrar_entrenador(entrenador);
-	puts("------------------------------------------------------------------------------------------");
-	while(!llego_al_objetivo(entrenador)){
-	sem_post(&(ejecutar_entrenador[entrenador->id]));
-    sem_wait(&activar_algoritmo);
+		sem_wait(&hay_entrenador_corto_plazo);
+		puts("                               SACO A UN ENTRENADOR");
+		t_entrenador *entrenador = list_get(lista_corto_plazo,0);
+		puts("------------------------------------------------------------------------------------------");
+		mostrar_entrenador(entrenador);
+		puts("------------------------------------------------------------------------------------------");
+		while(!llego_al_objetivo(entrenador)){
+			sem_post(&(ejecutar_entrenador[entrenador->id]));
+			sem_wait(&activar_algoritmo);
+		}
+
+		retirar_entrenador(entrenador);
 	}
-	retirar_entrenador(entrenador);}
-	puts("CUMPLIO EL TEAM SU OBJETIVO, IUPIIIII");}
+	puts("CUMPLIO EL TEAM SU OBJETIVO, IUPIIIII");
+}
 
 void planificacionRR(){
 	int quantum = config_get_int_value(config,"QUANTUM");
@@ -357,9 +371,9 @@ void planificacionRR(){
 	mostrar_entrenador(entrenador);
 	puts("------------------------------------------------------------------------------------------");
 	while(!llego_al_objetivo(entrenador) && (cantidad < quantum)){
-    sem_post(&(ejecutar_entrenador[entrenador->id]));
-	sem_wait(&activar_algoritmo);
-	cantidad++;
+		sem_post(&(ejecutar_entrenador[entrenador->id]));
+		sem_wait(&activar_algoritmo);
+		cantidad++;
     }
 	cantidad = 0;
 	if(llego_al_objetivo(entrenador))
@@ -367,7 +381,8 @@ void planificacionRR(){
 	else{
 		list_remove(lista_corto_plazo,0);
 	    list_add(lista_corto_plazo,entrenador);
-	    sem_post(&hay_entrenador_corto_plazo);}}
+	    sem_post(&hay_entrenador_corto_plazo);}
+	}
 	puts("CUMPLIO EL TEAM SU OBJETIVO, IUPIIIII");}
 
 //---
@@ -631,7 +646,7 @@ void planificador(){
 	    printf("CANTIDAD: %d\n",list_size(list_pok_ready));
 	    debug_leer_lista(list_pok_ready);
 	    puts("------------------------");
-	    //planificar();
+	    planificar();
 	}
 }
 

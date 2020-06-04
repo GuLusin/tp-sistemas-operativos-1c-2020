@@ -25,7 +25,7 @@ pthread_mutex_t mutex_cola_appeared;
 t_log* logger;
 t_config* config;
 int socket_broker;
-
+sem_t esperar;
 
 t_list* sockets_cola_new;
 t_list* sockets_cola_get;
