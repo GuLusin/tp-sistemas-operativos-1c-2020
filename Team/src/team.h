@@ -18,6 +18,7 @@ typedef struct {
    int posicion_x;
    int posicion_y;
    int bloq_exec;
+   int exit;
    t_pokemon *objetivo_temporal;
    t_list *pokemones;
    t_list *objetivos;
