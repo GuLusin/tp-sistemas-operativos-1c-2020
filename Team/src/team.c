@@ -101,7 +101,7 @@ void remover_de_diccionario(t_dictionary* pokemones_deseados,char* un_pokemon){
 		}
 		return;
 	}
-	printf("ERROR, se intenta sacar del diccionario a un pokemon que no estaba\n");
+	//printf("ERROR, se intenta sacar del diccionario a un pokemon que no estaba\n"); SINO ME LO TIRA EL CUMPLIO OBJETIVO
 }
 
 //---------------------------------------PLANIFICACION---------------------------------------------------------------------
@@ -232,14 +232,28 @@ void atrapar_pokemon(int id){
 	//bool confirmacion = espera_confirmacion();
 
 	if(true){//envia mensaje catch_pokemon(pokemon);
+		puts("DIROBJETIVOS:");
+		debug_dic(dic_pok_obj);
+		puts("-------------");
 		remover_de_diccionario(dic_pok_obj,nombre);
+		puts("removi bien");
+		puts("DIROBJETIVOS:");
+				debug_dic(dic_pok_obj);
+				puts("-------------");
 		list_add(entrenador->pokemones, nombre);
 		puts("ATRAPE POKEMON");}
 	else
 		free(nombre);
 
 	pthread_mutex_lock(&list_pok_ready_mutex);
+	puts("DIRreadyexec:");
+	debug_dic(dic_pok_ready_o_exec);
+	puts("-------------");
 	remover_de_diccionario(dic_pok_ready_o_exec,nombre);
+	puts("removi bien");
+	puts("DIRreadyexec:");
+	debug_dic(dic_pok_ready_o_exec);
+	puts("-------------");
 	pthread_mutex_unlock(&list_pok_ready_mutex);
 }
 
