@@ -175,54 +175,148 @@ void deadlock(){
 	//intercambia
 	//vuelve a preguntar
 
-		char *auxp;
-		t_entrenador* aux;
-		t_pokemon *pok_mentira = malloc(sizeof(t_pokemon));
-		pok_mentira->nombre=NULL;
-		pok_mentira->pos_x=4;
-		pok_mentira->pos_y=7;
-		t_list* pokemones_ya_obtenidos = list_create();
-		t_list* pokemones_objetivo = list_create();
 
-		t_list *entrenadores_bloqueados=list_create();
-		for (int i=0;i<list_size(entrenadores);i++){
-			aux = list_get(entrenadores,i);
-			if(aux->bloq_exec && !aux->exit)
+	t_entrenador* aux;
+	t_entrenador* aux1;
+	t_pokemon *pok_mentira = malloc(sizeof(t_pokemon));
+
+
+	t_list* pokemones_que_quiere_aux;
+
+	t_list *entrenadores_bloqueados = list_create();
+	for (int i=0;i<list_size(entrenadores);i++){
+		aux = list_get(entrenadores,i);
+		if(aux->bloq_exec)
 			list_add(entrenadores_bloqueados,aux);
+	}
+
+	printf("Lista de entrenadores bloquedos:\n");
+	leer_lista_entrenadores(entrenadores_bloqueados);
+
+
+
+	void remover_de_lista_si_esta(t_list* lista_de_pokemones, char* un_pokemon){
+		//lista_de_pokemones lista de char* !!!!!!!
+		printf("SE ENTRA A remover_de_lista_si_esta\n");
+		for(int i = 0; i < list_size(lista_de_pokemones) ; i++){;
+			if(!strcmp((char*)list_get(lista_de_pokemones,i) , un_pokemon)){
+				list_remove(lista_de_pokemones,i);
+				break;
+			}
+		}
+	}
+
+	bool puedeIntercambiarConAux(void* unEntrenador){
+
+		bool auxLoQuiere(void* un_pokemon){
+			//fijarse si un_pokemon esta dentro de la lista pokemones_que_quiere_aux
+			for (int i=0 ; i<list_size(pokemones_que_quiere_aux) ; i++)
+				if(!strcmp(((char*)un_pokemon) , (char*)list_get(pokemones_que_quiere_aux,i)))
+					return true;
+
+			return false;
 		}
 
-	    leer_lista_entrenadores(entrenadores_bloqueados);
+		t_list* pokemones_no_necesarios = list_duplicate(((t_entrenador*) unEntrenador)->pokemones);
+		for(int i = 0; i < list_size(((t_entrenador*) unEntrenador) -> objetivos) ; i++)
+			remover_de_lista_si_esta(pokemones_no_necesarios , list_get( ((t_entrenador*)unEntrenador) -> objetivos,i));
 
-		for (int i=0;i<list_size(entrenadores);i++){
-			aux = list_get(entrenadores,i);
-			list_add_all(pokemones_ya_obtenidos,aux->pokemones);
-			list_add_all(pokemones_objetivo,aux->objetivos);
-			printf("--------------------------------------\n");
-			printf("Comienza lectura de lista:\n");
+		printf("224\n");
 
-			for (int i=0;i<list_size(pokemones_ya_obtenidos);i++){
-				auxp = list_get(pokemones_ya_obtenidos,i);
-				printf("Pokemon %s\n",auxp);
-				list_remove(pokemones_ya_obtenidos,i);
-			}
-			printf("--------------------------------------\n");
+		//comparar con auxHASTA ACA TESTIE
+		bool valor_a_retornar = list_any_satisfy(pokemones_no_necesarios,auxLoQuiere);
 
-			for (int i=0;i<list_size(pokemones_objetivo);i++){
-				auxp = list_get(pokemones_objetivo,i);
-				printf("Pokemon %s\n",auxp);
-				list_remove(pokemones_objetivo,i);
-			}
-			printf("--------------------------------------\n");
-			while(aux->bloq_exec && !aux->exit){
-				aux->objetivo_temporal=pok_mentira;
-				sem_post(&deadlock_entrenadores[i]);
-				sem_wait(&sem_deadlock);
-				}
+		list_destroy(pokemones_no_necesarios);
+
+		return valor_a_retornar;
+	}
+
+
+
+	while(!list_is_empty(entrenadores_bloqueados)){
+		aux = list_remove(entrenadores_bloqueados,0);
+		pokemones_que_quiere_aux = list_duplicate(aux->objetivos);
+		//lista de char*
+
+		for(int q = 0; q < list_size(aux->pokemones)  ; q++)
+			remover_de_lista_si_esta(pokemones_que_quiere_aux,list_get(aux->pokemones,q));
+
+
+		printf("245!!!!\n");
+
+		aux1 = list_remove_by_condition(entrenadores_bloqueados,puedeIntercambiarConAux);
+
+		printf("249!!!!\n");
+
+//		pok_mentira->nombre = NULL;
+		pok_mentira->pos_x = (uint32_t)aux1->posicion_x;
+		pok_mentira->pos_y = (uint32_t)aux1->posicion_y;
+
+		printf("or is it\n");
+
+		aux->objetivo_temporal = pok_mentira;
+
+		printf("XXXXXXD\n");
+		printf("sem_post(&deadlock_entrenadores[%d])\n",aux->id);
+		sem_post(&deadlock_entrenadores[aux->id]);
+		sem_wait(&sem_deadlock);
+
+		printf("SE LLEGO A LA UBICACION QUE SE QUERIA LLEGAR!\n");
+		sleep(15);
+
+
+
+
+		list_destroy(pokemones_que_quiere_aux);
+
+
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+	/*
+
+	for (int i=0;i<list_size(entrenadores);i++){
+		aux = list_get(entrenadores,i);
+		list_add_all(pokemones_ya_obtenidos,aux->pokemones);
+		list_add_all(pokemones_objetivo,aux->objetivos);
+		printf("--------------------------------------\n");
+		printf("Comienza lectura de lista:\n");
+
+		for (int i=0;i<list_size(pokemones_ya_obtenidos);i++){
+			auxp = list_get(pokemones_ya_obtenidos,i);
+			printf("Pokemon %s\n",auxp);
+			list_remove(pokemones_ya_obtenidos,i);
 		}
+		printf("--------------------------------------\n");
 
-		leer_lista_entrenadores(entrenadores_bloqueados);
-		list_destroy(pokemones_objetivo);
-		list_destroy(pokemones_ya_obtenidos);
+		for (int i=0;i<list_size(pokemones_objetivo);i++){
+			auxp = list_get(pokemones_objetivo,i);
+			printf("Pokemon %s\n",auxp);
+			list_remove(pokemones_objetivo,i);
+		}
+		printf("--------------------------------------\n");
+		while(aux->bloq_exec && !aux->exit){
+			aux->objetivo_temporal=pok_mentira;
+			sem_post(&deadlock_entrenadores[i]);
+			sem_wait(&sem_deadlock);
+			}
+	}
+
+	leer_lista_entrenadores(entrenadores_bloqueados);
+	list_destroy(pokemones_objetivo);
+	list_destroy(pokemones_ya_obtenidos);
+
+	*/
 }
 
 //---------------------------------------------- ENTRENADOR ----------------------------------------------------
@@ -294,16 +388,13 @@ void entrenador(int id){
 
     while(!cumplio_objetivo_entrenador(id)){
     	sem_wait(&deadlock_entrenadores[id]);
-		sleep(retardo);
-		avanzar(id);
-		printf("Avance (Por deadlock) -> ");
-		mostrar_entrenador(list_get(entrenadores,id));
-
-		if(llego_al_objetivo(list_get(entrenadores,id))){
-			puts("INTERCAMBIAR");
-			entrenador->exit = 1;
-		}
-
+    	while(!llego_al_objetivo(list_get(entrenadores,id))){
+    		sleep(retardo);
+    		avanzar(id);
+    		printf("Avance (Por deadlock) -> ");
+//  		mostrar_entrenador(list_get(entrenadores,id));
+    	}
+    	printf("El entrenador llego al objetivo para hacer el intercambio\n");
 		sem_post(&sem_deadlock);
     }
     entrenador->exit = 1;
@@ -586,16 +677,16 @@ t_list* ordenar_lista_new(){
 	return pokemones_aux;
 }
 
+bool es_el_mismo_pokemon(t_pokemon* uno, t_pokemon* otro){
+	if(!strcmp(uno->nombre,otro->nombre))
+		if(uno->pos_x == otro->pos_x)
+			if(uno->pos_y == otro->pos_y)
+				return true;
+	return false;
+}
+
 t_pokemon* remover_pokemon(t_list* una_lista, t_pokemon* un_pokemon){
 	t_pokemon* aux;
-
-	bool es_el_mismo_pokemon(t_pokemon* uno, t_pokemon* otro){
-		if(!strcmp(uno->nombre,otro->nombre))
-			if(uno->pos_x == otro->pos_x)
-				if(uno->pos_y == otro->pos_y)
-					return true;
-		return false;
-	}
 
 	for (int i=0 ; i<list_size(una_lista) ; i++){
 		if(es_el_mismo_pokemon(list_get(una_lista,i),un_pokemon)){
