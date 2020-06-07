@@ -111,11 +111,16 @@ void inicializar_semaforos(){
 	for (int i=0;i<list_size(entrenadores);i++){
 		sem_init(&(ejecutar_entrenador[i]), 0,0);
 	}
+	deadlock_entrenadores = malloc(sizeof(sem_t)*list_size(entrenadores));
+	for(int i=0;i<list_size(entrenadores);i++){
+		sem_init(&(deadlock_entrenadores[i]), 0,0);
+	}
 	sem_init(&activar_algoritmo, 0,0);
 	sem_init(&cumplio_objetivo_global, 0,0);
 	sem_init(&hay_pokemones, 0, 0);
 	sem_init(&hay_entrenador_corto_plazo,0,0);
     sem_init(&revisar_pokemones_new,0,0);
+    sem_init (&sem_deadlock,0,0);
 	sem_init(&hayentrenadorlibre, 0,list_size(entrenadores));
     pthread_mutex_init(&mutex_pokemones_recibidos, NULL);
     pthread_mutex_init(&mutex_recibir, NULL);
@@ -163,54 +168,62 @@ bool cumplio_objetivo_entrenador(int id){ //verifica si las listas de objetivos 
 	return exito;
 }
 
-bool todos_terminados(){
-	t_entrenador *aux;
-	for (int i=0;i<list_size(entrenadores);i++){
-		aux = list_get(entrenadores,i);
-		if(!aux->exit)
-			return false;
-	}
-	return true;
-}
-
 void deadlock(){
-        //sleep(30);
-        //puts("\n------MOSTRAMOS LISTA DE NEW---------(es un sleep de control en hilo deadlock, sacarlo)---\n");
-		//debug_leer_lista(list_pok_new);
 
-	/*int index = 0;
-	while(entrenadores){
-		while(tiene_pokemons_faltantes(list_get(entrenador,index)){
-			entrenador_actual = list_get(entrenador,index);
-			entrenador_a_buscar = entrenador_que_le_sobra_este_pokemon(pokemon_faltante(entrenador_actual));
-		    ir_a_buscar_al_entrenador(entrenador_actual->id,entrenador_a_buscar->id);
-		    intercambiar(entrenador_actual->id,entrenador_a_buscar->id);
-		}
-		//habilitar semaforo
-		entrenadores++;
-		index++;
-	}*/
-
-	//PREGUNTAR
 	//leee de la config
 	//tarda 4 ciclos
 	//intercambia
 	//vuelve a preguntar
 
-	while(!todos_terminados()); //tendria q tener un semaforo por tiempo o algun evento
+		char *auxp;
+		t_entrenador* aux;
+		t_pokemon *pok_mentira = malloc(sizeof(t_pokemon));
+		pok_mentira->nombre=NULL;
+		pok_mentira->pos_x=4;
+		pok_mentira->pos_y=7;
+		t_list* pokemones_ya_obtenidos = list_create();
+		t_list* pokemones_objetivo = list_create();
 
-	sem_post(&cumplio_objetivo_global);
-}
+		t_list *entrenadores_bloqueados=list_create();
+		for (int i=0;i<list_size(entrenadores);i++){
+			aux = list_get(entrenadores,i);
+			if(aux->bloq_exec && !aux->exit)
+			list_add(entrenadores_bloqueados,aux);
+		}
 
-/*
-void inicializar_deadlock_entrenadores(){
-	deadlock_entrenador = malloc(sizeof(sem_t)*list_size(entrenadores));
-	for(int i=0;i<list_size(entrenadores);i++){
-		sem_init(&(dead_lock[i]), 0,0);
-	}
-	sem_init(&activar_algoritmo, 0,0);
+	    leer_lista_entrenadores(entrenadores_bloqueados);
+
+		for (int i=0;i<list_size(entrenadores);i++){
+			aux = list_get(entrenadores,i);
+			list_add_all(pokemones_ya_obtenidos,aux->pokemones);
+			list_add_all(pokemones_objetivo,aux->objetivos);
+			printf("--------------------------------------\n");
+			printf("Comienza lectura de lista:\n");
+
+			for (int i=0;i<list_size(pokemones_ya_obtenidos);i++){
+				auxp = list_get(pokemones_ya_obtenidos,i);
+				printf("Pokemon %s\n",auxp);
+				list_remove(pokemones_ya_obtenidos,i);
+			}
+			printf("--------------------------------------\n");
+
+			for (int i=0;i<list_size(pokemones_objetivo);i++){
+				auxp = list_get(pokemones_objetivo,i);
+				printf("Pokemon %s\n",auxp);
+				list_remove(pokemones_objetivo,i);
+			}
+			printf("--------------------------------------\n");
+			while(aux->bloq_exec && !aux->exit){
+				aux->objetivo_temporal=pok_mentira;
+				sem_post(&deadlock_entrenadores[i]);
+				sem_wait(&sem_deadlock);
+				}
+		}
+
+		leer_lista_entrenadores(entrenadores_bloqueados);
+		list_destroy(pokemones_objetivo);
+		list_destroy(pokemones_ya_obtenidos);
 }
-*/
 
 //---------------------------------------------- ENTRENADOR ----------------------------------------------------
 
@@ -232,28 +245,15 @@ void atrapar_pokemon(int id){
 	//bool confirmacion = espera_confirmacion();
 
 	if(true){//envia mensaje catch_pokemon(pokemon);
-		puts("DIROBJETIVOS:");
 		debug_dic(dic_pok_obj);
-		puts("-------------");
 		remover_de_diccionario(dic_pok_obj,nombre);
-		puts("removi bien");
-		puts("DIROBJETIVOS:");
-				debug_dic(dic_pok_obj);
-				puts("-------------");
 		list_add(entrenador->pokemones, nombre);
-		puts("ATRAPE POKEMON");}
+    }
 	else
 		free(nombre);
 
 	pthread_mutex_lock(&list_pok_ready_mutex);
-	puts("DIRreadyexec:");
-	debug_dic(dic_pok_ready_o_exec);
-	puts("-------------");
 	remover_de_diccionario(dic_pok_ready_o_exec,nombre);
-	puts("removi bien");
-	puts("DIRreadyexec:");
-	debug_dic(dic_pok_ready_o_exec);
-	puts("-------------");
 	pthread_mutex_unlock(&list_pok_ready_mutex);
 }
 
@@ -280,22 +280,32 @@ void entrenador(int id){
 		avanzar(id);
 		printf("Avance -> ");
 		mostrar_entrenador(list_get(entrenadores,id));
-		sem_post(&activar_algoritmo);
+
 		if(llego_al_objetivo(list_get(entrenadores,id)))
 		  {atrapar_pokemon(id);
 		  //liberar(); o algo asi para el deadlock si entras en deadlock, solo se ejecuta todo el deadlock hasta terminar el intercambio?
 		  //o tambien se puede hacer actuar el planificador? es monoprocesador no?
 		  }
+		sem_post(&activar_algoritmo);
 	}
 
 	t_entrenador *entrenador = list_get(entrenadores, id);
     entrenador->bloq_exec = 1;
 
     while(!cumplio_objetivo_entrenador(id)){
-    	puts("TENDRIA Q ESPERAR A Q VENGA EL DEADLOCK PERO SIGO");
-    	break;
-    }
+    	sem_wait(&deadlock_entrenadores[id]);
+		sleep(retardo);
+		avanzar(id);
+		printf("Avance (Por deadlock) -> ");
+		mostrar_entrenador(list_get(entrenadores,id));
 
+		if(llego_al_objetivo(list_get(entrenadores,id))){
+			puts("INTERCAMBIAR");
+			entrenador->exit = 1;
+		}
+
+		sem_post(&sem_deadlock);
+    }
     entrenador->exit = 1;
 
 	printf("------ Termino entrenador -------\n");
@@ -399,6 +409,7 @@ void planificacionFIFO(){
     sem_wait(&activar_algoritmo);
 	}
 	retirar_entrenador(entrenador);}
+	sem_post(&cumplio_objetivo_global);
 }
 
 void planificacionRR(){
@@ -691,15 +702,12 @@ void planificador(){
 
 void crear_hilos_planificar_recursos(){
 	pthread_t hilo_planificador_corto_plazo;
-	pthread_t hilo_deadlock;
 	pthread_t hilo_planificador_largo_plazo;
 
 	pthread_create(&hilo_planificador_largo_plazo, NULL, (void*)planificador_largo_plazo,NULL);
 	pthread_create(&hilo_planificador_corto_plazo, NULL, (void*)planificador, NULL); //OJOOOOO
-	pthread_create(&hilo_deadlock, NULL, (void*)deadlock, NULL); //OJOOOOO
 
     pthread_detach(hilo_planificador_largo_plazo);
-    pthread_detach(hilo_deadlock);
     pthread_detach(hilo_planificador_corto_plazo);
 }
 
@@ -1004,6 +1012,11 @@ int main(void) {
 					break;
 				case 'C':
 					leer_lista_entrenadores(lista_corto_plazo);
+			        puts("----- INGRESE MENSAJE -----");
+					break;
+				case 'D':
+					deadlock();
+					puts("Se corrio el algoritmo de deteccion de deadlock");
 			        puts("----- INGRESE MENSAJE -----");
 					break;
 			}
