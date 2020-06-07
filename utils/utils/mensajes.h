@@ -84,7 +84,6 @@ typedef struct{
 	t_pokemon_especie* pokemon_especie;
 }t_localized_pokemon;
 
-
 typedef struct{
 	uint32_t id;
 	uint32_t codigo_operacion;

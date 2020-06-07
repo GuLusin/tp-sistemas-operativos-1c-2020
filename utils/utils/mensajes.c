@@ -400,8 +400,6 @@ void* serializar_mensaje(t_mensaje* mensaje, int *ret_size){
 		offset += size_contenido_mensaje;
 		free(stream);
 		break;
-
-
 	}
 	*ret_size=(int)size;
 	return magic;
@@ -603,6 +601,17 @@ bool hay_pokemon_en_posicion(t_pokemon_especie* pokemon_especie, char* key){
 
 int tamanio_pokemon_especie(t_pokemon_especie* especie_pokemon){
 	return strlen(especie_pokemon->nombre_especie) + 1 + strlen(posiciones_a_string(especie_pokemon->posiciones_especie)) + 1;
+}
+
+int cant_coordenadas_especie_pokemon(t_pokemon_especie* pokemon_especie){
+	int contador_aux=0;
+	void contador(char* key, void* stream){
+		int cantidad = stream;
+		contador_aux += cantidad;
+	}
+	dictionary_iterator(pokemon_especie->posiciones_especie,contador);
+	printf("contador devuelve:%d\n",contador_aux);
+	return contador_aux;
 }
 
 void printear_posicion(char* key, void* value){

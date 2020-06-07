@@ -14,6 +14,8 @@
 #include <semaphore.h>
 
 
+pthread_mutex_t mutex_recibir;
+pthread_mutex_t mutex_enviar;
 pthread_mutex_t mutex_cola_new;
 pthread_mutex_t mutex_cola_get;
 pthread_mutex_t mutex_cola_catch;
@@ -27,7 +29,7 @@ t_config* config;
 int socket_broker;
 
 
-t_list* sockets_cola_new;
+t_list* sockets_cola_new; // todo cambiar a cola id_teams
 t_list* sockets_cola_get;
 t_list* sockets_cola_catch;
 t_list* sockets_cola_localized;
@@ -56,12 +58,13 @@ typedef struct{
 }adm_cola;
 
 typedef struct{
-	int pid;
-	// partition id; seria bueno que corresponda con el id de su mensaje?
-	//que relacion hay entre cada adm_cola con cada t_partition
 	void* inicio;
 	int size;
-	t_list* suscriptores_confirmados; // como identificamos a un suscriptor? por el socket? es temporal?
+	int msg_id;
+	int cola_code;
+	int id_correlativo;
+	t_list* suscriptores_confirmados;
+	// todo agregar id Team al team, para poder utilizar suscriptores_confirmados  se manda como id del mensaje en la suscripcion
 }t_partition;
 
 typedef struct{
@@ -78,7 +81,7 @@ algoritmo_reemplazo AR;
 pthread_mutex_t mutex_particiones_libres;
 
 t_list* particiones_libres; 	//LISTA CON LAS PARTICIONES LIBRES DISPONIBLES.
-adm_cola* administracion_colas[5]; // ARREGLO DE LAS 6 COLAS QUE EL BROKER ADMINISTRA EN LA CACHE.
+adm_cola* administracion_colas; // ARREGLO DE LAS 6 COLAS QUE EL BROKER ADMINISTRA EN LA CACHE.
 void* mem_alloc; //ESTE PUNTERO ES GLOBAL Y UNICO, NO SE TOCA NI MODIFICA. ES EL PRINCIPIO DE LA CACHE.
 
 
