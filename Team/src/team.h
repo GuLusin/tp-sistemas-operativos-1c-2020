@@ -53,6 +53,8 @@ t_dictionary* ids_a_esperar;
 //sem_t *semaforos_entrenadores; //comienza con el id 0, para q corresponda con el index de cada lista
 
 sem_t *ejecutar_entrenador; //vector
+sem_t *deadlock_entrenadores; //vector
+sem_t sem_deadlock;
 sem_t activar_algoritmo;
 sem_t hayentrenadorlibre;
 pthread_mutex_t send_mutex;
