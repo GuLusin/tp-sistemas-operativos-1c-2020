@@ -61,6 +61,8 @@ pthread_mutex_t send_mutex;
 pthread_mutex_t mutex_recibir;
 pthread_mutex_t list_pok_new_mutex;
 pthread_mutex_t list_pok_ready_mutex;
+pthread_mutex_t mutexPRUEBA;
+
 t_list* entrenadores; //new - bloqueado - deadlock?
 t_list* lista_corto_plazo; //lista de entrenadores para moverse
 

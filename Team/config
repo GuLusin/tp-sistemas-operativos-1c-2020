@@ -1,5 +1,5 @@
 POSICIONES_ENTRENADORES=[1|2,3|7,5|5]
-POKEMON_ENTRENADORES=[Pikachu|Squirtle|Pidgey, Squirtle|Charmander, Bulbasaur]
+POKEMON_ENTRENADORES=[Pikachu, Pidgey|Charmander, Bulbasaur]
 OBJETIVOS_ENTRENADORES=[Pikachu|Pikachu|Squirtle|Pidgey, Pikachu|Charmander|Charmander,Squirtle|Bulbasaur]
 TIEMPO_RECONEXION=5
 RETARDO_CICLO_CPU=1

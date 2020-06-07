@@ -54,7 +54,7 @@ void leer_lista_entrenadores(t_list* lista){
 	t_entrenador* aux;
 	for (int i=0;i<list_size(lista);i++){
 		aux = list_get(lista,i);
-		printf("Entrenador con ID: %d, bloq_exec: %d, posx: %d, posy: %d\n",aux->id,aux->bloq_exec,aux->posicion_x,aux->posicion_y);
+		printf("Entrenador con ID: %d, bloq_exec: %d, posx: %d, posy: %d, exit: %d\n",aux->id,aux->bloq_exec,aux->posicion_x,aux->posicion_y,aux->exit);
 	    puts("-Sus objetivos: ");
 		for (int i=0;i<list_size(aux->objetivos);i++){
 				printf("Pokemon numero: %d %s\n",i+1,(char *) list_get(aux->objetivos,i));
@@ -72,7 +72,7 @@ void leer_lista_entrenadores(t_list* lista){
 void mostrar_entrenador(t_entrenador *t){
 	printf("EN x :%d ",t->posicion_x);
 	printf("y En y :%d ",t->posicion_y);
-	printf("| Entrenador id :%d\n",t->id);
+	printf("| Entrenador id :%d, bloq_exec :%d, exit:%d\n",t->id,t->bloq_exec,t->exit);
 }
 
 void mostrar_pokemon(t_pokemon *pokemon){
@@ -127,6 +127,8 @@ void inicializar_semaforos(){
     pthread_mutex_init(&list_pok_new_mutex, NULL);
     pthread_mutex_init(&list_pok_ready_mutex, NULL);
 
+    pthread_mutex_init(&mutexPRUEBA, NULL);
+
 }
 
 void inicializar_estructuras_globales(){
@@ -140,7 +142,11 @@ void inicializar_estructuras_globales(){
 }
 
 bool cumplio_objetivo_entrenador(int id){ //verifica si las listas de objetivos y pokemones son iguales
-    int exito;
+
+
+	pthread_mutex_lock(&mutexPRUEBA);
+
+	int exito;
 	t_dictionary* pokemones_deseados = dictionary_create();
 	t_list* pokemones_ya_obtenidos = list_create();
 	t_list* pokemones_objetivo = list_create();
@@ -165,6 +171,8 @@ bool cumplio_objetivo_entrenador(int id){ //verifica si las listas de objetivos 
 	else
 		exito = false;
 	dictionary_destroy(pokemones_deseados);
+
+	pthread_mutex_unlock(&mutexPRUEBA);
 	return exito;
 }
 
@@ -227,19 +235,13 @@ void intercambiar_pokemones(t_entrenador* un_entrenador, t_entrenador* otro_entr
 
 	t_list* trade = intersectar_listas(pok_dis,pok_des);
 
-	printf("Pokemon en lista trade %s\n",(char*)list_get(trade,0));
-
 	while(list_size(trade)){
 
-
 		remover_de_lista_si_esta(otro_entrenador->pokemones,list_get(trade,0));
-
 		list_add(un_entrenador->pokemones,list_get(trade,0));
 
-		list_add(otro_entrenador->pokemones,list_get(pok_devolucion,0));
-
 		remover_de_lista_si_esta(un_entrenador->pokemones,list_get(pok_devolucion,0));
-
+		list_add(otro_entrenador->pokemones,list_get(pok_devolucion,0));
 
 		printf("Se esta realizando el intercambio, banca...\n");
 		sleep(retardo*5);
@@ -247,11 +249,15 @@ void intercambiar_pokemones(t_entrenador* un_entrenador, t_entrenador* otro_entr
 
 		remover_de_lista_si_esta(pok_des,list_get(trade,0));
 		remover_de_lista_si_esta(pok_dis,list_get(pok_devolucion,0));
+
 		list_remove(pok_devolucion,0);
 
-
 		list_destroy(trade);
+
 		trade = intersectar_listas(pok_dis,pok_des);
+
+		sem_post(&deadlock_entrenadores[un_entrenador->id]);
+		sem_post(&deadlock_entrenadores[otro_entrenador->id]);
 
 	}
 
@@ -336,12 +342,23 @@ void deadlock(){
 
 		intercambiar_pokemones(aux,aux1);
 
-		//if(cumplio_objetivo_entrenador(1))
+		printf("Lista de entradores bloqueados tiene %d entrenadores!\n",list_size(entrenadores_bloqueados));
+		mostrar_entrenador(aux);
+		mostrar_entrenador(aux1);
+		printf("joya\n");
+
+		if(!aux->exit)
+			list_add(entrenadores_bloqueados,aux);
+
+		printf("TEST1\n");
+		if(!aux1->exit)
+			list_add(entrenadores_bloqueados,aux1);
+		printf("TEST1\n");
 
 
 		list_destroy(pokemones_que_quiere_aux);
 
-
+		leer_lista_entrenadores(entrenadores);
 	}
 
 	printf("Deadlock solucionado! :D\n");
@@ -375,8 +392,8 @@ void atrapar_pokemon(int id){
 		remover_de_diccionario(dic_pok_obj,nombre);
 		list_add(entrenador->pokemones, nombre);
     }
-	else
-		free(nombre);
+	//else
+		//free(nombre);
 
 	pthread_mutex_lock(&list_pok_ready_mutex);
 	remover_de_diccionario(dic_pok_ready_o_exec,nombre);
@@ -402,13 +419,14 @@ void entrenador(int id){
 	//deadlock?
 	while(!tiene_cantidad(id)){//con el deadlock tiene q ser q cumpla el objetivo
 		sem_wait(&(ejecutar_entrenador[id]));
+
 		sleep(retardo);
 		avanzar(id);
 		printf("Avance -> ");
 		mostrar_entrenador(list_get(entrenadores,id));
 
-		if(llego_al_objetivo(list_get(entrenadores,id)))
-		  {atrapar_pokemon(id);
+		if(llego_al_objetivo(list_get(entrenadores,id))){
+			atrapar_pokemon(id);
 		  //liberar(); o algo asi para el deadlock si entras en deadlock, solo se ejecuta todo el deadlock hasta terminar el intercambio?
 		  //o tambien se puede hacer actuar el planificador? es monoprocesador no?
 		  }
@@ -420,6 +438,11 @@ void entrenador(int id){
 
     while(!cumplio_objetivo_entrenador(id)){
     	sem_wait(&deadlock_entrenadores[id]);
+    	if(cumplio_objetivo_entrenador(id))
+    		break;
+    	if(!entrenador->objetivo_temporal)
+    		continue;
+
     	while(!llego_al_objetivo(list_get(entrenadores,id))){
     		sleep(retardo);
     		avanzar(id);
@@ -434,7 +457,7 @@ void entrenador(int id){
     entrenador->exit = 1;
 
 
-	printf("------ Termino entrenador -------\n");
+	printf("------ Termino entrenador %d -------\n",id);
 	for(int i=0; i < list_size(entrenador->pokemones); i++){
 		printf("Pokemon numero: %d %s\n",i+1,(char *) list_get(entrenador->pokemones,i));
 	}
@@ -1092,14 +1115,86 @@ void inicializar_team(){
 }
 
 
+void mostrar_menu(){
+	puts("-----------MENU -----------");
+	puts("INGRESE UN VALOR");
+	puts("M -> MOSTRAR MENU");
+	puts("N -> LISTA DE NEW");
+	puts("R -> LISTA DE READY");
+	puts("o -> DICCIONARIO DE OBJETIVOS");
+	puts("r -> DICCIONARIO DE READY");
+	puts("E -> LISTA DE ENTRENADORES");
+	puts("C -> LISTA DE CORTO PLAZO");
+	puts("D -> INICIAR CORRECICON DEADLOCK");
+	puts("Z -> SALIR");
+	puts("---------------------------");
+}
+
+void debug(){
+	while(true){
+		char msg;
+		scanf("%c",&msg);
+		switch(msg){
+			case 'M':
+				mostrar_menu();
+				break;
+			case 'N':
+				debug_leer_lista(list_pok_new);
+				puts("----- INGRESE MENSAJE -----");
+				break;
+			case 'R':
+				debug_leer_lista(list_pok_ready);
+				puts("----- INGRESE MENSAJE -----");
+				break;
+			case 'o':
+				debug_dic(dic_pok_obj);
+				puts("----- INGRESE MENSAJE -----");
+				break;
+			case 'r':
+				debug_dic(dic_pok_ready_o_exec);
+				puts("----- INGRESE MENSAJE -----");
+				break;
+			case 'E':
+				leer_lista_entrenadores(entrenadores);
+				puts("----- INGRESE MENSAJE -----");
+				break;
+			case 'C':
+				leer_lista_entrenadores(lista_corto_plazo);
+		        puts("----- INGRESE MENSAJE -----");
+				break;
+			case 'D':
+				deadlock();
+				puts("Se corrio el algoritmo de deteccion de deadlock");
+		        puts("----- INGRESE MENSAJE -----");
+				break;
+			case 'Z':
+				return;
+
+		}
+	}
+}
+
+
+
+
 int main(void) {
 
 	inicializar_team();
 	dictionary_put(ids_a_esperar,"455",(void*)LOCALIZED_POKEMON);
 	dictionary_put(ids_a_esperar,"888888",(void*)LOCALIZED_POKEMON);
 
+	//DEBUG
+	pthread_t menu_debug;
+	pthread_create(&menu_debug, NULL, (void*)debug, NULL);
+	pthread_detach(menu_debug);
+
+
+	//FIN DEBUG
+
 	sem_wait(&cumplio_objetivo_global);
 	puts("CUMPLIO EL TEAM SU OBJETIVO, IUPIIIII");
+	/*
+
 	puts("");
 	puts("-----------MENU -----------");
     puts("INGRESE UN VALOR");
@@ -1109,6 +1204,7 @@ int main(void) {
     puts("r -> DICCIONARIO DE READY");
     puts("E -> LISTA DE ENTRENADORES");
     puts("C -> LISTA DE CORTO PLAZO");
+    puts("D -> INICIAR CORRECICON DEADLOCK");
     puts("---------------------------");
     puts("");
     puts("----- INGRESE MENSAJE -----");
@@ -1151,5 +1247,6 @@ int main(void) {
 
 	//liberar_recursos();
 
+*/
 	return EXIT_SUCCESS;
 }
