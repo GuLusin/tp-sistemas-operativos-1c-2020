@@ -20,6 +20,7 @@
 #include <commons/collections/list.h>
 #include <commons/collections/dictionary.h>
 #include <commons/string.h>
+#include <commons/log.h>
 
 #define ID_SUSCRIPCION 999999
 #define ID_DEFAULT 888888
@@ -119,6 +120,9 @@ int tamanio_pokemon(t_pokemon* pokemon);
 char* posiciones_a_string(t_dictionary* posiciones);
 char* posicion_string_pokemon(t_pokemon* pokemon);
 
+void logear_llegada_mensaje(t_log* logger, t_mensaje* mensaje);
+char* crear_pokestring(t_pokemon* pokemon);
+char* especie_pokemon_a_string(t_pokemon_especie* pokemon_especie);
 
 
 t_pokemon_especie* deserializar_pokemon_especie(void* string);

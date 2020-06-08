@@ -247,7 +247,7 @@ void inicializar_broker(){
 	pthread_mutex_init(&mutex_cola_caught, NULL);
 	pthread_mutex_init(&mutex_cola_appeared, NULL);
 
-	logger = log_create("broker.log", "log", true, LOG_LEVEL_DEBUG);
+	logger = log_create("../broker.log", "log", true, LOG_LEVEL_DEBUG);
 	config = config_create("../config");
 
 	sockets_cola_new = list_create();

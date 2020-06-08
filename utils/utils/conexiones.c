@@ -81,7 +81,7 @@ int sendall(int s, void *buf, int len)
  * wait_time = tiempo de espera entre reintentos de conexion (en segundos), en caso de fallo
  */
 
-int connect_to(char* ip_aux, char* puerto_aux,int wait_time){
+int connect_to(char* ip_aux, char* puerto_aux,int wait_time,t_log* logger){
 	char* ip = ip_aux;
 	char* puerto = puerto_aux;
 	struct addrinfo hints;
@@ -105,10 +105,11 @@ int connect_to(char* ip_aux, char* puerto_aux,int wait_time){
 
 	// INTENTA CONEXION INDEFINIDAMENTE
 	while(connect(socket_cliente,server_info->ai_addr,server_info->ai_addrlen)== -1){
-		perror("Fallo Conexion, reintentando...");
+		log_debug(logger,"Fallo conexion, reintentando en %d segundos...",wait_time);
 		sleep(wait_time);
 	}
 
+	log_debug(logger,"Se logra establecer la conexion");
 	freeaddrinfo(server_info);
 	return socket_cliente;
 }

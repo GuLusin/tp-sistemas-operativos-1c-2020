@@ -1,473 +1,330 @@
-[INFO] 03:25:03:733 log/(23852:23852): Inicio conexion con el broker
-[INFO] 03:25:03:733 log/(23852:23852): 127.0.0.1
-[INFO] 03:25:03:733 log/(23852:23852): 5002
-[INFO] 03:25:03:733 log/(23852:23852): Mensaje localized enviado
-[INFO] 03:25:06:734 log/(23852:23852): Mensaje caught enviado
-[INFO] 03:25:09:735 log/(23852:23852): Mensaje appeared enviado
-[INFO] 03:25:12:736 log/(23852:23852): Termino conexion con el broker
-[INFO] 03:34:14:295 log/(24105:24105): Inicio conexion con el broker
-[INFO] 03:34:14:295 log/(24105:24105): 127.0.0.1
-[INFO] 03:34:14:295 log/(24105:24105): 5002
-[INFO] 03:53:15:823 log/(24669:24669): Inicio conexion con el broker
-[INFO] 03:53:15:824 log/(24669:24669): 127.0.0.1
-[INFO] 03:53:15:824 log/(24669:24669): 5002
-[INFO] 03:53:43:732 log/(24686:24686): Inicio conexion con el broker
-[INFO] 03:53:43:733 log/(24686:24686): 127.0.0.1
-[INFO] 03:53:43:733 log/(24686:24686): 5002
-[INFO] 03:53:43:733 log/(24686:24686): Mensaje localized enviado, al socket: 5.
-[INFO] 03:53:46:733 log/(24686:24686): Mensaje caught enviado, al socket: 7.
-[INFO] 03:53:49:734 log/(24686:24686): Mensaje appeared enviado, al socket: 8.
-[INFO] 03:53:52:734 log/(24686:24686): Termino conexion con el broker
-[INFO] 03:56:57:827 log/(24714:24714): Inicio conexion con el broker
-[INFO] 03:56:57:828 log/(24714:24714): 127.0.0.1
-[INFO] 03:56:57:828 log/(24714:24714): 5002
-[INFO] 03:56:57:828 log/(24714:24714): Mensaje localized enviado, al socket: 5.
-[INFO] 03:57:00:828 log/(24714:24714): Mensaje caught enviado, al socket: 7.
-[INFO] 03:57:03:829 log/(24714:24714): Mensaje appeared enviado, al socket: 8.
-[INFO] 03:57:06:830 log/(24714:24714): Termino conexion con el broker
-[INFO] 04:02:24:923 log/(24880:24880): Inicio conexion con el broker
-[INFO] 04:02:24:923 log/(24880:24880): 127.0.0.1
-[INFO] 04:02:24:923 log/(24880:24880): 5002
-[INFO] 04:02:24:924 log/(24880:24880): Mensaje localized enviado, al socket: 5.
-[INFO] 04:02:27:925 log/(24880:24880): Mensaje caught enviado, al socket: 7.
-[INFO] 04:02:30:925 log/(24880:24880): Mensaje appeared enviado, al socket: 8.
-[INFO] 04:02:33:925 log/(24880:24880): Termino conexion con el broker
-[INFO] 05:49:13:589 log/(13603:13603): Inicio conexion con el broker
-[INFO] 05:49:13:589 log/(13603:13603): 127.0.0.1
-[INFO] 05:49:13:589 log/(13603:13603): 5002
-[INFO] 05:51:34:598 log/(13603:13603): Mensaje localized enviado, al socket: 5.
-[INFO] 05:51:37:599 log/(13603:13603): Mensaje caught enviado, al socket: 6.
-[INFO] 05:51:40:599 log/(13603:13603): Mensaje appeared enviado, al socket: 7.
-[INFO] 05:51:43:599 log/(13603:13603): Termino conexion con el broker
-[DEBUG] 02:53:17:825 log/(9739:9739): 127.0.0.1
-[DEBUG] 02:53:17:825 log/(9739:9739): 5005
-[DEBUG] 02:53:31:315 log/(9751:9751): 127.0.0.1
-[DEBUG] 02:53:31:315 log/(9751:9751): 5005
-[DEBUG] 03:07:20:964 log/(6827:6827): 127.0.0.1
-[DEBUG] 03:07:20:964 log/(6827:6827): 5005
-[DEBUG] 03:53:44:567 log/(7777:7777): 127.0.0.1
-[DEBUG] 03:53:44:567 log/(7777:7777): 5005
-[DEBUG] 03:54:39:682 log/(7789:7789): 127.0.0.1
-[DEBUG] 03:54:39:682 log/(7789:7789): 5005
-[DEBUG] 03:57:04:464 log/(21065:21065): 127.0.0.1
-[DEBUG] 03:57:04:464 log/(21065:21065): 5005
-[DEBUG] 03:59:03:459 log/(4141:4141): 127.0.0.1
-[DEBUG] 03:59:03:459 log/(4141:4141): 5005
-[DEBUG] 04:00:20:893 log/(4159:4159): 127.0.0.1
-[DEBUG] 04:00:20:893 log/(4159:4159): 5005
-[DEBUG] 04:02:51:908 log/(15513:15513): 127.0.0.1
-[DEBUG] 04:02:51:908 log/(15513:15513): 5005
-[DEBUG] 04:09:57:68 log/(16080:16080): 127.0.0.1
-[DEBUG] 04:09:57:68 log/(16080:16080): 5005
-[DEBUG] 04:13:05:646 log/(16143:16143): 127.0.0.1
-[DEBUG] 04:13:05:646 log/(16143:16143): 5005
-[DEBUG] 04:16:18:805 log/(16203:16203): 127.0.0.1
-[DEBUG] 04:16:18:805 log/(16203:16203): 5005
-[DEBUG] 04:17:55:460 log/(16233:16233): 127.0.0.1
-[DEBUG] 04:17:55:460 log/(16233:16233): 5005
-[DEBUG] 04:18:18:290 log/(16240:16240): 127.0.0.1
-[DEBUG] 04:18:18:290 log/(16240:16240): 5005
-[DEBUG] 04:20:52:516 log/(16269:16269): 127.0.0.1
-[DEBUG] 04:20:52:517 log/(16269:16269): 5005
-[DEBUG] 04:22:18:789 log/(16304:16304): 127.0.0.1
-[DEBUG] 04:22:18:789 log/(16304:16304): 5005
-[DEBUG] 04:25:02:278 log/(16388:16388): 127.0.0.1
-[DEBUG] 04:25:02:278 log/(16388:16388): 5005
-[DEBUG] 04:26:54:351 log/(16449:16449): 127.0.0.1
-[DEBUG] 04:26:54:351 log/(16449:16449): 5005
-[DEBUG] 04:28:26:97 log/(16501:16501): 127.0.0.1
-[DEBUG] 04:28:26:97 log/(16501:16501): 5005
-[DEBUG] 04:30:33:603 log/(16564:16564): 127.0.0.1
-[DEBUG] 04:30:33:603 log/(16564:16564): 5005
-[DEBUG] 05:09:21:614 log/(18796:18796): 127.0.0.1
-[DEBUG] 05:09:21:614 log/(18796:18796): 5005
-[DEBUG] 05:13:29:665 log/(18890:18890): 127.0.0.1
-[DEBUG] 05:13:29:665 log/(18890:18890): 5005
-[DEBUG] 05:20:16:431 log/(19083:19083): 127.0.0.1
-[DEBUG] 05:20:16:431 log/(19083:19083): 5005
-[DEBUG] 05:22:53:772 log/(19179:19179): 127.0.0.1
-[DEBUG] 05:22:53:772 log/(19179:19179): 5005
-[DEBUG] 05:47:34:518 log/(19751:19751): 127.0.0.1
-[DEBUG] 05:47:34:518 log/(19751:19751): 5005
-[DEBUG] 05:49:43:679 log/(19815:19815): 127.0.0.1
-[DEBUG] 05:49:43:679 log/(19815:19815): 5005
-[DEBUG] 05:51:01:504 log/(19850:19850): 127.0.0.1
-[DEBUG] 05:51:01:505 log/(19850:19850): 5005
-[DEBUG] 05:52:34:721 log/(19903:19903): 127.0.0.1
-[DEBUG] 05:52:34:721 log/(19903:19903): 5005
-[DEBUG] 06:10:17:767 log/(21071:21071): 127.0.0.1
-[DEBUG] 06:10:17:767 log/(21071:21071): 5005
-[DEBUG] 07:14:08:1 log/(4781:4781): 127.0.0.1
-[DEBUG] 07:14:08:2 log/(4781:4781): 5005
-[DEBUG] 07:15:35:621 log/(4816:4816): 127.0.0.1
-[DEBUG] 07:15:35:622 log/(4816:4816): 5005
-[DEBUG] 07:24:42:977 log/(5030:5030): 127.0.0.1
-[DEBUG] 07:24:42:977 log/(5030:5030): 5005
-[DEBUG] 07:25:24:633 log/(5048:5048): 127.0.0.1
-[DEBUG] 07:25:24:634 log/(5048:5048): 5005
-[DEBUG] 07:26:18:776 log/(5068:5068): 127.0.0.1
-[DEBUG] 07:26:18:776 log/(5068:5068): 5005
-[DEBUG] 07:27:04:906 log/(5102:5102): 127.0.0.1
-[DEBUG] 07:27:04:906 log/(5102:5102): 5005
-[DEBUG] 07:27:57:899 log/(5130:5130): 127.0.0.1
-[DEBUG] 07:27:57:899 log/(5130:5130): 5005
-[DEBUG] 07:28:05:823 log/(5134:5134): 127.0.0.1
-[DEBUG] 07:28:05:823 log/(5134:5134): 5005
-[DEBUG] 07:28:19:128 log/(5142:5142): 127.0.0.1
-[DEBUG] 07:28:19:128 log/(5142:5142): 5005
-[DEBUG] 07:28:29:489 log/(5147:5147): 127.0.0.1
-[DEBUG] 07:28:29:489 log/(5147:5147): 5005
-[DEBUG] 07:28:33:570 log/(5158:5158): 127.0.0.1
-[DEBUG] 07:28:33:570 log/(5158:5158): 5005
-[DEBUG] 07:28:57:370 log/(5166:5166): 127.0.0.1
-[DEBUG] 07:28:57:370 log/(5166:5166): 5005
-[DEBUG] 07:29:12:224 log/(5190:5190): 127.0.0.1
-[DEBUG] 07:29:12:224 log/(5190:5190): 5005
-[DEBUG] 07:29:24:973 log/(5204:5204): 127.0.0.1
-[DEBUG] 07:29:24:973 log/(5204:5204): 5005
-[DEBUG] 07:29:38:764 log/(5218:5218): 127.0.0.1
-[DEBUG] 07:29:38:764 log/(5218:5218): 5005
-[DEBUG] 07:29:41:364 log/(5222:5222): 127.0.0.1
-[DEBUG] 07:29:41:364 log/(5222:5222): 5005
-[DEBUG] 07:33:33:613 log/(5332:5332): 127.0.0.1
-[DEBUG] 07:33:33:613 log/(5332:5332): 5005
-[DEBUG] 07:33:38:359 log/(5336:5336): 127.0.0.1
-[DEBUG] 07:33:38:359 log/(5336:5336): 5005
-[DEBUG] 07:34:36:484 log/(5376:5376): 127.0.0.1
-[DEBUG] 07:34:36:484 log/(5376:5376): 5005
-[DEBUG] 07:34:38:357 log/(5381:5381): 127.0.0.1
-[DEBUG] 07:34:38:358 log/(5381:5381): 5005
-[DEBUG] 07:35:09:170 log/(5400:5400): 127.0.0.1
-[DEBUG] 07:35:09:170 log/(5400:5400): 5005
-[DEBUG] 07:40:13:288 log/(5549:5549): 127.0.0.1
-[DEBUG] 07:40:13:288 log/(5549:5549): 5005
-[DEBUG] 07:41:52:900 log/(5603:5603): 127.0.0.1
-[DEBUG] 07:41:52:900 log/(5603:5603): 5005
-[DEBUG] 07:43:16:416 log/(5624:5624): 127.0.0.1
-[DEBUG] 07:43:16:416 log/(5624:5624): 5005
-[DEBUG] 07:51:49:324 log/(5736:5736): 127.0.0.1
-[DEBUG] 07:51:49:324 log/(5736:5736): 5005
-[DEBUG] 07:52:24:139 log/(5760:5760): 127.0.0.1
-[DEBUG] 07:52:24:139 log/(5760:5760): 5005
-[DEBUG] 08:23:05:336 log/(6222:6222): 127.0.0.1
-[DEBUG] 08:23:05:336 log/(6222:6222): 5005
-[DEBUG] 08:28:04:885 log/(6332:6332): 127.0.0.1
-[DEBUG] 08:28:04:885 log/(6332:6332): 5005
-[DEBUG] 08:29:22:700 log/(6368:6368): 127.0.0.1
-[DEBUG] 08:29:22:700 log/(6368:6368): 5005
-[DEBUG] 08:48:10:134 log/(6779:6779): 127.0.0.1
-[DEBUG] 08:48:10:134 log/(6779:6779): 5005
-[DEBUG] 23:05:29:22 log/(4550:4550): 127.0.0.1
-[DEBUG] 23:05:29:23 log/(4550:4550): 5005
-[DEBUG] 00:22:08:718 log/(5962:5962): 127.0.0.1
-[DEBUG] 00:22:08:722 log/(5962:5962): 5005
-[DEBUG] 00:22:28:466 log/(5975:5975): 127.0.0.1
-[DEBUG] 00:22:28:467 log/(5975:5975): 5005
-[DEBUG] 00:23:34:100 log/(6050:6050): 127.0.0.1
-[DEBUG] 00:23:34:100 log/(6050:6050): 5005
-[DEBUG] 00:27:53:988 log/(6121:6121): 127.0.0.1
-[DEBUG] 00:27:53:988 log/(6121:6121): 5005
-[DEBUG] 00:43:32:629 log/(6524:6524): 127.0.0.1
-[DEBUG] 00:43:32:629 log/(6524:6524): 5005
-[DEBUG] 00:52:58:269 log/(6713:6713): 127.0.0.1
-[DEBUG] 00:52:58:269 log/(6713:6713): 5005
-[DEBUG] 01:22:41:433 log/(5886:5886): 127.0.0.1
-[DEBUG] 01:22:41:434 log/(5886:5886): 5005
-[DEBUG] 02:06:32:507 log/(7613:7613): 127.0.0.1
-[DEBUG] 02:06:32:507 log/(7613:7613): 5002
-[DEBUG] 02:07:23:373 log/(7734:7734): 127.0.0.1
-[DEBUG] 02:07:23:373 log/(7734:7734): 5002
-[DEBUG] 02:52:24:674 log/(7592:7592): 127.0.0.1
-[DEBUG] 02:52:24:674 log/(7592:7592): 5002
-[DEBUG] 02:52:41:489 log/(7605:7605): 127.0.0.1
-[DEBUG] 02:52:41:489 log/(7605:7605): 5002
-[DEBUG] 02:52:50:610 log/(7617:7617): 127.0.0.1
-[DEBUG] 02:52:50:610 log/(7617:7617): 5002
-[DEBUG] 04:12:40:450 log/(9406:9406): 127.0.0.1
-[DEBUG] 04:12:40:450 log/(9406:9406): 5002
-[DEBUG] 22:55:20:254 log/(4723:4723): 127.0.0.1
-[DEBUG] 22:55:20:254 log/(4723:4723): 5002
-[DEBUG] 23:20:12:772 log/(7538:7538): 127.0.0.1
-[DEBUG] 23:20:12:772 log/(7538:7538): 5002
-[DEBUG] 23:34:01:470 log/(9211:9211): 127.0.0.1
-[DEBUG] 23:34:01:470 log/(9211:9211): 5002
-[DEBUG] 00:37:27:159 log/(5082:5082): 127.0.0.1
-[DEBUG] 00:37:27:159 log/(5082:5082): 5002
-[DEBUG] 00:52:32:931 log/(5744:5744): 127.0.0.1
-[DEBUG] 00:52:32:931 log/(5744:5744): 5002
-[DEBUG] 00:52:53:199 log/(5756:5756): 127.0.0.1
-[DEBUG] 00:52:53:199 log/(5756:5756): 5002
-[DEBUG] 01:10:08:812 log/(6403:6403): 127.0.0.1
-[DEBUG] 01:10:08:813 log/(6403:6403): 5002
-[DEBUG] 16:32:00:107 log/(4944:4944): 127.0.0.1
-[DEBUG] 16:32:00:107 log/(4944:4944): 5002
-[DEBUG] 16:34:25:48 log/(5038:5038): 127.0.0.1
-[DEBUG] 16:34:25:48 log/(5038:5038): 5002
-[DEBUG] 17:30:16:319 log/(4838:4838): 127.0.0.1
-[DEBUG] 17:30:16:319 log/(4838:4838): 5002
-[DEBUG] 17:31:01:798 log/(4885:4885): 127.0.0.1
-[DEBUG] 17:31:01:798 log/(4885:4885): 5002
-[DEBUG] 17:34:47:274 log/(5172:5172): 127.0.0.1
-[DEBUG] 17:34:47:274 log/(5172:5172): 5002
-[DEBUG] 17:36:17:351 log/(5280:5280): 127.0.0.1
-[DEBUG] 17:36:17:351 log/(5280:5280): 5002
-[DEBUG] 17:36:35:593 log/(5300:5300): 127.0.0.1
-[DEBUG] 17:36:35:593 log/(5300:5300): 5002
-[DEBUG] 17:36:51:457 log/(5338:5338): 127.0.0.1
-[DEBUG] 17:36:51:457 log/(5338:5338): 5002
-[DEBUG] 15:01:54:757 log/(7384:7384): 127.0.0.1
-[DEBUG] 15:01:54:758 log/(7384:7384): 5002
-[DEBUG] 20:28:39:635 log/(9467:9467): 127.0.0.1
-[DEBUG] 20:28:39:635 log/(9467:9467): 5002
-[DEBUG] 21:56:34:518 log/(11517:11517): 127.0.0.1
-[DEBUG] 21:56:34:518 log/(11517:11517): 5002
-[DEBUG] 22:26:50:316 log/(12454:12454): 127.0.0.1
-[DEBUG] 22:26:50:316 log/(12454:12454): 5002
-[DEBUG] 22:37:09:725 log/(12981:12981): 127.0.0.1
-[DEBUG] 22:37:09:725 log/(12981:12981): 5002
-[DEBUG] 22:37:37:22 log/(13000:13000): 127.0.0.1
-[DEBUG] 22:37:37:22 log/(13000:13000): 5002
-[DEBUG] 22:40:40:500 log/(13087:13087): 127.0.0.1
-[DEBUG] 22:40:40:500 log/(13087:13087): 5002
-[DEBUG] 22:41:02:64 log/(13114:13114): 127.0.0.1
-[DEBUG] 22:41:02:64 log/(13114:13114): 5002
-[DEBUG] 00:31:34:132 log/(6112:6112): 127.0.0.1
-[DEBUG] 00:31:34:132 log/(6112:6112): 5002
-[DEBUG] 00:32:31:500 log/(6172:6172): 127.0.0.1
-[DEBUG] 00:32:31:500 log/(6172:6172): 5002
-[DEBUG] 00:33:51:554 log/(6226:6226): 127.0.0.1
-[DEBUG] 00:33:51:554 log/(6226:6226): 5002
-[DEBUG] 20:47:34:496 log/(3815:3815): 127.0.0.1
-[DEBUG] 20:47:34:499 log/(3815:3815): 5002
-[DEBUG] 20:56:25:7 log/(4033:4033): 127.0.0.1
-[DEBUG] 20:56:25:10 log/(4033:4033): 5002
-[DEBUG] 21:08:12:478 log/(4471:4471): 127.0.0.1
-[DEBUG] 21:08:12:479 log/(4471:4471): 5002
-[DEBUG] 21:12:04:835 log/(4621:4621): 127.0.0.1
-[DEBUG] 21:12:04:835 log/(4621:4621): 5002
-[DEBUG] 21:15:12:170 log/(4703:4703): 127.0.0.1
-[DEBUG] 21:15:12:170 log/(4703:4703): 5002
-[DEBUG] 21:20:08:930 log/(4855:4855): 127.0.0.1
-[DEBUG] 21:20:08:930 log/(4855:4855): 5002
-[DEBUG] 21:23:25:486 log/(5007:5007): 127.0.0.1
-[DEBUG] 21:23:25:486 log/(5007:5007): 5002
-[DEBUG] 21:24:25:769 log/(5066:5066): 127.0.0.1
-[DEBUG] 21:24:25:770 log/(5066:5066): 5002
-[DEBUG] 21:25:19:103 log/(5103:5103): 127.0.0.1
-[DEBUG] 21:25:19:103 log/(5103:5103): 5002
-[DEBUG] 21:30:24:742 log/(5359:5359): 127.0.0.1
-[DEBUG] 21:30:24:742 log/(5359:5359): 5002
-[DEBUG] 21:36:55:496 log/(5515:5515): 127.0.0.1
-[DEBUG] 21:36:55:496 log/(5515:5515): 5002
-[DEBUG] 21:56:55:693 log/(6013:6013): 127.0.0.1
-[DEBUG] 21:56:55:693 log/(6013:6013): 5002
-[DEBUG] 22:15:49:709 log/(6872:6872): 127.0.0.1
-[DEBUG] 22:15:49:709 log/(6872:6872): 5002
-[DEBUG] 22:41:59:639 log/(7234:7234): 127.0.0.1
-[DEBUG] 22:41:59:639 log/(7234:7234): 5002
-[DEBUG] 23:07:35:650 log/(7892:7892): 127.0.0.1
-[DEBUG] 23:07:35:650 log/(7892:7892): 5002
-[DEBUG] 23:08:42:534 log/(7943:7943): 127.0.0.1
-[DEBUG] 23:08:42:534 log/(7943:7943): 5002
-[DEBUG] 23:12:48:757 log/(8104:8104): 127.0.0.1
-[DEBUG] 23:12:48:757 log/(8104:8104): 5002
-[DEBUG] 00:40:51:606 log/(5014:5014): 127.0.0.1
-[DEBUG] 00:40:51:610 log/(5014:5014): 5002
-[DEBUG] 00:41:18:777 log/(5057:5057): 127.0.0.1
-[DEBUG] 00:41:18:778 log/(5057:5057): 5002
-[DEBUG] 00:43:42:216 log/(5145:5145): 127.0.0.1
-[DEBUG] 00:43:42:217 log/(5145:5145): 5002
-[DEBUG] 00:59:15:745 log/(6878:6878): 127.0.0.1
-[DEBUG] 00:59:15:746 log/(6878:6878): 5002
-[DEBUG] 01:25:22:976 log/(8505:8505): 127.0.0.1
-[DEBUG] 01:25:22:976 log/(8505:8505): 5002
-[DEBUG] 02:19:55:63 log/(12399:12399): 127.0.0.1
-[DEBUG] 02:19:55:65 log/(12399:12399): 5002
-[DEBUG] 02:21:59:944 log/(12515:12515): 127.0.0.1
-[DEBUG] 02:21:59:944 log/(12515:12515): 5002
-[DEBUG] 02:25:44:119 log/(12654:12654): 127.0.0.1
-[DEBUG] 02:25:44:121 log/(12654:12654): 5002
-[DEBUG] 02:26:56:280 log/(12723:12723): 127.0.0.1
-[DEBUG] 02:26:56:284 log/(12723:12723): 5002
-[DEBUG] 02:31:55:916 log/(12978:12978): 127.0.0.1
-[DEBUG] 02:31:55:919 log/(12978:12978): 5002
-[DEBUG] 02:33:49:834 log/(13246:13246): 127.0.0.1
-[DEBUG] 02:33:49:834 log/(13246:13246): 5002
-[DEBUG] 02:41:41:3 log/(13646:13646): 127.0.0.1
-[DEBUG] 02:41:41:3 log/(13646:13646): 5002
-[DEBUG] 02:43:43:51 log/(13765:13765): 127.0.0.1
-[DEBUG] 02:43:43:52 log/(13765:13765): 5002
-[DEBUG] 02:45:20:293 log/(13863:13863): 127.0.0.1
-[DEBUG] 02:45:20:294 log/(13863:13863): 5002
-[DEBUG] 14:35:20:105 log/(1302:1302): 127.0.0.1
-[DEBUG] 14:35:20:105 log/(1302:1302): 5002
-[DEBUG] 14:35:43:354 log/(1355:1355): 127.0.0.1
-[DEBUG] 14:35:43:354 log/(1355:1355): 5002
-[DEBUG] 14:38:26:79 log/(1648:1648): 127.0.0.1
-[DEBUG] 14:38:26:82 log/(1648:1648): 5002
-[DEBUG] 14:41:24:188 log/(1780:1780): 127.0.0.1
-[DEBUG] 14:41:24:189 log/(1780:1780): 5002
-[DEBUG] 15:05:05:968 log/(2253:2253): 127.0.0.1
-[DEBUG] 15:05:05:968 log/(2253:2253): 5002
-[DEBUG] 15:07:10:436 log/(2347:2347): 127.0.0.1
-[DEBUG] 15:07:10:436 log/(2347:2347): 5002
-[DEBUG] 15:09:23:800 log/(2453:2453): 127.0.0.1
-[DEBUG] 15:09:23:800 log/(2453:2453): 5002
-[DEBUG] 15:10:01:637 log/(2527:2527): 127.0.0.1
-[DEBUG] 15:10:01:638 log/(2527:2527): 5002
-[DEBUG] 15:10:24:28 log/(2561:2561): 127.0.0.1
-[DEBUG] 15:10:24:29 log/(2561:2561): 5002
-[DEBUG] 15:11:46:613 log/(2627:2627): 127.0.0.1
-[DEBUG] 15:11:46:614 log/(2627:2627): 5002
-[DEBUG] 15:20:19:392 log/(3237:3237): 127.0.0.1
-[DEBUG] 15:20:19:392 log/(3237:3237): 5002
-[DEBUG] 15:39:24:911 log/(3536:3536): 127.0.0.1
-[DEBUG] 15:39:24:911 log/(3536:3536): 5002
-[DEBUG] 15:45:00:521 log/(3880:3880): 127.0.0.1
-[DEBUG] 15:45:00:521 log/(3880:3880): 5002
-[DEBUG] 15:47:25:571 log/(3958:3958): 127.0.0.1
-[DEBUG] 15:47:25:571 log/(3958:3958): 5002
-[DEBUG] 15:52:29:792 log/(4094:4094): 127.0.0.1
-[DEBUG] 15:52:29:792 log/(4094:4094): 5002
-[DEBUG] 15:56:31:254 log/(4213:4213): 127.0.0.1
-[DEBUG] 15:56:31:255 log/(4213:4213): 5002
-[DEBUG] 15:56:32:859 log/(4231:4231): 127.0.0.1
-[DEBUG] 15:56:32:860 log/(4231:4231): 5002
-[DEBUG] 15:58:31:103 log/(4367:4367): 127.0.0.1
-[DEBUG] 15:58:31:103 log/(4367:4367): 5002
-[DEBUG] 15:59:41:511 log/(4455:4455): 127.0.0.1
-[DEBUG] 15:59:41:511 log/(4455:4455): 5002
-[DEBUG] 16:00:30:738 log/(4520:4520): 127.0.0.1
-[DEBUG] 16:00:30:742 log/(4520:4520): 5002
-[DEBUG] 16:02:29:522 log/(4635:4635): 127.0.0.1
-[DEBUG] 16:02:29:522 log/(4635:4635): 5002
-[DEBUG] 16:03:49:403 log/(4717:4717): 127.0.0.1
-[DEBUG] 16:03:49:403 log/(4717:4717): 5002
-[DEBUG] 16:05:06:909 log/(4786:4786): 127.0.0.1
-[DEBUG] 16:05:06:909 log/(4786:4786): 5002
-[DEBUG] 16:06:48:379 log/(4903:4903): 127.0.0.1
-[DEBUG] 16:06:48:379 log/(4903:4903): 5002
-[DEBUG] 16:09:00:667 log/(5005:5005): 127.0.0.1
-[DEBUG] 16:09:00:668 log/(5005:5005): 5002
-[DEBUG] 18:32:54:732 log/(7142:7142): 127.0.0.1
-[DEBUG] 18:32:54:732 log/(7142:7142): 5002
-[DEBUG] 18:40:50:834 log/(7197:7197): 127.0.0.1
-[DEBUG] 18:40:50:835 log/(7197:7197): 5002
-[DEBUG] 18:59:24:892 log/(7505:7505): 127.0.0.1
-[DEBUG] 18:59:24:893 log/(7505:7505): 5002
-[DEBUG] 19:01:50:806 log/(7596:7596): 127.0.0.1
-[DEBUG] 19:01:50:806 log/(7596:7596): 5002
-[DEBUG] 19:04:03:146 log/(7686:7686): 127.0.0.1
-[DEBUG] 19:04:03:147 log/(7686:7686): 5002
-[DEBUG] 19:04:44:775 log/(7756:7756): 127.0.0.1
-[DEBUG] 19:04:44:776 log/(7756:7756): 5002
-[DEBUG] 19:05:41:587 log/(7823:7823): 127.0.0.1
-[DEBUG] 19:05:41:588 log/(7823:7823): 5002
-[DEBUG] 19:17:47:43 log/(8026:8026): 127.0.0.1
-[DEBUG] 19:17:48:44 log/(8026:8026): 5002
-[DEBUG] 19:18:14:761 log/(8078:8078): 127.0.0.1
-[DEBUG] 19:18:14:761 log/(8078:8078): 5002
-[DEBUG] 19:18:40:392 log/(8126:8126): 127.0.0.1
-[DEBUG] 19:18:40:393 log/(8126:8126): 5002
-[DEBUG] 19:21:31:942 log/(8205:8205): 127.0.0.1
-[DEBUG] 19:21:31:942 log/(8205:8205): 5002
-[DEBUG] 19:22:48:317 log/(8257:8257): 127.0.0.1
-[DEBUG] 19:22:48:318 log/(8257:8257): 5002
-[DEBUG] 19:30:05:708 log/(8462:8462): 127.0.0.1
-[DEBUG] 19:30:05:709 log/(8462:8462): 5002
-[DEBUG] 19:33:49:525 log/(8536:8536): 127.0.0.1
-[DEBUG] 19:33:49:534 log/(8536:8536): 5002
-[DEBUG] 19:36:13:290 log/(8612:8612): 127.0.0.1
-[DEBUG] 19:36:13:291 log/(8612:8612): 5002
-[DEBUG] 19:38:25:893 log/(8777:8777): 127.0.0.1
-[DEBUG] 19:38:25:894 log/(8777:8777): 5002
-[DEBUG] 19:42:20:374 log/(8947:8947): 127.0.0.1
-[DEBUG] 19:42:20:376 log/(8947:8947): 5002
-[DEBUG] 19:42:27:73 log/(9000:9000): 127.0.0.1
-[DEBUG] 19:42:27:74 log/(9000:9000): 5002
-[DEBUG] 19:43:56:805 log/(9051:9051): 127.0.0.1
-[DEBUG] 19:43:56:807 log/(9051:9051): 5002
-[DEBUG] 19:56:19:117 log/(9219:9219): 127.0.0.1
-[DEBUG] 19:56:19:118 log/(9219:9219): 5002
-[DEBUG] 19:56:52:280 log/(9271:9271): 127.0.0.1
-[DEBUG] 19:56:52:281 log/(9271:9271): 5002
-[DEBUG] 19:58:07:678 log/(9326:9326): 127.0.0.1
-[DEBUG] 19:58:07:680 log/(9326:9326): 5002
-[DEBUG] 20:02:39:726 log/(9463:9463): 127.0.0.1
-[DEBUG] 20:02:39:726 log/(9463:9463): 5002
-[DEBUG] 20:20:23:101 log/(9725:9725): 127.0.0.1
-[DEBUG] 20:20:23:103 log/(9725:9725): 5002
-[DEBUG] 20:24:27:259 log/(9817:9817): 127.0.0.1
-[DEBUG] 20:24:27:260 log/(9817:9817): 5002
-[DEBUG] 20:28:32:724 log/(9896:9896): 127.0.0.1
-[DEBUG] 20:28:32:725 log/(9896:9896): 5002
-[DEBUG] 20:35:30:434 log/(9992:9992): 127.0.0.1
-[DEBUG] 20:35:30:435 log/(9992:9992): 5002
-[DEBUG] 20:35:48:986 log/(10015:10015): 127.0.0.1
-[DEBUG] 20:35:48:987 log/(10015:10015): 5002
-[DEBUG] 20:38:59:609 log/(10110:10110): 127.0.0.1
-[DEBUG] 20:38:59:612 log/(10110:10110): 5002
-[DEBUG] 20:40:24:931 log/(10192:10192): 127.0.0.1
-[DEBUG] 20:40:24:932 log/(10192:10192): 5002
-[DEBUG] 20:43:09:843 log/(10271:10271): 127.0.0.1
-[DEBUG] 20:43:09:846 log/(10271:10271): 5002
-[DEBUG] 20:44:56:790 log/(10335:10335): 127.0.0.1
-[DEBUG] 20:44:56:791 log/(10335:10335): 5002
-[DEBUG] 22:56:13:662 log/(11112:11112): 127.0.0.1
-[DEBUG] 22:56:13:665 log/(11112:11112): 5002
-[DEBUG] 22:58:36:979 log/(11244:11244): 127.0.0.1
-[DEBUG] 22:58:36:980 log/(11244:11244): 5002
-[DEBUG] 23:11:46:345 log/(11413:11413): 127.0.0.1
-[DEBUG] 23:11:46:346 log/(11413:11413): 5002
-[DEBUG] 23:14:02:593 log/(11472:11472): 127.0.0.1
-[DEBUG] 23:14:02:594 log/(11472:11472): 5002
-[DEBUG] 23:17:24:165 log/(11597:11597): 127.0.0.1
-[DEBUG] 23:17:24:166 log/(11597:11597): 5002
-[DEBUG] 01:38:57:89 log/(12447:12447): 127.0.0.1
-[DEBUG] 01:38:57:90 log/(12447:12447): 5002
-[DEBUG] 01:42:21:879 log/(12545:12545): 127.0.0.1
-[DEBUG] 01:42:21:879 log/(12545:12545): 5002
-[DEBUG] 01:43:46:687 log/(12608:12608): 127.0.0.1
-[DEBUG] 01:43:46:687 log/(12608:12608): 5002
-[DEBUG] 01:44:10:771 log/(12656:12656): 127.0.0.1
-[DEBUG] 01:44:10:771 log/(12656:12656): 5002
-[DEBUG] 01:48:55:520 log/(12782:12782): 127.0.0.1
-[DEBUG] 01:48:55:520 log/(12782:12782): 5002
-[DEBUG] 01:49:41:556 log/(12829:12829): 127.0.0.1
-[DEBUG] 01:49:41:556 log/(12829:12829): 5002
-[DEBUG] 01:51:01:84 log/(12890:12890): 127.0.0.1
-[DEBUG] 01:51:01:84 log/(12890:12890): 5002
-[DEBUG] 02:03:42:572 log/(13148:13148): 127.0.0.1
-[DEBUG] 02:03:42:572 log/(13148:13148): 5002
-[DEBUG] 02:06:19:254 log/(13180:13180): 127.0.0.1
-[DEBUG] 02:06:19:254 log/(13180:13180): 5002
-[DEBUG] 02:10:39:141 log/(13359:13359): 127.0.0.1
-[DEBUG] 02:10:39:142 log/(13359:13359): 5002
-[DEBUG] 02:14:11:199 log/(13427:13427): 127.0.0.1
-[DEBUG] 02:14:11:199 log/(13427:13427): 5002
-[DEBUG] 02:15:00:43 log/(13456:13456): 127.0.0.1
-[DEBUG] 02:15:00:43 log/(13456:13456): 5002
-[DEBUG] 02:18:36:645 log/(13541:13541): 127.0.0.1
-[DEBUG] 02:18:36:645 log/(13541:13541): 5002
-[DEBUG] 02:20:31:11 log/(13613:13613): 127.0.0.1
-[DEBUG] 02:20:31:11 log/(13613:13613): 5002
-[DEBUG] 02:20:58:455 log/(13639:13639): 127.0.0.1
-[DEBUG] 02:20:58:456 log/(13639:13639): 5002
-[DEBUG] 02:21:34:691 log/(13661:13661): 127.0.0.1
-[DEBUG] 02:21:34:692 log/(13661:13661): 5002
-[DEBUG] 02:22:44:684 log/(13725:13725): 127.0.0.1
-[DEBUG] 02:22:44:685 log/(13725:13725): 5002
-[DEBUG] 02:24:11:149 log/(13774:13774): 127.0.0.1
-[DEBUG] 02:24:11:149 log/(13774:13774): 5002
-[DEBUG] 02:26:32:202 log/(13845:13845): 127.0.0.1
-[DEBUG] 02:26:32:203 log/(13845:13845): 5002
-[DEBUG] 03:02:36:37 log/(14648:14648): 127.0.0.1
-[DEBUG] 03:02:36:37 log/(14648:14648): 5002
-[DEBUG] 11:13:59:733 log/(14734:14734): 127.0.0.1
-[DEBUG] 11:13:59:734 log/(14734:14734): 5002
-[DEBUG] 11:15:00:951 log/(14763:14763): 127.0.0.1
-[DEBUG] 11:15:00:952 log/(14763:14763): 5002
-[DEBUG] 11:15:27:940 log/(14784:14784): 127.0.0.1
-[DEBUG] 11:15:27:941 log/(14784:14784): 5002
-[DEBUG] 23:30:22:144 log/(3794:3794): 127.0.0.1
-[DEBUG] 23:30:22:147 log/(3794:3794): 5002
+[DEBUG] 16:29:40:828 log/(6132:6132): 127.0.0.1
+[DEBUG] 16:29:40:829 log/(6132:6132): 5002
+[DEBUG] 16:29:45:699 log/(6132:6133): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+
+[DEBUG] 16:29:46:700 log/(6132:6133): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+
+[DEBUG] 16:29:47:702 log/(6132:6134): Se mueve el entredor id:1 a las coordenadas x:2 y:7
+
+[DEBUG] 16:29:48:703 log/(6132:6134): Se mueve el entredor id:1 a las coordenadas x:1 y:7
+
+[DEBUG] 16:29:49:704 log/(6132:6134): Se mueve el entredor id:1 a las coordenadas x:0 y:7
+
+[DEBUG] 16:29:50:705 log/(6132:6134): Se mueve el entredor id:1 a las coordenadas x:-1 y:7
+
+[DEBUG] 16:29:51:707 log/(6132:6134): Se mueve el entredor id:1 a las coordenadas x:-1 y:6
+
+[DEBUG] 16:29:52:708 log/(6132:6134): Se mueve el entredor id:1 a las coordenadas x:-1 y:5
+
+[DEBUG] 16:29:53:708 log/(6132:6134): Se mueve el entredor id:1 a las coordenadas x:-1 y:4
+
+[DEBUG] 16:29:54:710 log/(6132:6134): Se mueve el entredor id:1 a las coordenadas x:-1 y:3
+
+[DEBUG] 16:29:55:711 log/(6132:6134): Se mueve el entredor id:1 a las coordenadas x:-1 y:2
+
+[DEBUG] 16:29:56:713 log/(6132:6135): Se mueve el entredor id:2 a las coordenadas x:4 y:5
+
+[DEBUG] 16:29:57:714 log/(6132:6135): Se mueve el entredor id:2 a las coordenadas x:4 y:6
+
+[DEBUG] 16:29:58:716 log/(6132:6135): Se mueve el entredor id:2 a las coordenadas x:4 y:7
+
+[DEBUG] 16:29:59:717 log/(6132:6133): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+
+[DEBUG] 16:30:00:718 log/(6132:6133): Se mueve el entredor id:0 a las coordenadas x:1 y:2
+
+[DEBUG] 16:30:01:719 log/(6132:6133): Se mueve el entredor id:0 a las coordenadas x:2 y:2
+
+[DEBUG] 16:30:02:720 log/(6132:6133): Se mueve el entredor id:0 a las coordenadas x:3 y:2
+
+[DEBUG] 16:30:03:722 log/(6132:6133): Se mueve el entredor id:0 a las coordenadas x:4 y:2
+
+[DEBUG] 16:30:04:723 log/(6132:6133): Se mueve el entredor id:0 a las coordenadas x:4 y:3
+
+[DEBUG] 16:30:05:724 log/(6132:6133): Se mueve el entredor id:0 a las coordenadas x:4 y:4
+
+[DEBUG] 16:30:06:726 log/(6132:6133): Se mueve el entredor id:0 a las coordenadas x:4 y:5
+
+[DEBUG] 16:30:07:727 log/(6132:6133): Se mueve el entredor id:0 a las coordenadas x:4 y:6
+
+[DEBUG] 16:30:08:728 log/(6132:6133): Se mueve el entredor id:0 a las coordenadas x:4 y:7
+
+[DEBUG] 16:30:09:730 log/(6132:6133): Se mueve el entredor id:0 a las coordenadas x:4 y:7
+
+[DEBUG] 16:59:58:856 log/(6928:6928): 127.0.0.1
+[DEBUG] 16:59:58:900 log/(6928:6928): 5002
+[DEBUG] 17:00:16:881 log/(6928:6929): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+
+[DEBUG] 17:00:17:889 log/(6928:6929): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+
+[DEBUG] 17:00:58:473 log/(7018:7018): 127.0.0.1
+[DEBUG] 17:00:58:473 log/(7018:7018): 5002
+[DEBUG] 17:01:02:853 log/(7018:7019): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 17:01:03:853 log/(7018:7019): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 17:01:04:855 log/(7018:7020): Se mueve el entredor id:1 a las coordenadas x:2 y:7
+[DEBUG] 17:01:05:855 log/(7018:7020): Se mueve el entredor id:1 a las coordenadas x:1 y:7
+[DEBUG] 17:01:06:856 log/(7018:7020): Se mueve el entredor id:1 a las coordenadas x:0 y:7
+[DEBUG] 17:01:07:856 log/(7018:7020): Se mueve el entredor id:1 a las coordenadas x:-1 y:7
+[DEBUG] 17:01:08:857 log/(7018:7020): Se mueve el entredor id:1 a las coordenadas x:-1 y:6
+[DEBUG] 17:01:09:860 log/(7018:7020): Se mueve el entredor id:1 a las coordenadas x:-1 y:5
+[DEBUG] 17:01:10:860 log/(7018:7020): Se mueve el entredor id:1 a las coordenadas x:-1 y:4
+[DEBUG] 17:01:11:860 log/(7018:7020): Se mueve el entredor id:1 a las coordenadas x:-1 y:3
+[DEBUG] 17:01:12:861 log/(7018:7020): Se mueve el entredor id:1 a las coordenadas x:-1 y:2
+[DEBUG] 17:01:13:861 log/(7018:7021): Se mueve el entredor id:2 a las coordenadas x:4 y:5
+[DEBUG] 17:01:14:862 log/(7018:7021): Se mueve el entredor id:2 a las coordenadas x:4 y:6
+[DEBUG] 17:01:15:866 log/(7018:7021): Se mueve el entredor id:2 a las coordenadas x:4 y:7
+[DEBUG] 17:01:16:866 log/(7018:7019): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 17:01:17:866 log/(7018:7019): Se mueve el entredor id:0 a las coordenadas x:1 y:2
+[DEBUG] 17:01:18:867 log/(7018:7019): Se mueve el entredor id:0 a las coordenadas x:2 y:2
+[DEBUG] 17:01:19:867 log/(7018:7019): Se mueve el entredor id:0 a las coordenadas x:3 y:2
+[DEBUG] 17:01:20:867 log/(7018:7019): Se mueve el entredor id:0 a las coordenadas x:4 y:2
+[DEBUG] 17:01:21:869 log/(7018:7019): Se mueve el entredor id:0 a las coordenadas x:4 y:3
+[DEBUG] 17:01:22:869 log/(7018:7019): Se mueve el entredor id:0 a las coordenadas x:4 y:4
+[DEBUG] 17:01:23:870 log/(7018:7019): Se mueve el entredor id:0 a las coordenadas x:4 y:5
+[DEBUG] 17:01:24:870 log/(7018:7019): Se mueve el entredor id:0 a las coordenadas x:4 y:6
+[DEBUG] 17:01:25:871 log/(7018:7019): Se mueve el entredor id:0 a las coordenadas x:4 y:7
+[DEBUG] 17:01:26:872 log/(7018:7019): Se mueve el entredor id:0 a las coordenadas x:4 y:7
+[DEBUG] 17:51:13:522 log/(8124:8124): 127.0.0.1
+[DEBUG] 17:51:13:523 log/(8124:8124): 5002
+[DEBUG] 17:51:27:285 log/(8124:8132): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 17:51:28:286 log/(8124:8125): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 17:51:29:287 log/(8124:8125): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 17:51:55:186 log/(8124:8132): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 17:51:55:453 log/(8124:8132): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 17:51:55:668 log/(8124:8132): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 17:51:55:971 log/(8124:8132): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 17:51:56:183 log/(8124:8132): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 17:51:56:186 log/(8124:8125): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 17:51:56:366 log/(8124:8132): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 17:51:57:187 log/(8124:8126): Se mueve el entredor id:1 a las coordenadas x:4 y:7
+[DEBUG] 17:51:58:385 log/(8124:8132): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 17:51:58:637 log/(8124:8132): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 17:51:58:851 log/(8124:8132): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 17:52:04:275 log/(8124:8132): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 17:52:05:39 log/(8124:8132): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 17:52:05:332 log/(8124:8132): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 17:52:10:289 log/(8124:8134): Llegada mensaje tipo: LOCALIZED_POKEMON , id correlativo: 455 | pokemon_especie: Bulbasaur,6|3|1,5|4|1,-2|7|2,
+[DEBUG] 17:57:36:548 log/(8311:8311): 127.0.0.1
+[DEBUG] 17:57:36:548 log/(8311:8311): 5002
+[DEBUG] 17:57:42:993 log/(8311:8318): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 17:57:43:336 log/(8311:8318): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 17:57:43:621 log/(8311:8318): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 17:57:43:881 log/(8311:8318): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 17:57:43:994 log/(8311:8312): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 17:57:44:370 log/(8311:8318): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 17:57:44:649 log/(8311:8318): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 17:57:44:896 log/(8311:8318): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 17:57:44:994 log/(8311:8312): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 17:57:45:102 log/(8311:8318): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 17:57:45:995 log/(8311:8313): Se mueve el entredor id:1 a las coordenadas x:2 y:7
+[DEBUG] 17:57:46:996 log/(8311:8313): Se mueve el entredor id:1 a las coordenadas x:1 y:7
+[DEBUG] 17:57:47:997 log/(8311:8313): Se mueve el entredor id:1 a las coordenadas x:0 y:7
+[DEBUG] 17:57:48:999 log/(8311:8313): Se mueve el entredor id:1 a las coordenadas x:-1 y:7
+[DEBUG] 17:57:49:949 log/(8311:8318): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 17:57:49:0 log/(8311:8313): Se mueve el entredor id:1 a las coordenadas x:-1 y:6
+[DEBUG] 17:57:50:281 log/(8311:8318): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 17:57:50:519 log/(8311:8318): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 17:57:50:0 log/(8311:8313): Se mueve el entredor id:1 a las coordenadas x:-1 y:5
+[DEBUG] 17:57:51:1 log/(8311:8313): Se mueve el entredor id:1 a las coordenadas x:-1 y:4
+[DEBUG] 17:57:53:2 log/(8311:8313): Se mueve el entredor id:1 a las coordenadas x:-1 y:3
+[DEBUG] 17:57:53:4 log/(8311:8313): Se mueve el entredor id:1 a las coordenadas x:-1 y:2
+[DEBUG] 17:57:55:6 log/(8311:8314): Se mueve el entredor id:2 a las coordenadas x:4 y:5
+[DEBUG] 17:57:56:6 log/(8311:8314): Se mueve el entredor id:2 a las coordenadas x:4 y:6
+[DEBUG] 17:57:57:7 log/(8311:8314): Se mueve el entredor id:2 a las coordenadas x:4 y:7
+[DEBUG] 17:57:58:8 log/(8311:8312): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 17:57:59:10 log/(8311:8312): Se mueve el entredor id:0 a las coordenadas x:1 y:2
+[DEBUG] 17:58:00:12 log/(8311:8312): Se mueve el entredor id:0 a las coordenadas x:2 y:2
+[DEBUG] 17:58:01:13 log/(8311:8312): Se mueve el entredor id:0 a las coordenadas x:3 y:2
+[DEBUG] 17:58:02:13 log/(8311:8312): Se mueve el entredor id:0 a las coordenadas x:4 y:2
+[DEBUG] 17:58:03:14 log/(8311:8312): Se mueve el entredor id:0 a las coordenadas x:4 y:3
+[DEBUG] 17:58:04:16 log/(8311:8312): Se mueve el entredor id:0 a las coordenadas x:4 y:4
+[DEBUG] 17:58:05:17 log/(8311:8312): Se mueve el entredor id:0 a las coordenadas x:4 y:5
+[DEBUG] 17:58:06:17 log/(8311:8312): Se mueve el entredor id:0 a las coordenadas x:4 y:6
+[DEBUG] 17:58:07:18 log/(8311:8312): Se mueve el entredor id:0 a las coordenadas x:4 y:7
+[DEBUG] 17:58:08:20 log/(8311:8312): Se mueve el entredor id:0 a las coordenadas x:4 y:7
+[DEBUG] 18:00:31:7 log/(8430:8430): 127.0.0.1
+[DEBUG] 18:00:31:7 log/(8430:8430): 5002
+[DEBUG] 18:00:35:196 log/(8430:8437): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 18:00:35:409 log/(8430:8437): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 18:00:35:636 log/(8430:8437): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 18:00:35:952 log/(8430:8437): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 18:00:36:126 log/(8430:8437): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 18:00:36:197 log/(8430:8431): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 18:00:36:337 log/(8430:8437): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 18:00:37:198 log/(8430:8431): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 18:00:38:199 log/(8430:8432): Se mueve el entredor id:1 a las coordenadas x:2 y:7
+[DEBUG] 18:00:39:200 log/(8430:8432): Se mueve el entredor id:1 a las coordenadas x:1 y:7
+[DEBUG] 18:00:40:201 log/(8430:8432): Se mueve el entredor id:1 a las coordenadas x:0 y:7
+[DEBUG] 18:00:41:201 log/(8430:8432): Se mueve el entredor id:1 a las coordenadas x:-1 y:7
+[DEBUG] 18:00:42:204 log/(8430:8432): Se mueve el entredor id:1 a las coordenadas x:-1 y:6
+[DEBUG] 18:00:43:205 log/(8430:8432): Se mueve el entredor id:1 a las coordenadas x:-1 y:5
+[DEBUG] 18:00:44:205 log/(8430:8432): Se mueve el entredor id:1 a las coordenadas x:-1 y:4
+[DEBUG] 18:00:45:206 log/(8430:8432): Se mueve el entredor id:1 a las coordenadas x:-1 y:3
+[DEBUG] 18:00:46:208 log/(8430:8432): Se mueve el entredor id:1 a las coordenadas x:-1 y:2
+[DEBUG] 18:00:47:209 log/(8430:8433): Se mueve el entredor id:2 a las coordenadas x:4 y:5
+[DEBUG] 18:00:48:209 log/(8430:8433): Se mueve el entredor id:2 a las coordenadas x:4 y:6
+[DEBUG] 18:00:49:210 log/(8430:8433): Se mueve el entredor id:2 a las coordenadas x:4 y:7
+[DEBUG] 18:01:11:443 log/(8430:8437): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 18:01:11:643 log/(8430:8437): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 18:01:12:444 log/(8430:8431): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 18:01:13:444 log/(8430:8431): Se mueve el entredor id:0 a las coordenadas x:1 y:2
+[DEBUG] 18:01:14:445 log/(8430:8431): Se mueve el entredor id:0 a las coordenadas x:2 y:2
+[DEBUG] 18:01:15:445 log/(8430:8431): Se mueve el entredor id:0 a las coordenadas x:3 y:2
+[DEBUG] 18:01:16:446 log/(8430:8431): Se mueve el entredor id:0 a las coordenadas x:4 y:2
+[DEBUG] 18:01:17:447 log/(8430:8431): Se mueve el entredor id:0 a las coordenadas x:4 y:3
+[DEBUG] 18:01:18:447 log/(8430:8431): Se mueve el entredor id:0 a las coordenadas x:4 y:4
+[DEBUG] 18:01:19:454 log/(8430:8431): Se mueve el entredor id:0 a las coordenadas x:4 y:5
+[DEBUG] 18:01:20:455 log/(8430:8431): Se mueve el entredor id:0 a las coordenadas x:4 y:6
+[DEBUG] 18:01:21:461 log/(8430:8431): Se mueve el entredor id:0 a las coordenadas x:4 y:7
+[DEBUG] 18:01:22:465 log/(8430:8431): Se mueve el entredor id:0 a las coordenadas x:4 y:7
+[DEBUG] 18:02:54:780 log/(8522:8522): 127.0.0.1
+[DEBUG] 18:02:54:781 log/(8522:8522): 5002
+[DEBUG] 18:02:58:336 log/(8522:8529): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 18:02:58:597 log/(8522:8529): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 18:02:58:782 log/(8522:8529): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 18:02:59:192 log/(8522:8529): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 18:02:59:337 log/(8522:8523): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 18:02:59:381 log/(8522:8529): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 18:02:59:572 log/(8522:8529): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 18:03:00:273 log/(8522:8529): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 18:03:00:338 log/(8522:8523): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 18:03:00:466 log/(8522:8529): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 18:03:00:696 log/(8522:8529): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 18:03:01:338 log/(8522:8524): Se mueve el entredor id:1 a las coordenadas x:2 y:7
+[DEBUG] 18:03:02:339 log/(8522:8524): Se mueve el entredor id:1 a las coordenadas x:1 y:7
+[DEBUG] 18:03:03:341 log/(8522:8524): Se mueve el entredor id:1 a las coordenadas x:0 y:7
+[DEBUG] 18:03:04:342 log/(8522:8524): Se mueve el entredor id:1 a las coordenadas x:-1 y:7
+[DEBUG] 18:03:05:344 log/(8522:8524): Se mueve el entredor id:1 a las coordenadas x:-1 y:6
+[DEBUG] 18:03:06:345 log/(8522:8524): Se mueve el entredor id:1 a las coordenadas x:-1 y:5
+[DEBUG] 18:03:07:346 log/(8522:8524): Se mueve el entredor id:1 a las coordenadas x:-1 y:4
+[DEBUG] 18:03:08:346 log/(8522:8524): Se mueve el entredor id:1 a las coordenadas x:-1 y:3
+[DEBUG] 18:03:09:349 log/(8522:8524): Se mueve el entredor id:1 a las coordenadas x:-1 y:2
+[DEBUG] 18:03:10:350 log/(8522:8525): Se mueve el entredor id:2 a las coordenadas x:4 y:5
+[DEBUG] 18:03:11:350 log/(8522:8525): Se mueve el entredor id:2 a las coordenadas x:4 y:6
+[DEBUG] 18:03:12:351 log/(8522:8525): Se mueve el entredor id:2 a las coordenadas x:4 y:7
+[DEBUG] 18:03:13:352 log/(8522:8523): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 18:03:14:353 log/(8522:8523): Se mueve el entredor id:0 a las coordenadas x:1 y:2
+[DEBUG] 18:03:15:356 log/(8522:8523): Se mueve el entredor id:0 a las coordenadas x:2 y:2
+[DEBUG] 18:03:16:357 log/(8522:8523): Se mueve el entredor id:0 a las coordenadas x:3 y:2
+[DEBUG] 18:03:17:357 log/(8522:8523): Se mueve el entredor id:0 a las coordenadas x:4 y:2
+[DEBUG] 18:03:18:358 log/(8522:8523): Se mueve el entredor id:0 a las coordenadas x:4 y:3
+[DEBUG] 18:03:19:359 log/(8522:8523): Se mueve el entredor id:0 a las coordenadas x:4 y:4
+[DEBUG] 18:03:20:362 log/(8522:8523): Se mueve el entredor id:0 a las coordenadas x:4 y:5
+[DEBUG] 18:03:21:363 log/(8522:8523): Se mueve el entredor id:0 a las coordenadas x:4 y:6
+[DEBUG] 18:03:22:363 log/(8522:8523): Se mueve el entredor id:0 a las coordenadas x:4 y:7
+[DEBUG] 18:03:23:366 log/(8522:8523): Se mueve el entredor id:0 a las coordenadas x:4 y:7
+[DEBUG] 18:03:58:594 log/(8522:8523): DEADLOCK: Se mueve el entredor id:0 a las coordenadas x:3 y:7
+[DEBUG] 18:03:59:595 log/(8522:8523): DEADLOCK: Se mueve el entredor id:0 a las coordenadas x:2 y:7
+[DEBUG] 18:04:00:596 log/(8522:8523): DEADLOCK: Se mueve el entredor id:0 a las coordenadas x:1 y:7
+[DEBUG] 18:04:01:598 log/(8522:8523): DEADLOCK: Se mueve el entredor id:0 a las coordenadas x:0 y:7
+[DEBUG] 18:04:02:599 log/(8522:8523): DEADLOCK: Se mueve el entredor id:0 a las coordenadas x:-1 y:7
+[DEBUG] 18:04:03:600 log/(8522:8523): DEADLOCK: Se mueve el entredor id:0 a las coordenadas x:-1 y:6
+[DEBUG] 18:04:04:601 log/(8522:8523): DEADLOCK: Se mueve el entredor id:0 a las coordenadas x:-1 y:5
+[DEBUG] 18:04:05:602 log/(8522:8523): DEADLOCK: Se mueve el entredor id:0 a las coordenadas x:-1 y:4
+[DEBUG] 18:04:06:603 log/(8522:8523): DEADLOCK: Se mueve el entredor id:0 a las coordenadas x:-1 y:3
+[DEBUG] 18:04:07:603 log/(8522:8523): DEADLOCK: Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 18:04:13:607 log/(8522:8525): DEADLOCK: Se mueve el entredor id:2 a las coordenadas x:3 y:7
+[DEBUG] 18:04:14:608 log/(8522:8525): DEADLOCK: Se mueve el entredor id:2 a las coordenadas x:2 y:7
+[DEBUG] 18:04:15:609 log/(8522:8525): DEADLOCK: Se mueve el entredor id:2 a las coordenadas x:1 y:7
+[DEBUG] 18:04:16:610 log/(8522:8525): DEADLOCK: Se mueve el entredor id:2 a las coordenadas x:0 y:7
+[DEBUG] 18:04:17:611 log/(8522:8525): DEADLOCK: Se mueve el entredor id:2 a las coordenadas x:-1 y:7
+[DEBUG] 18:04:18:612 log/(8522:8525): DEADLOCK: Se mueve el entredor id:2 a las coordenadas x:-1 y:6
+[DEBUG] 18:04:19:613 log/(8522:8525): DEADLOCK: Se mueve el entredor id:2 a las coordenadas x:-1 y:5
+[DEBUG] 18:04:20:614 log/(8522:8525): DEADLOCK: Se mueve el entredor id:2 a las coordenadas x:-1 y:4
+[DEBUG] 18:04:21:614 log/(8522:8525): DEADLOCK: Se mueve el entredor id:2 a las coordenadas x:-1 y:3
+[DEBUG] 18:04:22:615 log/(8522:8525): DEADLOCK: Se mueve el entredor id:2 a las coordenadas x:-1 y:2
+[DEBUG] 18:49:26:404 log/(9437:9437): 127.0.0.1
+[DEBUG] 18:49:26:404 log/(9437:9437): 5002
+[DEBUG] 18:49:26:404 log/(9437:9446): Fallo conexion, reintentando en 5 segundos...
+[DEBUG] 18:49:31:405 log/(9437:9446): Fallo conexion, reintentando en 5 segundos...
+[DEBUG] 18:49:36:405 log/(9437:9446): Se logra establecer la conexion
+[DEBUG] 18:49:37:515 log/(9437:9445): Se logra establecer la conexion
+[DEBUG] 18:49:37:516 log/(9437:9444): Se logra establecer la conexion
+[DEBUG] 18:51:46:637 log/(9437:9444): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 18:51:46:904 log/(9437:9444): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 18:51:47:91 log/(9437:9444): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 18:51:47:367 log/(9437:9444): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 18:51:47:591 log/(9437:9444): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 18:51:47:638 log/(9437:9438): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 18:51:47:788 log/(9437:9444): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 18:51:48:203 log/(9437:9444): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 18:51:48:479 log/(9437:9444): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 18:51:48:638 log/(9437:9438): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 18:51:49:638 log/(9437:9439): Se mueve el entredor id:1 a las coordenadas x:2 y:7
+[DEBUG] 18:51:50:638 log/(9437:9439): Se mueve el entredor id:1 a las coordenadas x:1 y:7
+[DEBUG] 18:51:51:639 log/(9437:9439): Se mueve el entredor id:1 a las coordenadas x:0 y:7
+[DEBUG] 18:51:52:640 log/(9437:9439): Se mueve el entredor id:1 a las coordenadas x:-1 y:7
+[DEBUG] 18:51:53:640 log/(9437:9439): Se mueve el entredor id:1 a las coordenadas x:-1 y:6
+[DEBUG] 18:51:54:641 log/(9437:9439): Se mueve el entredor id:1 a las coordenadas x:-1 y:5
+[DEBUG] 18:51:55:642 log/(9437:9439): Se mueve el entredor id:1 a las coordenadas x:-1 y:4
+[DEBUG] 18:51:56:643 log/(9437:9439): Se mueve el entredor id:1 a las coordenadas x:-1 y:3
+[DEBUG] 18:51:57:643 log/(9437:9439): Se mueve el entredor id:1 a las coordenadas x:-1 y:2
+[DEBUG] 18:51:58:648 log/(9437:9440): Se mueve el entredor id:2 a las coordenadas x:4 y:5
+[DEBUG] 18:51:59:648 log/(9437:9440): Se mueve el entredor id:2 a las coordenadas x:4 y:6
+[DEBUG] 18:52:00:649 log/(9437:9440): Se mueve el entredor id:2 a las coordenadas x:4 y:7
+[DEBUG] 18:52:01:649 log/(9437:9438): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 18:52:02:650 log/(9437:9438): Se mueve el entredor id:0 a las coordenadas x:1 y:2
+[DEBUG] 18:52:03:651 log/(9437:9438): Se mueve el entredor id:0 a las coordenadas x:2 y:2
+[DEBUG] 18:52:04:651 log/(9437:9438): Se mueve el entredor id:0 a las coordenadas x:3 y:2
+[DEBUG] 18:52:05:652 log/(9437:9438): Se mueve el entredor id:0 a las coordenadas x:4 y:2
+[DEBUG] 18:52:06:653 log/(9437:9438): Se mueve el entredor id:0 a las coordenadas x:4 y:3
+[DEBUG] 18:52:07:655 log/(9437:9438): Se mueve el entredor id:0 a las coordenadas x:4 y:4
+[DEBUG] 18:52:08:656 log/(9437:9438): Se mueve el entredor id:0 a las coordenadas x:4 y:5
+[DEBUG] 18:52:09:656 log/(9437:9438): Se mueve el entredor id:0 a las coordenadas x:4 y:6
+[DEBUG] 18:52:10:656 log/(9437:9438): Se mueve el entredor id:0 a las coordenadas x:4 y:7
+[DEBUG] 18:52:11:657 log/(9437:9438): Se mueve el entredor id:0 a las coordenadas x:4 y:7
+[DEBUG] 18:58:26:116 log/(9913:9913): 127.0.0.1
+[DEBUG] 18:58:26:116 log/(9913:9913): 5002
+[DEBUG] 18:58:26:117 log/(9913:9922): Se logra establecer la conexion
+[DEBUG] 18:58:26:117 log/(9913:9921): Se logra establecer la conexion
+[DEBUG] 18:58:26:118 log/(9913:9920): Se logra establecer la conexion
+[DEBUG] 18:58:30:741 log/(9913:9920): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 18:58:30:1 log/(9913:9920): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 18:58:31:202 log/(9913:9920): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 18:58:31:657 log/(9913:9920): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 18:58:31:742 log/(9913:9914): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 18:58:31:869 log/(9913:9920): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 18:58:32:742 log/(9913:9914): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 18:58:32:743 log/(9913:9914): El entrenador 0 intenta atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 18:58:32:743 log/(9913:9914): El entrenador 0 logro atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 18:58:33:743 log/(9913:9915): Se mueve el entredor id:1 a las coordenadas x:2 y:7
+[DEBUG] 18:58:34:744 log/(9913:9915): Se mueve el entredor id:1 a las coordenadas x:1 y:7
+[DEBUG] 18:58:35:744 log/(9913:9915): Se mueve el entredor id:1 a las coordenadas x:0 y:7
+[DEBUG] 18:58:36:745 log/(9913:9915): Se mueve el entredor id:1 a las coordenadas x:-1 y:7
+[DEBUG] 18:58:37:746 log/(9913:9915): Se mueve el entredor id:1 a las coordenadas x:-1 y:6
+[DEBUG] 18:58:38:746 log/(9913:9915): Se mueve el entredor id:1 a las coordenadas x:-1 y:5
+[DEBUG] 18:58:39:746 log/(9913:9915): Se mueve el entredor id:1 a las coordenadas x:-1 y:4
+[DEBUG] 18:58:40:747 log/(9913:9915): Se mueve el entredor id:1 a las coordenadas x:-1 y:3
+[DEBUG] 18:58:41:747 log/(9913:9915): Se mueve el entredor id:1 a las coordenadas x:-1 y:2
+[DEBUG] 18:58:41:748 log/(9913:9915): El entrenador 1 intenta atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 18:58:41:748 log/(9913:9915): El entrenador 1 logro atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 18:58:42:759 log/(9913:9916): Se mueve el entredor id:2 a las coordenadas x:4 y:5
+[DEBUG] 18:58:43:760 log/(9913:9916): Se mueve el entredor id:2 a las coordenadas x:4 y:6
+[DEBUG] 18:58:44:766 log/(9913:9916): Se mueve el entredor id:2 a las coordenadas x:4 y:7
+[DEBUG] 18:58:44:766 log/(9913:9916): El entrenador 2 intenta atapar al pokemon Charmander en la posicion x:4 y:7
+[DEBUG] 18:58:44:766 log/(9913:9916): El entrenador 2 logro atapar al pokemon Charmander en la posicion x:4 y:7
+[DEBUG] 19:02:46:634 log/(9913:9920): Error de comunicacion con el broker, se realizara la operacion default
+[DEBUG] 19:02:46:634 log/(9913:9921): Error de comunicacion con el broker, se realizara la operacion default
+[DEBUG] 19:02:46:634 log/(9913:9922): Error de comunicacion con el broker, se realizara la operacion default
+[DEBUG] 19:02:46:636 log/(9913:9920): Reintentando conexion...
+[DEBUG] 19:02:46:637 log/(9913:9922): Reintentando conexion...
+[DEBUG] 19:02:46:637 log/(9913:9921): Reintentando conexion...
+[DEBUG] 19:02:46:637 log/(9913:9920): Fallo conexion, reintentando en 5 segundos...
+[DEBUG] 19:02:51:639 log/(9913:9920): Fallo conexion, reintentando en 5 segundos...
+[DEBUG] 19:02:56:640 log/(9913:9920): Fallo conexion, reintentando en 5 segundos...
+[DEBUG] 19:03:01:641 log/(9913:9920): Fallo conexion, reintentando en 5 segundos...
+[DEBUG] 19:03:06:642 log/(9913:9920): Fallo conexion, reintentando en 5 segundos...
+[DEBUG] 19:03:11:644 log/(9913:9920): Fallo conexion, reintentando en 5 segundos...
+[DEBUG] 19:03:16:645 log/(9913:9920): Fallo conexion, reintentando en 5 segundos...
+[DEBUG] 19:03:21:647 log/(9913:9920): Fallo conexion, reintentando en 5 segundos...
+[DEBUG] 19:03:26:647 log/(9913:9920): Fallo conexion, reintentando en 5 segundos...
+[DEBUG] 19:03:31:649 log/(9913:9920): Fallo conexion, reintentando en 5 segundos...
+[DEBUG] 19:03:36:652 log/(9913:9920): Fallo conexion, reintentando en 5 segundos...
+[DEBUG] 19:03:41:654 log/(9913:9920): Fallo conexion, reintentando en 5 segundos...
+[DEBUG] 19:03:46:655 log/(9913:9920): Fallo conexion, reintentando en 5 segundos...
+[DEBUG] 19:03:51:656 log/(9913:9920): Fallo conexion, reintentando en 5 segundos...
+[DEBUG] 19:03:56:657 log/(9913:9920): Fallo conexion, reintentando en 5 segundos...
+[DEBUG] 19:04:01:659 log/(9913:9920): Fallo conexion, reintentando en 5 segundos...
+[DEBUG] 19:04:06:659 log/(9913:9920): Fallo conexion, reintentando en 5 segundos...
+[DEBUG] 19:04:11:660 log/(9913:9920): Fallo conexion, reintentando en 5 segundos...
+[DEBUG] 19:04:16:662 log/(9913:9920): Fallo conexion, reintentando en 5 segundos...
+[DEBUG] 19:04:21:664 log/(9913:9920): Fallo conexion, reintentando en 5 segundos...
