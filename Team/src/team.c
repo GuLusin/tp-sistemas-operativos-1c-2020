@@ -854,6 +854,7 @@ void manejar_appeared_pokemon(t_appeared_pokemon appeared_pokemon) {
 }
 
 void manejar_mensaje(t_mensaje* mensaje){
+	printf("codigo_operacion:%d\n",mensaje->codigo_operacion);
 	switch(mensaje->codigo_operacion){
 		case APPEARED_POKEMON:
 			manejar_appeared_pokemon(mensaje->contenido.appeared_pokemon);
@@ -869,27 +870,29 @@ void manejar_mensaje(t_mensaje* mensaje){
 			}
 			break;
 		default:
+			puts("libera mensaje");
+			liberar_mensaje(mensaje);
 			break;
 	}
 }
 
 bool recibir_mensaje(int un_socket){
 	uint32_t codigo_operacion,id,size_contenido_mensaje;
-	if(recv(un_socket,&codigo_operacion,sizeof(uint32_t),0)<=0){
+	if(recv(un_socket,&codigo_operacion,sizeof(uint32_t),MSG_WAITALL)<=0){
 		return false;
 	}
 
-	if(recv(un_socket,&id,sizeof(uint32_t),0)<=0){
+	if(recv(un_socket,&id,sizeof(uint32_t),MSG_WAITALL)<=0){
 		return false;
 	}
 
-	if(recv(un_socket,&size_contenido_mensaje,sizeof(uint32_t),0)<=0){
+	if(recv(un_socket,&size_contenido_mensaje,sizeof(uint32_t),MSG_WAITALL)<=0){
 		return false;
 	}
 
 	void* stream = malloc(size_contenido_mensaje);
 
-	if(recv(un_socket, stream, size_contenido_mensaje, 0)<=0){
+	if(recv(un_socket, stream, size_contenido_mensaje, MSG_WAITALL)<=0){
 		return false;
 	}
 
@@ -899,6 +902,7 @@ bool recibir_mensaje(int un_socket){
 	mensaje->id=id;
 	printear_mensaje(mensaje);
 	manejar_mensaje(mensaje);
+	//liberar_mensaje(mensaje);
 	return true;
 }
 

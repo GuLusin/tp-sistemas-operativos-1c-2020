@@ -126,6 +126,7 @@ void liberar_mensaje(t_mensaje* mensaje){
 			liberar_pokemon_especie(mensaje->contenido.localized_pokemon.pokemon_especie);
 			break;
 	}
+	free(mensaje);
 }
 
 
@@ -172,7 +173,12 @@ void printear_mensaje(t_mensaje* mensaje){
 // ------------------- SERIALIZAR APPEARED_POKEMON ---------------------//
 
 void* serializar_appeared_pokemon(t_appeared_pokemon appeared_pokemon){
-	void* magic = malloc(sizeof(uint32_t) + tamanio_pokemon(appeared_pokemon.pokemon));
+
+	printf("ser_appeared\ntamanio_pokemon:%d\n",tamanio_pokemon(appeared_pokemon.pokemon));
+	printf("strlen nombre pokemon:%d\n",strlen(appeared_pokemon.pokemon->nombre));
+
+
+	void* magic = malloc(sizeof(uint32_t)*2 + tamanio_pokemon(appeared_pokemon.pokemon));
 	int size_pokemon=tamanio_pokemon(appeared_pokemon.pokemon);
 	void* pokemon_stream = serializar_pokemon(appeared_pokemon.pokemon);
 	int offset = 0;
@@ -315,7 +321,7 @@ int tamanio_contenido_mensaje(t_mensaje* mensaje){
 			tamanio += strlen(mensaje->contenido.get_pokemon.nombre_pokemon) + 1;
 			break;
 		case APPEARED_POKEMON:
-			tamanio += sizeof(uint32_t) + tamanio_pokemon(mensaje->contenido.appeared_pokemon.pokemon);
+			tamanio += sizeof(uint32_t)*2 + tamanio_pokemon(mensaje->contenido.appeared_pokemon.pokemon);
 			break;
 		case NEW_POKEMON:
 			tamanio += sizeof(uint32_t) + tamanio_pokemon(mensaje->contenido.new_pokemon.pokemon);
@@ -459,6 +465,7 @@ t_mensaje* deserializar_mensaje(int codigo_operacion, void* stream){
 t_pokemon* crear_pokemon(char* nombre,uint32_t px, uint32_t py){
 	t_pokemon* pokemon = malloc(sizeof(t_pokemon));
 	pokemon->nombre=strdup(nombre);
+	//printf("//////////////////\nnombre pokemon:%s\n",pokemon->nombre);
 	pokemon->pos_x=px;
 	pokemon->pos_y=py;
 	return pokemon;
