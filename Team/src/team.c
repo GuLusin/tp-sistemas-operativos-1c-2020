@@ -547,17 +547,22 @@ void retirar_entrenador(t_entrenador *entrenador){
 
 void planificacionFIFO(){
 	while(!(dictionary_size(dic_pok_obj) == 0)){
-	sem_wait(&hay_entrenador_corto_plazo);
-	puts("                               SACO A UN ENTRENADOR");
-	t_entrenador *entrenador = list_get(lista_corto_plazo,0);
-	puts("------------------------------------------------------------------------------------------");
-	mostrar_entrenador(entrenador);
-	puts("------------------------------------------------------------------------------------------");
-	while(!llego_al_objetivo(entrenador)){
-	sem_post(&(ejecutar_entrenador[entrenador->id]));
-    sem_wait(&activar_algoritmo);
+		sem_wait(&hay_entrenador_corto_plazo);
+		puts("                               SACO A UN ENTRENADOR");
+		t_entrenador *entrenador = list_get(lista_corto_plazo,0);
+		puts("------------------------------------------------------------------------------------------");
+		mostrar_entrenador(entrenador);
+		puts("------------------------------------------------------------------------------------------");
+		if(llego_al_objetivo(entrenador)){
+			sem_post(&(ejecutar_entrenador[entrenador->id]));
+			sem_wait(&activar_algoritmo);
+		}
+		while(!llego_al_objetivo(entrenador)){
+			sem_post(&(ejecutar_entrenador[entrenador->id]));
+			sem_wait(&activar_algoritmo);
+		}
+		retirar_entrenador(entrenador);
 	}
-	retirar_entrenador(entrenador);}
 	sem_post(&cumplio_objetivo_global);
 }
 
@@ -1189,64 +1194,15 @@ int main(void) {
 	pthread_detach(menu_debug);
 
 
+
 	//FIN DEBUG
 
 	sem_wait(&cumplio_objetivo_global);
 	puts("CUMPLIO EL TEAM SU OBJETIVO, IUPIIIII");
-	/*
 
-	puts("");
-	puts("-----------MENU -----------");
-    puts("INGRESE UN VALOR");
-    puts("N -> LISTA DE NEW");
-    puts("R -> LISTA DE READY");
-    puts("o -> DICCIONARIO DE OBJETIVOS");
-    puts("r -> DICCIONARIO DE READY");
-    puts("E -> LISTA DE ENTRENADORES");
-    puts("C -> LISTA DE CORTO PLAZO");
-    puts("D -> INICIAR CORRECICON DEADLOCK");
-    puts("---------------------------");
-    puts("");
-    puts("----- INGRESE MENSAJE -----");
-	while(true){
-		    char msg;
-		    scanf("%c",&msg);
-
-			switch(msg){
-				case 'N':
-					debug_leer_lista(list_pok_new);
-					puts("----- INGRESE MENSAJE -----");
-					break;
-				case 'R':
-					debug_leer_lista(list_pok_ready);
-					puts("----- INGRESE MENSAJE -----");
-					break;
-				case 'o':
-					debug_dic(dic_pok_obj);
-					puts("----- INGRESE MENSAJE -----");
-					break;
-				case 'r':
-					debug_dic(dic_pok_ready_o_exec);
-					puts("----- INGRESE MENSAJE -----");
-					break;
-				case 'E':
-					leer_lista_entrenadores(entrenadores);
-					puts("----- INGRESE MENSAJE -----");
-					break;
-				case 'C':
-					leer_lista_entrenadores(lista_corto_plazo);
-			        puts("----- INGRESE MENSAJE -----");
-					break;
-				case 'D':
-					deadlock();
-					puts("Se corrio el algoritmo de deteccion de deadlock");
-			        puts("----- INGRESE MENSAJE -----");
-					break;
-			}
-		}
+	while(1); //!esto es por el debug!
 
 	//liberar_recursos();
 
-*/
 	return EXIT_SUCCESS;
 }
