@@ -1038,21 +1038,21 @@ void manejar_mensaje(t_mensaje* mensaje){
 
 bool recibir_mensaje(int un_socket){
 	uint32_t codigo_operacion,id,size_contenido_mensaje;
-	if(recv(un_socket,&codigo_operacion,sizeof(uint32_t),0)<=0){
+	if(recv(un_socket,&codigo_operacion,sizeof(uint32_t),MSG_WAITALL)<=0){
 		return false;
 	}
 
-	if(recv(un_socket,&id,sizeof(uint32_t),0)<=0){
+	if(recv(un_socket,&id,sizeof(uint32_t),0)<=MSG_WAITALL){
 		return false;
 	}
 
-	if(recv(un_socket,&size_contenido_mensaje,sizeof(uint32_t),0)<=0){
+	if(recv(un_socket,&size_contenido_mensaje,sizeof(uint32_t),MSG_WAITALL)<=0){
 		return false;
 	}
 
 	void* stream = malloc(size_contenido_mensaje);
 
-	if(recv(un_socket, stream, size_contenido_mensaje, 0)<=0){
+	if(recv(un_socket, stream, size_contenido_mensaje, MSG_WAITALL)<=0){
 		return false;
 	}
 

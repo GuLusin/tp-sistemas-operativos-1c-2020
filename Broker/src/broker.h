@@ -89,7 +89,7 @@ t_mensaje* leer_particion_cache(t_partition* particion);
 t_suscriptor* crear_suscriptor(int id, int socket_cliente);
 char* cola_string(int cola);
 t_partition* encontrar_particion(int id,int cola,int* posicion);
-t_mensaje* descachear_mensaje(int msg_id,int cola);
+void descachear_mensaje(int msg_id,int cola);
 void sacar_particion(int cola, int index);
 
 

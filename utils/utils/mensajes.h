@@ -29,10 +29,21 @@ typedef enum {
 	COLA_NEW_POKEMON,
 	COLA_GET_POKEMON,
 	COLA_CATCH_POKEMON,
-	COLA_LOCALIZED_POKEMON,
 	COLA_CAUGHT_POKEMON,
+	COLA_LOCALIZED_POKEMON,
 	COLA_APPEARED_POKEMON,
 } cola_code;
+
+typedef enum
+{
+	NEW_POKEMON,
+	GET_POKEMON,
+	CATCH_POKEMON,
+	CAUGHT_POKEMON,
+	LOCALIZED_POKEMON,
+	APPEARED_POKEMON,
+	SUBSCRIPCION,
+} op_code;
 
 typedef struct {
 	char* nombre; // SE USA STRDUP
@@ -90,16 +101,7 @@ typedef struct{
 
 //size se envia en la serializacion aunque no este en el struct
 
-typedef enum
-{
-	SUBSCRIPCION,
-	NEW_POKEMON,
-	LOCALIZED_POKEMON,
-	APPEARED_POKEMON,
-	CAUGHT_POKEMON,
-	GET_POKEMON,
-	CATCH_POKEMON,
-} op_code;
+
 
 t_mensaje* crear_mensaje(int num, ...);
 int enviar_mensaje(int socket_a_enviar, t_mensaje* mensaje);

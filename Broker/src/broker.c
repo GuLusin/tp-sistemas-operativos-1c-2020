@@ -208,7 +208,6 @@ void printear_lista_suscriptores(t_list* lista){
 		t_suscriptor* suscriptor = stream;
 		printf("|ID:%d,SOCKET:%d|\n",suscriptor->id_team,suscriptor->socket_cliente);
 	}
-	puts("asd");
 	list_iterate(lista,printear_suscriptor);
 }
 
@@ -943,7 +942,7 @@ void* pmalloc(int size){
 	int i=0;
 	void* aux=NULL;
 	puts("pmalloc\n");
-	while(!aux){
+	//while(!aux){
 		puts("while\n");
 		switch(APL){
 			case FF:
@@ -959,12 +958,12 @@ void* pmalloc(int size){
 		}
 		normalizar_particiones_libres();
 
-		if(aux==NULL){
+		/*if(aux==NULL){
 			puts("ES NULL\n");
 			compactar_memoria();
 			}
 		puts("sale pmalloc\n");
-	}
+	}*/
 
 
 	return aux;
@@ -1118,13 +1117,12 @@ void cachear_mensaje(t_mensaje* mensaje){
 	agregar_particion(administracion_colas[mensaje->codigo_operacion],particion);
 }
 
-t_mensaje* descachear_mensaje(int msg_id,int cola){
+void descachear_mensaje(int msg_id,int cola){
 	//SE PODRIA IMPLEMENTAR QUE SAQUE SEGUN ID MENSAJE
 	int posicion;
 	encontrar_particion(msg_id,cola,&posicion);
 	printf("posicion:%d\n", posicion);
 	sacar_particion(cola,posicion);
-	return get_mensaje_cacheado(cola,posicion);
 }
 
 
