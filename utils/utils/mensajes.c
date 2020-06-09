@@ -609,6 +609,17 @@ void printear_posicion(char* key, void* value){
 	printf("[%s|%d]",key, (int)value);
 }
 
+int cant_coordenadas_especie_pokemon(t_pokemon_especie* pokemon_especie){
+	int contador_aux=0;
+	void contador(char* key, void* stream){
+		int cantidad = stream;
+		contador_aux += cantidad;
+	}
+	dictionary_iterator(pokemon_especie->posiciones_especie,contador);
+	printf("contador devuelve:%d\n",contador_aux);
+	return contador_aux;
+}
+
 void printear_pokemon_especie(t_pokemon_especie* pokemon_especie){
 	printf("Especie:%s\n[", pokemon_especie->nombre_especie);
 	dictionary_iterator(pokemon_especie->posiciones_especie,printear_posicion);
