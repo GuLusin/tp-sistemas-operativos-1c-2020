@@ -10,3 +10,7 @@
 [DEBUG] 22:41:44:138 log/(13158:13158): 5002
 [DEBUG] 22:41:44:138 log/(13158:13158): Socket: 4, escuchando
 [DEBUG] 22:41:49:138 log/(13158:13158): Recibi al cliente
+[DEBUG] 23:43:09:475 log/(16066:16066): 127.0.0.1
+[DEBUG] 23:43:09:476 log/(16066:16066): 5002
+[DEBUG] 23:43:09:477 log/(16066:16066): Socket: 4, escuchando
+[DEBUG] 23:43:11:478 log/(16066:16066): Recibi al cliente

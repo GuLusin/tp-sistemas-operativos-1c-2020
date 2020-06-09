@@ -166,13 +166,10 @@ void logear_llegada_mensaje(t_log* logger, t_mensaje* mensaje){
 			return;
 	}
 
-
-
 	log_debug(logger,"Llegada mensaje tipo: %s, %s",tipo,info);
 	free(tipo);
 	free(info);
 	free(aux);
-
 }
 
 

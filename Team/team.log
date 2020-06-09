@@ -328,3 +328,399 @@
 [DEBUG] 19:04:11:660 log/(9913:9920): Fallo conexion, reintentando en 5 segundos...
 [DEBUG] 19:04:16:662 log/(9913:9920): Fallo conexion, reintentando en 5 segundos...
 [DEBUG] 19:04:21:664 log/(9913:9920): Fallo conexion, reintentando en 5 segundos...
+[DEBUG] 23:43:28:889 log/(16091:16091): 127.0.0.1
+[DEBUG] 23:43:28:889 log/(16091:16091): 5002
+[DEBUG] 23:43:28:890 log/(16091:16098): Se logra establecer la conexion
+[DEBUG] 23:43:28:891 log/(16091:16099): Se logra establecer la conexion
+[DEBUG] 23:43:28:893 log/(16091:16097): Se logra establecer la conexion
+[DEBUG] 23:43:35:546 log/(16091:16097): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 23:43:36:547 log/(16091:16092): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 23:43:36:550 log/(16091:16097): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 23:43:37:549 log/(16091:16092): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 23:43:37:549 log/(16091:16092): El entrenador id:0 intenta atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 23:43:37:550 log/(16091:16092): El entrenador id:0 logro atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 23:43:37:863 log/(16091:16097): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 23:43:38:551 log/(16091:16093): Se mueve el entredor id:1 a las coordenadas x:2 y:7
+[DEBUG] 23:43:38:624 log/(16091:16097): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 23:43:39:26 log/(16091:16097): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 23:43:39:551 log/(16091:16093): Se mueve el entredor id:1 a las coordenadas x:1 y:7
+[DEBUG] 23:43:39:584 log/(16091:16097): Llegada mensaje tipo: APPEARED_POKEMON , Bulbasaur,9|5
+[DEBUG] 23:43:39:995 log/(16091:16097): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 23:43:40:552 log/(16091:16093): Se mueve el entredor id:1 a las coordenadas x:0 y:7
+[DEBUG] 23:43:41:553 log/(16091:16093): Se mueve el entredor id:1 a las coordenadas x:-1 y:7
+[DEBUG] 23:43:42:554 log/(16091:16093): Se mueve el entredor id:1 a las coordenadas x:-1 y:6
+[DEBUG] 23:43:43:554 log/(16091:16093): Se mueve el entredor id:1 a las coordenadas x:-1 y:5
+[DEBUG] 23:43:44:555 log/(16091:16093): Se mueve el entredor id:1 a las coordenadas x:-1 y:4
+[DEBUG] 23:43:45:556 log/(16091:16093): Se mueve el entredor id:1 a las coordenadas x:-1 y:3
+[DEBUG] 23:43:46:556 log/(16091:16093): Se mueve el entredor id:1 a las coordenadas x:-1 y:2
+[DEBUG] 23:43:46:557 log/(16091:16093): El entrenador id:1 intenta atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 23:43:46:557 log/(16091:16093): El entrenador id:1 logro atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 23:43:47:557 log/(16091:16094): Se mueve el entredor id:2 a las coordenadas x:4 y:5
+[DEBUG] 23:43:48:558 log/(16091:16094): Se mueve el entredor id:2 a las coordenadas x:4 y:6
+[DEBUG] 23:43:49:559 log/(16091:16094): Se mueve el entredor id:2 a las coordenadas x:4 y:7
+[DEBUG] 23:43:49:561 log/(16091:16094): El entrenador id:2 intenta atapar al pokemon Charmander en la posicion x:4 y:7
+[DEBUG] 23:43:49:562 log/(16091:16094): El entrenador id:2 logro atapar al pokemon Charmander en la posicion x:4 y:7
+[DEBUG] 23:43:50:566 log/(16091:16092): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 23:43:51:567 log/(16091:16092): Se mueve el entredor id:0 a las coordenadas x:1 y:2
+[DEBUG] 23:43:52:568 log/(16091:16092): Se mueve el entredor id:0 a las coordenadas x:2 y:2
+[DEBUG] 23:43:53:569 log/(16091:16092): Se mueve el entredor id:0 a las coordenadas x:3 y:2
+[DEBUG] 23:43:54:569 log/(16091:16092): Se mueve el entredor id:0 a las coordenadas x:4 y:2
+[DEBUG] 23:43:55:570 log/(16091:16092): Se mueve el entredor id:0 a las coordenadas x:4 y:3
+[DEBUG] 23:43:56:571 log/(16091:16092): Se mueve el entredor id:0 a las coordenadas x:4 y:4
+[DEBUG] 23:43:57:572 log/(16091:16092): Se mueve el entredor id:0 a las coordenadas x:4 y:5
+[DEBUG] 23:43:58:573 log/(16091:16092): Se mueve el entredor id:0 a las coordenadas x:4 y:6
+[DEBUG] 23:43:59:573 log/(16091:16092): Se mueve el entredor id:0 a las coordenadas x:4 y:7
+[DEBUG] 23:43:59:574 log/(16091:16092): El entrenador id:0 intenta atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 23:43:59:575 log/(16091:16092): El entrenador id:0 logro atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 23:44:00:577 log/(16091:16092): Se mueve el entredor id:0 a las coordenadas x:4 y:7
+[DEBUG] 23:44:00:577 log/(16091:16092): El entrenador id:0 intenta atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 23:44:00:577 log/(16091:16092): El entrenador id:0 logro atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 23:44:08:761 log/(16091:16100): Inicio del algoritmo de deteccion de deadlock
+[DEBUG] 23:44:09:762 log/(16091:16092): DEADLOCK: Se mueve el entredor id:0 a las coordenadas x:3 y:7
+[DEBUG] 23:44:10:762 log/(16091:16092): DEADLOCK: Se mueve el entredor id:0 a las coordenadas x:2 y:7
+[DEBUG] 23:44:11:763 log/(16091:16092): DEADLOCK: Se mueve el entredor id:0 a las coordenadas x:1 y:7
+[DEBUG] 23:44:12:763 log/(16091:16092): DEADLOCK: Se mueve el entredor id:0 a las coordenadas x:0 y:7
+[DEBUG] 23:44:13:765 log/(16091:16092): DEADLOCK: Se mueve el entredor id:0 a las coordenadas x:-1 y:7
+[DEBUG] 23:44:14:767 log/(16091:16092): DEADLOCK: Se mueve el entredor id:0 a las coordenadas x:-1 y:6
+[DEBUG] 23:44:15:768 log/(16091:16092): DEADLOCK: Se mueve el entredor id:0 a las coordenadas x:-1 y:5
+[DEBUG] 23:44:16:769 log/(16091:16092): DEADLOCK: Se mueve el entredor id:0 a las coordenadas x:-1 y:4
+[DEBUG] 23:44:17:770 log/(16091:16092): DEADLOCK: Se mueve el entredor id:0 a las coordenadas x:-1 y:3
+[DEBUG] 23:44:18:771 log/(16091:16092): DEADLOCK: Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 23:44:18:772 log/(16091:16100): Operacion de intercambio en x:-1 y:2, entre los entrenadores id:0 y id:1
+[DEBUG] 23:44:24:775 log/(16091:16094): DEADLOCK: Se mueve el entredor id:2 a las coordenadas x:3 y:7
+[DEBUG] 23:44:25:775 log/(16091:16094): DEADLOCK: Se mueve el entredor id:2 a las coordenadas x:2 y:7
+[DEBUG] 23:44:26:776 log/(16091:16094): DEADLOCK: Se mueve el entredor id:2 a las coordenadas x:1 y:7
+[DEBUG] 23:44:27:777 log/(16091:16094): DEADLOCK: Se mueve el entredor id:2 a las coordenadas x:0 y:7
+[DEBUG] 23:44:28:778 log/(16091:16094): DEADLOCK: Se mueve el entredor id:2 a las coordenadas x:-1 y:7
+[DEBUG] 23:44:29:779 log/(16091:16094): DEADLOCK: Se mueve el entredor id:2 a las coordenadas x:-1 y:6
+[DEBUG] 23:44:30:780 log/(16091:16094): DEADLOCK: Se mueve el entredor id:2 a las coordenadas x:-1 y:5
+[DEBUG] 23:44:31:780 log/(16091:16094): DEADLOCK: Se mueve el entredor id:2 a las coordenadas x:-1 y:4
+[DEBUG] 23:44:32:781 log/(16091:16094): DEADLOCK: Se mueve el entredor id:2 a las coordenadas x:-1 y:3
+[DEBUG] 23:44:33:781 log/(16091:16094): DEADLOCK: Se mueve el entredor id:2 a las coordenadas x:-1 y:2
+[DEBUG] 23:44:33:781 log/(16091:16100): Operacion de intercambio en x:-1 y:2, entre los entrenadores id:2 y id:1
+[DEBUG] 23:44:38:785 log/(16091:16100): Finaliza el algoritmo de deteccion de deadlock con exito
+[DEBUG] 23:45:29:941 log/(16110:16110): 127.0.0.1
+[DEBUG] 23:45:29:0 log/(16110:16110): 5002
+[DEBUG] 23:45:30:46 log/(16110:16117): Se logra establecer la conexion
+[DEBUG] 23:45:30:89 log/(16110:16119): Se logra establecer la conexion
+[DEBUG] 23:45:30:99 log/(16110:16118): Se logra establecer la conexion
+[DEBUG] 23:45:42:798 log/(16110:16117): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 23:45:43:900 log/(16110:16111): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 23:45:44:910 log/(16110:16111): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 23:45:44:975 log/(16110:16111): El entrenador id:0 intenta atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 23:45:44:985 log/(16110:16111): El entrenador id:0 logro atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 23:47:05:27 log/(16110:16117): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 23:47:05:684 log/(16110:16117): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 23:47:06:41 log/(16110:16111): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 23:47:06:44 log/(16110:16111): El entrenador id:0 intenta atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 23:47:06:46 log/(16110:16111): El entrenador id:0 logro atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 23:47:06:647 log/(16110:16117): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 23:47:07:674 log/(16110:16112): Se mueve el entredor id:1 a las coordenadas x:4 y:7
+[DEBUG] 23:47:07:677 log/(16110:16112): El entrenador id:1 intenta atapar al pokemon Charmander en la posicion x:4 y:7
+[DEBUG] 23:47:07:679 log/(16110:16112): El entrenador id:1 logro atapar al pokemon Charmander en la posicion x:4 y:7
+[DEBUG] 23:47:09:649 log/(16110:16117): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 23:47:10:395 log/(16110:16117): Llegada mensaje tipo: APPEARED_POKEMON , Bulbasaur,9|5
+[DEBUG] 23:47:10:658 log/(16110:16113): Se mueve el entredor id:2 a las coordenadas x:4 y:5
+[DEBUG] 23:47:11:327 log/(16110:16117): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 23:47:11:662 log/(16110:16113): Se mueve el entredor id:2 a las coordenadas x:4 y:6
+[DEBUG] 23:47:12:667 log/(16110:16113): Se mueve el entredor id:2 a las coordenadas x:4 y:7
+[DEBUG] 23:47:12:670 log/(16110:16113): El entrenador id:2 intenta atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 23:47:12:673 log/(16110:16113): El entrenador id:2 logro atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 23:47:13:692 log/(16110:16111): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 23:47:14:695 log/(16110:16111): Se mueve el entredor id:0 a las coordenadas x:1 y:2
+[DEBUG] 23:47:15:698 log/(16110:16111): Se mueve el entredor id:0 a las coordenadas x:2 y:2
+[DEBUG] 23:47:16:703 log/(16110:16111): Se mueve el entredor id:0 a las coordenadas x:3 y:2
+[DEBUG] 23:47:17:709 log/(16110:16111): Se mueve el entredor id:0 a las coordenadas x:4 y:2
+[DEBUG] 23:47:18:711 log/(16110:16111): Se mueve el entredor id:0 a las coordenadas x:4 y:3
+[DEBUG] 23:47:19:714 log/(16110:16111): Se mueve el entredor id:0 a las coordenadas x:4 y:4
+[DEBUG] 23:47:20:718 log/(16110:16111): Se mueve el entredor id:0 a las coordenadas x:4 y:5
+[DEBUG] 23:47:21:722 log/(16110:16111): Se mueve el entredor id:0 a las coordenadas x:4 y:6
+[DEBUG] 23:47:22:725 log/(16110:16111): Se mueve el entredor id:0 a las coordenadas x:4 y:7
+[DEBUG] 23:47:22:728 log/(16110:16111): El entrenador id:0 intenta atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 23:47:22:733 log/(16110:16111): El entrenador id:0 logro atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 00:02:49:254 log/(16416:16416): 127.0.0.1
+[DEBUG] 00:02:49:254 log/(16416:16416): 5002
+[DEBUG] 00:02:49:255 log/(16416:16425): Se logra establecer la conexion
+[DEBUG] 00:02:49:256 log/(16416:16424): Se logra establecer la conexion
+[DEBUG] 00:02:49:257 log/(16416:16423): Se logra establecer la conexion
+[DEBUG] 00:02:53:800 log/(16416:16423): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:02:54:801 log/(16416:16417): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 00:02:55:802 log/(16416:16417): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 00:02:55:802 log/(16416:16417): El entrenador id:0 intenta atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 00:02:55:802 log/(16416:16417): El entrenador id:0 logro atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 00:02:57:106 log/(16416:16423): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:02:58:107 log/(16416:16417): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 00:02:58:108 log/(16416:16417): El entrenador id:0 intenta atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 00:02:58:108 log/(16416:16417): El entrenador id:0 logro atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 00:02:58:663 log/(16416:16423): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 00:02:59:665 log/(16416:16418): Se mueve el entredor id:1 a las coordenadas x:4 y:7
+[DEBUG] 00:02:59:665 log/(16416:16418): El entrenador id:1 intenta atapar al pokemon Charmander en la posicion x:4 y:7
+[DEBUG] 00:02:59:665 log/(16416:16418): El entrenador id:1 logro atapar al pokemon Charmander en la posicion x:4 y:7
+[DEBUG] 00:03:07:868 log/(16416:16423): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:03:09:24 log/(16416:16423): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 00:03:10:7 log/(16416:16423): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 00:03:10:24 log/(16416:16419): Se mueve el entredor id:2 a las coordenadas x:4 y:5
+[DEBUG] 00:03:10:727 log/(16416:16423): Llegada mensaje tipo: APPEARED_POKEMON , Bulbasaur,9|5
+[DEBUG] 00:03:11:25 log/(16416:16419): Se mueve el entredor id:2 a las coordenadas x:4 y:6
+[DEBUG] 00:03:11:255 log/(16416:16423): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 00:03:12:25 log/(16416:16419): Se mueve el entredor id:2 a las coordenadas x:4 y:7
+[DEBUG] 00:03:12:26 log/(16416:16419): El entrenador id:2 intenta atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 00:03:12:26 log/(16416:16419): El entrenador id:2 logro atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 00:03:13:27 log/(16416:16417): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 00:03:14:29 log/(16416:16417): Se mueve el entredor id:0 a las coordenadas x:1 y:2
+[DEBUG] 00:03:15:30 log/(16416:16417): Se mueve el entredor id:0 a las coordenadas x:2 y:2
+[DEBUG] 00:03:16:31 log/(16416:16417): Se mueve el entredor id:0 a las coordenadas x:3 y:2
+[DEBUG] 00:03:17:32 log/(16416:16417): Se mueve el entredor id:0 a las coordenadas x:4 y:2
+[DEBUG] 00:03:18:33 log/(16416:16417): Se mueve el entredor id:0 a las coordenadas x:4 y:3
+[DEBUG] 00:03:19:35 log/(16416:16417): Se mueve el entredor id:0 a las coordenadas x:4 y:4
+[DEBUG] 00:03:20:36 log/(16416:16417): Se mueve el entredor id:0 a las coordenadas x:4 y:5
+[DEBUG] 00:03:21:37 log/(16416:16417): Se mueve el entredor id:0 a las coordenadas x:4 y:6
+[DEBUG] 00:03:22:38 log/(16416:16417): Se mueve el entredor id:0 a las coordenadas x:4 y:7
+[DEBUG] 00:03:22:38 log/(16416:16417): El entrenador id:0 intenta atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 00:03:22:38 log/(16416:16417): El entrenador id:0 logro atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 00:03:25:276 log/(16416:16426): Inicio del algoritmo de deteccion de deadlock
+[DEBUG] 00:03:25:276 log/(16416:16426): Operacion de intercambio en x:4 y:7, entre los entrenadores id:0 y id:1
+[DEBUG] 00:03:30:280 log/(16416:16426): Finaliza el algoritmo de deteccion de deadlock con exito
+[DEBUG] 00:20:06:461 log/(16679:16679): 127.0.0.1
+[DEBUG] 00:20:06:553 log/(16679:16679): 5002
+[DEBUG] 00:20:06:626 log/(16679:16687): Se logra establecer la conexion
+[DEBUG] 00:20:06:666 log/(16679:16688): Se logra establecer la conexion
+[DEBUG] 00:20:06:674 log/(16679:16686): Se logra establecer la conexion
+[DEBUG] 00:20:26:434 log/(16679:16686): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:20:27:535 log/(16679:16680): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 00:20:28:544 log/(16679:16680): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 00:20:28:591 log/(16679:16680): El entrenador id:0 intenta atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 00:20:28:595 log/(16679:16680): El entrenador id:0 logro atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 00:20:28:788 log/(16679:16686): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 00:20:29:797 log/(16679:16681): Se mueve el entredor id:1 a las coordenadas x:4 y:7
+[DEBUG] 00:20:29:802 log/(16679:16681): El entrenador id:1 intenta atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 00:20:29:805 log/(16679:16681): El entrenador id:1 logro atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 00:20:29:896 log/(16679:16686): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:20:30:907 log/(16679:16680): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 00:20:30:909 log/(16679:16680): El entrenador id:0 intenta atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 00:20:30:919 log/(16679:16680): El entrenador id:0 logro atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 00:20:32:211 log/(16679:16686): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 00:20:32:622 log/(16679:16686): Llegada mensaje tipo: APPEARED_POKEMON , Bulbasaur,9|5
+[DEBUG] 00:20:32:987 log/(16679:16686): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 00:20:33:218 log/(16679:16682): Se mueve el entredor id:2 a las coordenadas x:4 y:5
+[DEBUG] 00:20:33:396 log/(16679:16686): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:20:34:222 log/(16679:16682): Se mueve el entredor id:2 a las coordenadas x:4 y:6
+[DEBUG] 00:20:35:225 log/(16679:16682): Se mueve el entredor id:2 a las coordenadas x:4 y:7
+[DEBUG] 00:20:35:227 log/(16679:16682): El entrenador id:2 intenta atapar al pokemon Charmander en la posicion x:4 y:7
+[DEBUG] 00:20:35:230 log/(16679:16682): El entrenador id:2 logro atapar al pokemon Charmander en la posicion x:4 y:7
+[DEBUG] 00:20:36:237 log/(16679:16680): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 00:20:37:240 log/(16679:16680): Se mueve el entredor id:0 a las coordenadas x:1 y:2
+[DEBUG] 00:20:38:243 log/(16679:16680): Se mueve el entredor id:0 a las coordenadas x:2 y:2
+[DEBUG] 00:20:39:246 log/(16679:16680): Se mueve el entredor id:0 a las coordenadas x:3 y:2
+[DEBUG] 00:20:40:249 log/(16679:16680): Se mueve el entredor id:0 a las coordenadas x:4 y:2
+[DEBUG] 00:20:41:251 log/(16679:16680): Se mueve el entredor id:0 a las coordenadas x:4 y:3
+[DEBUG] 00:20:42:254 log/(16679:16680): Se mueve el entredor id:0 a las coordenadas x:4 y:4
+[DEBUG] 00:20:43:259 log/(16679:16680): Se mueve el entredor id:0 a las coordenadas x:4 y:5
+[DEBUG] 00:20:44:262 log/(16679:16680): Se mueve el entredor id:0 a las coordenadas x:4 y:6
+[DEBUG] 00:20:45:265 log/(16679:16680): Se mueve el entredor id:0 a las coordenadas x:4 y:7
+[DEBUG] 00:20:45:267 log/(16679:16680): El entrenador id:0 intenta atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 00:20:45:270 log/(16679:16680): El entrenador id:0 logro atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 00:20:47:681 log/(16679:16689): Inicio del algoritmo de deteccion de deadlock
+[DEBUG] 00:20:47:743 log/(16679:16689): Operacion de intercambio en x:4 y:7, entre los entrenadores id:0 y id:1
+[DEBUG] 00:20:52:878 log/(16679:16689): Operacion de intercambio en x:4 y:7, entre los entrenadores id:2 y id:1
+[DEBUG] 00:20:57:931 log/(16679:16689): Finaliza el algoritmo de deteccion de deadlock con exito
+[DEBUG] 00:33:09:211 log/(16974:16974): 127.0.0.1
+[DEBUG] 00:33:09:271 log/(16974:16974): 5002
+[DEBUG] 00:33:09:324 log/(16974:16981): Se logra establecer la conexion
+[DEBUG] 00:33:09:366 log/(16974:16983): Se logra establecer la conexion
+[DEBUG] 00:33:09:369 log/(16974:16982): Se logra establecer la conexion
+[DEBUG] 00:33:11:982 log/(16974:16981): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:33:13:85 log/(16974:16975): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 00:33:14:95 log/(16974:16975): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 00:33:14:146 log/(16974:16975): El entrenador id:0 intenta atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 00:33:14:151 log/(16974:16975): El entrenador id:0 logro atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 00:33:14:366 log/(16974:16981): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:33:15:376 log/(16974:16975): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 00:33:15:378 log/(16974:16975): El entrenador id:0 intenta atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 00:33:15:381 log/(16974:16975): El entrenador id:0 logro atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 00:33:24:366 log/(16974:16981): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 00:33:25:375 log/(16974:16976): Se mueve el entredor id:1 a las coordenadas x:4 y:7
+[DEBUG] 00:33:25:378 log/(16974:16976): El entrenador id:1 intenta atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 00:33:25:381 log/(16974:16976): El entrenador id:1 logro atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 00:33:30:518 log/(16974:16981): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 00:33:31:287 log/(16974:16981): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:33:31:527 log/(16974:16977): Se mueve el entredor id:2 a las coordenadas x:4 y:5
+[DEBUG] 00:33:31:869 log/(16974:16981): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 00:33:32:531 log/(16974:16977): Se mueve el entredor id:2 a las coordenadas x:4 y:6
+[DEBUG] 00:33:33:534 log/(16974:16977): Se mueve el entredor id:2 a las coordenadas x:4 y:7
+[DEBUG] 00:33:33:536 log/(16974:16977): El entrenador id:2 intenta atapar al pokemon Charmander en la posicion x:4 y:7
+[DEBUG] 00:33:33:539 log/(16974:16977): El entrenador id:2 logro atapar al pokemon Charmander en la posicion x:4 y:7
+[DEBUG] 00:33:34:549 log/(16974:16975): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 00:33:35:551 log/(16974:16975): Se mueve el entredor id:0 a las coordenadas x:1 y:2
+[DEBUG] 00:33:36:555 log/(16974:16975): Se mueve el entredor id:0 a las coordenadas x:2 y:2
+[DEBUG] 00:33:37:559 log/(16974:16975): Se mueve el entredor id:0 a las coordenadas x:3 y:2
+[DEBUG] 00:33:38:562 log/(16974:16975): Se mueve el entredor id:0 a las coordenadas x:4 y:2
+[DEBUG] 00:33:39:564 log/(16974:16975): Se mueve el entredor id:0 a las coordenadas x:4 y:3
+[DEBUG] 00:33:40:566 log/(16974:16975): Se mueve el entredor id:0 a las coordenadas x:4 y:4
+[DEBUG] 00:33:41:570 log/(16974:16975): Se mueve el entredor id:0 a las coordenadas x:4 y:5
+[DEBUG] 00:33:42:573 log/(16974:16975): Se mueve el entredor id:0 a las coordenadas x:4 y:6
+[DEBUG] 00:33:43:576 log/(16974:16975): Se mueve el entredor id:0 a las coordenadas x:4 y:7
+[DEBUG] 00:33:43:579 log/(16974:16975): El entrenador id:0 intenta atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 00:33:43:586 log/(16974:16975): El entrenador id:0 logro atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 00:35:18:119 log/(16974:16984): Inicio del algoritmo de deteccion de deadlock
+[DEBUG] 00:35:18:212 log/(16974:16984): Operacion de intercambio en x:4 y:7, entre los entrenadores id:0 y id:1
+[DEBUG] 00:35:23:405 log/(16974:16984): Operacion de intercambio en x:4 y:7, entre los entrenadores id:2 y id:1
+[DEBUG] 00:35:28:440 log/(16974:16984): Finaliza el algoritmo de deteccion de deadlock con exito
+[DEBUG] 00:39:54:59 log/(17168:17168): 127.0.0.1
+[DEBUG] 00:39:55:117 log/(17168:17168): 5002
+[DEBUG] 00:39:55:169 log/(17168:17175): Se logra establecer la conexion
+[DEBUG] 00:39:55:205 log/(17168:17177): Se logra establecer la conexion
+[DEBUG] 00:39:55:209 log/(17168:17176): Se logra establecer la conexion
+[DEBUG] 00:39:56:973 log/(17168:17175): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:39:57:903 log/(17168:17175): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:39:58:78 log/(17168:17169): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 00:40:01:786 log/(17168:17175): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 00:40:12:726 log/(17168:17175): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:40:14:191 log/(17168:17175): Llegada mensaje tipo: APPEARED_POKEMON , Bulbasaur,9|5
+[DEBUG] 00:40:16:21 log/(17168:17175): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 00:40:16:656 log/(17168:17175): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 00:40:18:33 log/(17168:17175): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:40:18:494 log/(17168:17175): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:40:18:791 log/(17168:17175): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:43:10:629 log/(17248:17248): 127.0.0.1
+[DEBUG] 00:43:10:686 log/(17248:17248): 5002
+[DEBUG] 00:43:10:727 log/(17248:17255): Se logra establecer la conexion
+[DEBUG] 00:43:10:770 log/(17248:17257): Se logra establecer la conexion
+[DEBUG] 00:43:10:773 log/(17248:17256): Se logra establecer la conexion
+[DEBUG] 00:43:12:711 log/(17248:17255): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:43:13:828 log/(17248:17249): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 00:43:14:836 log/(17248:17249): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 00:43:14:868 log/(17248:17249): El entrenador id:0 intenta atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 00:43:14:871 log/(17248:17249): El entrenador id:0 logro atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 00:43:16:129 log/(17248:17255): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:43:17:136 log/(17248:17249): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 00:43:17:138 log/(17248:17249): El entrenador id:0 intenta atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 00:43:17:140 log/(17248:17249): El entrenador id:0 logro atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 00:43:19:234 log/(17248:17255): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 00:43:20:241 log/(17248:17250): Se mueve el entredor id:1 a las coordenadas x:4 y:7
+[DEBUG] 00:43:20:243 log/(17248:17250): El entrenador id:1 intenta atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 00:43:20:245 log/(17248:17250): El entrenador id:1 logro atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 00:43:20:836 log/(17248:17255): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 00:43:21:842 log/(17248:17251): Se mueve el entredor id:2 a las coordenadas x:4 y:5
+[DEBUG] 00:43:22:845 log/(17248:17251): Se mueve el entredor id:2 a las coordenadas x:4 y:6
+[DEBUG] 00:43:22:992 log/(17248:17255): Llegada mensaje tipo: APPEARED_POKEMON , Bulbasaur,9|5
+[DEBUG] 00:43:23:848 log/(17248:17251): Se mueve el entredor id:2 a las coordenadas x:4 y:7
+[DEBUG] 00:43:23:850 log/(17248:17251): El entrenador id:2 intenta atapar al pokemon Charmander en la posicion x:4 y:7
+[DEBUG] 00:43:23:852 log/(17248:17251): El entrenador id:2 logro atapar al pokemon Charmander en la posicion x:4 y:7
+[DEBUG] 00:43:24:20 log/(17248:17255): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:43:29:757 log/(17248:17255): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 00:43:30:595 log/(17248:17255): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 00:43:31:600 log/(17248:17249): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 00:43:32:604 log/(17248:17249): Se mueve el entredor id:0 a las coordenadas x:1 y:2
+[DEBUG] 00:43:33:607 log/(17248:17249): Se mueve el entredor id:0 a las coordenadas x:2 y:2
+[DEBUG] 00:43:34:609 log/(17248:17249): Se mueve el entredor id:0 a las coordenadas x:3 y:2
+[DEBUG] 00:43:35:612 log/(17248:17249): Se mueve el entredor id:0 a las coordenadas x:4 y:2
+[DEBUG] 00:43:36:616 log/(17248:17249): Se mueve el entredor id:0 a las coordenadas x:4 y:3
+[DEBUG] 00:43:37:619 log/(17248:17249): Se mueve el entredor id:0 a las coordenadas x:4 y:4
+[DEBUG] 00:43:38:622 log/(17248:17249): Se mueve el entredor id:0 a las coordenadas x:4 y:5
+[DEBUG] 00:43:39:625 log/(17248:17249): Se mueve el entredor id:0 a las coordenadas x:4 y:6
+[DEBUG] 00:43:40:628 log/(17248:17249): Se mueve el entredor id:0 a las coordenadas x:4 y:7
+[DEBUG] 00:43:40:631 log/(17248:17249): El entrenador id:0 intenta atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 00:43:40:633 log/(17248:17249): El entrenador id:0 logro atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 00:48:47:527 log/(17377:17377): 127.0.0.1
+[DEBUG] 00:48:47:587 log/(17377:17377): 5002
+[DEBUG] 00:48:47:632 log/(17377:17384): Se logra establecer la conexion
+[DEBUG] 00:48:47:676 log/(17377:17386): Se logra establecer la conexion
+[DEBUG] 00:48:47:679 log/(17377:17385): Se logra establecer la conexion
+[DEBUG] 00:48:49:987 log/(17377:17384): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:48:51:83 log/(17377:17378): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 00:49:17:443 log/(17377:17384): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:49:18:200 log/(17377:17384): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:49:18:939 log/(17377:17384): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:49:19:908 log/(17377:17384): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:49:20:514 log/(17377:17384): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:49:21:237 log/(17377:17384): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:49:21:875 log/(17377:17384): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:49:22:399 log/(17377:17384): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:54:05:423 log/(17518:17518): 127.0.0.1
+[DEBUG] 00:54:05:484 log/(17518:17518): 5002
+[DEBUG] 00:54:05:536 log/(17518:17525): Se logra establecer la conexion
+[DEBUG] 00:54:05:573 log/(17518:17527): Se logra establecer la conexion
+[DEBUG] 00:54:05:581 log/(17518:17526): Se logra establecer la conexion
+[DEBUG] 00:54:06:989 log/(17518:17525): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:54:08:80 log/(17518:17519): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 00:54:09:88 log/(17518:17519): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 00:54:09:137 log/(17518:17519): El entrenador id:0 intenta atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 00:54:09:142 log/(17518:17519): El entrenador id:0 logro atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 00:54:10:807 log/(17518:17525): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:54:11:821 log/(17518:17519): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 00:54:11:823 log/(17518:17519): El entrenador id:0 intenta atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 00:54:11:826 log/(17518:17519): El entrenador id:0 logro atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 00:54:14:120 log/(17518:17525): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 00:54:15:127 log/(17518:17520): Se mueve el entredor id:1 a las coordenadas x:4 y:7
+[DEBUG] 00:54:15:129 log/(17518:17520): El entrenador id:1 intenta atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 00:54:15:132 log/(17518:17520): El entrenador id:1 logro atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 00:54:16:249 log/(17518:17525): Llegada mensaje tipo: APPEARED_POKEMON , Bulbasaur,9|5
+[DEBUG] 00:54:19:988 log/(17518:17525): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:54:22:506 log/(17518:17525): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 00:54:23:513 log/(17518:17521): Se mueve el entredor id:2 a las coordenadas x:4 y:5
+[DEBUG] 00:54:24:531 log/(17518:17521): Se mueve el entredor id:2 a las coordenadas x:4 y:6
+[DEBUG] 00:54:25:534 log/(17518:17521): Se mueve el entredor id:2 a las coordenadas x:4 y:7
+[DEBUG] 00:54:25:536 log/(17518:17521): El entrenador id:2 intenta atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 00:54:25:539 log/(17518:17521): El entrenador id:2 logro atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 00:54:28:538 log/(17518:17525): Llegada mensaje tipo: APPEARED_POKEMON , Bulbasaur,9|5
+[DEBUG] 00:54:36:463 log/(17518:17525): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 00:54:37:704 log/(17518:17525): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 00:54:38:312 log/(17518:17525): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 00:54:39:317 log/(17518:17519): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 00:54:40:320 log/(17518:17519): Se mueve el entredor id:0 a las coordenadas x:1 y:2
+[DEBUG] 00:54:41:323 log/(17518:17519): Se mueve el entredor id:0 a las coordenadas x:2 y:2
+[DEBUG] 00:54:42:326 log/(17518:17519): Se mueve el entredor id:0 a las coordenadas x:3 y:2
+[DEBUG] 00:54:43:328 log/(17518:17519): Se mueve el entredor id:0 a las coordenadas x:4 y:2
+[DEBUG] 00:54:44:330 log/(17518:17519): Se mueve el entredor id:0 a las coordenadas x:4 y:3
+[DEBUG] 00:54:45:333 log/(17518:17519): Se mueve el entredor id:0 a las coordenadas x:4 y:4
+[DEBUG] 00:54:46:336 log/(17518:17519): Se mueve el entredor id:0 a las coordenadas x:4 y:5
+[DEBUG] 00:54:47:339 log/(17518:17519): Se mueve el entredor id:0 a las coordenadas x:4 y:6
+[DEBUG] 00:54:48:342 log/(17518:17519): Se mueve el entredor id:0 a las coordenadas x:4 y:7
+[DEBUG] 00:54:48:344 log/(17518:17519): El entrenador id:0 intenta atapar al pokemon Charmander en la posicion x:4 y:7
+[DEBUG] 00:54:48:347 log/(17518:17519): El entrenador id:0 logro atapar al pokemon Charmander en la posicion x:4 y:7
+[DEBUG] 00:54:50:373 log/(17518:17528): Inicio del algoritmo de deteccion de deadlock
+[DEBUG] 00:54:50:453 log/(17518:17528): Operacion de intercambio en x:4 y:7, entre los entrenadores id:0 y id:1
+[DEBUG] 00:54:55:487 log/(17518:17528): Operacion de intercambio en x:4 y:7, entre los entrenadores id:0 y id:1
+[DEBUG] 00:55:00:567 log/(17518:17528): Finaliza el algoritmo de deteccion de deadlock con exito
+[DEBUG] 01:08:19:948 log/(17806:17806): 127.0.0.1
+[DEBUG] 01:08:20:6 log/(17806:17806): 5002
+[DEBUG] 01:08:20:51 log/(17806:17813): Se logra establecer la conexion
+[DEBUG] 01:08:20:97 log/(17806:17815): Se logra establecer la conexion
+[DEBUG] 01:08:20:108 log/(17806:17814): Se logra establecer la conexion
+[DEBUG] 01:08:25:10 log/(17806:17813): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 01:08:26:123 log/(17806:17807): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 01:08:27:131 log/(17806:17807): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 01:08:27:148 log/(17806:17807): El entrenador id:0 intenta atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 01:08:27:150 log/(17806:17807): El entrenador id:0 logro atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 01:08:29:146 log/(17806:17813): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 01:08:30:155 log/(17806:17807): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 01:08:30:158 log/(17806:17807): El entrenador id:0 intenta atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 01:08:30:162 log/(17806:17807): El entrenador id:0 logro atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 01:08:37:383 log/(17806:17813): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 01:08:38:390 log/(17806:17808): Se mueve el entredor id:1 a las coordenadas x:4 y:7
+[DEBUG] 01:08:38:392 log/(17806:17808): El entrenador id:1 intenta atapar al pokemon Charmander en la posicion x:4 y:7
+[DEBUG] 01:08:38:395 log/(17806:17808): El entrenador id:1 logro atapar al pokemon Charmander en la posicion x:4 y:7
+[DEBUG] 01:08:40:67 log/(17806:17813): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 01:08:41:72 log/(17806:17809): Se mueve el entredor id:2 a las coordenadas x:4 y:5
+[DEBUG] 01:08:42:76 log/(17806:17809): Se mueve el entredor id:2 a las coordenadas x:4 y:6
+[DEBUG] 01:08:43:79 log/(17806:17809): Se mueve el entredor id:2 a las coordenadas x:4 y:7
+[DEBUG] 01:08:43:82 log/(17806:17809): El entrenador id:2 intenta atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 01:08:43:85 log/(17806:17809): El entrenador id:2 logro atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 01:08:46:736 log/(17806:17813): Llegada mensaje tipo: APPEARED_POKEMON , Bulbasaur,9|5
+[DEBUG] 01:08:48:598 log/(17806:17813): Llegada mensaje tipo: APPEARED_POKEMON , Squirtle,4|7
+[DEBUG] 01:08:49:604 log/(17806:17807): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 01:08:50:606 log/(17806:17807): Se mueve el entredor id:0 a las coordenadas x:1 y:2
+[DEBUG] 01:08:51:610 log/(17806:17807): Se mueve el entredor id:0 a las coordenadas x:2 y:2
+[DEBUG] 01:08:52:612 log/(17806:17807): Se mueve el entredor id:0 a las coordenadas x:3 y:2
+[DEBUG] 01:08:53:614 log/(17806:17807): Se mueve el entredor id:0 a las coordenadas x:4 y:2
+[DEBUG] 01:08:54:618 log/(17806:17807): Se mueve el entredor id:0 a las coordenadas x:4 y:3
+[DEBUG] 01:08:55:621 log/(17806:17807): Se mueve el entredor id:0 a las coordenadas x:4 y:4
+[DEBUG] 01:08:56:624 log/(17806:17807): Se mueve el entredor id:0 a las coordenadas x:4 y:5
+[DEBUG] 01:08:57:626 log/(17806:17807): Se mueve el entredor id:0 a las coordenadas x:4 y:6
+[DEBUG] 01:08:58:629 log/(17806:17807): Se mueve el entredor id:0 a las coordenadas x:4 y:7
+[DEBUG] 01:08:58:632 log/(17806:17807): El entrenador id:0 intenta atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 01:08:58:635 log/(17806:17807): El entrenador id:0 logro atapar al pokemon Squirtle en la posicion x:4 y:7
+[DEBUG] 01:09:03:919 log/(17806:17816): Inicio del algoritmo de deteccion de deadlock
+[DEBUG] 01:09:03:996 log/(17806:17816): Operacion de intercambio en x:4 y:7, entre los entrenadores id:0 y id:1
+[DEBUG] 01:09:09:81 log/(17806:17816): Finaliza el algoritmo de deteccion de deadlock con exito
