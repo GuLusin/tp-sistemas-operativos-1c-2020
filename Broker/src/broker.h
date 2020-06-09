@@ -13,29 +13,41 @@
 #include <pthread.h>
 #include <semaphore.h>
 
+#define CANTIDAD_COLAS 6
 
 pthread_mutex_t mutex_recibir;
 pthread_mutex_t mutex_enviar;
+
+/*
 pthread_mutex_t mutex_cola_new;
 pthread_mutex_t mutex_cola_get;
 pthread_mutex_t mutex_cola_catch;
 pthread_mutex_t mutex_cola_localized;
 pthread_mutex_t mutex_cola_caught;
 pthread_mutex_t mutex_cola_appeared;
+*/
 
+pthread_mutex_t* mutex_cola_suscriptores;
 
 t_log* logger;
 t_config* config;
 int socket_broker;
 
+typedef struct{
+	int id_team;
+	int socket_cliente;
+}t_suscriptor;
 
+t_list** suscriptores;
+
+/*
 t_list* sockets_cola_new; // todo cambiar a cola id_teams
 t_list* sockets_cola_get;
 t_list* sockets_cola_catch;
 t_list* sockets_cola_localized;
 t_list* sockets_cola_caught;
 t_list* sockets_cola_appeared;
-
+*/
 
 int id_mensajes_globales;
 
@@ -64,7 +76,6 @@ typedef struct{
 	int cola_code;
 	int id_correlativo;
 	t_list* suscriptores_confirmados;
-	// todo agregar id Team al team, para poder utilizar suscriptores_confirmados  se manda como id del mensaje en la suscripcion
 }t_partition;
 
 typedef struct{
@@ -72,7 +83,6 @@ typedef struct{
 	int size;
 }t_free_partition;
 
-#define CANTIDAD_COLAS 6
 int TAMANO_MEMORIA;
 algoritmo_particion_libre APL;
 algoritmo_reemplazo AR;
@@ -85,11 +95,18 @@ adm_cola* administracion_colas; // ARREGLO DE LAS 6 COLAS QUE EL BROKER ADMINIST
 void* mem_alloc; //ESTE PUNTERO ES GLOBAL Y UNICO, NO SE TOCA NI MODIFICA. ES EL PRINCIPIO DE LA CACHE.
 
 
+
+void asignar_id_correlativo_a_particion(t_partition* particion,t_mensaje* mensaje);
+void cachear_mensaje(t_mensaje* mensaje_aux);
 int puntero_cmp(void* un_puntero, void* otro_puntero);
 bool particiones_libres_contiguas(t_free_partition* particion1,t_free_partition* particion2);
 bool es_suscriptor_confirmado(t_list* lista,int socket_cliente);
 t_mensaje* get_mensaje_cacheado(int cola_code, int index);
 t_mensaje* leer_cache(void* stream);
+
+t_suscriptor* crear_suscriptor(int id, int socket_cliente);
+char* cola_string(int cola);
+t_partition* encontrar_particion(int id,int cola,int* posicion);
 #endif /* BROKER_H */
 
 

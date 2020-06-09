@@ -28,44 +28,31 @@ bool id_validation(int socket_cliente) {
 //./broker
 
 void notificar_mensaje_cacheados(int cola, int socket_cliente){
-	//printf("cola:%d | socket:%d\n", cola,socket_cliente);
-	//leer cada particion de la cola correspondiente
-	//por cada particion ver si no es un suscriptor confirmado
-	//si es confirmado, pasa a la siguiente particion
-	//si no es confirmado, get_mensaje_cacheado y le envia el mensaje al socket_cliente
-	printf("notifica mensajes cacheados\n");
 	int i=-1;
-
 	void enviar_mensaje_condicional(void* stream){
 		i++;
 		t_partition* particion = (t_partition*)stream;
-		printf("socket_cliente:%d | i:%d\n", socket_cliente,i);
-		printf("condicion:%d\n",!es_suscriptor_confirmado(particion->suscriptores_confirmados,socket_cliente));
-
 		if(!es_suscriptor_confirmado(particion->suscriptores_confirmados,socket_cliente)){
 			t_mensaje* mensaje_aux;
-			//printf("envia mensaje a socket:%d\n", socket_cliente);
 			mensaje_aux = get_mensaje_cacheado(cola,i);
-			puts("printea mensaje\n");
-			printear_mensaje(mensaje_aux);
-			//sleep(2);
 			pthread_mutex_lock(&mutex_enviar);
 			enviar_mensaje(socket_cliente,mensaje_aux);
 			pthread_mutex_unlock(&mutex_enviar);
-
 			pthread_mutex_lock(&mutex_recibir);
 			check_ack(socket_cliente,ACK);
 			pthread_mutex_unlock(&mutex_recibir);
 		}
 	}
-
-	printf("list_size:%d\n",list_size(administracion_colas[cola].particiones));
 	list_iterate(administracion_colas[cola].particiones,enviar_mensaje_condicional);
-	puts("sale");
 }
 
-void manejar_subscripcion(int cola,int socket_cliente){
+void manejar_subscripcion(int cola,t_suscriptor* suscriptor){
 
+	pthread_mutex_lock(&mutex_cola_suscriptores[cola]);
+	list_add(suscriptores[cola],suscriptor);
+	pthread_mutex_unlock(&mutex_cola_suscriptores[cola]);
+
+	/*
 	switch(cola){
 		case COLA_APPEARED_POKEMON:
 			pthread_mutex_lock(&mutex_cola_appeared);
@@ -98,19 +85,14 @@ void manejar_subscripcion(int cola,int socket_cliente){
 			pthread_mutex_unlock(&mutex_cola_new);
 			break;
 	}
+	*/
 	puts("Mensaje recibido con exito!");
 	pthread_mutex_lock(&mutex_enviar);
-	send_ack(socket_cliente,ACK);
+	send_ack(suscriptor->socket_cliente,ACK);
 	pthread_mutex_unlock(&mutex_enviar);
 	puts("Aviso de retorno con exito!");
-
-
-	notificar_mensaje_cacheados(cola,socket_cliente);
-	//notifica si tiene algun mensaje cacheado no recibido de la cola correspondiente
-
-	//id_validation(socket_cliente);
+	notificar_mensaje_cacheados(cola,suscriptor->socket_cliente);
 	return;
-
 }
 
 bool manejar_mensaje(t_mensaje* mensaje){
@@ -172,8 +154,8 @@ void recibir_mensaje(int *socket_cliente){
 		int cola;
 		recv(*socket_cliente, &(cola),size_contenido_mensaje, MSG_WAITALL);
 		printf("cola:%d\n", cola);
-		manejar_subscripcion(cola, *socket_cliente);
-		//send_ack(socket_cliente);
+		int socket_suscriptor = *socket_cliente;
+		manejar_subscripcion(cola, crear_suscriptor(id,socket_suscriptor));
 		return;
 	}
 
@@ -196,69 +178,66 @@ void recibir_mensaje(int *socket_cliente){
 
 void recibir_cliente(int *socket_servidor){
 	while(1){
-
 		esperar_cliente(*socket_servidor,recibir_mensaje);
 	}
 }
 
-void remover_socket(t_list* lista, int un_socket){
-	int i=-1;
-	bool es_igual(void* otro_socket){
-		i++;
-		return un_socket==(int)otro_socket;
+bool es_suscriptor_confirmado(t_list* suscriptores_confirmados,int socket_cliente){//todo tener en cuenta que si son id TEAM hay que cambiarlo a id
+	puts("entra a suscr confir");
+	bool pertenece(void* stream){
+		int suscriptor=(int)stream;
+		return suscriptor == socket_cliente;
 	}
-	list_find(lista, (void*)es_igual);
-	printf("i:%d\n",i);
-	int socket_desechado = list_remove(lista, i);
-	printf("socket_desechado:%d\n", socket_desechado);
-	close(socket_desechado);
+
+	return list_any_satisfy(suscriptores_confirmados,pertenece);
+	//todo arreglar a que funcione como deberia
+
+}
+
+void confirmar_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje){
+	printf("confirmar\n");
+	int posicion;
+	t_partition* particion = encontrar_particion(mensaje->id,mensaje->codigo_operacion,&posicion);
+	list_add(particion->suscriptores_confirmados,suscriptor->id_team);
+	printf("sale confirmar\n");
+	//agregar el id_team a esa particion
+}
+
+void remover_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje){
+	printf("remover\n");
+	int i=-1;
+	bool es_suscriptor(void* stream){
+		i++;
+		t_suscriptor* suscriptor_lista = stream;
+		return suscriptor->id_team==suscriptor_lista->id_team;
+	}
+	list_find(suscriptores[mensaje->codigo_operacion], remover_suscriptor);
+	list_remove(suscriptores[mensaje->codigo_operacion],i);
+	close(suscriptor->socket_cliente);
 }
 
 void notificar_mensaje(t_mensaje* mensaje){
-	bool r;
-	int *n;
-	int num;
-	switch(mensaje->codigo_operacion){
-		case APPEARED_POKEMON:;
-			void enviar_appeared(void* socket_cola){
-				num = socket_cola;
-				//num = *n;
-				printf("SOCKET: %d",num);
-				puts("MENSAJE");
-				enviar_mensaje((int)socket_cola, mensaje);
-				puts("CHECK");
-				r = check_ack((int)socket_cola, ACK);
-				if(r){
-					puts("todo bien");
-				}else{
-					puts("envio fallo");
-					remover_socket(sockets_cola_appeared,(int)socket_cola);
-				}
-			}
-			list_iterate(sockets_cola_appeared,enviar_appeared);
-			break;
-		case LOCALIZED_POKEMON:;
-			void enviar_localized(void* socket_cola){
-				enviar_mensaje((int)socket_cola, mensaje);
-				r = check_ack((int)socket_cola, ACK);
-				if(r){
-					puts("todo bien");
-				}else{
-					puts("envio fallo");
-					remover_socket(sockets_cola_localized,(int)socket_cola);
-				}
-		}
-		list_iterate(sockets_cola_localized,enviar_localized);
-			break;
-	}
 
+
+	void notificar_suscriptores(void* stream){
+		t_suscriptor* suscriptor = stream;
+		enviar_mensaje(suscriptor->socket_cliente,mensaje);
+		if(check_ack(suscriptor->socket_cliente, ACK))
+			confirmar_suscriptor(suscriptor,mensaje);
+		else
+			remover_suscriptor(suscriptor,mensaje);
+	}
+	printf("cachear_mensaje\n");
+	cachear_mensaje(mensaje);
+	list_iterate(suscriptores[mensaje->codigo_operacion],notificar_suscriptores);
 }
+
 
 void enviar_appeared_pokemon(t_pokemon* pokemon){
 	puts("envia appeared");
 	int id_correlativo = 455;
 	t_mensaje* mensaje = crear_mensaje(5, APPEARED_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,id_correlativo);
-	int socket_aux = (int)list_get(sockets_cola_appeared,0);
+	int socket_aux = (int)list_get(suscriptores[APPEARED_POKEMON],0);
 	printear_mensaje(mensaje);
 	enviar_mensaje(socket_aux,mensaje);
 	printf("Se envio el mensaje al socket:%d\n", socket_aux);
@@ -266,21 +245,25 @@ void enviar_appeared_pokemon(t_pokemon* pokemon){
 	puts("ACK con exito\n");
 }
 
-void printear_lista(t_list* lista){
-	void printear_elemento(void* elem){
-		printf("%d,",(int)elem);
+void printear_lista_suscriptores(t_list* lista){
+	void printear_suscriptor(void* stream){
+		t_suscriptor* suscriptor = stream;
+		printf("|ID:%d,SOCKET:%d|\n",suscriptor->id_team,suscriptor->socket_cliente);
 	}
-	list_iterate(lista,printear_elemento);
+	puts("asd");
+	list_iterate(lista,printear_suscriptor);
 }
 
 void printear_estado(){
-	printf("sockets_cola_localized:");
-	printear_lista(sockets_cola_localized);
-	printf("\nsockets_cola_caught:");
-	printear_lista(sockets_cola_caught);
-	printf("\nsockets_cola_appeared:");
-	printear_lista(sockets_cola_appeared);
-	printf("\n");
+	for(int i=0;i<CANTIDAD_COLAS;i++){
+		printf("%s\n",cola_string(i));
+		printear_lista_suscriptores(suscriptores[i]);
+	}
+}
+
+void descachear_particiones(void* stream){
+	t_partition* particion = stream;
+	descachear_mensaje(particion->msg_id,particion->cola_code);
 }
 
 void envio_mensaje(){
@@ -406,18 +389,50 @@ void envio_mensaje(){
 
 				break;
 			case 'd':
-				/*for(int i=0;i<CANTIDAD_COLAS;i++){
+				for(int i=0;i<CANTIDAD_COLAS;i++){
 					mensaje_aux = get_mensaje_cacheado(i,0);
 					printear_mensaje(mensaje_aux);
-				}*/
-				mensaje_aux = get_mensaje_cacheado(LOCALIZED_POKEMON,0);
-				printear_mensaje(mensaje_aux);
+				}
+				break;
+			case 'h':
+				for(int i=0;i<CANTIDAD_COLAS;i++)
+					list_iterate(administracion_colas[i].particiones,descachear_particiones);
+				break;
+			case '0':
+				descachear_particion(0,NEW_POKEMON);
+				break;
+			case '1':
+				descachear_particion(0,GET_POKEMON);
+				break;
+			case '2':
+				descachear_particion(0,CATCH_POKEMON);
+				break;
+			case '3':
+				descachear_particion(0,CAUGHT_POKEMON);
+				break;
+			case '4':
+				descachear_particion(0,LOCALIZED_POKEMON);
+				break;
+			case '5':
+				descachear_particion(0,APPEARED_POKEMON);
 				break;
 			default:
 				break;
 		}
 	}
 }
+
+//=============================SUSCRIPTORES ============================
+
+t_suscriptor* crear_suscriptor(int id, int socket_cliente){
+	t_suscriptor* suscriptor = malloc(sizeof(t_suscriptor));
+	suscriptor->id_team=id;
+	suscriptor->socket_cliente=socket_cliente;
+	return suscriptor;
+}
+
+
+
 //=========================PARTICIONES DINAMICAS==================================
 
 //------------------------------------MEMORY SERIALIZATION MENSAJE-----------------------
@@ -473,7 +488,7 @@ void* memser_get_pokemon(t_get_pokemon get_pokemon, int size){
 	return magic;
 }
 
-void* memser_appeared_pokemon(t_appeared_pokemon appeared_pokemon, int size){//todo
+void* memser_appeared_pokemon(t_appeared_pokemon appeared_pokemon, int size){
 	void* magic = malloc(size);
 	int offset = 0;
 	int str_len = strlen(appeared_pokemon.pokemon->nombre);
@@ -486,11 +501,11 @@ void* memser_appeared_pokemon(t_appeared_pokemon appeared_pokemon, int size){//t
 	offset += sizeof(uint32_t);
 	memcpy(magic+offset, &appeared_pokemon.pokemon->pos_y, sizeof(uint32_t));
 	offset += sizeof(uint32_t);
-
+	printf("sale de memser appeared");
 	return magic;
 }
 
-void* memser_new_pokemon(t_new_pokemon new_pokemon, int size){//todo
+void* memser_new_pokemon(t_new_pokemon new_pokemon, int size){
 	void* magic = malloc(size);
 	int offset = 0;
 	int str_len = strlen(new_pokemon.pokemon->nombre);
@@ -508,7 +523,7 @@ void* memser_new_pokemon(t_new_pokemon new_pokemon, int size){//todo
 	return magic;
 }
 
-void* memser_catch_pokemon(t_catch_pokemon catch_pokemon, int size){//todo
+void* memser_catch_pokemon(t_catch_pokemon catch_pokemon, int size){
 	void* magic = malloc(size);
 	int offset = 0;
 	int str_len = strlen(catch_pokemon.pokemon->nombre);
@@ -524,14 +539,14 @@ void* memser_catch_pokemon(t_catch_pokemon catch_pokemon, int size){//todo
 	return magic;
 }
 
-void* memser_caught_pokemon(t_caught_pokemon caught_pokemon, int size){//todo
+void* memser_caught_pokemon(t_caught_pokemon caught_pokemon, int size){
 	void* magic = malloc(size);
 	memcpy(magic, &caught_pokemon.caught_confirmation, sizeof(uint32_t));
 
 	return magic;
 }
 
-void* memser_localized_pokemon(t_localized_pokemon localized_pokemon, int size){//todo
+void* memser_localized_pokemon(t_localized_pokemon localized_pokemon, int size){
 	void* magic = malloc(size);
 	int offset = 0, cant_coords=0;
 	int str_len = strlen(localized_pokemon.pokemon_especie->nombre_especie);
@@ -632,7 +647,7 @@ t_get_pokemon memdes_get_pokemon(void* stream){
 	return get_pokemon;
 }
 
-t_appeared_pokemon memdes_appeared_pokemon(void* stream){// todo arreglar nombre pikachu
+t_appeared_pokemon memdes_appeared_pokemon(void* stream){
 	t_appeared_pokemon appeared_pokemon;
 	int size_str,offset=0,pos_x,pos_y;
 	char* str;
@@ -644,7 +659,6 @@ t_appeared_pokemon memdes_appeared_pokemon(void* stream){// todo arreglar nombre
 	offset += size_str;
 	str[size_str]='\0';
 
-	printf("%s\naaaaaaa\n",str);
 	memcpy(&pos_x,stream+offset,sizeof(uint32_t));
 	offset += sizeof(uint32_t);
 	memcpy(&pos_y,stream+offset,sizeof(uint32_t));
@@ -915,9 +929,10 @@ void normalizar_particiones_libres(){
  */
 
 void* pmalloc(int size){
+	int i=0;
 	void* aux=NULL;
 	switch(APL){
-		case FF: // SON NECESARIOS LOS MUTEX?? todo
+		case FF:
 			pthread_mutex_lock(&mutex_particiones_libres);
 			aux = first_fit(size);
 			pthread_mutex_unlock(&mutex_particiones_libres);
@@ -1003,11 +1018,11 @@ t_partition* crear_particion(t_mensaje* mensaje){//todo aca vendria validacion d
 	void* magic = memser_mensaje(mensaje, &size);
 
 	t_partition* particion = malloc(sizeof(t_partition));
+	particion->inicio=pmalloc(size);
 	particion->msg_id=mensaje->id;
 	particion->cola_code=mensaje->codigo_operacion;
-	particion->inicio=pmalloc(size);
 	asignar_id_correlativo_a_particion(particion,mensaje);
-	printf("inicio:%d\nstream:%d\nsize:%d\n", particion->inicio,magic,size);
+	printf("inicio:%d\nstream:%d\nsize:%d\n", particion->inicio,(int)magic,size);
 	memcpy(particion->inicio,magic,size);
 	particion->size = size;
 	particion->suscriptores_confirmados = list_create();
@@ -1030,23 +1045,6 @@ void agregar_particion(adm_cola adm_cola, t_partition* particion){
 void sacar_particion(adm_cola adm_cola, int index){//SE USA ASI??
 	printf("libero particion en indice:%d\n",index);
 	liberar_particion(list_remove(adm_cola.particiones,index));
-}
-
-bool es_suscriptor_confirmado(t_list* suscriptores_confirmados,int socket_cliente){//todo tener en cuenta que si son id TEAM hay que cambiarlo a id
-	puts("entra a suscr confir");
-	bool pertenece(void* stream){
-		puts("es igual");
-		int socket_lista = (int)stream; //todo chequear si esta bien el casteo
-		return socket_lista == socket_cliente;
-	}
-
-	return list_any_satisfy(suscriptores_confirmados,pertenece);
-	//todo arreglar a que funcione como deberia
-
-}
-
-void confirmar_suscriptor(t_partition* particion, int socket_suscriptor){ ///Deben ser sockets o algun ID para cada TEAM?? todo
-	list_add(particion->suscriptores_confirmados,(void*)socket_suscriptor);
 }
 
 void asignar_id_correlativo_a_particion(t_partition* particion,t_mensaje* mensaje){
@@ -1093,90 +1091,67 @@ void asignar_id_correlativo_a_mensaje(t_mensaje* mensaje, t_partition* particion
 }
 
 t_mensaje* leer_particion_cache(t_partition* particion){
-	/*t_mensaje* mensaje = malloc(sizeof(t_mensaje));
-	mensaje->codigo_operacion = particion->cola_code;
-	mensaje->id = particion->msg_id;
-	*/
-
-	//puts("memdes");
 	t_mensaje* mensaje = memdes_mensaje(particion);
-
 	asignar_id_correlativo_a_mensaje(mensaje, particion);
-
-
-	//printear_mensaje(mensaje);
 	return mensaje;
 }
 
 void cachear_mensaje(t_mensaje* mensaje){
-	printear_mensaje(mensaje);
 	t_partition* particion = crear_particion(mensaje);
-	puts("se crea particion");
 	agregar_particion(administracion_colas[mensaje->codigo_operacion],particion);
-	//printf("inicio:%d | size:%d\n", (int)particion->inicio, particion->size);
-	puts("agrega particion");
 }
 
 t_mensaje* get_mensaje_cacheado(int cola_code, int index){
-	//printf("get mensaje cacheado\ncola_code:%d\nindex:%d\n",cola_code,index);
 	t_partition* particion = list_get(administracion_colas[cola_code].particiones, index);
-	printf("particion:%d\n",index);
-	printf("Inicio:%d\n",(int)particion->inicio);
-	printf("size:%d\n",particion->size);
-	printf("cola_code:%d\n",particion->cola_code);
-	printf("id_correlativo:%d\n",particion->id_correlativo);
-	printf("trae particion\n");
-	t_mensaje* mensaje = leer_particion_cache(particion);//todo habria que agregar el id correlativo a la particion
+	t_mensaje* mensaje = leer_particion_cache(particion);
 	return mensaje;
 }
 
-void descachear_mensaje(int id){//todo se pasa el id del mensaje asociado y lo remueve de la adm_cola
-	int i=-1,j=0;//SE PODRIA IMPLEMENTAR QUE SAQUE SEGUN ID MENSAJE
+/*
+ * encontrar_particion le paso un id de mensaje a buscar, la cola a la cual pertenece,
+ * devuelve la particion y la posicion en la cual esta ubicada
+ *
+ */
 
-	bool es_igual(void* otra_particion){
-		t_partition* aux_part = otra_particion;
+t_partition* encontrar_particion(int msg_id,int cola,int* posicion){
+	int i=-1;
+	bool corresponde_a_id(void* stream){
 		i++;
-		return aux_part->msg_id==id;
+		t_partition* particion_lista = stream;
+		return particion_lista->msg_id == msg_id;
 	}
-	while(true){
-		t_partition* particion = list_find(administracion_colas[j].particiones, (void*)es_igual);
-		if(particion)
-			break;
-		else
-			j++;
-	}
+	t_partition* particion = list_find(administracion_colas[cola].particiones,corresponde_a_id);
+	if(posicion!=NULL)
+		*posicion=i;
+	return particion;
 }
 
-void inicializar_memoria(){
-	mem_alloc = malloc(TAMANO_MEMORIA);
-	void* aux = mem_alloc;
-	int var = 0;
-
-	for(int i=0;i<TAMANO_MEMORIA;i++)//todo es necesario???
-		memcpy(aux+i,&var,1);
-
-
-	pthread_mutex_init(&mutex_particiones_libres, NULL);
-	administracion_colas=malloc(sizeof(adm_cola)*5);
-	for(int i=0;i<CANTIDAD_COLAS;i++){
-		administracion_colas[i] = crear_adm_cola();
-	}
-	particiones_libres = list_create();
-	list_add(particiones_libres, crear_particion_libre(mem_alloc,TAMANO_MEMORIA));
+void descachear_particion(int index,int cola){
+	sacar_particion(administracion_colas[cola],index);
 }
+
+void descachear_mensaje(int msg_id,int cola){
+	//SE PODRIA IMPLEMENTAR QUE SAQUE SEGUN ID MENSAJE
+	int posicion;
+	encontrar_particion(msg_id,cola,&posicion);
+	sacar_particion(administracion_colas[cola],posicion);
+}
+
+//============================ INTERPRETADORES ===================================
 
 algoritmo_particion_libre interpretar_APL(char* word){
 	if(!strcmp(word,"FF")) return FF;
 	if(!strcmp(word,"BF")) return BF;
 }
 
-char* cola_string(cola_code cola){
+char* cola_string(int cola){
 	if(cola==COLA_APPEARED_POKEMON) return "COLA_APPEARED_POKEMON";
 	if(cola==COLA_GET_POKEMON) return "COLA_GET_POKEMON";
 	if(cola==COLA_CAUGHT_POKEMON) return "COLA_CAUGHT_POKEMON";
 	if(cola==COLA_CATCH_POKEMON) return "COLA_CATCH_POKEMON";
 	if(cola==COLA_NEW_POKEMON) return "COLA_NEW_POKEMON";
 	if(cola==COLA_LOCALIZED_POKEMON) return "COLA_LOCALIZED_POKEMON";
+	return NULL;
 }
 
 void printear_estado_memoria(){
@@ -1185,23 +1160,23 @@ void printear_estado_memoria(){
 	void printear_particion_libre(void* stream){
 		i++;
 		t_free_partition* particion = stream;
-		printf("Particion %d | Inicio:%d | Tamaño:%d \n", i,particion->inicio, particion->size);
+		printf("Particion %d | Inicio:%d | Tamaño:%d \n", i,(int)particion->inicio, particion->size);
 	}
 
-	void printear_suscriptor(void* socket_suscriptor){
-		printf("%d|",(int)socket_suscriptor);
+	void printear_suscriptor(void* id_suscriptor){
+		printf("%d|",(int)id_suscriptor);
 	}
 
 	void printear_particion(void* stream){
 		i++;
 		t_partition* particion = stream;
-		printf("Particion %d | Inicio:%d | Tamaño:%d | sockets confirmados [", i,particion->inicio, particion->size);
+		printf("Particion %d | Inicio:%d | Tamaño:%d | sockets confirmados [", i,(int)particion->inicio, particion->size);
 		list_iterate(particion->suscriptores_confirmados,printear_suscriptor);
 		printf("]\n");
 	}
 
 
-	printf("mem_alloc:%d\nParticiones Ocupadas\n-------------------------\n",mem_alloc);
+	printf("mem_alloc:%d\nParticiones Ocupadas\n-------------------------\n",(int)mem_alloc);
 
 	for(int j=0; j<CANTIDAD_COLAS;j++){
 		printf("Particiones Cola %s\n", cola_string(j));
@@ -1217,6 +1192,26 @@ void printear_estado_memoria(){
 
 }
 
+//============================== INICIALIZACION ==============================
+
+void inicializar_memoria(){
+	mem_alloc = malloc(TAMANO_MEMORIA);
+	void* aux = mem_alloc;
+	int var = 0;
+
+	for(int i=0;i<TAMANO_MEMORIA;i++)
+		memcpy(aux+i,&var,1);
+
+
+	pthread_mutex_init(&mutex_particiones_libres, NULL);
+	administracion_colas=malloc(sizeof(adm_cola)*6);
+	for(int i=0;i<CANTIDAD_COLAS;i++){
+		administracion_colas[i] = crear_adm_cola();
+	}
+	particiones_libres = list_create();
+	list_add(particiones_libres, crear_particion_libre(mem_alloc,TAMANO_MEMORIA));
+}
+
 void inicializar_broker(){
 
 
@@ -1228,22 +1223,17 @@ void inicializar_broker(){
 	pthread_t pthread_atender_cliente;
 	pthread_mutex_init(&mutex_recibir, NULL);
 	pthread_mutex_init(&mutex_enviar, NULL);
-	pthread_mutex_init(&mutex_cola_new, NULL);
-	pthread_mutex_init(&mutex_cola_get, NULL);
-	pthread_mutex_init(&mutex_cola_catch, NULL);
-	pthread_mutex_init(&mutex_cola_localized, NULL);
-	pthread_mutex_init(&mutex_cola_caught, NULL);
-	pthread_mutex_init(&mutex_cola_appeared, NULL);
+
+	mutex_cola_suscriptores = malloc(sizeof(pthread_mutex_t)*CANTIDAD_COLAS);
+	for(int i=0;i<CANTIDAD_COLAS;i++)
+		pthread_mutex_init(&mutex_cola_suscriptores[i], NULL);
 
 	logger = log_create("../broker.log", "log", true, LOG_LEVEL_DEBUG);
 	config = config_create("../config");
 
-	sockets_cola_new = list_create();
-	sockets_cola_get = list_create();
-	sockets_cola_catch = list_create();
-	sockets_cola_localized = list_create();
-	sockets_cola_caught = list_create();
-	sockets_cola_appeared = list_create();
+	suscriptores = malloc(sizeof(t_list)*CANTIDAD_COLAS);
+	for(int i=0;i<CANTIDAD_COLAS;i++)
+		suscriptores[i] = list_create();
 
 	ip = config_get_string_value(config,"IP_BROKER");
 	log_debug(logger,ip); //pido y logueo ip
@@ -1287,15 +1277,6 @@ void inicializar_broker(){
 
 	inicializar_memoria();
 	printear_estado_memoria();
-	//t_pokemon* pokemon = crear_pokemon("Bulbasaur",9,5);
-	//t_mensaje* mensaje_aux = crear_mensaje(5, APPEARED_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,455);
-
-	//printear_mensaje(mensaje_aux);
-	//cachear_mensaje(mensaje_aux);
-	//printf("codigo:%d\n",mensaje_aux->codigo_operacion);
-	//printear_estado_memoria();
-	//t_mensaje* mensaje_auxx = get_mensaje_cacheado(APPEARED_POKEMON,0);
-	//printear_mensaje(mensaje_auxx);
 	/*
 	 * cachear_mensaje para guardarlo en cache
 	 * get_mensaje_cacheado para leer mensaje en cache
@@ -1317,7 +1298,7 @@ int main(void) {
 	sem_t esperar;
 	sem_init(&esperar, 0,0);
 	sem_wait(&esperar);
-	printf("cola appeared: %d\ncola caught: %d\ncola localized: %d\n", (int)list_get(sockets_cola_appeared,0),(int)list_get(sockets_cola_caught,0),(int)list_get(sockets_cola_localized,0));
+	//printf("cola appeared: %d\ncola caught: %d\ncola localized: %d\n", (int)list_get(sockets_cola_appeared,0),(int)list_get(sockets_cola_caught,0),(int)list_get(sockets_cola_localized,0));
 	close(socket_broker);
 
 
