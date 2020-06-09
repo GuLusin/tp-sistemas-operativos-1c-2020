@@ -138,13 +138,15 @@ void printear_pokemon(t_pokemon* pokemon){
 void logear_llegada_mensaje(t_log* logger, t_mensaje* mensaje){
 	char* tipo;
 	char* info;
-	char* aux = string_new();
+	char* aux; //STRING_NEW???
 
 	switch(mensaje -> codigo_operacion){
 		case APPEARED_POKEMON:
 			tipo = malloc(strlen("APPEARED_POKEMON ")+1);
 			strcpy(tipo,"APPEARED_POKEMON ");
 			info = crear_pokestring(mensaje->contenido.appeared_pokemon.pokemon);
+			//free(mensaje->contenido.appeared_pokemon.pokemon->nombre);
+		    //free(mensaje->contenido.appeared_pokemon.pokemon);
 			break;
 		case CAUGHT_POKEMON:
 			tipo = malloc(strlen("CAUGHT_POKEMON ")+1);
@@ -155,12 +157,15 @@ void logear_llegada_mensaje(t_log* logger, t_mensaje* mensaje){
 				aux = string_from_format("FALSE");
 
 			info = string_from_format("id correlativo: %d | se logro atrapar: %s",mensaje->contenido.caught_pokemon.id_correlativo,aux);
+			free(aux);
 			break;
 		case LOCALIZED_POKEMON:
 			tipo = malloc(strlen("LOCALIZED_POKEMON ")+1);
 			strcpy(tipo,"LOCALIZED_POKEMON ");
 
 			info = string_from_format("id correlativo: %d | pokemon_especie: %s",mensaje->contenido.localized_pokemon.id_correlativo,especie_pokemon_a_string(mensaje->contenido.localized_pokemon.pokemon_especie));
+			//free(mensaje->contenido.localized_pokemon.pokemon_especie->nombre_especie);
+			//free(mensaje->contenido.localized_pokemon.pokemon_especie);
 			break;
 		default:
 			puts("la funcion logear_llegada_mensaje no soporta mensajes de ese tipo todavia :$");
@@ -170,7 +175,7 @@ void logear_llegada_mensaje(t_log* logger, t_mensaje* mensaje){
 	log_debug(logger,"Llegada mensaje tipo: %s, %s",tipo,info);
 	free(tipo);
 	free(info);
-	free(aux);
+	//free(aux);
 }
 
 
@@ -528,6 +533,8 @@ t_pokemon* string_a_pokemon(char* pokestring){
 	char** params = string_split(pokestring,",");
 	char** posiciones = string_split(params[1],"|");
 	t_pokemon* pokemon = crear_pokemon(params[0],atoi(posiciones[0]),atoi(posiciones[1]));
+	//free(params);
+	//free(posiciones);
 	return pokemon;
 }
 

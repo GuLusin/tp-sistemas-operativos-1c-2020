@@ -70,8 +70,8 @@ int sendall(int s, void *buf, int len)
         bytesleft -= n;
     }
 
+    free(buf);
     //len = total; // devuelve el numero total de
-
     return n==-1 ? 0:1; // return 0 si falla, 1 si tiene exito
 }
 

@@ -245,7 +245,7 @@ void intercambiar_pokemones(t_entrenador* un_entrenador, t_entrenador* otro_entr
 
 	}
 
-
+	list_destroy(trade);
 	list_destroy(pok_des);
 	list_destroy(pok_dis);
 	list_destroy(pok_devolucion);
@@ -324,6 +324,7 @@ void deadlock(){
 
 		leer_lista_entrenadores(entrenadores);
 	}
+	free(pok_mentira);
     list_destroy(entrenadores_bloqueados);
 	log_debug(logger,"Finaliza el algoritmo de deteccion de deadlock con exito");
 
@@ -377,7 +378,7 @@ bool llego_al_objetivo(t_entrenador *entrenador){
 
 void atrapar_pokemon(int id){
 	t_entrenador *entrenador = list_get(entrenadores,id);
-	char* nombre = malloc(strlen(entrenador->objetivo_temporal->nombre));
+    char* nombre = malloc(strlen(entrenador->objetivo_temporal->nombre));
 	strcpy(nombre,entrenador->objetivo_temporal->nombre);
 
 	//enviar_catch();
@@ -462,6 +463,7 @@ void entrenador(int id){
 		printf("Pokemon numero: %d %s\n",i+1,(char *) list_get(entrenador->pokemones,i));
 	}
 	printf("---------------------------------\n");
+	free(entrenador);
 }
 
 void crear_hilos_entrenadores(){ //creamos todos los entrenadores, estos se quedan esperando la habilitacion del algoritmo para avanzar
@@ -820,7 +822,7 @@ void pasar_a_ready_al_pokemon_adecuado(t_list* pokemons, int interacion){
 
 	if (ya_no_me_sirve(aux)){
 		pasar_a_ready_al_pokemon_adecuado(pokemons,interacion+1);
-		free(remover_pokemon(list_pok_new, aux));
+		(remover_pokemon(list_pok_new, aux));
 		return;
 	}
 
@@ -892,23 +894,33 @@ t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos,
 	entrenador->posicion_x = atoi(auxiliar[0]);
 	entrenador->posicion_y = atoi(auxiliar[1]);
 
-	auxiliar = string_split(pokemones,"|"); //ultima posicion tiene null
+	//free(auxiliar);
+	free(auxiliar[0]);
+	free(auxiliar[1]);
+    //free(auxiliar);
+
+	char **auxiliar3 = string_split(pokemones,"|"); //ultima posicion tiene null
 
 	entrenador->pokemones = list_create();
 
-	while(*auxiliar){
-		list_add(entrenador->pokemones,*auxiliar);
-		auxiliar++;
+	while(*auxiliar3){
+		list_add(entrenador->pokemones,*auxiliar3);
+		auxiliar3++;
 	}
 
-	auxiliar = string_split(objetivos,"|"); //ultima posicion tiene null
+	//free(auxiliar3);
+
+	char **auxiliar2 = string_split(objetivos,"|"); //ultima posicion tiene null
 
 	entrenador->objetivos = list_create();
-	while(*auxiliar){
-		list_add(entrenador->objetivos,*auxiliar);
-		auxiliar++;
+	while(*auxiliar2){
+		list_add(entrenador->objetivos,*auxiliar2);
+		auxiliar2++;
 	}
 
+	//OJO CON LOS CHAR * Q SE PASAN POR PARAMETRO, SE LIBERAN???
+	//puts("ASDSAD");
+	//free(auxiliar2);
 	return entrenador;
 }
 
@@ -927,11 +939,17 @@ void obtener_entrenadores(){
 	while(*lista_de_posiciones){
 		entrenador = crear_entrenador(*lista_de_posiciones, *lista_de_pokemones, *lista_de_objetivos,i);
 		list_add(entrenadores, entrenador);
+		free(*lista_de_posiciones);
+		free(*lista_de_pokemones);
+		free(*lista_de_objetivos);
 		lista_de_objetivos++;
 		lista_de_pokemones++;
 		lista_de_posiciones++;
 		i++;
 	}
+	//free(lista_de_posiciones);
+	//free(lista_de_pokemones);
+	//free(lista_de_objetivos);
 }
 
 
@@ -971,6 +989,7 @@ int subscribirse_a_cola(cola_code cola){
 	mensaje->id=ID_SUSCRIPCION;
 	enviar_mensaje(socket_aux, mensaje);
 	check_ack(socket_aux, ACK);
+	free(mensaje);
 	return socket_aux;
 }
 
@@ -1076,6 +1095,7 @@ bool recibir_mensaje(int un_socket){
 	printear_mensaje(mensaje);
 	manejar_mensaje(mensaje);
 	free(mensaje);
+	free(stream);
 	return true;
 }
 
