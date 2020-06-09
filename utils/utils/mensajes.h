@@ -1,3 +1,4 @@
+
 /*
  * conexiones.h
  *
@@ -20,6 +21,7 @@
 #include <commons/collections/list.h>
 #include <commons/collections/dictionary.h>
 #include <commons/string.h>
+#include <commons/log.h>
 
 #define ID_SUSCRIPCION 999999
 #define ID_DEFAULT 888888
@@ -101,10 +103,9 @@ typedef struct{
 
 //size se envia en la serializacion aunque no este en el struct
 
-
-
 t_mensaje* crear_mensaje(int num, ...);
 int enviar_mensaje(int socket_a_enviar, t_mensaje* mensaje);
+int cant_coordenadas_especie_pokemon(t_pokemon_especie *pokemon_especie);
 void* serializar_subscripcion(cola_code cola);
 cola_code deserializar_subscripcion(void* stream);
 t_mensaje* deserializar_mensaje(int codigo_operacion, void* stream);
@@ -121,11 +122,11 @@ int tamanio_pokemon(t_pokemon* pokemon);
 char* posiciones_a_string(t_dictionary* posiciones);
 char* posicion_string_pokemon(t_pokemon* pokemon);
 
+void logear_llegada_mensaje(t_log* logger, t_mensaje* mensaje);
+char* crear_pokestring(t_pokemon* pokemon);
+char* especie_pokemon_a_string(t_pokemon_especie* pokemon_especie);
 
 
 t_pokemon_especie* deserializar_pokemon_especie(void* string);
 
 #endif /* MENSAJES_H */
-
-
-

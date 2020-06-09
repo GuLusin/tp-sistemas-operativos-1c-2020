@@ -12,7 +12,6 @@
 #include <semaphore.h>
 #include <commons/collections/list.h>
 
-
 typedef struct {
    int id;
    int posicion_x;
@@ -28,13 +27,9 @@ t_config* config;
 t_log* logger;
 
 char *ip_broker,*puerto_broker;
-
 int wait_time;
 
 //---------------------------------- PLANIFICACION -----------------------------------------------
-
-int retardo;
-int largo_lista_conocida;
 
 typedef enum {
 	FIFO,
@@ -43,42 +38,45 @@ typedef enum {
 	SJF_SD,
 } algoritmo_code;
 
+int retardo;
+int largo_lista_conocida;
+
+//-----------------LISTAS
+
 t_list* list_pok_new;
 t_list* list_pok_ready;
+t_list* entrenadores;
+t_list* lista_corto_plazo;
+
+//-----------------DICCIONARIOS
 
 t_dictionary* dic_pok_obj;
 t_dictionary* dic_pok_ready_o_exec;
 t_dictionary* ids_a_esperar;
 
-//sem_t *semaforos_entrenadores; //comienza con el id 0, para q corresponda con el index de cada lista
+//-----------------SEMAFOROS
 
 sem_t *ejecutar_entrenador; //vector
 sem_t *deadlock_entrenadores; //vector
 sem_t sem_deadlock;
 sem_t activar_algoritmo;
 sem_t hayentrenadorlibre;
-pthread_mutex_t send_mutex;
-pthread_mutex_t mutex_recibir;
-pthread_mutex_t list_pok_new_mutex;
-pthread_mutex_t list_pok_ready_mutex;
-pthread_mutex_t mutexPRUEBA;
-
-
-t_list* entrenadores; //new - bloqueado - deadlock?
-t_list* lista_corto_plazo; //lista de entrenadores para moverse
-
-/*
-t_entrenador entrenador_deadlock_1; //mutex para recorrer la lista, hay dos q pasen a deadlock
-t_entrenador entrenador_deadlock_2; //sino cada vez q se atrapa uno se habilita otra iteracion
-*/
-
 sem_t revisar_pokemones_new;
 sem_t hay_pokemones;
 sem_t hay_entrenador_corto_plazo;
 sem_t cumplio_objetivo_global;
 
-//Bool vectorConfirmacionCatch;
+//-----------------MUTEX
 
+pthread_mutex_t send_mutex;
+pthread_mutex_t mutex_recibir;
+pthread_mutex_t list_pok_new_mutex;
+pthread_mutex_t list_pok_ready_mutex;
+pthread_mutex_t mutexPRUEBA;
 pthread_mutex_t mutex_pokemones_recibidos;
+
+//-----------------HILOS
+
+pthread_t *hilo_entrenador;
 
 #endif /* TEAM_H */
