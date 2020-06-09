@@ -98,15 +98,23 @@ void* mem_alloc; //ESTE PUNTERO ES GLOBAL Y UNICO, NO SE TOCA NI MODIFICA. ES EL
 
 void asignar_id_correlativo_a_particion(t_partition* particion,t_mensaje* mensaje);
 void cachear_mensaje(t_mensaje* mensaje_aux);
+void unificar_particiones_libres();
 int puntero_cmp(void* un_puntero, void* otro_puntero);
 bool particiones_libres_contiguas(t_free_partition* particion1,t_free_partition* particion2);
 bool es_suscriptor_confirmado(t_list* lista,int socket_cliente);
 t_mensaje* get_mensaje_cacheado(int cola_code, int index);
 t_mensaje* leer_cache(void* stream);
-
+t_mensaje* leer_particion_cache(t_partition* particion);
 t_suscriptor* crear_suscriptor(int id, int socket_cliente);
 char* cola_string(int cola);
 t_partition* encontrar_particion(int id,int cola,int* posicion);
+t_mensaje* descachear_mensaje(int msg_id,int cola);
+void sacar_particion(int cola, int index);
+
+
+
+
+
 #endif /* BROKER_H */
 
 

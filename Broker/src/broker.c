@@ -52,40 +52,6 @@ void manejar_subscripcion(int cola,t_suscriptor* suscriptor){
 	list_add(suscriptores[cola],suscriptor);
 	pthread_mutex_unlock(&mutex_cola_suscriptores[cola]);
 
-	/*
-	switch(cola){
-		case COLA_APPEARED_POKEMON:
-			pthread_mutex_lock(&mutex_cola_appeared);
-			list_add(sockets_cola_appeared, (void*)socket_cliente);
-			pthread_mutex_unlock(&mutex_cola_appeared);
-			break;
-		case COLA_CAUGHT_POKEMON:
-			pthread_mutex_lock(&mutex_cola_caught);
-			list_add(sockets_cola_caught, (void*)socket_cliente);
-			pthread_mutex_unlock(&mutex_cola_caught);
-			break;
-		case COLA_LOCALIZED_POKEMON:
-			pthread_mutex_lock(&mutex_cola_localized);
-			list_add(sockets_cola_localized, (void*)socket_cliente);
-			pthread_mutex_unlock(&mutex_cola_localized);
-			break;
-		case COLA_CATCH_POKEMON:
-			pthread_mutex_lock(&mutex_cola_catch);
-			list_add(sockets_cola_catch, (void*)socket_cliente);
-			pthread_mutex_unlock(&mutex_cola_catch);
-			break;
-		case COLA_GET_POKEMON:
-			pthread_mutex_lock(&mutex_cola_get);
-			list_add(sockets_cola_get, (void*)socket_cliente);
-			pthread_mutex_unlock(&mutex_cola_get);
-			break;
-		case COLA_NEW_POKEMON:
-			pthread_mutex_lock(&mutex_cola_new);
-			list_add(sockets_cola_new, (void*)socket_cliente);
-			pthread_mutex_unlock(&mutex_cola_new);
-			break;
-	}
-	*/
 	puts("Mensaje recibido con exito!");
 	pthread_mutex_lock(&mutex_enviar);
 	send_ack(suscriptor->socket_cliente,ACK);
@@ -99,16 +65,8 @@ bool manejar_mensaje(t_mensaje* mensaje){
     switch(mensaje->codigo_operacion){
     	case GET_POKEMON:;
     		break;
-
     }
     return true;
-
-
-
-
-
-
-
 }
 
 
@@ -182,11 +140,11 @@ void recibir_cliente(int *socket_servidor){
 	}
 }
 
-bool es_suscriptor_confirmado(t_list* suscriptores_confirmados,int socket_cliente){//todo tener en cuenta que si son id TEAM hay que cambiarlo a id
+bool es_suscriptor_confirmado(t_list* suscriptores_confirmados,int id_team){
 	puts("entra a suscr confir");
 	bool pertenece(void* stream){
-		int suscriptor=(int)stream;
-		return suscriptor == socket_cliente;
+		int id_team_lista=(int)stream;
+		return id_team_lista == id_team;
 	}
 
 	return list_any_satisfy(suscriptores_confirmados,pertenece);
@@ -399,22 +357,22 @@ void envio_mensaje(){
 					list_iterate(administracion_colas[i].particiones,descachear_particiones);
 				break;
 			case '0':
-				descachear_particion(0,NEW_POKEMON);
+				sacar_particion(0,NEW_POKEMON);
 				break;
 			case '1':
-				descachear_particion(0,GET_POKEMON);
+				sacar_particion(0,GET_POKEMON);
 				break;
 			case '2':
-				descachear_particion(0,CATCH_POKEMON);
+				sacar_particion(0,CATCH_POKEMON);
 				break;
 			case '3':
-				descachear_particion(0,CAUGHT_POKEMON);
+				sacar_particion(0,CAUGHT_POKEMON);
 				break;
 			case '4':
-				descachear_particion(0,LOCALIZED_POKEMON);
+				sacar_particion(0,LOCALIZED_POKEMON);
 				break;
 			case '5':
-				descachear_particion(0,APPEARED_POKEMON);
+				sacar_particion(0,APPEARED_POKEMON);
 				break;
 			default:
 				break;
@@ -810,7 +768,7 @@ void* asignar_particion_libre(t_free_partition* particion_libre, int size){
 	void* aux = particion_libre->inicio;
 	particion_libre->inicio += size;
 	particion_libre->size -= size;
-	printf("particion _libre_nueva\n inicio:%d | size:%d\n", particion_libre->inicio,particion_libre->size);
+	printf("particion _libre_nueva\n inicio:%d | size:%d\n", (int)particion_libre->inicio,particion_libre->size);
 	if(particion_libre->size)
 		list_add(particiones_libres,particion_libre);
 	else
@@ -821,14 +779,21 @@ void* asignar_particion_libre(t_free_partition* particion_libre, int size){
 
 void* first_fit(int size){
 	int i = -1;
+	t_free_partition* particion_libre;
 	bool tiene_espacio(void* stream){
 		i++;
 		t_free_partition* particion_libre = stream;
 		printf("r:%d\n",particion_libre->size>=size);
 		return particion_libre->size >= size;
 	}
-	t_free_partition* particion_libre = list_remove_by_condition(particiones_libres,tiene_espacio);
-	printf("PL inicio:%d | size:%d\n", particion_libre->inicio,particion_libre->size);
+	void* aux = list_remove_by_condition(particiones_libres,tiene_espacio);
+	if(!aux)
+		return NULL;
+	else
+		particion_libre = (t_free_partition*)aux;
+	printf("PL inicio:%d | size:%d\n", (int)particion_libre->inicio,particion_libre->size);
+
+	printf("PL:%d\n",(int)particion_libre);
 	return asignar_particion_libre(particion_libre,size);
 }
 
@@ -889,7 +854,6 @@ void* best_fit(int size){
 
 
 void unificar_particiones_libres(){
-
 	void unificar(t_free_partition* particion1, t_free_partition* particion2){
 		particion1->size += particion2->size;
 		free(particion2);
@@ -922,6 +886,53 @@ void normalizar_particiones_libres(){
 	unificar_particiones_libres();
 }
 
+//========================== COMPACTACION =====================================
+
+void compactar_memoria(){//todo ya tengo los mensajes a compactar en mensajes aux y la cache limpia
+	//todo falta ir agregando de a una sobre el mem_alloc y agregarlas a sus correspondientes colas adm
+	void* magic;
+	t_list* mensajes_aux = list_create();
+	void transpaso_a_aux(void* stream){
+		int pos;
+		t_partition* particion = stream;
+		t_mensaje* mensaje = leer_particion_cache(particion);
+		encontrar_particion(particion->msg_id,particion->cola_code,&pos);
+		sacar_particion(particion->cola_code,pos);
+		printear_mensaje(mensaje);
+		list_add(mensajes_aux,mensaje);
+
+	}
+
+	for(int i=0;i<CANTIDAD_COLAS;i++){
+		while(list_size(administracion_colas[i].particiones)){
+
+			transpaso_a_aux(list_get(administracion_colas[i].particiones,0));
+		}
+	}
+	for(int i=0;i<CANTIDAD_COLAS;i++)
+		printf("list_size:%d de cola:%d\n", list_size(administracion_colas[i].particiones),i);
+
+	printf("list_size aux:%d\n",list_size(mensajes_aux));
+
+
+	printear_estado_memoria();
+	sleep(5);
+	unificar_particiones_libres();
+	magic = mem_alloc;
+
+	while(list_size(mensajes_aux)){
+		t_partition* particion = list_remove(mensajes_aux,0);
+
+
+
+
+	}
+	//for(int i=0;i<list_size(particiones_aux);i++)
+
+
+	list_destroy(mensajes_aux);
+}
+
 /*
  * pmalloc
  *
@@ -931,19 +942,31 @@ void normalizar_particiones_libres(){
 void* pmalloc(int size){
 	int i=0;
 	void* aux=NULL;
-	switch(APL){
-		case FF:
-			pthread_mutex_lock(&mutex_particiones_libres);
-			aux = first_fit(size);
-			pthread_mutex_unlock(&mutex_particiones_libres);
-			break;
-		case BF:
-			pthread_mutex_lock(&mutex_particiones_libres);
-			aux = best_fit(size);
-			pthread_mutex_unlock(&mutex_particiones_libres);
-			break;
+	puts("pmalloc\n");
+	while(!aux){
+		puts("while\n");
+		switch(APL){
+			case FF:
+				pthread_mutex_lock(&mutex_particiones_libres);
+				aux = first_fit(size);
+				pthread_mutex_unlock(&mutex_particiones_libres);
+				break;
+			case BF:
+				pthread_mutex_lock(&mutex_particiones_libres);
+				aux = best_fit(size);
+				pthread_mutex_unlock(&mutex_particiones_libres);
+				break;
+		}
+		normalizar_particiones_libres();
+
+		if(aux==NULL){
+			puts("ES NULL\n");
+			compactar_memoria();
+			}
+		puts("sale pmalloc\n");
 	}
-	normalizar_particiones_libres();
+
+
 	return aux;
 }
 
@@ -1016,13 +1039,13 @@ void agregar_particion_libre(t_free_partition* particion_libre){
 t_partition* crear_particion(t_mensaje* mensaje){//todo aca vendria validacion del algoritmo de compactacion y
 	int size;
 	void* magic = memser_mensaje(mensaje, &size);
-
+	puts("crear_particion\n");
 	t_partition* particion = malloc(sizeof(t_partition));
 	particion->inicio=pmalloc(size);
 	particion->msg_id=mensaje->id;
 	particion->cola_code=mensaje->codigo_operacion;
 	asignar_id_correlativo_a_particion(particion,mensaje);
-	printf("inicio:%d\nstream:%d\nsize:%d\n", particion->inicio,(int)magic,size);
+	printf("inicio:%d\nstream:%d\nsize:%d\n", (int)particion->inicio,(int)magic,size);
 	memcpy(particion->inicio,magic,size);
 	particion->size = size;
 	particion->suscriptores_confirmados = list_create();
@@ -1042,9 +1065,9 @@ void agregar_particion(adm_cola adm_cola, t_partition* particion){
 	list_add(adm_cola.particiones,particion);
 }
 
-void sacar_particion(adm_cola adm_cola, int index){//SE USA ASI??
+void sacar_particion(int cola, int index){//SE USA ASI??
 	printf("libero particion en indice:%d\n",index);
-	liberar_particion(list_remove(adm_cola.particiones,index));
+	liberar_particion(list_remove(administracion_colas[cola].particiones,index));
 }
 
 void asignar_id_correlativo_a_particion(t_partition* particion,t_mensaje* mensaje){
@@ -1090,15 +1113,25 @@ void asignar_id_correlativo_a_mensaje(t_mensaje* mensaje, t_partition* particion
 	}
 }
 
+void cachear_mensaje(t_mensaje* mensaje){
+	t_partition* particion = crear_particion(mensaje);
+	agregar_particion(administracion_colas[mensaje->codigo_operacion],particion);
+}
+
+t_mensaje* descachear_mensaje(int msg_id,int cola){
+	//SE PODRIA IMPLEMENTAR QUE SAQUE SEGUN ID MENSAJE
+	int posicion;
+	encontrar_particion(msg_id,cola,&posicion);
+	printf("posicion:%d\n", posicion);
+	sacar_particion(cola,posicion);
+	return get_mensaje_cacheado(cola,posicion);
+}
+
+
 t_mensaje* leer_particion_cache(t_partition* particion){
 	t_mensaje* mensaje = memdes_mensaje(particion);
 	asignar_id_correlativo_a_mensaje(mensaje, particion);
 	return mensaje;
-}
-
-void cachear_mensaje(t_mensaje* mensaje){
-	t_partition* particion = crear_particion(mensaje);
-	agregar_particion(administracion_colas[mensaje->codigo_operacion],particion);
 }
 
 t_mensaje* get_mensaje_cacheado(int cola_code, int index){
@@ -1126,22 +1159,16 @@ t_partition* encontrar_particion(int msg_id,int cola,int* posicion){
 	return particion;
 }
 
-void descachear_particion(int index,int cola){
-	sacar_particion(administracion_colas[cola],index);
-}
-
-void descachear_mensaje(int msg_id,int cola){
-	//SE PODRIA IMPLEMENTAR QUE SAQUE SEGUN ID MENSAJE
-	int posicion;
-	encontrar_particion(msg_id,cola,&posicion);
-	sacar_particion(administracion_colas[cola],posicion);
-}
-
 //============================ INTERPRETADORES ===================================
 
 algoritmo_particion_libre interpretar_APL(char* word){
 	if(!strcmp(word,"FF")) return FF;
 	if(!strcmp(word,"BF")) return BF;
+}
+
+algoritmo_reemplazo interpretar_AR(char* word){
+	if(!strcmp(word,"LRU")) return LRU;
+	if(!strcmp(word,"FIFO")) return FIFO;
 }
 
 char* cola_string(int cola){
