@@ -1,7 +1,7 @@
 #include "gamecard.h"
 
 int subscribirse_a_cola(cola_code cola){
-	int socket_aux = connect_to(ip_broker,puerto_broker, tiempo_reintento_conexion);
+	int socket_aux = connect_to(ip_broker,puerto_broker, tiempo_reintento_conexion, logger);
 	t_mensaje* mensaje = crear_mensaje(2, SUBSCRIPCION, cola);
 	mensaje->id=ID_SUSCRIPCION;
 	enviar_mensaje(socket_aux, mensaje);
@@ -23,7 +23,20 @@ void leer_config() {
 }
 
 void recibir_new(t_mensaje *mensaje){
+	char* ruta = generar_ruta_metadata(mensaje->contenido.new_pokemon.pokemon->nombre); //puede fallar
+	if(!verificar_si_existe(ruta)){
+		crear_dir_pokemon(mensaje->contenido.new_pokemon.pokemon->nombre, ruta);
+	}
+	t_metadata* metadata;
+	metadata = leer_archivo_metadata(ruta);
+	agregar_pokemones(metadata);
 
+	/*
+	 Verificar si las posiciones ya existen dentro del archivo.
+	  En caso de existir, se deben agregar la cantidad pasada por parámetro
+	   a la actual. En caso de no existir se debe agregar al final del archivo
+	    una nueva línea indicando la cantidad de pokémon pasadas.
+	 */
 }
 
 void recibir_get(t_mensaje *mensaje){
@@ -36,12 +49,47 @@ void recibir_catch(t_mensaje *mensaje){
 
 }
 
+int verificar_si_existe(char* ruta){ //podria fijarse en lista global si esta el pokemon
+	FILE *archivo_pokemon = txt_open_for_append(ruta);
+	int existe=1;
+	if(!archivo_pokemon){
+		existe = 0;
+	}
+	txt_close(archivo_pokemon);
+	return existe;
+}
+
+t_metadata* leer_archivo_metadata(char* ruta){//TODO falla :(
+	t_config* aux_metadata = config_create(ruta);
+	t_metadata* metadata;
+	metadata->directory = config_get_int_value(aux_metadata, "DIRECTORY");
+	if(metadata->directory == 'N'){
+		metadata->size = config_get_int_value(aux_metadata, "SIZE");
+		metadata->blocks = config_get_array_value(aux_metadata, "BLOCKS");
+		metadata->open = config_get_int_value(aux_metadata, "OPEN");
+	}
+	config_destroy(aux_metadata);
+	return metadata;
+}
+
+char* generar_ruta_metadata(char* nombre_pokemon){//TODO falla :(
+	char* ruta = new_string();
+	string_append(&ruta,punto_montaje);
+	string_append(&ruta,"/Files/");//ver si hace falta capitalizar con: string_capitalized(char *text)
+	string_append(&ruta,nombre_pokemon);
+	string_append(&ruta,"/Metadata.bin");
+	return ruta;
+}
+
+void crear_dir_pokemon(char* nombre_pokemon, char* ruta){
+
+}
+
 void manejar_mensaje(t_mensaje* mensaje){
 	puts("maneja mensaje");
 	switch(mensaje->codigo_operacion){
-		case NEW_POKEMON:;
-			//TODO implementar logica
-
+		case NEW_POKEMON:
+			recibir_new(mensaje);
 			break;
 		case CATCH_POKEMON:;
 		//TODO implementar logica

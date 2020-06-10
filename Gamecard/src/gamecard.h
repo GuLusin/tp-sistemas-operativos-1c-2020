@@ -21,4 +21,11 @@ int tiempo_reintento_conexion, tiempo_reintento_operacion,
 	socket_cola_catch, socket_cola_get;
 char *ip_broker, *puerto_broker, *punto_montaje;
 
+typedef struct{
+	int directory;
+	int size;
+	int* blocks;
+	int open;
+}t_metadata;
+
 #endif /* GAMECARD_H*/
