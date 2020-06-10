@@ -129,11 +129,13 @@ void inicializar_estructuras_globales(){
 
 void liberar_pokemon(t_pokemon *pokemon){
 	free(pokemon->nombre);
+	free(pokemon);
 }
 
 void liberar_entrenador(t_entrenador *entrenador){
 	list_destroy(entrenador->pokemones);
 	list_destroy(entrenador->objetivos);
+	free(entrenador);
 }
 
 void liberar_recursos_globales(){
@@ -463,7 +465,7 @@ void entrenador(int id){
 		printf("Pokemon numero: %d %s\n",i+1,(char *) list_get(entrenador->pokemones,i));
 	}
 	printf("---------------------------------\n");
-	free(entrenador);
+	free(entrenador); //OJO CON LOS LOGS
 }
 
 void crear_hilos_entrenadores(){ //creamos todos los entrenadores, estos se quedan esperando la habilitacion del algoritmo para avanzar
@@ -822,7 +824,8 @@ void pasar_a_ready_al_pokemon_adecuado(t_list* pokemons, int interacion){
 
 	if (ya_no_me_sirve(aux)){
 		pasar_a_ready_al_pokemon_adecuado(pokemons,interacion+1);
-		(remover_pokemon(list_pok_new, aux));
+		remover_pokemon(list_pok_new, aux);
+		liberar_pokemon(aux); //NUEVA
 		return;
 	}
 
