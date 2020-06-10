@@ -40,6 +40,7 @@ typedef enum {
 
 int retardo;
 int largo_lista_conocida;
+uint32_t* respuesta_caught;
 
 //-----------------LISTAS
 
@@ -58,6 +59,7 @@ t_dictionary* ids_a_esperar;
 
 sem_t *ejecutar_entrenador; //vector
 sem_t *deadlock_entrenadores; //vector
+sem_t *espera_caught; //vector
 sem_t sem_deadlock;
 sem_t activar_algoritmo;
 sem_t hayentrenadorlibre;

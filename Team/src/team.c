@@ -113,6 +113,11 @@ void inicializar_semaforos(){
 
     pthread_mutex_init(&mutexPRUEBA, NULL);
 
+	espera_caught = malloc(sizeof(sem_t)*list_size(entrenadores));
+	for (int i=0;i<list_size(entrenadores);i++){
+		sem_init(&(espera_caught[i]), 0,0);
+	}
+
 }
 
 void inicializar_estructuras_globales(){
@@ -123,6 +128,11 @@ void inicializar_estructuras_globales(){
     ids_a_esperar = dictionary_create();
     dic_pok_obj = dictionary_create();
     dic_pok_ready_o_exec = dictionary_create();
+
+	respuesta_caught = malloc(sizeof(uint32_t)*list_size(entrenadores));
+	for (int i=0;i<list_size(entrenadores);i++){
+		respuesta_caught[i] = 0;
+	}
 }
 
 //--------------------------------------LIBERAR RECURSOS---------------------------------------------
@@ -378,16 +388,44 @@ bool llego_al_objetivo(t_entrenador *entrenador){
 	return ((entrenador->posicion_x == entrenador->objetivo_temporal->pos_x) && (entrenador->posicion_y == entrenador->objetivo_temporal->pos_y));
 }
 
+void enviar_catch(t_entrenador* entrenador){
+	t_pokemon* pokemon = entrenador->objetivo_temporal;
+	t_mensaje* mensaje = crear_mensaje(4,CATCH_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y);
+
+	int socket_broker = connect_to(ip_broker,puerto_broker,wait_time,logger);
+
+	enviar_mensaje(socket_broker,mensaje);
+
+	check_ack(socket_broker,ACK);
+
+	int id_correlativo = wait_ack(socket_broker);
+
+	printf("id_correlativo recibido:%d\n",id_correlativo);
+
+	send_ack(socket_broker,id_correlativo);
+
+	liberar_mensaje(mensaje);//todo chequear id a confirmar correlativo
+
+	agregar_id_esperado(entrenador->id,id_correlativo);
+}
+
+bool espera_confirmacion(int id){
+	sem_wait(&espera_caught[id]);
+	printf("confirmacion:%d\n",respuesta_caught[id]);
+	return respuesta_caught[id];
+}
+
 void atrapar_pokemon(int id){
 	t_entrenador *entrenador = list_get(entrenadores,id);
     char* nombre = malloc(strlen(entrenador->objetivo_temporal->nombre));
 	strcpy(nombre,entrenador->objetivo_temporal->nombre);
 
-	//enviar_catch();
-	//bool confirmacion = espera_confirmacion();
+	enviar_catch(entrenador);
+	uint32_t confirmacion = espera_confirmacion(entrenador->id);
+	printf("confirmacion:%d\n",confirmacion);
 
 	log_debug(logger,"El entrenador id:%d intenta atapar al pokemon %s en la posicion x:%d y:%d",id,nombre,entrenador->posicion_x,entrenador->posicion_y);
-	if(true){//envia mensaje catch_pokemon(pokemon);
+	if(confirmacion){//envia mensaje catch_pokemon(pokemon);
 		log_debug(logger,"El entrenador id:%d logro atapar al pokemon %s en la posicion x:%d y:%d",id,nombre,entrenador->posicion_x,entrenador->posicion_y);
 		debug_dic(dic_pok_obj);
 		remover_de_diccionario(dic_pok_obj,nombre);
@@ -1011,13 +1049,16 @@ void enviar_mensajes_get(int socket_a_enviar){
 	dictionary_iterator(dic_pok_obj,enviar_un_mensaje_get);
 }
 
-bool comprobar_id_esperado(uint32_t id){
-	if(dictionary_has_key(ids_a_esperar,string_itoa(id))){
-		dictionary_remove(ids_a_esperar,string_itoa(id));
-		return true;
-	}else{
-		return false;
-	}
+void agregar_id_esperado(int id_entrenador,int id){
+	dictionary_put(ids_a_esperar,string_itoa(id),(void*)id_entrenador);
+}
+
+int remover_id(int id){
+	return dictionary_remove(ids_a_esperar,string_itoa(id));
+}
+
+int comprobar_id_esperado(uint32_t id){
+	return dictionary_has_key(ids_a_esperar,string_itoa(id));
 }
 
 void manejar_pokemon_especie(t_pokemon_especie* pokemon_especie){
@@ -1049,7 +1090,13 @@ void manejar_appeared_pokemon(t_appeared_pokemon appeared_pokemon) {
 	pthread_mutex_unlock(&list_pok_new_mutex);
 }
 
+void avisar_caught(int id, uint32_t confirmacion){
+	sem_wait(&espera_caught[id]);
+	respuesta_caught[id]=confirmacion;
+}
+
 void manejar_mensaje(t_mensaje* mensaje){
+	int id_entrenador;
 	switch(mensaje->codigo_operacion){
 		case APPEARED_POKEMON:
 			manejar_appeared_pokemon(mensaje->contenido.appeared_pokemon);
@@ -1063,6 +1110,12 @@ void manejar_mensaje(t_mensaje* mensaje){
 			}else
 				liberar_mensaje(mensaje);
 			break;
+		case CAUGHT_POKEMON:
+			if(comprobar_id_esperado(mensaje->contenido.caught_pokemon.id_correlativo))
+				id_entrenador = remover_id(mensaje->contenido.caught_pokemon.id_correlativo);
+				avisar_caught(id_entrenador,mensaje->contenido.caught_pokemon.caught_confirmation);
+			break;
+
 		default:
 			break;
 	}
@@ -1216,6 +1269,11 @@ void debug(sem_t* sem){
 				puts("----- SE LIBERARON LOS RECURSOS CORRECTAMENTE -----");
 				sem_post(sem);
 				return;
+			case 'c':;
+				t_pokemon* pokemon = crear_pokemon("Pikachu",1,2);
+				enviar_catch(pokemon);
+				liberar_pokemon(pokemon);
+				break;
 
 		}
 	}

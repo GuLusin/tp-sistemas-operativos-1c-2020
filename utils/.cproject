@@ -119,15 +119,6 @@
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="utils.cdt.managedbuild.target.gnu.so.566899610" name="Shared Library" projectType="cdt.managedbuild.target.gnu.so"/>
 	</storageModule>
-	<storageModule moduleId="scannerConfiguration">
-		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.so.debug.1653429966;cdt.managedbuild.config.gnu.so.debug.1653429966.;cdt.managedbuild.tool.gnu.c.compiler.so.debug.1262559266;cdt.managedbuild.tool.gnu.c.compiler.input.2064260939">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.so.release.256222880;cdt.managedbuild.config.gnu.so.release.256222880.;cdt.managedbuild.tool.gnu.c.compiler.so.release.1138515849;cdt.managedbuild.tool.gnu.c.compiler.input.1541503427">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
 		<configuration configurationName="Debug">
@@ -139,4 +130,6 @@
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+	<storageModule moduleId="scannerConfiguration"/>
+	<storageModule moduleId="org.eclipse.cdt.core.pathentry"/>
 </cproject>

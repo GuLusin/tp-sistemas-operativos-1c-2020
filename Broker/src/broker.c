@@ -61,12 +61,26 @@ void manejar_subscripcion(int cola,t_suscriptor* suscriptor){
 	return;
 }
 
-bool manejar_mensaje(t_mensaje* mensaje){
+void manejar_catch(int socket_cliente,t_mensaje* mensaje){//MANDA ACK, LUEGO EL ID Y ESPERA CONFIRMACION CHEQUEANDO CON EL RECIBIDO
+	puts("envia ack");
+	send_ack(socket_cliente,ACK);
+	puts("envia id");
+	send_ack(socket_cliente,mensaje->id);
+	puts("recibe confirmacion del id");
+	check_ack(socket_cliente,mensaje->id);
+}
+
+void manejar_mensaje(int socket_cliente,t_mensaje* mensaje){
     switch(mensaje->codigo_operacion){
     	case GET_POKEMON:;
     		break;
+    	case CATCH_POKEMON:
+    		manejar_catch(socket_cliente,mensaje);
+    		break;
     }
-    return true;
+
+    close(socket_cliente);
+
 }
 
 
@@ -126,7 +140,7 @@ void recibir_mensaje(int *socket_cliente){
 	//pthread_mutex_unlock(&mutex_recibir);
 	t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
 	mensaje->id=id_mensajes_globales++;
-	manejar_mensaje(mensaje);
+	manejar_mensaje(*socket_cliente,mensaje);
 }
 
 
@@ -140,43 +154,7 @@ void recibir_cliente(int *socket_servidor){
 	}
 }
 
-bool es_suscriptor_confirmado(t_list* suscriptores_confirmados,int id_team){
-	puts("entra a suscr confir");
-	bool pertenece(void* stream){
-		int id_team_lista=(int)stream;
-		return id_team_lista == id_team;
-	}
-
-	return list_any_satisfy(suscriptores_confirmados,pertenece);
-	//todo arreglar a que funcione como deberia
-
-}
-
-void confirmar_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje){
-	printf("confirmar\n");
-	int posicion;
-	t_partition* particion = encontrar_particion(mensaje->id,mensaje->codigo_operacion,&posicion);
-	list_add(particion->suscriptores_confirmados,suscriptor->id_team);
-	printf("sale confirmar\n");
-	//agregar el id_team a esa particion
-}
-
-void remover_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje){
-	printf("remover\n");
-	int i=-1;
-	bool es_suscriptor(void* stream){
-		i++;
-		t_suscriptor* suscriptor_lista = stream;
-		return suscriptor->id_team==suscriptor_lista->id_team;
-	}
-	list_find(suscriptores[mensaje->codigo_operacion], remover_suscriptor);
-	list_remove(suscriptores[mensaje->codigo_operacion],i);
-	close(suscriptor->socket_cliente);
-}
-
 void notificar_mensaje(t_mensaje* mensaje){
-
-
 	void notificar_suscriptores(void* stream){
 		t_suscriptor* suscriptor = stream;
 		enviar_mensaje(suscriptor->socket_cliente,mensaje);
@@ -187,6 +165,7 @@ void notificar_mensaje(t_mensaje* mensaje){
 	}
 	printf("cachear_mensaje\n");
 	cachear_mensaje(mensaje);
+	printf("itera notificacion\n");
 	list_iterate(suscriptores[mensaje->codigo_operacion],notificar_suscriptores);
 }
 
@@ -220,7 +199,9 @@ void printear_estado(){
 
 void descachear_particiones(void* stream){
 	t_partition* particion = stream;
-	descachear_mensaje(particion->msg_id,particion->cola_code);
+	int posicion;
+	encontrar_particion(particion->msg_id,particion->cola_code,&posicion);
+	sacar_particion(particion->cola_code,posicion);
 }
 
 void envio_mensaje(){
@@ -231,6 +212,7 @@ void envio_mensaje(){
 	t_pokemon* pokemon4;
 	t_mensaje* mensaje_aux;
 	t_pokemon_especie* especie_pikachu;
+	t_suscriptor* suscriptor;
 	while(true){
 		int msg = getchar();
 		switch(msg){
@@ -243,6 +225,7 @@ void envio_mensaje(){
 			case 'P':
 				puts("Localized");
 				//------SE CREA UN LOCALIZED----------
+
 				pokemon1 = crear_pokemon("Pikachu",-1,2);
 				pokemon2 = crear_pokemon("Pikachu",9,5);
 				pokemon3 = crear_pokemon("Pikachu",-1,2);
@@ -253,7 +236,7 @@ void envio_mensaje(){
 				agregar_pokemon_a_especie(especie_pikachu,pokemon3);
 				agregar_pokemon_a_especie(especie_pikachu,pokemon4);
 
-				mensaje_aux = crear_mensaje(3, LOCALIZED_POKEMON, ID_DEFAULT, especie_pikachu);
+				mensaje_aux = crear_mensaje(3, LOCALIZED_POKEMON, 666, especie_pikachu);
 				mensaje_aux->id=ID_DEFAULT;
 
 				notificar_mensaje(mensaje_aux);
@@ -265,7 +248,7 @@ void envio_mensaje(){
 
 				pokemon1 = crear_pokemon("Squirtle",-12,12);
 				pokemon2 = crear_pokemon("Squirtle",-12,12);
-				pokemon3 = crear_pokemon("Squirtle",-12,12);
+				pokemon3 = crear_pokemon("Squirtle",12,12);
 				pokemon4 = crear_pokemon("Squirtle",-12,12);
 				especie_pikachu = crear_pokemon_especie("Squirtle");
 				agregar_pokemon_a_especie(especie_pikachu,pokemon1);
@@ -281,17 +264,18 @@ void envio_mensaje(){
 			case 'B':
 				puts("Localized");
 				//------SE CREA UN LOCALIZED----------
+
 				pokemon1 = crear_pokemon("Bulbasaur",-2,7);
 				pokemon2 = crear_pokemon("Bulbasaur",6,3);
 				pokemon3 = crear_pokemon("Bulbasaur",-2,7);
 				pokemon4 = crear_pokemon("Bulbasaur",5,4);
-				especie_pikachu = (t_pokemon_especie*) crear_pokemon_especie("Bulbasaur");
+				especie_pikachu = crear_pokemon_especie("Bulbasaur");
 				agregar_pokemon_a_especie(especie_pikachu,pokemon1);
 				agregar_pokemon_a_especie(especie_pikachu,pokemon2);
 				agregar_pokemon_a_especie(especie_pikachu,pokemon3);
 				agregar_pokemon_a_especie(especie_pikachu,pokemon4);
 
-				mensaje_aux = crear_mensaje(3, LOCALIZED_POKEMON, 455, especie_pikachu);
+				mensaje_aux = crear_mensaje(3, LOCALIZED_POKEMON, 4555, especie_pikachu);
 				mensaje_aux->id=ID_DEFAULT;
 
 				notificar_mensaje(mensaje_aux);
@@ -356,23 +340,33 @@ void envio_mensaje(){
 					list_iterate(administracion_colas[i].particiones,descachear_particiones);
 				break;
 			case '0':
-				sacar_particion(0,NEW_POKEMON);
+				sacar_particion(NEW_POKEMON,0);
 				break;
 			case '1':
-				sacar_particion(0,GET_POKEMON);
+				sacar_particion(GET_POKEMON,0);
 				break;
 			case '2':
-				sacar_particion(0,CATCH_POKEMON);
+				sacar_particion(CATCH_POKEMON,0);
 				break;
 			case '3':
-				sacar_particion(0,CAUGHT_POKEMON);
+				sacar_particion(CAUGHT_POKEMON,0);
 				break;
 			case '4':
-				sacar_particion(0,LOCALIZED_POKEMON);
+				sacar_particion(LOCALIZED_POKEMON,0);
 				break;
 			case '5':
-				sacar_particion(0,APPEARED_POKEMON);
+				sacar_particion(APPEARED_POKEMON,0);
 				break;
+			case '7':
+				sacar_particion(APPEARED_POKEMON,1);
+				break;
+			case '8':
+				sacar_particion(APPEARED_POKEMON,2);
+				break;
+			case 'o':
+				mensaje_aux = crear_mensaje(3, CAUGHT_POKEMON,1,true);
+				suscriptor = list_get(suscriptores[COLA_CAUGHT_POKEMON],0);
+				enviar_mensaje(suscriptor->socket_cliente,mensaje_aux);
 			default:
 				break;
 		}
@@ -388,6 +382,43 @@ t_suscriptor* crear_suscriptor(int id, int socket_cliente){
 	return suscriptor;
 }
 
+void liberar_suscriptor(t_suscriptor* suscriptor){//todo liberar suscriptor chequear que se confirmen bien
+	free(suscriptor);
+}
+
+bool es_suscriptor_confirmado(t_list* suscriptores_confirmados,int id_team){
+	puts("entra a suscr confir");
+	bool pertenece(void* stream){
+		int id_team_lista=(int)stream;
+		return id_team_lista == id_team;
+	}
+
+	return list_any_satisfy(suscriptores_confirmados,pertenece);
+	//todo arreglar a que funcione como deberia
+
+}
+
+void confirmar_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje){
+	printf("confirmar\n");
+	int posicion;
+	t_partition* particion = encontrar_particion(mensaje->id,mensaje->codigo_operacion,&posicion);
+	list_add(particion->suscriptores_confirmados,suscriptor->id_team);
+	printf("sale confirmar\n");
+	//agregar el id_team a esa particion todo?
+}
+
+void remover_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje){ // Remueve suscriptor de la cola correspondiente a ese tipo de mensaje
+	printf("remover\n");
+	int i=-1;
+	bool es_suscriptor(void* stream){
+		i++;
+		t_suscriptor* suscriptor_lista = stream;
+		return suscriptor->id_team==suscriptor_lista->id_team;
+	}
+	list_find(suscriptores[mensaje->codigo_operacion], es_suscriptor);
+	liberar_suscriptor(list_remove(suscriptores[mensaje->codigo_operacion],i));
+	close(suscriptor->socket_cliente);
+}
 
 
 //=========================PARTICIONES DINAMICAS==================================
@@ -504,9 +535,11 @@ void* memser_caught_pokemon(t_caught_pokemon caught_pokemon, int size){
 }
 
 void* memser_localized_pokemon(t_localized_pokemon localized_pokemon, int size){
+
 	void* magic = malloc(size);
 	int offset = 0, cant_coords=0;
 	int str_len = strlen(localized_pokemon.pokemon_especie->nombre_especie);
+
 	memcpy(magic, &str_len, sizeof(uint32_t));
 	offset += sizeof(uint32_t);
 	memcpy(magic+offset,localized_pokemon.pokemon_especie->nombre_especie,str_len);
@@ -535,55 +568,31 @@ void* memser_localized_pokemon(t_localized_pokemon localized_pokemon, int size){
 	return magic;
 }
 
-
 void* memser_mensaje(t_mensaje* mensaje, int *ret_size){
 	uint32_t size = tamanio_mensaje_memoria(mensaje);
-	printf("size:%d\n",size);
-	void* magic=malloc(size);
 	void* stream;
-	int offset=0;
 	switch(mensaje->codigo_operacion){
 	case GET_POKEMON:;
 		stream = memser_get_pokemon(mensaje->contenido.get_pokemon, size);
-		memcpy(magic + offset, stream, size);
-		offset += size;
-		free(stream);
 		break;
 	case APPEARED_POKEMON:;
 		stream = memser_appeared_pokemon(mensaje->contenido.appeared_pokemon,size);
-		memcpy(magic + offset, stream, size);
-		offset += size;
-		free(stream);
 		break;
 	case LOCALIZED_POKEMON:;
 		stream = memser_localized_pokemon(mensaje->contenido.localized_pokemon,size);
-		memcpy(magic, stream, size);
-		offset += size;
-		free(stream);
 		break;
 	case CATCH_POKEMON:;
 		stream = memser_catch_pokemon(mensaje->contenido.catch_pokemon,size);
-		memcpy(magic, stream, size);
-		offset += size;
-		free(stream);
 		break;
 	case CAUGHT_POKEMON:;
 		stream = memser_caught_pokemon(mensaje->contenido.caught_pokemon,size);
-		memcpy(magic, stream, size);
-		offset += size;
-		free(stream);
 		break;
 	case NEW_POKEMON:;
 		stream = memser_new_pokemon(mensaje->contenido.new_pokemon,size);
-		memcpy(magic, stream, size);
-		offset += size;
-		free(stream);
 		break;
-
 	}
-	*ret_size=(int)size;
-	return magic;
-
+	*ret_size = (int)size;
+	return stream;
 }
 
 //------------------------------------MEMORY DESERIALIZATION MENSAJE-----------------------
@@ -799,7 +808,7 @@ void* first_fit(int size){
 void* best_fit(int size){
 	int i = -1;
 	int pos=-1;
-	int tam_min=1000000; // Numero muy grande para que tenga valized el algoritmo. Deberia ser el total de la memoria;
+	int tam_min=1000000000; // Numero muy grande para que tenga valized el algoritmo. Deberia ser el total de la memoria;
 
 	void espacio_optimo(void* stream){
 		i++;
@@ -887,23 +896,22 @@ void normalizar_particiones_libres(){
 
 //========================== COMPACTACION =====================================
 
-void compactar_memoria(){//todo ya tengo los mensajes a compactar en mensajes aux y la cache limpia
-	//todo falta ir agregando de a una sobre el mem_alloc y agregarlas a sus correspondientes colas adm
+void compactar_memoria(){//todo guardar los id_team confirmados de cada mensaje
+
 	void* magic;
 	t_list* mensajes_aux = list_create();
 	void transpaso_a_aux(void* stream){
 		int pos;
 		t_partition* particion = stream;
 		t_mensaje* mensaje = leer_particion_cache(particion);
+		printear_mensaje(mensaje);
 		encontrar_particion(particion->msg_id,particion->cola_code,&pos);
 		sacar_particion(particion->cola_code,pos);
-		printear_mensaje(mensaje);
 		list_add(mensajes_aux,mensaje);
-
 	}
 
 	for(int i=0;i<CANTIDAD_COLAS;i++)
-		while(list_size(administracion_colas[i].particiones)){
+		while(list_size(administracion_colas[i].particiones))
 			transpaso_a_aux(list_get(administracion_colas[i].particiones,0));
 
 	for(int i=0;i<CANTIDAD_COLAS;i++)
@@ -911,25 +919,20 @@ void compactar_memoria(){//todo ya tengo los mensajes a compactar en mensajes au
 
 	printf("list_size aux:%d\n",list_size(mensajes_aux));
 
-
 	printear_estado_memoria();
 	sleep(5);
 	unificar_particiones_libres();
 	magic = mem_alloc;
 
 	while(list_size(mensajes_aux)){
-		t_partition* particion = list_remove(mensajes_aux,0);
-
-
-
-
+		t_mensaje* mensaje = list_remove(mensajes_aux,0);
+		cachear_mensaje(mensaje);
 	}
-	//for(int i=0;i<list_size(particiones_aux);i++)
 
-
+	printear_estado_memoria();
+	sleep(5);
+	puts("MEMORIA COMPACTADA");
 	list_destroy(mensajes_aux);
-}
-
 }
 
 /*
@@ -942,8 +945,8 @@ void* pmalloc(int size){
 	int i=0;
 	void* aux=NULL;
 	puts("pmalloc\n");
-	//while(!aux){
-		puts("while\n");
+	while(!aux){
+		puts("ENTRA AL WHILE");
 		switch(APL){
 			case FF:
 				pthread_mutex_lock(&mutex_particiones_libres);
@@ -958,12 +961,14 @@ void* pmalloc(int size){
 		}
 		normalizar_particiones_libres();
 
-		/*if(aux==NULL){
+		if(!aux){
 			puts("ES NULL\n");
-			compactar_memoria();
+			compactar_memoria();//todo se deberia ver si ya se compacto una vez, en ese caso activa protocolo eleccion de victima
+			}else{
+				puts("es puntero valido");
 			}
 		puts("sale pmalloc\n");
-	}*/
+	}
 
 
 	return aux;
@@ -1114,6 +1119,7 @@ void asignar_id_correlativo_a_mensaje(t_mensaje* mensaje, t_partition* particion
 
 void cachear_mensaje(t_mensaje* mensaje){
 	t_partition* particion = crear_particion(mensaje);
+	puts("crea particion");
 	agregar_particion(administracion_colas[mensaje->codigo_operacion],particion);
 }
 
@@ -1124,7 +1130,6 @@ void descachear_mensaje(int msg_id,int cola){
 	printf("posicion:%d\n", posicion);
 	sacar_particion(cola,posicion);
 }
-
 
 t_mensaje* leer_particion_cache(t_partition* particion){
 	t_mensaje* mensaje = memdes_mensaje(particion);

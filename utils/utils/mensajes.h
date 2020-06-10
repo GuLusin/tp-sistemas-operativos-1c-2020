@@ -113,7 +113,7 @@ char* especie_pokemon_a_string(t_pokemon_especie* pokemon_especie);
 
 void printear_pokemon(t_pokemon* pokemon);
 void printear_mensaje(t_mensaje* mensaje);
-
+void liberar_mensaje(t_mensaje* mensaje);
 
 t_pokemon* crear_pokemon(char* nombre,uint32_t px, uint32_t py);
 void* serializar_pokemon(t_pokemon* pokemon);

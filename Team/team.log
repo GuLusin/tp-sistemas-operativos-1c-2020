@@ -3066,3 +3066,112 @@
 [DEBUG] 01:29:09:455 log/(4987:4990): DEADLOCK: Se mueve el entredor id:2 a las coordenadas x:4 y:7
 [DEBUG] 01:29:09:470 log/(4987:4997): Operacion de intercambio en x:4 y:7, entre los entrenadores id:2 y id:1
 [DEBUG] 01:29:14:526 log/(4987:4997): Finaliza el algoritmo de deteccion de deadlock con exito
+[DEBUG] 02:13:05:756 log/(16173:16173): 127.0.0.1
+[DEBUG] 02:13:05:756 log/(16173:16173): 5002
+[DEBUG] 02:13:05:757 log/(16173:16180): Se logra establecer la conexion
+[DEBUG] 02:13:05:757 log/(16173:16181): Se logra establecer la conexion
+[DEBUG] 02:13:05:758 log/(16173:16179): Se logra establecer la conexion
+[DEBUG] 02:13:07:456 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:10:966 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:15:410 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:16:80 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:16:349 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:16:551 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:16:711 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:16:894 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:17:41 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:17:205 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:17:367 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:17:527 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:17:689 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:17:849 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:17:0 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:22:762 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:23:24 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:23:740 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:25:395 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:26:444 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:34:393 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:35:791 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:36:319 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:36:561 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:36:783 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:37:5 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:37:205 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:37:427 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:37:648 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:37:850 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:38:31 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:38:212 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:38:412 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:38:654 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:38:861 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:40:411 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:13:40:651 log/(16173:16182): Se logra establecer la conexion
+[DEBUG] 02:54:11:167 log/(18214:18214): 127.0.0.1
+[DEBUG] 02:54:11:167 log/(18214:18214): 5002
+[DEBUG] 02:54:11:168 log/(18214:18222): Se logra establecer la conexion
+[DEBUG] 02:54:11:169 log/(18214:18223): Se logra establecer la conexion
+[DEBUG] 02:54:11:170 log/(18214:18221): Se logra establecer la conexion
+[DEBUG] 02:54:16:623 log/(18214:18221): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 02:54:17:623 log/(18214:18215): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 02:54:18:624 log/(18214:18215): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 02:54:18:624 log/(18214:18215): Se logra establecer la conexion
+[DEBUG] 02:54:18:624 log/(18214:18215): El entrenador id:0 intenta atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 02:54:18:624 log/(18214:18215): El entrenador id:0 no logro atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 02:54:53:546 log/(18214:18221): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 02:54:54:547 log/(18214:18215): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 02:54:54:547 log/(18214:18215): Se logra establecer la conexion
+[DEBUG] 02:54:54:548 log/(18214:18215): El entrenador id:0 intenta atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 02:54:54:548 log/(18214:18215): El entrenador id:0 no logro atapar al pokemon Pikachu en la posicion x:-1 y:2
+[DEBUG] 02:57:01:504 log/(18298:18298): 127.0.0.1
+[DEBUG] 02:57:01:505 log/(18298:18298): 5002
+[DEBUG] 02:57:01:506 log/(18298:18305): Se logra establecer la conexion
+[DEBUG] 02:57:01:507 log/(18298:18306): Se logra establecer la conexion
+[DEBUG] 02:57:01:508 log/(18298:18304): Se logra establecer la conexion
+[DEBUG] 02:57:04:527 log/(18298:18304): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 02:57:05:527 log/(18298:18299): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 02:57:06:528 log/(18298:18299): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 02:57:06:528 log/(18298:18299): Se logra establecer la conexion
+[DEBUG] 02:57:11:950 log/(18298:18304): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 02:57:16:307 log/(18298:18304): Llegada mensaje tipo: APPEARED_POKEMON , Charmander,4|7
+[DEBUG] 02:59:52:507 log/(18448:18448): 127.0.0.1
+[DEBUG] 02:59:52:507 log/(18448:18448): 5002
+[DEBUG] 02:59:52:508 log/(18448:18455): Se logra establecer la conexion
+[DEBUG] 02:59:52:509 log/(18448:18456): Se logra establecer la conexion
+[DEBUG] 02:59:52:509 log/(18448:18454): Se logra establecer la conexion
+[DEBUG] 02:59:55:217 log/(18448:18454): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 02:59:56:218 log/(18448:18449): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 02:59:57:218 log/(18448:18449): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 02:59:57:218 log/(18448:18449): Se logra establecer la conexion
+[DEBUG] 03:00:06:405 log/(18448:18455): Llegada mensaje tipo: CAUGHT_POKEMON , id correlativo: 1 | se logro atrapar: TRUE
+[DEBUG] 03:03:39:322 log/(18603:18603): 127.0.0.1
+[DEBUG] 03:03:39:322 log/(18603:18603): 5002
+[DEBUG] 03:03:39:324 log/(18603:18610): Se logra establecer la conexion
+[DEBUG] 03:03:39:324 log/(18603:18611): Se logra establecer la conexion
+[DEBUG] 03:03:39:325 log/(18603:18609): Se logra establecer la conexion
+[DEBUG] 03:03:42:317 log/(18603:18609): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 03:03:43:319 log/(18603:18604): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 03:03:44:319 log/(18603:18604): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 03:03:44:320 log/(18603:18604): Se logra establecer la conexion
+[DEBUG] 03:03:49:18 log/(18603:18610): Llegada mensaje tipo: CAUGHT_POKEMON , id correlativo: 1 | se logro atrapar: TRUE
+[DEBUG] 03:06:22:894 log/(18706:18706): 127.0.0.1
+[DEBUG] 03:06:22:894 log/(18706:18706): 5002
+[DEBUG] 03:06:22:895 log/(18706:18713): Se logra establecer la conexion
+[DEBUG] 03:06:22:896 log/(18706:18714): Se logra establecer la conexion
+[DEBUG] 03:06:22:896 log/(18706:18712): Se logra establecer la conexion
+[DEBUG] 03:06:25:278 log/(18706:18712): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 03:06:26:278 log/(18706:18707): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 03:06:27:279 log/(18706:18707): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 03:06:27:280 log/(18706:18707): Se logra establecer la conexion
+[DEBUG] 03:06:29:654 log/(18706:18713): Llegada mensaje tipo: CAUGHT_POKEMON , id correlativo: 1 | se logro atrapar: TRUE
+[DEBUG] 03:07:40:914 log/(18765:18765): 127.0.0.1
+[DEBUG] 03:07:40:914 log/(18765:18765): 5002
+[DEBUG] 03:07:40:915 log/(18765:18772): Se logra establecer la conexion
+[DEBUG] 03:07:40:916 log/(18765:18773): Se logra establecer la conexion
+[DEBUG] 03:07:40:917 log/(18765:18771): Se logra establecer la conexion
+[DEBUG] 03:07:43:518 log/(18765:18771): Llegada mensaje tipo: APPEARED_POKEMON , Pikachu,-1|2
+[DEBUG] 03:07:44:519 log/(18765:18766): Se mueve el entredor id:0 a las coordenadas x:0 y:2
+[DEBUG] 03:07:45:520 log/(18765:18766): Se mueve el entredor id:0 a las coordenadas x:-1 y:2
+[DEBUG] 03:07:45:520 log/(18765:18766): Se logra establecer la conexion
+[DEBUG] 03:07:47:494 log/(18765:18772): Llegada mensaje tipo: CAUGHT_POKEMON , id correlativo: 1 | se logro atrapar: TRUE
