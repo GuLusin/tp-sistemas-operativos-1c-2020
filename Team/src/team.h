@@ -39,7 +39,6 @@ typedef enum {
 } algoritmo_code;
 
 int retardo;
-int largo_lista_conocida;
 uint32_t* respuesta_caught;
 
 //-----------------LISTAS
@@ -65,8 +64,9 @@ sem_t activar_algoritmo;
 sem_t hayentrenadorlibre;
 sem_t revisar_pokemones_new;
 sem_t hay_pokemones;
+sem_t hay_entrenador_disponible;
 sem_t hay_entrenador_corto_plazo;
-sem_t cumplio_objetivo_global;
+sem_t entrenador_bloqueado;
 
 //-----------------MUTEX
 
@@ -76,6 +76,8 @@ pthread_mutex_t list_pok_new_mutex;
 pthread_mutex_t list_pok_ready_mutex;
 pthread_mutex_t mutexPRUEBA;
 pthread_mutex_t mutex_pokemones_recibidos;
+pthread_mutex_t mutex_lista_entrenadores;
+pthread_mutex_t mutex_lista_corto_plazo;
 
 //-----------------HILOS
 
