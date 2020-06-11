@@ -65,9 +65,9 @@ void manejar_catch(int socket_cliente,t_mensaje* mensaje){//MANDA ACK, LUEGO EL 
 	puts("envia ack");
 	send_ack(socket_cliente,ACK);
 	puts("envia id");
-	send_ack(socket_cliente,mensaje->id);
+	send_ack(socket_cliente,id_mensajes_globales++);
 	puts("recibe confirmacion del id");
-	check_ack(socket_cliente,mensaje->id);
+	check_ack(socket_cliente,id_mensajes_globales);
 }
 
 void manejar_mensaje(int socket_cliente,t_mensaje* mensaje){
@@ -213,6 +213,7 @@ void envio_mensaje(){
 	t_mensaje* mensaje_aux;
 	t_pokemon_especie* especie_pikachu;
 	t_suscriptor* suscriptor;
+	int i = 0;
 	while(true){
 		int msg = getchar();
 		switch(msg){
@@ -364,9 +365,11 @@ void envio_mensaje(){
 				sacar_particion(APPEARED_POKEMON,2);
 				break;
 			case 'o':
-				mensaje_aux = crear_mensaje(3, CAUGHT_POKEMON,1,true);
+				mensaje_aux = crear_mensaje(3, CAUGHT_POKEMON,i,true);
+				i++;
 				suscriptor = list_get(suscriptores[COLA_CAUGHT_POKEMON],0);
 				enviar_mensaje(suscriptor->socket_cliente,mensaje_aux);
+				break;
 			default:
 				break;
 		}
