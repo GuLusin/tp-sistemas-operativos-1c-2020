@@ -5,11 +5,9 @@ agregar logs:
 * resultado del team (especificado anteriormente)
 * log atrapar
 *
-* atrapar exitoso si cae el team
 * hilo para recibir gameboy
 *
-* disminuir memleaks o preguntar si son muchos
-* enviar mensajes get al comienzo
+* disminuir memleaks o preguntar si son muchos (PREGUNTAR EL FREE DEL ENTRENADOR, XQ NO ROMPE?)
 *
 */
 
@@ -20,7 +18,7 @@ agregar logs:
 void debug_dic(t_dictionary* pokemones_deseados){
 
 	void leer(char* key, void* count){
-		printf("Nombre: %s    Cantidad:%d\n",key,(int)count);
+		printf("Nombre: %s Cantidad: %d\n",key,(int)count);
 	}
 
 	printf("Lectura diccionario:\n");
@@ -93,8 +91,6 @@ void remover_de_diccionario(t_dictionary* pokemones_deseados,char* un_pokemon){
 	//printf("ERROR, se intenta sacar del diccionario a un pokemon que no estaba\n"); SINO ME LO TIRA EL CUMPLIO OBJETIVO
 }
 
-
-
 //---------------------------------------PLANIFICACION---------------------------------------------------------------------
 
 void inicializar_semaforos(){
@@ -120,8 +116,10 @@ void inicializar_semaforos(){
     pthread_mutex_init(&list_pok_ready_mutex, NULL);
     pthread_mutex_init(&mutex_lista_entrenadores, NULL);
     pthread_mutex_init(&mutex_lista_corto_plazo, NULL);
-
+    pthread_mutex_init(&mutex_confirmacion, NULL);
+    pthread_mutex_init(&mutex_respuesta, NULL);
     pthread_mutex_init(&mutexPRUEBA, NULL);
+    pthread_mutex_init(&mutex_logger, NULL);
 
 	espera_caught = malloc(sizeof(sem_t)*list_size(entrenadores));
 	for (int i=0;i<list_size(entrenadores);i++)
@@ -134,7 +132,8 @@ void inicializar_estructuras_globales(){
 	lista_corto_plazo=list_create();
     list_pok_new = list_create();
     list_pok_ready = list_create();
-    ids_a_esperar = dictionary_create();
+    ids_a_esperar_localized = dictionary_create();
+    ids_a_esperar_catch = dictionary_create();
     dic_pok_obj = dictionary_create();
     dic_pok_ready_o_exec = dictionary_create();
 
@@ -148,13 +147,13 @@ void inicializar_estructuras_globales(){
 
 void liberar_pokemon(t_pokemon *pokemon){
 	free(pokemon->nombre);
-	free(pokemon);
+	//free(pokemon); PREGUNTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAR
 }
 
 void liberar_entrenador(t_entrenador *entrenador){
 	list_destroy(entrenador->pokemones);
 	list_destroy(entrenador->objetivos);
-	free(entrenador);
+	//free(entrenador); PREGUNTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAR
 }
 
 void liberar_recursos_globales(){
@@ -163,8 +162,10 @@ void liberar_recursos_globales(){
 	puts("2");
 	dictionary_destroy(dic_pok_ready_o_exec);
 	puts("3");
-	dictionary_destroy(ids_a_esperar);
+	dictionary_destroy(ids_a_esperar_localized);
 	puts("4");
+	dictionary_destroy(ids_a_esperar_catch);
+	puts("4.1");
 	free(ejecutar_entrenador);
 	puts("5");
 	free(deadlock_entrenadores);
@@ -274,12 +275,13 @@ void intercambiar_pokemones(t_entrenador* un_entrenador, t_entrenador* otro_entr
 
 void deadlock(){
 
+	pthread_mutex_lock(&mutex_logger);
 	log_debug(logger,"Inicio del algoritmo de deteccion de deadlock");
+	pthread_mutex_unlock(&mutex_logger);
 
 	t_entrenador* aux;
 	t_entrenador* aux1;
 	t_pokemon *pok_mentira = malloc(sizeof(t_pokemon));
-
 
 	t_list* pokemones_que_quiere_aux;
 
@@ -304,7 +306,6 @@ void deadlock(){
 			return false;
 		}
 
-
 		t_list* pokemones_otorgables = pokemones_no_necesarios(unEntrenador);
 
 		bool valor_a_retornar = list_any_satisfy(pokemones_otorgables,auxLoQuiere);
@@ -313,8 +314,6 @@ void deadlock(){
 
 		return valor_a_retornar;
 	}
-
-
 
 	while(!list_is_empty(entrenadores_bloqueados)){
 		aux = list_remove(entrenadores_bloqueados,0);
@@ -347,8 +346,9 @@ void deadlock(){
 	}
 	free(pok_mentira);
     list_destroy(entrenadores_bloqueados);
+	pthread_mutex_lock(&mutex_logger);
 	log_debug(logger,"Finaliza el algoritmo de deteccion de deadlock con exito");
-
+	pthread_mutex_unlock(&mutex_logger);
 }
 
 //---------------------------------------------- ENTRENADOR ----------------------------------------------------
@@ -411,39 +411,60 @@ void enviar_catch(t_entrenador* entrenador){
 
 	int id_correlativo = wait_ack(socket_broker);
 
-	printf("id_correlativo recibido:%d\n",id_correlativo);
+	printf("id_correlativo recibiasdasdasdasdsddo:%d\n",id_correlativo);
 
 	send_ack(socket_broker,id_correlativo);
-
 	liberar_mensaje(mensaje);//todo chequear id a confirmar correlativo
-
-	agregar_id_esperado(entrenador->id,id_correlativo);
+	dictionary_put(ids_a_esperar_catch,string_itoa(id_correlativo),entrenador->id); //id_correlativo -> id
+    puts("SALGO DE ENVIAR CATCH");
 }
 
-bool espera_confirmacion(int id){
-	sem_wait(&espera_caught[id]);
-	printf("confirmacion:%d\n",respuesta_caught[id]);
-	return respuesta_caught[id];
+bool espera_confirmacion(t_entrenador *entrenador){
+	int respuesta;
+	pthread_mutex_lock(&mutex_logger);
+	log_debug(logger,"El entrenador id:%d intenta atapar al pokemon %s en la posicion x:%d y:%d",entrenador->id,entrenador->objetivo_temporal->nombre,entrenador->posicion_x,entrenador->posicion_y);
+	pthread_mutex_unlock(&mutex_logger);
+	sem_wait(&espera_caught[entrenador->id]);
+	printf("confirmacion:%d\n",respuesta_caught[entrenador->id]);
+	pthread_mutex_lock(&mutex_respuesta);
+	respuesta = respuesta_caught[entrenador->id];
+	pthread_mutex_unlock(&mutex_respuesta);
+	return respuesta;
 }
 
 void atrapar_pokemon(t_entrenador* entrenador){
 
+	uint32_t confirmacion;
     char* nombre = malloc(strlen(entrenador->objetivo_temporal->nombre));
 	strcpy(nombre,entrenador->objetivo_temporal->nombre);
 
-	enviar_catch(entrenador);
-	uint32_t confirmacion = espera_confirmacion(entrenador->id);
+	pthread_mutex_lock(&mutex_confirmacion);
+	if(broker_conectado){
+		pthread_mutex_unlock(&mutex_confirmacion);
+		enviar_catch(entrenador);
+		puts("ESPERO MENSAJE");
+		confirmacion = espera_confirmacion(entrenador);}
+	else{
+		pthread_mutex_unlock(&mutex_confirmacion);
+		pthread_mutex_lock(&mutex_logger);
+		log_debug(logger,"El Broker se ha caido, se realizara la operacion default de atrapar el pokemon");
+		pthread_mutex_unlock(&mutex_logger);
+		confirmacion = true;}
+
 	printf("confirmacion:%d\n",confirmacion);
 
-	log_debug(logger,"El entrenador id:%d intenta atapar al pokemon %s en la posicion x:%d y:%d",entrenador->id,nombre,entrenador->posicion_x,entrenador->posicion_y);
 	if(confirmacion){//envia mensaje catch_pokemon(pokemon);
+		pthread_mutex_lock(&mutex_logger);
 		log_debug(logger,"El entrenador id:%d logro atapar al pokemon %s en la posicion x:%d y:%d",entrenador->id,nombre,entrenador->posicion_x,entrenador->posicion_y);
+		pthread_mutex_unlock(&mutex_logger);
 		remover_de_diccionario(dic_pok_obj,nombre);
 		list_add(entrenador->pokemones, nombre);
     }
 	else{
 		//free
+		pthread_mutex_lock(&mutex_logger);
 		log_debug(logger,"El entrenador id:%d no logro atapar al pokemon %s en la posicion x:%d y:%d",entrenador->id,nombre,entrenador->posicion_x,entrenador->posicion_y);
+		pthread_mutex_unlock(&mutex_logger);
 	}
 
 
@@ -454,8 +475,6 @@ void atrapar_pokemon(t_entrenador* entrenador){
 	free(entrenador->objetivo_temporal->nombre);
 	free(entrenador->objetivo_temporal);
 	entrenador->objetivo_temporal = NULL;
-
-
 }
 
 void avanzar(t_entrenador* entrenador){
@@ -483,28 +502,23 @@ void entrenador(int id){
 
 		sleep(retardo);
 		avanzar(entrenador);
+
+		pthread_mutex_lock(&mutex_logger);
 		log_debug(logger,"Se mueve el entredor id:%d a las coordenadas x:%d y:%d",entrenador->id,entrenador->posicion_x,entrenador->posicion_y);
+		pthread_mutex_unlock(&mutex_logger);
 
 		if(llego_al_objetivo(entrenador)){
 			entrenador->bloq_exec = 1;
 			sem_post(&activar_algoritmo);
 			atrapar_pokemon(entrenador);
 
-
-
-			//TODO
-		  //liberar(); o algo asi para el deadlock si entras en deadlock, solo se ejecuta todo el deadlock hasta terminar el intercambio?
-		  //o tambien se puede hacer actuar el planificador? es monoprocesador no?
-
 			entrenador->bloq_exec = 0;
 			if(!tiene_cantidad(entrenador))
 				sem_post(&hayentrenadorlibre);
-
 		  }
 		else
 			sem_post(&activar_algoritmo);
 	}
-
 
     entrenador->bloq_exec = 1;
     sem_post(&entrenador_bloqueado);
@@ -519,7 +533,9 @@ void entrenador(int id){
     	while(!llego_al_objetivo(entrenador)){
     		sleep(retardo);
     		avanzar(entrenador);
+    		pthread_mutex_lock(&mutex_logger);
     		log_debug(logger,"DEADLOCK: Se mueve el entredor id:%d a las coordenadas x:%d y:%d",entrenador->id,entrenador->posicion_x,entrenador->posicion_y);
+    		pthread_mutex_unlock(&mutex_logger);
     	}
     	printf("El entrenador llego al objetivo para hacer el intercambio\n");
     	entrenador->objetivo_temporal = NULL;
@@ -528,13 +544,12 @@ void entrenador(int id){
 
     entrenador->exit = 1;
 
-
 	printf("------ Termino entrenador %d -------\n",id);
 	for(int i=0; i < list_size(entrenador->pokemones); i++){
 		printf("Pokemon numero: %d %s\n",i+1,(char *) list_get(entrenador->pokemones,i));
 	}
 	printf("---------------------------------\n");
-	free(entrenador); //OJO CON LOS LOGS
+	//free(entrenador); //OJO CON LOS LOGS
 }
 
 void crear_hilos_entrenadores(){ //creamos todos los entrenadores, estos se quedan esperando la habilitacion del algoritmo para avanzar
@@ -601,7 +616,6 @@ void entrenador_mas_cerca_a_lista_corto_plazo(t_pokemon* pokemon){
     list_add(lista_corto_plazo, entrenador_elegido);
 	pthread_mutex_unlock(&mutex_lista_corto_plazo);
     sem_post(&hay_entrenador_corto_plazo);
-
 }
 
 //------------------------------------------PLANIFICAR----------------------------------------------------
@@ -947,11 +961,12 @@ void pasar_a_ready_al_pokemon_adecuado(t_list* pokemons, int interacion){
 
 	if (me_sirve(aux)){
 		mover_a_ready(aux);
-		sem_post(&hay_pokemones);/
+		sem_post(&hay_pokemones);
 		return;
 	}
 
 	if (ya_no_me_sirve(aux)){
+		puts("NO ME SIRVE");
 		pasar_a_ready_al_pokemon_adecuado(pokemons,interacion+1);
 		pthread_mutex_lock(&list_pok_new_mutex);
 		remover_pokemon(list_pok_new, aux);
@@ -981,6 +996,7 @@ void planificador_largo_plazo(){
 	while(1){
 		sem_wait(&revisar_pokemones_new);
 		sem_wait(&hayentrenadorlibre);
+		puts("REVISA EL ALGORITMO");
 		exec_algoritmo_largo_plazo();
 
 	}
@@ -1118,6 +1134,9 @@ t_dictionary* obtener_pokemones_objetivo(){
 
 int subscribirse_a_cola(cola_code cola){
 	int socket_aux = connect_to(ip_broker,puerto_broker,wait_time,logger);
+	pthread_mutex_lock(&mutex_confirmacion);
+	broker_conectado = true;
+	pthread_mutex_unlock(&mutex_confirmacion);
 	t_mensaje* mensaje = crear_mensaje(2, SUBSCRIPCION, cola);
 	mensaje->id=ID_SUSCRIPCION;
 	enviar_mensaje(socket_aux, mensaje);
@@ -1133,7 +1152,7 @@ void enviar_mensajes_get(int socket_a_enviar){
 		t_mensaje* mensaje = crear_mensaje(2,GET_POKEMON,nombre_pokemon);
 		enviar_mensaje(socket_broker,mensaje);
 		int id_correlativo = wait_ack(socket_broker);
-		dictionary_put(ids_a_esperar,string_itoa(id_correlativo),(void*)GET_POKEMON);
+		dictionary_put(ids_a_esperar_localized,string_itoa(id_correlativo),(void*)GET_POKEMON);
 
 		close(socket_broker);
 	}
@@ -1142,16 +1161,29 @@ void enviar_mensajes_get(int socket_a_enviar){
 }
 
 void agregar_id_esperado(int id_entrenador,int id){
-	dictionary_put(ids_a_esperar,string_itoa(id),(void*)id_entrenador);
+	dictionary_put(ids_a_esperar_localized,string_itoa(id),(void*)id_entrenador);
 }
 
 int remover_id(int id){
-	return dictionary_remove(ids_a_esperar,string_itoa(id));
+	return dictionary_remove(ids_a_esperar_localized,string_itoa(id));
 }
 
 int comprobar_id_esperado(uint32_t id){
-	return dictionary_has_key(ids_a_esperar,string_itoa(id));
+	return dictionary_has_key(ids_a_esperar_localized,string_itoa(id));
 }
+
+void agregar_id_esperado_catch(int id_entrenador,int id){
+	dictionary_put(ids_a_esperar_catch,string_itoa(id),(void*)id_entrenador);
+}
+
+int remover_id_catch(int id){
+	return dictionary_remove(ids_a_esperar_catch,string_itoa(id));
+}
+
+int comprobar_id_esperado_catch(uint32_t id){
+	return dictionary_has_key(ids_a_esperar_catch,string_itoa(id));
+}
+
 
 void manejar_pokemon_especie(t_pokemon_especie* pokemon_especie){
 	t_pokemon* pokemon_aux;
@@ -1184,7 +1216,9 @@ void manejar_appeared_pokemon(t_appeared_pokemon appeared_pokemon) {
 }
 
 void avisar_caught(int id, uint32_t confirmacion){
+	pthread_mutex_lock(&mutex_respuesta);
 	respuesta_caught[id]=confirmacion;
+	pthread_mutex_unlock(&mutex_respuesta);
 	sem_post(&espera_caught[id]);
 
 }
@@ -1205,8 +1239,8 @@ void manejar_mensaje(t_mensaje* mensaje){
 				liberar_mensaje(mensaje);
 			break;
 		case CAUGHT_POKEMON:
-			if(comprobar_id_esperado(mensaje->contenido.caught_pokemon.id_correlativo)){
-				id_entrenador = remover_id(mensaje->contenido.caught_pokemon.id_correlativo);
+			if(comprobar_id_esperado_catch(mensaje->contenido.caught_pokemon.id_correlativo)){
+				id_entrenador = remover_id_catch(mensaje->contenido.caught_pokemon.id_correlativo);
 				avisar_caught(id_entrenador,mensaje->contenido.caught_pokemon.caught_confirmation);
 			}else
 				liberar_mensaje(mensaje);
@@ -1251,17 +1285,35 @@ bool recibir_mensaje(int un_socket){
 	return true;
 }
 
+void avisar_semaforo(char* id_correlativo,void *id){
+	pthread_mutex_unlock(&mutex_respuesta);
+	respuesta_caught[(int)id]=true;
+	pthread_mutex_unlock(&mutex_respuesta);
+	sem_post(&espera_caught[((int)id)]);
+}
+
+void confirmar_respuesta(){
+	int id_correlativo;
+	dictionary_iterator(ids_a_esperar_catch,avisar_semaforo);
+}
 
 void protocolo_recibir_mensaje(cola_code cola){
-
 	while(true){
 		pthread_mutex_lock(&mutex_recibir);
 		int socket_cola = subscribirse_a_cola(cola); //todo suscribirse y enviar el id del team en el mensaje
 		pthread_mutex_unlock(&mutex_recibir);
 		printf("socket_suscripcion:%d\n",socket_cola);
 		while(recibir_mensaje(socket_cola));
+		pthread_mutex_lock(&mutex_logger);
 		log_debug(logger,"Error de comunicacion con el broker, se realizara la operacion default");
+		pthread_mutex_unlock(&mutex_logger);
+	    confirmar_respuesta();
+		pthread_mutex_lock(&mutex_confirmacion);
+	    broker_conectado = false;
+		pthread_mutex_unlock(&mutex_confirmacion);
+		pthread_mutex_lock(&mutex_logger);
 		log_debug(logger,"Reintentando conexion...");
+		pthread_mutex_unlock(&mutex_logger);
 		close(socket_cola);
 	}
 }
@@ -1370,7 +1422,6 @@ void debug(sem_t* sem){
 				enviar_catch(pokemon);
 				liberar_pokemon(pokemon);
 				break;
-
 		}
 	}
 }
@@ -1381,8 +1432,8 @@ void debug(sem_t* sem){
 int main(void) {
 
 	inicializar_team();
-	dictionary_put(ids_a_esperar,"455",(void*)LOCALIZED_POKEMON);
-	dictionary_put(ids_a_esperar,"888888",(void*)LOCALIZED_POKEMON);
+	dictionary_put(ids_a_esperar_localized,"455",(void*)LOCALIZED_POKEMON);
+	dictionary_put(ids_a_esperar_localized,"888888",(void*)LOCALIZED_POKEMON);
 
 	//DEBUG
 	sem_t sem_debug;
