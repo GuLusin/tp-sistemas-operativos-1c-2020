@@ -27,6 +27,7 @@ void debug_dic(t_dictionary* pokemones_deseados){
 }
 
 void debug_leer_lista(t_list* lista){
+	pthread_mutex_lock(&list_pok_new_mutex);
 	printf("Comienza lectura de lista:\n");
 	t_pokemon* aux;
 	for (int i=0;i<list_size(lista);i++){
@@ -34,6 +35,7 @@ void debug_leer_lista(t_list* lista){
 		printf("Pokemon %s, posx %d, posy %d\n",aux->nombre,aux->pos_x,aux->pos_y);
 	}
 	printf("--------------------------------------\n");
+	pthread_mutex_unlock(&list_pok_new_mutex);
 }
 
 void leer_lista_entrenadores(t_list* lista){
@@ -147,13 +149,13 @@ void inicializar_estructuras_globales(){
 
 void liberar_pokemon(t_pokemon *pokemon){
 	free(pokemon->nombre);
-	//free(pokemon); PREGUNTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAR
+	free(pokemon); //PREGUNTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAR
 }
 
 void liberar_entrenador(t_entrenador *entrenador){
 	list_destroy(entrenador->pokemones);
 	list_destroy(entrenador->objetivos);
-	//free(entrenador); PREGUNTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAR
+	free(entrenador); //fPREGUNTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAR
 }
 
 void liberar_recursos_globales(){
@@ -411,7 +413,7 @@ void enviar_catch(t_entrenador* entrenador){
 
 	int id_correlativo = wait_ack(socket_broker);
 
-	printf("id_correlativo recibiasdasdasdasdsddo:%d\n",id_correlativo);
+	printf("id_correlativo: %d\n",id_correlativo);
 
 	send_ack(socket_broker,id_correlativo);
 	liberar_mensaje(mensaje);//todo chequear id a confirmar correlativo
@@ -879,16 +881,24 @@ int encontrar_distancia_minima(t_pokemon *pokemon){
 t_list* ordenar_lista_new(){
 	pthread_mutex_lock(&list_pok_new_mutex);
 	t_list *pokemones_aux = list_duplicate(list_pok_new);
-	/*puts("POKEMON NEW");
-	debug_leer_lista(list_pok_new);
-	puts("------------");*/
+	//puts("POKEMON NEW ANTES");
+	//debug_leer_lista(list_pok_new);
+	//puts("------------");
+	//puts("POKEMON NEW DEPLICATED");
+	//debug_leer_lista(pokemones_aux);
+	//puts("------------");
 	pthread_mutex_unlock(&list_pok_new_mutex);
 
 	bool distancia_mas_cercana(void* pokemon1,void* pokemon2){
 	    return encontrar_distancia_minima((t_pokemon*)pokemon1) < encontrar_distancia_minima((t_pokemon*)pokemon2);//ojo los signos
 	}
-
 	list_sort(pokemones_aux, distancia_mas_cercana);
+	//puts("POKEMON NEW DESPUES");
+	//debug_leer_lista(list_pok_new);
+	//puts("------------");
+	//puts("POKEMON NEW DEPLICATED");
+	//debug_leer_lista(pokemones_aux);
+	//puts("------------");
 	return pokemones_aux;
 }
 
@@ -916,11 +926,12 @@ void mover_a_ready(t_pokemon* un_pokemon){
 	pthread_mutex_lock(&list_pok_new_mutex);
 	t_pokemon* aux = remover_pokemon(list_pok_new, un_pokemon);
 	pthread_mutex_unlock(&list_pok_new_mutex);
-
+	puts("POKEMON NEW ANTES");
+	debug_leer_lista(list_pok_new);
+	puts("------------");
 	pthread_mutex_lock(&list_pok_ready_mutex);
 	list_add(list_pok_ready,aux);
 	pthread_mutex_unlock(&list_pok_ready_mutex);
-
 	agregar_a_diccionario(dic_pok_ready_o_exec, un_pokemon->nombre);
 }
 
@@ -960,6 +971,8 @@ void pasar_a_ready_al_pokemon_adecuado(t_list* pokemons, int interacion){
 	t_pokemon* aux = list_get(pokemons,interacion);
 
 	if (me_sirve(aux)){
+		puts("ME SIRVE");
+		mostrar_pokemon(aux);
 		mover_a_ready(aux);
 		sem_post(&hay_pokemones);
 		return;
@@ -967,11 +980,13 @@ void pasar_a_ready_al_pokemon_adecuado(t_list* pokemons, int interacion){
 
 	if (ya_no_me_sirve(aux)){
 		puts("NO ME SIRVE");
+		mostrar_pokemon(aux);
 		pasar_a_ready_al_pokemon_adecuado(pokemons,interacion+1);
 		pthread_mutex_lock(&list_pok_new_mutex);
 		remover_pokemon(list_pok_new, aux);
 		pthread_mutex_unlock(&list_pok_new_mutex);
-		liberar_pokemon(aux); //NUEVA
+		mostrar_pokemon(aux);
+		//liberar_pokemon(aux); //NUEVA
 		return;
 	}
 
@@ -983,12 +998,11 @@ void pasar_a_ready_al_pokemon_adecuado(t_list* pokemons, int interacion){
 
 
 void exec_algoritmo_largo_plazo(){
-	t_list* pokemon_aux = ordenar_lista_new(); //pokemones_ordenados() devuelve una lista de los pokemones ordenados por conveniencia en relacion a los entrenadores disponibles
+	t_list* pokemones_aux = ordenar_lista_new(); //pokemones_ordenados() devuelve una lista de los pokemones ordenados por conveniencia en relacion a los entrenadores disponibles
 	//debug_leer_lista(pokemon_aux);
+	pasar_a_ready_al_pokemon_adecuado(pokemones_aux,0);
 
-	pasar_a_ready_al_pokemon_adecuado(pokemon_aux,0);
-
-	list_destroy(pokemon_aux);
+	list_destroy(pokemones_aux); //CAGAAAAA?
 	return;
 }
 
@@ -998,7 +1012,6 @@ void planificador_largo_plazo(){
 		sem_wait(&hayentrenadorlibre);
 		puts("REVISA EL ALGORITMO");
 		exec_algoritmo_largo_plazo();
-
 	}
 }
 
@@ -1287,6 +1300,7 @@ bool recibir_mensaje(int un_socket){
 
 void avisar_semaforo(char* id_correlativo,void *id){
 	pthread_mutex_unlock(&mutex_respuesta);
+	dictionary_remove(ids_a_esperar_catch,id_correlativo);
 	respuesta_caught[(int)id]=true;
 	pthread_mutex_unlock(&mutex_respuesta);
 	sem_post(&espera_caught[((int)id)]);
@@ -1308,6 +1322,7 @@ void protocolo_recibir_mensaje(cola_code cola){
 		log_debug(logger,"Error de comunicacion con el broker, se realizara la operacion default");
 		pthread_mutex_unlock(&mutex_logger);
 	    confirmar_respuesta();
+
 		pthread_mutex_lock(&mutex_confirmacion);
 	    broker_conectado = false;
 		pthread_mutex_unlock(&mutex_confirmacion);
@@ -1417,11 +1432,6 @@ void debug(sem_t* sem){
 				puts("----- SE LIBERARON LOS RECURSOS CORRECTAMENTE -----");
 				sem_post(sem);
 				return;
-			case 'c':;
-				t_pokemon* pokemon = crear_pokemon("Pikachu",1,2);
-				enviar_catch(pokemon);
-				liberar_pokemon(pokemon);
-				break;
 		}
 	}
 }
