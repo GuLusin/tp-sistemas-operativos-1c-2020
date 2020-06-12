@@ -6,6 +6,7 @@ agregar logs:
 * log atrapar
 *
 * hilo para recibir gameboy
+* revisar mutexPRUEBA
 *
 * disminuir memleaks o preguntar si son muchos (PREGUNTAR EL FREE DEL ENTRENADOR, XQ NO ROMPE?)
 *
@@ -283,7 +284,8 @@ void deadlock(){
 
 	t_entrenador* aux;
 	t_entrenador* aux1;
-	t_pokemon *pok_mentira = malloc(sizeof(t_pokemon));
+	t_pokemon *pok_mentira;
+
 
 	t_list* pokemones_que_quiere_aux;
 
@@ -318,10 +320,15 @@ void deadlock(){
 	}
 
 	while(!list_is_empty(entrenadores_bloqueados)){
+		printf("Entra al while\n");
 		aux = list_remove(entrenadores_bloqueados,0);
 		pokemones_que_quiere_aux = pokemones_deseados(aux);
 
 		aux1 = list_remove_by_condition(entrenadores_bloqueados,puedeIntercambiarConAux);
+
+		pok_mentira = malloc(sizeof(t_pokemon));
+		pok_mentira->nombre = malloc(strlen("pok_mentira "));
+		strcpy(pok_mentira->nombre,"pok_mentira");
 
 		pok_mentira->pos_x = (uint32_t) aux1->posicion_x;
 		pok_mentira->pos_y = (uint32_t) aux1->posicion_y;
@@ -331,7 +338,11 @@ void deadlock(){
 		sem_post(&deadlock_entrenadores[aux->id]);
 		sem_wait(&sem_deadlock);
 
+
 		intercambiar_pokemones(aux,aux1);
+
+		printf("Sleep fraudulento\n");
+		sleep(2);
 
 		mostrar_entrenador(aux);
 		mostrar_entrenador(aux1);
@@ -344,9 +355,12 @@ void deadlock(){
 
 		list_destroy(pokemones_que_quiere_aux);
 
-		leer_lista_entrenadores(entrenadores);
+		printf("esta por salir del while\n");
+		printf("size de entrenadores bloqueados: %d\n",list_size(entrenadores_bloqueados));
 	}
-	free(pok_mentira);
+
+	printf("Sale del while\n");
+
     list_destroy(entrenadores_bloqueados);
 	pthread_mutex_lock(&mutex_logger);
 	log_debug(logger,"Finaliza el algoritmo de deteccion de deadlock con exito");
@@ -357,6 +371,7 @@ void deadlock(){
 
 bool cumplio_objetivo_entrenador(int id){ //verifica si las listas de objetivos y pokemones son iguales
 
+	printf("ENTRA A cumplio_objetivo_entrenador\n");
 
 	pthread_mutex_lock(&mutexPRUEBA);
 
@@ -390,15 +405,26 @@ bool cumplio_objetivo_entrenador(int id){ //verifica si las listas de objetivos 
 	dictionary_destroy(pokemones_deseados);
 
 	pthread_mutex_unlock(&mutexPRUEBA);
+
+	printf("SALE DE cumplio_objetivo_entrenador\n");
 	return exito;
 }
 
 bool tiene_cantidad(t_entrenador* entrenador){
-	return (list_size(entrenador->pokemones) == list_size(entrenador->objetivos));
+
+	pthread_mutex_lock(&mutex_lista_entrenadores);
+	bool devuelve = (list_size(entrenador->pokemones) == list_size(entrenador->objetivos));
+	pthread_mutex_unlock(&mutex_lista_entrenadores);
+
+	return devuelve;
 }
 
 bool llego_al_objetivo(t_entrenador *entrenador){
-	return ((entrenador->posicion_x == entrenador->objetivo_temporal->pos_x) && (entrenador->posicion_y == entrenador->objetivo_temporal->pos_y));
+	if(entrenador->objetivo_temporal != NULL){
+		return ((entrenador->posicion_x == entrenador->objetivo_temporal->pos_x) && (entrenador->posicion_y == entrenador->objetivo_temporal->pos_y));
+	}
+	else
+		return false;
 }
 
 void enviar_catch(t_entrenador* entrenador){
@@ -461,6 +487,11 @@ void atrapar_pokemon(t_entrenador* entrenador){
 		pthread_mutex_unlock(&mutex_logger);
 		remover_de_diccionario(dic_pok_obj,nombre);
 		list_add(entrenador->pokemones, nombre);
+
+		leer_lista_entrenadores(entrenadores); //TODO sacar
+
+
+
     }
 	else{
 		//free
@@ -510,22 +541,33 @@ void entrenador(int id){
 		pthread_mutex_unlock(&mutex_logger);
 
 		if(llego_al_objetivo(entrenador)){
+
+			pthread_mutex_lock(&mutex_lista_entrenadores);//TODO
+
 			entrenador->bloq_exec = 1;
 			sem_post(&activar_algoritmo);
 			atrapar_pokemon(entrenador);
-
+			printf("Sale de atrapar!\n");
 			entrenador->bloq_exec = 0;
+
+			pthread_mutex_unlock(&mutex_lista_entrenadores);
+
 			if(!tiene_cantidad(entrenador))
 				sem_post(&hayentrenadorlibre);
-		  }
-		else
+
+			printf("Llega a la 540!\n");
+		  }else
 			sem_post(&activar_algoritmo);
 	}
 
+	pthread_mutex_lock(&mutex_lista_entrenadores);
     entrenador->bloq_exec = 1;
+    pthread_mutex_unlock(&mutex_lista_entrenadores);
+
     sem_post(&entrenador_bloqueado);
 
     while(!cumplio_objetivo_entrenador(id)){
+
     	sem_wait(&deadlock_entrenadores[id]);
     	if(cumplio_objetivo_entrenador(id))
     		break;
@@ -540,17 +582,18 @@ void entrenador(int id){
     		pthread_mutex_unlock(&mutex_logger);
     	}
     	printf("El entrenador llego al objetivo para hacer el intercambio\n");
+    	free(entrenador->objetivo_temporal->nombre);
+    	free(entrenador->objetivo_temporal);
     	entrenador->objetivo_temporal = NULL;
+
 		sem_post(&sem_deadlock);
     }
 
+
     entrenador->exit = 1;
 
+
 	printf("------ Termino entrenador %d -------\n",id);
-	for(int i=0; i < list_size(entrenador->pokemones); i++){
-		printf("Pokemon numero: %d %s\n",i+1,(char *) list_get(entrenador->pokemones,i));
-	}
-	printf("---------------------------------\n");
 	//free(entrenador); //OJO CON LOS LOGS
 }
 
@@ -652,6 +695,8 @@ void planificacionFIFO(){
 			sem_post(&(ejecutar_entrenador[entrenador->id]));
 			sem_wait(&activar_algoritmo);
 		}
+
+		printf("679!\n");
 
 		pthread_mutex_lock(&mutex_lista_corto_plazo);
 		list_remove(lista_corto_plazo,0);
@@ -981,12 +1026,14 @@ void pasar_a_ready_al_pokemon_adecuado(t_list* pokemons, int interacion){
 	if (ya_no_me_sirve(aux)){
 		puts("NO ME SIRVE");
 		mostrar_pokemon(aux);
+
 		pasar_a_ready_al_pokemon_adecuado(pokemons,interacion+1);
 		pthread_mutex_lock(&list_pok_new_mutex);
-		remover_pokemon(list_pok_new, aux);
+		aux = remover_pokemon(list_pok_new, aux);
 		pthread_mutex_unlock(&list_pok_new_mutex);
 		mostrar_pokemon(aux);
 		//liberar_pokemon(aux); //NUEVA
+		puts("SALE DE NO ME SIRVE!");
 		return;
 	}
 
