@@ -186,6 +186,47 @@ void liberar_recursos_globales(){
 
 //--------------------------------------------------- DEADLOCK ---------------------------------------
 
+bool cumplio_objetivo_entrenador(int id){ //verifica si las listas de objetivos y pokemones son iguales
+
+	printf("ENTRA A cumplio_objetivo_entrenador\n");
+
+	pthread_mutex_lock(&mutexPRUEBA);
+
+	int exito;
+	t_dictionary* pokemones_deseados = dictionary_create();
+	t_list* pokemones_ya_obtenidos = list_create();
+	t_list* pokemones_objetivo = list_create();
+
+	t_entrenador* aux;
+
+	pthread_mutex_lock(&mutex_lista_entrenadores);
+	aux=list_get(entrenadores,id);
+	pthread_mutex_unlock(&mutex_lista_entrenadores);
+
+	list_add_all(pokemones_ya_obtenidos,aux->pokemones);
+	list_add_all(pokemones_objetivo,aux->objetivos);
+
+	for (int i=0;i<list_size(pokemones_objetivo);i++)
+		agregar_a_diccionario(pokemones_deseados,list_get(pokemones_objetivo,i));
+
+	for (int i=0;i<list_size(pokemones_ya_obtenidos);i++)
+		remover_de_diccionario(pokemones_deseados,list_get(pokemones_ya_obtenidos,i));
+
+	list_destroy(pokemones_objetivo);
+	list_destroy(pokemones_ya_obtenidos);
+
+	if(dictionary_is_empty(pokemones_deseados))
+		exito = true;
+	else
+		exito = false;
+	dictionary_destroy(pokemones_deseados);
+
+	pthread_mutex_unlock(&mutexPRUEBA);
+
+	printf("SALE DE cumplio_objetivo_entrenador\n");
+	return exito;
+}
+
 void remover_de_lista_si_esta(t_list* lista_de_pokemones, char* un_pokemon){
 	//lista_de_pokemones lista de char* !!!!!!!
 	for(int z = 0; z < list_size(lista_de_pokemones) ; z++){;
@@ -234,8 +275,7 @@ t_list* intersectar_listas(t_list* una, t_list* otra){
 }
 
 
-
-void intercambiar_pokemones(t_entrenador* un_entrenador, t_entrenador* otro_entrenador){
+void intercambiar_pokemones(t_entrenador* un_entrenador, t_entrenador* otro_entrenador){//aca ya tienen la misma posicion
 	t_list* pok_des = pokemones_deseados(un_entrenador);
 	t_list* pok_dis = pokemones_no_necesarios(otro_entrenador);
 
@@ -263,11 +303,22 @@ void intercambiar_pokemones(t_entrenador* un_entrenador, t_entrenador* otro_entr
 
 		list_destroy(trade);
 
-		trade = intersectar_listas(pok_dis,pok_des);
+		//revisar nuevo estado entrenadores:
+		if(cumplio_objetivo_entrenador(un_entrenador->id))
+			un_entrenador->exit = 1;
+
+		if(cumplio_objetivo_entrenador(otro_entrenador->id))
+			otro_entrenador->exit = 1;
 
 		sem_post(&deadlock_entrenadores[un_entrenador->id]);
 		sem_post(&deadlock_entrenadores[otro_entrenador->id]);
 
+
+
+
+
+
+		trade = intersectar_listas(pok_dis,pok_des);
 	}
 
 	list_destroy(trade);
@@ -338,11 +389,10 @@ void deadlock(){
 		sem_post(&deadlock_entrenadores[aux->id]);
 		sem_wait(&sem_deadlock);
 
-
 		intercambiar_pokemones(aux,aux1);
 
-		printf("Sleep fraudulento\n");
-		sleep(2);
+//		printf("Sleep fraudulento\n");
+//		sleep(2);
 
 		mostrar_entrenador(aux);
 		mostrar_entrenador(aux1);
@@ -368,47 +418,6 @@ void deadlock(){
 }
 
 //---------------------------------------------- ENTRENADOR ----------------------------------------------------
-
-bool cumplio_objetivo_entrenador(int id){ //verifica si las listas de objetivos y pokemones son iguales
-
-	printf("ENTRA A cumplio_objetivo_entrenador\n");
-
-	pthread_mutex_lock(&mutexPRUEBA);
-
-	int exito;
-	t_dictionary* pokemones_deseados = dictionary_create();
-	t_list* pokemones_ya_obtenidos = list_create();
-	t_list* pokemones_objetivo = list_create();
-
-	t_entrenador* aux;
-
-	pthread_mutex_lock(&mutex_lista_entrenadores);
-	aux=list_get(entrenadores,id);
-	pthread_mutex_unlock(&mutex_lista_entrenadores);
-
-	list_add_all(pokemones_ya_obtenidos,aux->pokemones);
-	list_add_all(pokemones_objetivo,aux->objetivos);
-
-	for (int i=0;i<list_size(pokemones_objetivo);i++)
-		agregar_a_diccionario(pokemones_deseados,list_get(pokemones_objetivo,i));
-
-	for (int i=0;i<list_size(pokemones_ya_obtenidos);i++)
-		remover_de_diccionario(pokemones_deseados,list_get(pokemones_ya_obtenidos,i));
-
-	list_destroy(pokemones_objetivo);
-	list_destroy(pokemones_ya_obtenidos);
-
-	if(dictionary_is_empty(pokemones_deseados))
-		exito = true;
-	else
-		exito = false;
-	dictionary_destroy(pokemones_deseados);
-
-	pthread_mutex_unlock(&mutexPRUEBA);
-
-	printf("SALE DE cumplio_objetivo_entrenador\n");
-	return exito;
-}
 
 bool tiene_cantidad(t_entrenador* entrenador){
 
@@ -530,7 +539,7 @@ void entrenador(int id){
 	t_entrenador *entrenador = list_get(entrenadores, id);
 	pthread_mutex_unlock(&mutex_lista_entrenadores);
 
-	while(!tiene_cantidad(entrenador)){//con el deadlock tiene q ser q cumpla el objetivo
+	while(!tiene_cantidad(entrenador)){
 		sem_wait(&(ejecutar_entrenador[id]));
 
 		sleep(retardo);
@@ -555,7 +564,6 @@ void entrenador(int id){
 			if(!tiene_cantidad(entrenador))
 				sem_post(&hayentrenadorlibre);
 
-			printf("Llega a la 540!\n");
 		  }else
 			sem_post(&activar_algoritmo);
 	}
@@ -675,6 +683,7 @@ void planificar(){
 
 //------------------------------------------ALGORITMOS-------------------------------------------------------
 
+
 void planificacionFIFO(){
 	while(dictionary_size(dic_pok_obj) > 0){
 		sem_wait(&hay_entrenador_corto_plazo);
@@ -687,16 +696,10 @@ void planificacionFIFO(){
 		puts("------------------------------------------------------------------------------------------");
 		mostrar_entrenador(entrenador);
 		puts("------------------------------------------------------------------------------------------");
-		if(llego_al_objetivo(entrenador)){
+		do{
 			sem_post(&(ejecutar_entrenador[entrenador->id]));
 			sem_wait(&activar_algoritmo);
-		}
-		while(!llego_al_objetivo(entrenador)){
-			sem_post(&(ejecutar_entrenador[entrenador->id]));
-			sem_wait(&activar_algoritmo);
-		}
-
-		printf("679!\n");
+		}while(entrenador->objetivo_temporal);
 
 		pthread_mutex_lock(&mutex_lista_corto_plazo);
 		list_remove(lista_corto_plazo,0);
@@ -1225,7 +1228,7 @@ void agregar_id_esperado(int id_entrenador,int id){
 }
 
 int remover_id(int id){
-	return dictionary_remove(ids_a_esperar_localized,string_itoa(id));
+	return (int)dictionary_remove(ids_a_esperar_localized,string_itoa(id));
 }
 
 int comprobar_id_esperado(uint32_t id){
@@ -1237,7 +1240,7 @@ void agregar_id_esperado_catch(int id_entrenador,int id){
 }
 
 int remover_id_catch(int id){
-	return dictionary_remove(ids_a_esperar_catch,string_itoa(id));
+	return (int)dictionary_remove(ids_a_esperar_catch,string_itoa(id));
 }
 
 int comprobar_id_esperado_catch(uint32_t id){
