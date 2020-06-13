@@ -28,6 +28,7 @@ t_log* logger;
 
 char *ip_broker,*puerto_broker;
 int wait_time;
+bool broker_conectado;
 
 //---------------------------------- PLANIFICACION -----------------------------------------------
 
@@ -52,7 +53,8 @@ t_list* lista_corto_plazo;
 
 t_dictionary* dic_pok_obj;
 t_dictionary* dic_pok_ready_o_exec;
-t_dictionary* ids_a_esperar;
+t_dictionary* ids_a_esperar_localized; //localized
+t_dictionary* ids_a_esperar_catch;
 
 //-----------------SEMAFOROS
 
@@ -78,6 +80,9 @@ pthread_mutex_t mutexPRUEBA;
 pthread_mutex_t mutex_pokemones_recibidos;
 pthread_mutex_t mutex_lista_entrenadores;
 pthread_mutex_t mutex_lista_corto_plazo;
+pthread_mutex_t mutex_confirmacion;
+pthread_mutex_t mutex_respuesta;
+pthread_mutex_t mutex_logger;
 
 //-----------------HILOS
 

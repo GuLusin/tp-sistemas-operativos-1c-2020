@@ -1,12 +1,10 @@
-//gcc broker.c -lpthread -lcommons -o broker
-//./broker
 
 #include "gameboy.h"
 
 int subscribirse_a_cola(cola_code cola){
 	char *ip_send = config_get_string_value(config,"IP_BROKER");
 	char *puerto_send = config_get_string_value(config,"PUERTO_BROKER");
-	int socket_aux = connect_to(ip_send,puerto_send,wait_time);
+	int socket_aux = connect_to(ip_send,puerto_send,wait_time,logger);
 	t_mensaje* mensaje = crear_mensaje(2, SUBSCRIPCION, cola);
 	mensaje->id=ID_SUSCRIPCION;
 	enviar_mensaje(socket_aux, mensaje);
@@ -41,7 +39,6 @@ void escuchar_broker(int *socket_servidor){
 		if(recv(*socket_servidor, &(size_contenido_mensaje), sizeof(uint32_t), 0) == -1){
 			perror("Falla recv() size_contenido_mensaje");
 		}
-
 
 		printf("size contenido:%d\n", size_contenido_mensaje);
 
@@ -118,7 +115,7 @@ void manejar_mensaje(int argc, char** args){
 	case BROKER:
 		ip_send = config_get_string_value(config,"IP_BROKER");
 	    puerto_send = config_get_string_value(config,"PUERTO_BROKER");
-		socket_aux = connect_to(ip_send,puerto_send,wait_time);
+		socket_aux = connect_to(ip_send,puerto_send,wait_time,logger);
 		log_debug(logger,"Conectado a proceso BROKER ip:%s	puerto:%s",ip_send,puerto_send);
 
 		switch(tipo_mensaje){
@@ -154,7 +151,7 @@ void manejar_mensaje(int argc, char** args){
 	case TEAM:
 		ip_send = config_get_string_value(config,"IP_TEAM");
 		puerto_send = config_get_string_value(config,"PUERTO_TEAM");
-		socket_aux = connect_to(ip_send,puerto_send,wait_time);
+		socket_aux = connect_to(ip_send,puerto_send,wait_time,logger);
 		log_debug(logger,"Conectado a proceso TEAM ip:%s	puerto:%s",ip_send,puerto_send);
 
 		if(tipo_mensaje == APPEARED_POKEMON){
@@ -167,7 +164,7 @@ void manejar_mensaje(int argc, char** args){
 	case GAMECARD:
 		ip_send = config_get_string_value(config,"IP_GAMECARD");
 	    puerto_send = config_get_string_value(config,"PUERTO_GAMECARD");
-		socket_aux = connect_to(ip_send,puerto_send,wait_time);
+		socket_aux = connect_to(ip_send,puerto_send,wait_time,logger);
 		log_debug(logger,"Conectado a proceso GAMECARD ip:%s	puerto:%s",ip_send,puerto_send);
 
 		switch(tipo_mensaje){
@@ -196,17 +193,16 @@ void manejar_mensaje(int argc, char** args){
 		return;
 	}
 
+	printear_mensaje(mensaje);
 	enviar_mensaje(socket_aux,mensaje);
 	check_ack(socket_aux,ACK);
 	printf("ACK recibido con exito\n");
 
 	free(mensaje);
 	close(socket_aux);
+	printf("Socket cerrado\n");
 	return;
-
 }
-
-
 
 int main(int argc, char**args) {
 
@@ -219,9 +215,6 @@ int main(int argc, char**args) {
 	config = config_create("../config");
 
 	manejar_mensaje(argc,args);
-
-
-
 
 	return EXIT_SUCCESS;
 }

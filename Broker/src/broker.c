@@ -218,7 +218,7 @@ void envio_mensaje(){
 		int msg = getchar();
 		switch(msg){
 			case 'p':
-				pokemon = crear_pokemon("Pikachu",-1,2);
+				pokemon = crear_pokemon("Pikachu",rand()%9,rand()%9);
 				mensaje_aux = crear_mensaje(5, APPEARED_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,455);
 				puts("envia appeared pokemon");
 				notificar_mensaje(mensaje_aux);
@@ -282,19 +282,19 @@ void envio_mensaje(){
 				notificar_mensaje(mensaje_aux);
 				break;
 			case 'b':
-				pokemon = crear_pokemon("Bulbasaur",9,5);
+				pokemon = crear_pokemon("Bulbasaur",rand()%9,rand()%9);
 				mensaje_aux = crear_mensaje(5, APPEARED_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,455);
 				puts("envia appeared pokemon");
 				notificar_mensaje(mensaje_aux);
 				break;
 			case 's':
-				pokemon = crear_pokemon("Squirtle",4,7);
+				pokemon = crear_pokemon("Squirtle",rand()%9,rand()%9);
 				mensaje_aux = crear_mensaje(5, APPEARED_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,455);
 				puts("envia appeared pokemon");
 				notificar_mensaje(mensaje_aux);
 				break;
 			case 'c':
-				pokemon = crear_pokemon("Charmander",4,7);
+				pokemon = crear_pokemon("Charmander",rand()%9,rand()%9);
 				mensaje_aux = crear_mensaje(5, APPEARED_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,455);
 				puts("envia appeared pokemon");
 				notificar_mensaje(mensaje_aux);
