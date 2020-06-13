@@ -188,8 +188,6 @@ void liberar_recursos_globales(){
 
 bool cumplio_objetivo_entrenador(int id){ //verifica si las listas de objetivos y pokemones son iguales
 
-	printf("ENTRA A cumplio_objetivo_entrenador\n");
-
 	pthread_mutex_lock(&mutexPRUEBA);
 
 	int exito;
@@ -223,7 +221,6 @@ bool cumplio_objetivo_entrenador(int id){ //verifica si las listas de objetivos 
 
 	pthread_mutex_unlock(&mutexPRUEBA);
 
-	printf("SALE DE cumplio_objetivo_entrenador\n");
 	return exito;
 }
 
@@ -391,9 +388,6 @@ void deadlock(){
 
 		intercambiar_pokemones(aux,aux1);
 
-//		printf("Sleep fraudulento\n");
-//		sleep(2);
-
 		mostrar_entrenador(aux);
 		mostrar_entrenador(aux1);
 
@@ -488,7 +482,7 @@ void atrapar_pokemon(t_entrenador* entrenador){
 		pthread_mutex_unlock(&mutex_logger);
 		confirmacion = true;}
 
-	printf("confirmacion:%d\n",confirmacion);
+//	printf("confirmacion:%d\n",confirmacion);
 
 	if(confirmacion){//envia mensaje catch_pokemon(pokemon);
 		pthread_mutex_lock(&mutex_logger);
@@ -552,7 +546,7 @@ void entrenador(int id){
 			pthread_mutex_unlock(&mutex_lista_entrenadores);
 			sem_post(&activar_algoritmo);
 			atrapar_pokemon(entrenador);
-			printf("Sale de atrapar!\n");
+
 			pthread_mutex_lock(&mutex_lista_entrenadores);//TODO
 			entrenador->bloq_exec = 0;
 			pthread_mutex_unlock(&mutex_lista_entrenadores);
@@ -931,24 +925,12 @@ int encontrar_distancia_minima(t_pokemon *pokemon){
 t_list* ordenar_lista_new(){
 	pthread_mutex_lock(&list_pok_new_mutex);
 	t_list *pokemones_aux = list_duplicate(list_pok_new);
-	//puts("POKEMON NEW ANTES");
-	//debug_leer_lista(list_pok_new);
-	//puts("------------");
-	//puts("POKEMON NEW DEPLICATED");
-	//debug_leer_lista(pokemones_aux);
-	//puts("------------");
 	pthread_mutex_unlock(&list_pok_new_mutex);
 
 	bool distancia_mas_cercana(void* pokemon1,void* pokemon2){
 	    return encontrar_distancia_minima((t_pokemon*)pokemon1) < encontrar_distancia_minima((t_pokemon*)pokemon2);//ojo los signos
 	}
 	list_sort(pokemones_aux, distancia_mas_cercana);
-	//puts("POKEMON NEW DESPUES");
-	//debug_leer_lista(list_pok_new);
-	//puts("------------");
-	//puts("POKEMON NEW DEPLICATED");
-	//debug_leer_lista(pokemones_aux);
-	//puts("------------");
 	return pokemones_aux;
 }
 
@@ -976,9 +958,7 @@ void mover_a_ready(t_pokemon* un_pokemon){
 	pthread_mutex_lock(&list_pok_new_mutex);
 	t_pokemon* aux = remover_pokemon(list_pok_new, un_pokemon);
 	pthread_mutex_unlock(&list_pok_new_mutex);
-	puts("POKEMON NEW ANTES");
-	debug_leer_lista(list_pok_new);
-	puts("------------");
+
 	pthread_mutex_lock(&list_pok_ready_mutex);
 	list_add(list_pok_ready,aux);
 	agregar_a_diccionario(dic_pok_ready_o_exec, un_pokemon->nombre);
@@ -1021,24 +1001,19 @@ void pasar_a_ready_al_pokemon_adecuado(t_list* pokemons, int interacion){
 	t_pokemon* aux = list_get(pokemons,interacion);
 
 	if (me_sirve(aux)){
-		puts("ME SIRVE");
-		mostrar_pokemon(aux);
 		mover_a_ready(aux);
 		sem_post(&hay_pokemones);
 		return;
 	}
 
 	if (ya_no_me_sirve(aux)){
-		puts("NO ME SIRVE");
-		mostrar_pokemon(aux);
-
 		pasar_a_ready_al_pokemon_adecuado(pokemons,interacion+1);
 		pthread_mutex_lock(&list_pok_new_mutex);
 		aux = remover_pokemon(list_pok_new, aux);
 		pthread_mutex_unlock(&list_pok_new_mutex);
 		mostrar_pokemon(aux);
 		//liberar_pokemon(aux); //NUEVA
-		puts("SALE DE NO ME SIRVE!");
+
 		return;
 	}
 
@@ -1062,7 +1037,7 @@ void planificador_largo_plazo(){
 	while(1){
 		sem_wait(&revisar_pokemones_new);
 		sem_wait(&hayentrenadorlibre);
-		puts("REVISA EL ALGORITMO");
+
 		exec_algoritmo_largo_plazo();
 	}
 }
@@ -1074,7 +1049,7 @@ void planificador(){
 
 	while(dictionary_size(dic_pok_obj)){ //cada entrenador tiene sus *cantidades* deseadas (no hace falta q coincidan)!
 	    sem_wait(&hay_pokemones);
-	    puts("HAY UN NUEVO POKEMON");
+	    //puts("HAY UN NUEVO POKEMON");
 	    planificar();
 	}
 }
@@ -1199,16 +1174,11 @@ t_dictionary* obtener_pokemones_objetivo(){
 
 void esperar_mensaje(int *socket){
 
-	//printf("a recibir mensaje le llega el socket %d\n",*socket_cliente);
 	uint32_t codigo_operacion;
-
-	//pthread_mutex_lock(&mutex_recibir);
 
 	if(recv(*socket, &(codigo_operacion),sizeof(uint32_t), MSG_WAITALL)==-1){
 		perror("Falla recv() op_code");
 	}
-
-	//printf("op_code: %d\n", codigo_operacion);
 
 	uint32_t id;
 
@@ -1216,16 +1186,11 @@ void esperar_mensaje(int *socket){
 		perror("Falla recv() id");
 	}
 
-	//printf("id:%d\n", id);
-
 	uint32_t size_contenido_mensaje;
 
 	if(recv(*socket, &(size_contenido_mensaje), sizeof(uint32_t), MSG_WAITALL) == -1){
 		perror("Falla recv() size_contenido_mensaje");
 	}
-
-	//printf("size contenido:%d\n", size_contenido_mensaje);
-
 
 	void* stream = malloc(size_contenido_mensaje);
 
@@ -1234,6 +1199,8 @@ void esperar_mensaje(int *socket){
 	}
 
 	t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
+
+	send_ack(*socket,ACK);
 
 	manejar_mensaje(mensaje);
 
@@ -1490,6 +1457,7 @@ void mostrar_menu(){
 	puts("N -> LISTA DE NEW");
 	puts("R -> LISTA DE READY");
 	puts("o -> DICCIONARIO DE OBJETIVOS");
+	puts("F -> LIBERAR RECURSOS");
 	puts("r -> DICCIONARIO DE READY");
 	puts("E -> LISTA DE ENTRENADORES");
 	puts("C -> LISTA DE CORTO PLAZO");

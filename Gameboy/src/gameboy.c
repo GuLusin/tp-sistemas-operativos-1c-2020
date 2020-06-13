@@ -193,12 +193,14 @@ void manejar_mensaje(int argc, char** args){
 		return;
 	}
 
+	printear_mensaje(mensaje);
 	enviar_mensaje(socket_aux,mensaje);
 	check_ack(socket_aux,ACK);
 	printf("ACK recibido con exito\n");
 
 	free(mensaje);
 	close(socket_aux);
+	printf("Socket cerrado\n");
 	return;
 }
 
