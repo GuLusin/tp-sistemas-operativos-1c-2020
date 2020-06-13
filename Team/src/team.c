@@ -1223,7 +1223,7 @@ int subscribirse_a_cola(cola_code cola){
 	broker_conectado = true;
 	pthread_mutex_unlock(&mutex_confirmacion);
 	t_mensaje* mensaje = crear_mensaje(2, SUBSCRIPCION, cola);
-	mensaje->id=ID_SUSCRIPCION;
+	mensaje->id=15;//todo leer ID_TEAM desde la config
 	enviar_mensaje(socket_aux, mensaje);
 	check_ack(socket_aux, ACK);
 	free(mensaje);

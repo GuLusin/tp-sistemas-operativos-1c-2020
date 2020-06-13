@@ -3,7 +3,7 @@
 int subscribirse_a_cola(cola_code cola){
 	int socket_aux = connect_to(ip_broker,puerto_broker, tiempo_reintento_conexion, logger);
 	t_mensaje* mensaje = crear_mensaje(2, SUBSCRIPCION, cola);
-	mensaje->id=ID_SUSCRIPCION;
+	mensaje->id=12; // todo agregar en config id gamecard y ttomar de ahi el valor
 	enviar_mensaje(socket_aux, mensaje);
 	check_ack(socket_aux, ACK);
 	return socket_aux;
@@ -22,14 +22,37 @@ void leer_config() {
 	//log_debug(logger,config_get_string_value(config,"PUNTO_MONTAJE_TALLGRASS")); // Ver si es necesario loggear esto
 }
 
+t_metadata* leer_archivo_metadata(char* ruta){//TODO falla :(
+	t_config* aux_metadata = config_create(ruta);
+	t_metadata* metadata;
+	metadata->directory = config_get_int_value(aux_metadata, "DIRECTORY");
+	if(metadata->directory == 'N'){
+		metadata->size = config_get_int_value(aux_metadata, "SIZE");
+		metadata->blocks = config_get_array_value(aux_metadata, "BLOCKS");
+		metadata->open = config_get_int_value(aux_metadata, "OPEN");
+	}
+	config_destroy(aux_metadata);
+	return metadata;
+}
+
+char* generar_ruta_metadata(char* nombre_pokemon){//TODO falla :(
+	char* ruta = string_new();
+	string_append(&ruta,punto_montaje);
+	string_append(&ruta,"/Files/");//ver si hace falta capitalizar con: string_capitalized(char *text)
+	string_append(&ruta,nombre_pokemon);
+	string_append(&ruta,"/Metadata.bin");
+	return ruta;
+}
+
 void recibir_new(t_mensaje *mensaje){
 	char* ruta = generar_ruta_metadata(mensaje->contenido.new_pokemon.pokemon->nombre); //puede fallar
+	puts(ruta);
 	if(!verificar_si_existe(ruta)){
 		crear_dir_pokemon(mensaje->contenido.new_pokemon.pokemon->nombre, ruta);
 	}
 	t_metadata* metadata;
 	metadata = leer_archivo_metadata(ruta);
-	agregar_pokemones(metadata);
+	//agregar_pokemones(metadata);
 
 	/*
 	 Verificar si las posiciones ya existen dentro del archivo.
@@ -55,31 +78,12 @@ int verificar_si_existe(char* ruta){ //podria fijarse en lista global si esta el
 	if(!archivo_pokemon){
 		existe = 0;
 	}
-	txt_close(archivo_pokemon);
+
+
+	txt_close_file(archivo_pokemon);
 	return existe;
 }
 
-t_metadata* leer_archivo_metadata(char* ruta){//TODO falla :(
-	t_config* aux_metadata = config_create(ruta);
-	t_metadata* metadata;
-	metadata->directory = config_get_int_value(aux_metadata, "DIRECTORY");
-	if(metadata->directory == 'N'){
-		metadata->size = config_get_int_value(aux_metadata, "SIZE");
-		metadata->blocks = config_get_array_value(aux_metadata, "BLOCKS");
-		metadata->open = config_get_int_value(aux_metadata, "OPEN");
-	}
-	config_destroy(aux_metadata);
-	return metadata;
-}
-
-char* generar_ruta_metadata(char* nombre_pokemon){//TODO falla :(
-	char* ruta = new_string();
-	string_append(&ruta,punto_montaje);
-	string_append(&ruta,"/Files/");//ver si hace falta capitalizar con: string_capitalized(char *text)
-	string_append(&ruta,nombre_pokemon);
-	string_append(&ruta,"/Metadata.bin");
-	return ruta;
-}
 
 void crear_dir_pokemon(char* nombre_pokemon, char* ruta){
 
@@ -128,6 +132,8 @@ bool recibir_mensaje(int un_socket){
 	mensaje->id=id;
 	printear_mensaje(mensaje);
 	manejar_mensaje(mensaje);
+	free(mensaje);
+	free(stream);
 	return true;
 }
 

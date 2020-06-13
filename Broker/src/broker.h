@@ -9,8 +9,11 @@
 #include <commons/log.h>
 #include <commons/string.h>
 #include <commons/config.h>
+#include <commons/process.h>
+#include <commons/temporal.h>
 #include <commons/collections/list.h>
 #include <pthread.h>
+#include <signal.h>
 #include <semaphore.h>
 
 #define CANTIDAD_COLAS 6
@@ -35,6 +38,10 @@ int id_mensajes_globales;
 
 //========================PARTICIONES DINAMICAS===============================
 
+typedef enum{
+	BS,
+	PARTICIONES,
+}algoritmo_memoria;
 
 typedef enum{
 	FF,
@@ -57,17 +64,15 @@ typedef struct{
 	int cola_code;
 	int id_correlativo;
 	t_list* suscriptores_confirmados;
+	char tipo;
 }t_partition;
 
-typedef struct{
-	void* inicio;
-	int size;
-}t_free_partition;
+int tamanio_memoria,tamanio_minimo_particion,freq_compactacion,particiones_ocupadas;
 
-int TAMANO_MEMORIA;
 algoritmo_particion_libre APL;
 algoritmo_reemplazo AR;
-
+algoritmo_memoria AM;
+t_list* lista_algoritmo_reemplazo;
 
 pthread_mutex_t mutex_particiones_libres;
 
@@ -77,20 +82,26 @@ void* mem_alloc; 				//ESTE PUNTERO ES GLOBAL Y UNICO, NO SE TOCA NI MODIFICA. E
 
 
 
+void printear_estado_memoria();
 void asignar_id_correlativo_a_particion(t_partition* particion,t_mensaje* mensaje);
-void cachear_mensaje(t_mensaje* mensaje_aux);
 void unificar_particiones_libres();
+void descachear_mensaje(int msg_id,int cola);
+void sacar_particion(int cola, int index);
+void confirmar_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje);
+void remover_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje);
+void validar_suscriptor(t_suscriptor* suscriptor, t_mensaje* mensaje_aux);
+void compactar_memoria();
+char* cola_string(int cola);
+int encontrar_particion(int msg_id,int cola);
 int puntero_cmp(void* un_puntero, void* otro_puntero);
-bool particiones_libres_contiguas(t_free_partition* particion1,t_free_partition* particion2);
-bool es_suscriptor_confirmado(t_list* lista,int socket_cliente);
+bool particiones_libres_contiguas(t_partition* particion1,t_partition* particion2);
+bool es_suscriptor_confirmado(t_partition* particion,int id_team);
 t_mensaje* get_mensaje_cacheado(int cola_code, int index);
 t_mensaje* leer_cache(void* stream);
 t_mensaje* leer_particion_cache(t_partition* particion);
 t_suscriptor* crear_suscriptor(int id, int socket_cliente);
-char* cola_string(int cola);
-t_partition* encontrar_particion(int id,int cola,int* posicion);
-void descachear_mensaje(int msg_id,int cola);
-void sacar_particion(int cola, int index);
+t_partition* cachear_mensaje(t_mensaje* mensaje_aux);
+
 
 
 

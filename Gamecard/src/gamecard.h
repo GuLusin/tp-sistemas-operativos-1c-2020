@@ -8,6 +8,7 @@
 #include <commons/log.h>
 #include <commons/string.h>
 #include <commons/config.h>
+#include <commons/txt.h>
 #include <pthread.h>
 #include <semaphore.h>
 #include <commons/collections/list.h>
@@ -28,4 +29,4 @@ typedef struct{
 	int open;
 }t_metadata;
 
-#endif /* GAMECARD_H*/
+#endif /* GAMECARD_H */
