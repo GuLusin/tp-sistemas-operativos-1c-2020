@@ -497,10 +497,7 @@ void atrapar_pokemon(t_entrenador* entrenador){
 		remover_de_diccionario(dic_pok_obj,nombre);
 		list_add(entrenador->pokemones, nombre);
 
-		leer_lista_entrenadores(entrenadores); //TODO sacar
-
-
-
+//		leer_lista_entrenadores(entrenadores); //TODO sacar
     }
 	else{
 		//free
@@ -508,7 +505,6 @@ void atrapar_pokemon(t_entrenador* entrenador){
 		log_debug(logger,"El entrenador id:%d no logro atapar al pokemon %s en la posicion x:%d y:%d",entrenador->id,nombre,entrenador->posicion_x,entrenador->posicion_y);
 		pthread_mutex_unlock(&mutex_logger);
 	}
-
 
 	pthread_mutex_lock(&list_pok_ready_mutex);
 	remover_de_diccionario(dic_pok_ready_o_exec,nombre);
@@ -552,13 +548,13 @@ void entrenador(int id){
 		if(llego_al_objetivo(entrenador)){
 
 			pthread_mutex_lock(&mutex_lista_entrenadores);//TODO
-
 			entrenador->bloq_exec = 1;
+			pthread_mutex_unlock(&mutex_lista_entrenadores);
 			sem_post(&activar_algoritmo);
 			atrapar_pokemon(entrenador);
 			printf("Sale de atrapar!\n");
+			pthread_mutex_lock(&mutex_lista_entrenadores);//TODO
 			entrenador->bloq_exec = 0;
-
 			pthread_mutex_unlock(&mutex_lista_entrenadores);
 
 			if(!tiene_cantidad(entrenador))
@@ -683,6 +679,13 @@ void planificar(){
 
 //------------------------------------------ALGORITMOS-------------------------------------------------------
 
+bool llego_entrenador(t_entrenador *entrenador){
+	if(entrenador->objetivo_temporal){
+		return ((entrenador->posicion_x == entrenador->objetivo_temporal->pos_x) && (entrenador->posicion_y == entrenador->objetivo_temporal->pos_y));
+	}else{
+		return true;
+	}
+}
 
 void planificacionFIFO(){
 	while(dictionary_size(dic_pok_obj) > 0){
@@ -699,12 +702,11 @@ void planificacionFIFO(){
 		do{
 			sem_post(&(ejecutar_entrenador[entrenador->id]));
 			sem_wait(&activar_algoritmo);
-		}while(entrenador->objetivo_temporal);
+		}while(!llego_entrenador(entrenador));
 
 		pthread_mutex_lock(&mutex_lista_corto_plazo);
 		list_remove(lista_corto_plazo,0);
 		pthread_mutex_unlock(&mutex_lista_corto_plazo);
-
 	}
 }
 
@@ -979,8 +981,8 @@ void mover_a_ready(t_pokemon* un_pokemon){
 	puts("------------");
 	pthread_mutex_lock(&list_pok_ready_mutex);
 	list_add(list_pok_ready,aux);
-	pthread_mutex_unlock(&list_pok_ready_mutex);
 	agregar_a_diccionario(dic_pok_ready_o_exec, un_pokemon->nombre);
+	pthread_mutex_unlock(&list_pok_ready_mutex);
 }
 
 bool me_sirve(t_pokemon* un_pokemon){
@@ -1195,6 +1197,59 @@ t_dictionary* obtener_pokemones_objetivo(){
 
 //------------------------------------------- MENSAJES DEL TEAM
 
+void esperar_mensaje(int *socket){
+
+	//printf("a recibir mensaje le llega el socket %d\n",*socket_cliente);
+	uint32_t codigo_operacion;
+
+	//pthread_mutex_lock(&mutex_recibir);
+
+	if(recv(*socket, &(codigo_operacion),sizeof(uint32_t), MSG_WAITALL)==-1){
+		perror("Falla recv() op_code");
+	}
+
+	//printf("op_code: %d\n", codigo_operacion);
+
+	uint32_t id;
+
+	if(recv(*socket, &(id), sizeof(uint32_t), MSG_WAITALL) == -1){
+		perror("Falla recv() id");
+	}
+
+	//printf("id:%d\n", id);
+
+	uint32_t size_contenido_mensaje;
+
+	if(recv(*socket, &(size_contenido_mensaje), sizeof(uint32_t), MSG_WAITALL) == -1){
+		perror("Falla recv() size_contenido_mensaje");
+	}
+
+	//printf("size contenido:%d\n", size_contenido_mensaje);
+
+
+	void* stream = malloc(size_contenido_mensaje);
+
+	if(recv(*socket, stream, size_contenido_mensaje, MSG_WAITALL) == -1){
+		perror("Falla recv() contenido");
+	}
+
+	t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
+
+	manejar_mensaje(mensaje);
+
+}
+
+
+void protocolo_escuchar_gameboy(){
+	char* ip_gameboy_escucha = "127.0.0.1";
+	char* puerto_gameboy_escucha = "5005";
+	int socket_escucha = listen_to(ip_gameboy_escucha,puerto_gameboy_escucha);
+
+	while(1)
+		esperar_cliente(socket_escucha,esperar_mensaje);
+
+}
+
 int subscribirse_a_cola(cola_code cola){
 	int socket_aux = connect_to(ip_broker,puerto_broker,wait_time,logger);
 	pthread_mutex_lock(&mutex_confirmacion);
@@ -1352,8 +1407,8 @@ void avisar_semaforo(char* id_correlativo,void *id){
 	pthread_mutex_unlock(&mutex_respuesta);
 	dictionary_remove(ids_a_esperar_catch,id_correlativo);
 	respuesta_caught[(int)id]=true;
-	pthread_mutex_unlock(&mutex_respuesta);
 	sem_post(&espera_caught[((int)id)]);
+	pthread_mutex_unlock(&mutex_respuesta);
 }
 
 void confirmar_respuesta(){
@@ -1372,7 +1427,6 @@ void protocolo_recibir_mensaje(cola_code cola){
 		log_debug(logger,"Error de comunicacion con el broker, se realizara la operacion default");
 		pthread_mutex_unlock(&mutex_logger);
 	    confirmar_respuesta();
-
 		pthread_mutex_lock(&mutex_confirmacion);
 	    broker_conectado = false;
 		pthread_mutex_unlock(&mutex_confirmacion);
@@ -1415,6 +1469,7 @@ void inicializar_team(){
 	pthread_t recibir_cola_appeared;
 	pthread_t recibir_cola_caught;
 	pthread_t recibir_cola_localized;
+	pthread_t escuchar_gameboy;
 
 	pthread_create(&recibir_cola_appeared, NULL, (void*)protocolo_recibir_mensaje,(void*) COLA_APPEARED_POKEMON);
 	pthread_detach(recibir_cola_appeared);
@@ -1422,6 +1477,9 @@ void inicializar_team(){
 	pthread_detach(recibir_cola_caught);
 	pthread_create(&recibir_cola_localized, NULL, (void*)protocolo_recibir_mensaje, (void*)COLA_LOCALIZED_POKEMON);
 	pthread_detach(recibir_cola_localized);
+
+	pthread_create(&escuchar_gameboy, NULL, (void*)protocolo_escuchar_gameboy,NULL);
+	pthread_detach(escuchar_gameboy);
 }
 
 
