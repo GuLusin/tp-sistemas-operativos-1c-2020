@@ -1017,7 +1017,7 @@ void pasar_a_ready_al_pokemon_adecuado(t_list* pokemons, int interacion){
 		aux = remover_pokemon(list_pok_new, aux);
 		pthread_mutex_unlock(&list_pok_new_mutex);
 		mostrar_pokemon(aux);
-		//liberar_pokemon(aux); //NUEVA
+		//liberar_pokemon(aux); //todo
 
 		return;
 	}
