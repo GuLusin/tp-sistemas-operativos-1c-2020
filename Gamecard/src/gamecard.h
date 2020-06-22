@@ -16,11 +16,13 @@
 pthread_mutex_t mutex_recibir;
 
 t_config* config;
+
 t_log* logger;
 int tiempo_reintento_conexion, tiempo_reintento_operacion,
 	tiempo_retardo_operacion, socket_broker, socket_cola_new,
-	socket_cola_catch, socket_cola_get;
+	socket_cola_catch, socket_cola_get, id_gamecard;
 char *ip_broker, *puerto_broker, *punto_montaje;
+
 
 typedef struct{
 	int directory;
@@ -29,4 +31,12 @@ typedef struct{
 	int open;
 }t_metadata;
 
+typedef struct{
+	int block_size;
+	int blocks;
+	char* magic_number;
+}t_global_metadata;
+
+t_global_metadata* global_metadata;
+FILE** blocks;
 #endif /* GAMECARD_H */

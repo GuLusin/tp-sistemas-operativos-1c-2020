@@ -3,7 +3,7 @@
 int subscribirse_a_cola(cola_code cola){
 	int socket_aux = connect_to(ip_broker,puerto_broker, tiempo_reintento_conexion, logger);
 	t_mensaje* mensaje = crear_mensaje(2, SUBSCRIPCION, cola);
-	mensaje->id=12; // todo agregar en config id gamecard y ttomar de ahi el valor
+	mensaje->id=id_gamecard;
 	enviar_mensaje(socket_aux, mensaje);
 	check_ack(socket_aux, ACK);
 	return socket_aux;
@@ -12,19 +12,30 @@ int subscribirse_a_cola(cola_code cola){
 void leer_config() {
 	config = config_create("../config");
 	tiempo_reintento_conexion = config_get_int_value(config,"TIEMPO_DE_REINTENTO_CONEXION");
+	log_debug(logger,config_get_string_value(config,"TIEMPO_DE_REINTENTO_CONEXION"));
+
 	tiempo_reintento_operacion = config_get_int_value(config,"TIEMPO_DE_REINTENTO_OPERACION");
+	log_debug(logger,config_get_string_value(config,"TIEMPO_DE_REINTENTO_OPERACION"));
+
 	tiempo_retardo_operacion = config_get_int_value(config,"TIEMPO_RETARDO_OPERACION");
+	log_debug(logger,config_get_string_value(config,"TIEMPO_RETARDO_OPERACION"));
+
 	ip_broker = config_get_string_value(config,"IP_BROKER");
-	log_debug(logger,config_get_string_value(config,"IP_BROKER")); //pido y logueo ip
+	log_debug(logger,config_get_string_value(config,"IP_BROKER"));
+
 	puerto_broker = config_get_string_value(config,"PUERTO_BROKER");
-	log_debug(logger,config_get_string_value(config,"PUERTO_BROKER")); //pido y logueo puerto
+	log_debug(logger,config_get_string_value(config,"PUERTO_BROKER"));
+
 	punto_montaje = config_get_string_value(config,"PUNTO_MONTAJE_TALLGRASS");
-	//log_debug(logger,config_get_string_value(config,"PUNTO_MONTAJE_TALLGRASS")); // Ver si es necesario loggear esto
+	log_debug(logger,config_get_string_value(config,"PUNTO_MONTAJE_TALLGRASS"));
+
+	id_gamecard = config_get_int_value(config, "ID_GAMECARD");
+	log_debug(logger,config_get_string_value(config,"ID_GAMECARD"));
 }
 
-t_metadata* leer_archivo_metadata(char* ruta){//TODO falla :(
+t_metadata* leer_archivo_metadata(char* ruta){
 	t_config* aux_metadata = config_create(ruta);
-	t_metadata* metadata;
+	t_metadata* metadata = malloc(sizeof(t_metadata));
 	metadata->directory = config_get_int_value(aux_metadata, "DIRECTORY");
 	if(metadata->directory == 'N'){
 		metadata->size = config_get_int_value(aux_metadata, "SIZE");
@@ -35,7 +46,8 @@ t_metadata* leer_archivo_metadata(char* ruta){//TODO falla :(
 	return metadata;
 }
 
-char* generar_ruta_metadata(char* nombre_pokemon){//TODO falla :(
+
+char* generar_ruta_metadata(char* nombre_pokemon){
 	char* ruta = string_new();
 	string_append(&ruta,punto_montaje);
 	string_append(&ruta,"/Files/");//ver si hace falta capitalizar con: string_capitalized(char *text)
@@ -44,7 +56,8 @@ char* generar_ruta_metadata(char* nombre_pokemon){//TODO falla :(
 	return ruta;
 }
 
-void recibir_new(t_mensaje *mensaje){
+
+void recibir_new(t_mensaje *mensaje){//TODO
 	char* ruta = generar_ruta_metadata(mensaje->contenido.new_pokemon.pokemon->nombre); //puede fallar
 	puts(ruta);
 	if(!verificar_si_existe(ruta)){
@@ -60,6 +73,7 @@ void recibir_new(t_mensaje *mensaje){
 	   a la actual. En caso de no existir se debe agregar al final del archivo
 	    una nueva línea indicando la cantidad de pokémon pasadas.
 	 */
+	free(metadata);
 }
 
 void recibir_get(t_mensaje *mensaje){
@@ -67,20 +81,20 @@ void recibir_get(t_mensaje *mensaje){
 
 }
 
-void recibir_catch(t_mensaje *mensaje){
 
+void recibir_catch(t_mensaje *mensaje){
 
 }
 
+
+
 int verificar_si_existe(char* ruta){ //podria fijarse en lista global si esta el pokemon
-	FILE *archivo_pokemon = txt_open_for_append(ruta);
+	FILE *archivo_pokemon = fopen(ruta, "r");
 	int existe=1;
 	if(!archivo_pokemon){
 		existe = 0;
 	}
-
-
-	txt_close_file(archivo_pokemon);
+	fclose(archivo_pokemon);
 	return existe;
 }
 
@@ -109,6 +123,7 @@ void manejar_mensaje(t_mensaje* mensaje){
 	}
 	puts("sale de manejar mensaje");
 }
+
 
 bool recibir_mensaje(int un_socket){
 	uint32_t codigo_operacion,id,size_contenido_mensaje;
@@ -139,27 +154,50 @@ bool recibir_mensaje(int un_socket){
 
 
 void protocolo_recibir_mensaje(cola_code cola){
-
 	while(true){
 		pthread_mutex_lock(&mutex_recibir);
-
 		int socket_cola = subscribirse_a_cola(cola);
-
 		pthread_mutex_unlock(&mutex_recibir);
-
 		printf("socket_suscripcion:%d\n",socket_cola);
 		while(recibir_mensaje(socket_cola));
 		close(socket_cola);
 	}
 }
 
-void inicializar_gamecard() { // Suscribirse a NEW_POKEMON, CATCH_POKEMON, GET_POKEMON
+
+void leer_metadata_global(){
+	char* ruta = string_new();
+	global_metadata = malloc(sizeof(t_global_metadata));
+	string_append_with_format(&ruta, "%s/Metadata/Metadata.bin", punto_montaje);
+	t_config* aux_metadata = config_create(ruta);
+	global_metadata->block_size = config_get_int_value(aux_metadata, "BLOCK_SIZE");
+	global_metadata->blocks = config_get_int_value(aux_metadata, "BLOCKS");
+	global_metadata->magic_number = config_get_string_value(aux_metadata, "MAGIC_NUMBER");
+	config_destroy(aux_metadata);
+}
+
+void crear_bloques(){
+	blocks = malloc((global_metadata->blocks) * sizeof(FILE*));//tamaño de un file: 148 bytes y de un punt file: 4 bytes
+	char* path = string_new();
+	string_append_with_format(&path, "%s/Blocks/", punto_montaje);
+	for(int i=0; i < global_metadata->blocks ;i++){
+		char* path_relative = string_duplicate(path);
+		string_append_with_format(&path_relative, "%d.bin",i);
+		blocks[i]=fopen(path_relative, "a");
+		free(path_relative);
+	}
+}
+
+void inicializar_gamecard() {
 	logger = log_create("../gamecard.log","log",1,LOG_LEVEL_DEBUG);
 	leer_config();
+	leer_metadata_global();
+	crear_bloques();
 
 	pthread_t pthread_cola_new;
 	pthread_t pthread_cola_catch;
 	pthread_t pthread_cola_get;
+
 
     pthread_mutex_init(&mutex_recibir, NULL);
 
@@ -171,12 +209,18 @@ void inicializar_gamecard() { // Suscribirse a NEW_POKEMON, CATCH_POKEMON, GET_P
 
 	pthread_create(&pthread_cola_get, NULL,(void*)protocolo_recibir_mensaje, COLA_GET_POKEMON);
 	pthread_detach(pthread_cola_get);
+
 }
 
 void cerrar_gamecard(){
 	log_destroy(logger);
 	config_destroy(config);
-	close(socket_cola_new);
+	for(int i=0; i < global_metadata->blocks; i++){
+		fclose(blocks[i]);
+	}
+	free(global_metadata);
+	free(blocks);
+	//close(socket_cola_new);
 }
 
 int main() {
