@@ -27,7 +27,7 @@ t_config* config;
 t_log* logger;
 
 char *ip_broker,*puerto_broker;
-int wait_time,id_team;
+int wait_time;
 bool broker_conectado;
 
 //---------------------------------- PLANIFICACION -----------------------------------------------

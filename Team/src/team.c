@@ -1223,7 +1223,7 @@ int subscribirse_a_cola(cola_code cola){
 	broker_conectado = true;
 	pthread_mutex_unlock(&mutex_confirmacion);
 	t_mensaje* mensaje = crear_mensaje(2, SUBSCRIPCION, cola);
-	mensaje->id=id_team;
+	mensaje->id=15;//todo leer ID_TEAM desde la config
 	enviar_mensaje(socket_aux, mensaje);
 	check_ack(socket_aux, ACK);
 	free(mensaje);
@@ -1386,7 +1386,7 @@ void confirmar_respuesta(){
 void protocolo_recibir_mensaje(cola_code cola){
 	while(true){
 		pthread_mutex_lock(&mutex_recibir);
-		int socket_cola = subscribirse_a_cola(cola);
+		int socket_cola = subscribirse_a_cola(cola); //todo suscribirse y enviar el id del team en el mensaje
 		pthread_mutex_unlock(&mutex_recibir);
 		printf("socket_suscripcion:%d\n",socket_cola);
 		while(recibir_mensaje(socket_cola));
@@ -1425,8 +1425,6 @@ void inicializar_team(){
 
     crear_hilos_planificar_recursos();
 
-	id_team = config_get_int_value(config,"ID_TEAM");
-	log_debug(logger,"ID TEAM:%d",id_team);
 	ip_broker = config_get_string_value(config,"IP_BROKER");
 	log_debug(logger,config_get_string_value(config,"IP_BROKER")); //pido y logueo ip
 	puerto_broker = config_get_string_value(config,"PUERTO_BROKER");

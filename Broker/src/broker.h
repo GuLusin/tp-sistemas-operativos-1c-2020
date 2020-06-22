@@ -21,21 +21,19 @@
 pthread_mutex_t mutex_recibir;
 pthread_mutex_t mutex_enviar;
 pthread_mutex_t* mutex_cola_suscriptores;
-pthread_mutex_t* mutex_adm_cola;
 
 t_log* logger;
 t_config* config;
 int socket_broker;
 
 typedef struct{
-	int id_suscriptor;
+	int id_team;
 	int socket_cliente;
 }t_suscriptor;
 
 t_list** suscriptores;
 
 int id_mensajes_globales;
-pthread_mutex_t mutex_id_globales;
 
 
 //========================PARTICIONES DINAMICAS===============================
@@ -65,7 +63,7 @@ typedef struct{
 	int msg_id;
 	int cola_code;
 	int id_correlativo;
-	t_list* suscriptores_confirmados; // LISTA CON LOS IDS DE LOS SUSCRIPTORES CONFIRMADOS
+	t_list* suscriptores_confirmados;
 	char tipo;
 }t_partition;
 
@@ -77,7 +75,6 @@ algoritmo_memoria AM;
 t_list* lista_algoritmo_reemplazo;
 
 pthread_mutex_t mutex_particiones_libres;
-pthread_mutex_t mutex_particiones_ocupadas;
 
 t_list* particiones_libres; 	//LISTA CON LAS PARTICIONES LIBRES DISPONIBLES.
 adm_cola* administracion_colas; // ARREGLO DE LAS 6 COLAS QUE EL BROKER ADMINISTRA EN LA CACHE.
@@ -94,8 +91,6 @@ void confirmar_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje);
 void remover_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje);
 void validar_suscriptor(t_suscriptor* suscriptor, t_mensaje* mensaje_aux);
 void compactar_memoria();
-void normalizar_particiones_libres();
-void notificar_mensaje(t_mensaje* mensaje);
 char* cola_string(int cola);
 int encontrar_particion(int msg_id,int cola);
 int puntero_cmp(void* un_puntero, void* otro_puntero);
