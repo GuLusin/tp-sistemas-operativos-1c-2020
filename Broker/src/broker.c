@@ -34,7 +34,7 @@ void notificar_mensaje_cacheados(int cola, t_suscriptor* suscriptor){
 	void enviar_mensaje_condicional(void* stream){
 		i++;
 		t_partition* particion = (t_partition*)stream;
-		if(!es_suscriptor_confirmado(particion,suscriptor->id_team)){
+		if(!es_suscriptor_confirmado(particion,suscriptor->id_suscriptor)){
 			mensaje_aux = get_mensaje_cacheado(cola,i);
 			printear_mensaje(mensaje_aux);
 			pthread_mutex_lock(&mutex_enviar);
@@ -152,6 +152,8 @@ void recibir_mensaje(int *socket_cliente){
 		perror("Falla recv() size_contenido_mensaje");
 	}
 
+	//printf("codigo operacion:%d, id:%d, size:%d\n", codigo_operacion,id, size_contenido_mensaje);
+
 	if(codigo_operacion==SUBSCRIPCION){
 		int cola;
 		recv(*socket_cliente, &(cola),size_contenido_mensaje, MSG_WAITALL);
@@ -166,10 +168,12 @@ void recibir_mensaje(int *socket_cliente){
 		perror("Falla recv() contenido");
 	}
 
-	send_ack(socket_cliente,ACK);
-
+	send_ack(*socket_cliente,ACK);
 	t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
+	pthread_mutex_lock(&mutex_id_globales);
 	mensaje->id=++id_mensajes_globales;
+	pthread_mutex_unlock(&mutex_id_globales);
+	printear_mensaje(mensaje);
 	manejar_mensaje(*socket_cliente,mensaje);
 }
 
@@ -191,6 +195,7 @@ void notificar_mensaje(t_mensaje* mensaje){
 		validar_suscriptor(suscriptor,mensaje);
 	}
 	cachear_mensaje(mensaje);
+	puts("Notifica mensaje");
 	//printear_estado_memoria();
 	list_iterate(suscriptores[mensaje->codigo_operacion],notificar_suscriptores);
 }
@@ -211,7 +216,7 @@ void enviar_appeared_pokemon(t_pokemon* pokemon){
 void printear_lista_suscriptores(t_list* lista){
 	void printear_suscriptor(void* stream){
 		t_suscriptor* suscriptor = stream;
-		printf("|ID:%d,SOCKET:%d|\n",suscriptor->id_team,suscriptor->socket_cliente);
+		printf("|ID SUSCRIPTOR:%d,SOCKET:%d|\n",suscriptor->id_suscriptor,suscriptor->socket_cliente);
 	}
 	list_iterate(lista,printear_suscriptor);
 }
@@ -229,7 +234,7 @@ void descachear_particiones(void* stream){
 	sacar_particion(particion->cola_code,posicion);
 }
 
-/*
+
 void envio_mensaje(){
 	t_pokemon* pokemon;
 	t_pokemon* pokemon1;
@@ -426,12 +431,13 @@ void envio_mensaje(){
 		}
 	}
 }
-*/
+
+
 //=============================SUSCRIPTORES ============================
 
 t_suscriptor* crear_suscriptor(int id, int socket_cliente){
 	t_suscriptor* suscriptor = malloc(sizeof(t_suscriptor));
-	suscriptor->id_team=id;
+	suscriptor->id_suscriptor=id;
 	suscriptor->socket_cliente=socket_cliente;
 	return suscriptor;
 }
@@ -453,7 +459,7 @@ bool es_suscriptor_confirmado(t_partition* particion,int id_team){
 void confirmar_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje){
 	int posicion = encontrar_particion(mensaje->id,mensaje->codigo_operacion);
 	t_partition* particion = list_get(administracion_colas[mensaje->codigo_operacion].particiones,posicion);
-	list_add(particion->suscriptores_confirmados,suscriptor->id_team);
+	list_add(particion->suscriptores_confirmados,suscriptor->id_suscriptor);
 	printear_estado_memoria();
 	//agregar el id_team a esa particion todo?
 }
@@ -463,7 +469,7 @@ void remover_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje){ // Remueve
 	bool es_suscriptor(void* stream){
 		i++;
 		t_suscriptor* suscriptor_lista = stream;
-		return suscriptor->id_team==suscriptor_lista->id_team;
+		return suscriptor->id_suscriptor==suscriptor_lista->id_suscriptor;
 	}
 	list_find(suscriptores[mensaje->codigo_operacion], es_suscriptor);
 	liberar_suscriptor(list_remove(suscriptores[mensaje->codigo_operacion],i));
@@ -473,7 +479,7 @@ void remover_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje){ // Remueve
 void validar_suscriptor(t_suscriptor* suscriptor, t_mensaje* mensaje_aux) {
 	if(check_ack(suscriptor->socket_cliente, ACK))
 		confirmar_suscriptor(suscriptor, mensaje_aux);
-	else;
+	else
 		remover_suscriptor(suscriptor, mensaje_aux);
 }
 
@@ -796,7 +802,6 @@ t_mensaje* memdes_mensaje(t_partition* particion){
 	case APPEARED_POKEMON:;
 		t_appeared_pokemon appeared_pokemon = memdes_appeared_pokemon(magic);
 		mensaje = crear_mensaje(5,op_code,appeared_pokemon.pokemon->nombre,appeared_pokemon.pokemon->pos_x,appeared_pokemon.pokemon->pos_y,id_correlativo);
-		//liberar_pokemon(appeared_pokemon.pokemon);
 		break;
 	case LOCALIZED_POKEMON:;
 		t_localized_pokemon localized_pokemon = memdes_localized_pokemon(magic);
@@ -832,7 +837,8 @@ void* asignar_particion_libre(t_partition* particion_libre, int size){
 		list_add(particiones_libres,particion_libre);
 	else
 		free(particion_libre);
-	unificar_particiones_libres(); //No se si es taaan necesario aca pero me aseguro que la lista global siga ordenada
+	normalizar_particiones_libres();
+	//unificar_particiones_libres(); //No se si es taaan necesario aca pero me aseguro que la lista global siga ordenada
 	return aux;
 }
 
@@ -961,6 +967,7 @@ void compactar_memoria(){
 	t_dictionary* dicc_suscriptores_particiones = dictionary_create();
 	t_list* lista_ar_aux = list_duplicate(lista_algoritmo_reemplazo);
 	t_list* mensajes_aux = list_create();
+
 	void transpaso_a_aux(void* stream){
 		t_partition* particion = stream;
 		dictionary_put(dicc_suscriptores_particiones,string_itoa(particion->msg_id) ,list_duplicate(particion->suscriptores_confirmados));
@@ -969,6 +976,7 @@ void compactar_memoria(){
 		sacar_particion(particion->cola_code,pos);
 		list_add(mensajes_aux,mensaje);
 	}
+
 	for(int i=0;i<CANTIDAD_COLAS;i++)
 		while(list_size(administracion_colas[i].particiones))
 			transpaso_a_aux(list_get(administracion_colas[i].particiones,0));
@@ -1031,7 +1039,7 @@ void eliminar_particion(){
  * "partition_malloc"
  */
 
-void* pmalloc(int size){
+void* pmalloc(int size){ // todo chequear con lo de -1 1 0 de frq compactacion
 	int cant_eliminaciones = freq_compactacion;
 	void* aux=NULL;
 	while(!aux){
@@ -1138,7 +1146,9 @@ t_partition* crear_particion(t_mensaje* mensaje){//todo aca vendria validacion d
 	particion->suscriptores_confirmados = list_create();
 	list_add(lista_algoritmo_reemplazo,(int)particion->msg_id);
 	free(magic);
+	pthread_mutex_lock(&mutex_particiones_ocupadas);
 	particiones_ocupadas++;
+	pthread_mutex_unlock(&mutex_particiones_ocupadas);
 	return particion;
 }
 
@@ -1150,7 +1160,9 @@ void liberar_particion(t_partition* particion){
 }
 
 void agregar_particion(adm_cola adm_cola, t_partition* particion){
+	pthread_mutex_lock(&mutex_adm_cola[particion->cola_code]);
 	list_add(adm_cola.particiones,particion);
+	pthread_mutex_unlock(&mutex_adm_cola[particion->cola_code]);
 }
 
 void sacar_particion(int cola, int index){//SE USA ASI??
@@ -1175,7 +1187,7 @@ void actualizar_algoritmo_reemplazo(t_partition* particion){
 			break;
 		case LRU:;
 			int msg_id = (int)list_remove_by_condition(lista_algoritmo_reemplazo,es_msg_id);
-			list_add(lista_algoritmo_reemplazo,msg_id);
+			list_add(lista_algoritmo_reemplazo,msg_id); // todo chequear que no haya race condition
 			break;
 	}
 }
@@ -1357,9 +1369,7 @@ void memory_dump(int signum){
 			default:
 				return "";
 				break;
-
 			}
-
 		}
 
 
@@ -1456,6 +1466,8 @@ void inicializar_memoria(){
 	particiones_libres = list_create();
 	list_add(particiones_libres, crear_particion_libre(mem_alloc,tamanio_memoria));
 	lista_algoritmo_reemplazo = list_create();
+
+	pthread_mutex_init(&mutex_particiones_ocupadas, NULL);
 	particiones_ocupadas=0;
 }
 
@@ -1500,10 +1512,16 @@ void inicializar_broker(){
 	pthread_t pthread_atender_cliente;
 	pthread_mutex_init(&mutex_recibir, NULL);
 	pthread_mutex_init(&mutex_enviar, NULL);
+	pthread_mutex_init(&mutex_id_globales, NULL);
 
 	mutex_cola_suscriptores = malloc(sizeof(pthread_mutex_t)*CANTIDAD_COLAS);
 	for(int i=0;i<CANTIDAD_COLAS;i++)
 		pthread_mutex_init(&mutex_cola_suscriptores[i], NULL);
+
+	mutex_adm_cola = malloc(sizeof(pthread_mutex_t)*CANTIDAD_COLAS);
+	for(int i=0;i<CANTIDAD_COLAS;i++){
+		pthread_mutex_init(&mutex_adm_cola[i], NULL);
+	}
 
 	suscriptores = malloc(sizeof(t_list)*CANTIDAD_COLAS);
 	for(int i=0;i<CANTIDAD_COLAS;i++)
@@ -1548,8 +1566,8 @@ int main(void) {
 	inicializar_broker();
 	sleep(2);
 	signal(SIGUSR1,memory_dump);
-	//pthread_t envio_mensaje_t;
-	//pthread_create(&envio_mensaje_t, NULL, (void*)envio_mensaje, NULL);
+	pthread_t envio_mensaje_t;
+	pthread_create(&envio_mensaje_t, NULL, (void*)envio_mensaje, NULL);
 	sem_t esperar;
 	sem_init(&esperar, 0,0);
 	sem_wait(&esperar);

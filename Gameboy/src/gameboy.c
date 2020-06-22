@@ -1,6 +1,8 @@
 
 #include "gameboy.h"
 
+//todo cambiar las pruebas que se adapten al codigo.
+
 int subscribirse_a_cola(cola_code cola){
 	char *ip_send = config_get_string_value(config,"IP_BROKER");
 	char *puerto_send = config_get_string_value(config,"PUERTO_BROKER");
@@ -99,10 +101,27 @@ cola_code interpretar_cola_mensaje(char* cola){
 	return -1;
 }
 
+bool interpretar_confirmacion(char* confirmacion){
+	puts(confirmacion);
+	if(!strcmp(strdup(confirmacion),"OK")){
+		puts("OK");
+		return true;
+	}
+	if(!strcmp(strdup(confirmacion),"FAIL")){
+		puts("FAIL");
+		return false;
+	}
+	printf("Mensaje invalido\n");
+	return false;
+}
 
-void manejar_mensaje(int argc, char** args){
+
+void manejar_mensaje(int argc, char** args){ //todo chequear que el broker reciba bien los get pokemon cuando le manda el nombre del pokemon
+	//todo chequear lo de la confirmacion que no lee bien de la config
 
 	char *ip_send, *puerto_send;
+	uint32_t id_correlativo;
+	bool confirmacion;
 
 	tipo_proceso_gameboy proceso = interpretar_tipo_proceso(args[1]);
 	op_code tipo_mensaje = interpretar_tipo_mensaje(args[2]);
@@ -111,90 +130,83 @@ void manejar_mensaje(int argc, char** args){
 	int socket_aux;
 
 	switch(proceso){
+		case BROKER:
+			ip_send = config_get_string_value(config,"IP_BROKER");
+			puerto_send = config_get_string_value(config,"PUERTO_BROKER");
+			socket_aux = connect_to(ip_send,puerto_send,wait_time,logger);
+			log_debug(logger,"Conectado a proceso BROKER ip:%s	puerto:%s",ip_send,puerto_send);
 
-	case BROKER:
-		ip_send = config_get_string_value(config,"IP_BROKER");
-	    puerto_send = config_get_string_value(config,"PUERTO_BROKER");
-		socket_aux = connect_to(ip_send,puerto_send,wait_time,logger);
-		log_debug(logger,"Conectado a proceso BROKER ip:%s	puerto:%s",ip_send,puerto_send);
+			switch(tipo_mensaje){
+				case NEW_POKEMON:
+					mensaje = crear_mensaje(5,NEW_POKEMON,args[3],atoi(args[4]),atoi(args[5]),atoi(args[6]));
+					break;
+				case APPEARED_POKEMON:
+					mensaje = crear_mensaje(5,APPEARED_POKEMON,args[3],atoi(args[4]),atoi(args[5]),atoi(args[6]));
+					break;
+				case CATCH_POKEMON:
+					mensaje = crear_mensaje(4,CATCH_POKEMON,args[3],atoi(args[4]),atoi(args[5]));
+					break;
+				case CAUGHT_POKEMON:
+					mensaje = crear_mensaje(3,CAUGHT_POKEMON,atoi(args[3]),interpretar_confirmacion(args[4]));
+					break;
+				case GET_POKEMON:
+					mensaje = crear_mensaje(2,GET_POKEMON,args[3]);
+					break;
+				default:
+					printf("Mensaje invalido\n");
+					return;
+					}
+			break;
+		case TEAM:
+			ip_send = config_get_string_value(config,"IP_TEAM");
+			puerto_send = config_get_string_value(config,"PUERTO_TEAM");
+			socket_aux = connect_to(ip_send,puerto_send,wait_time,logger);
+			log_debug(logger,"Conectado a proceso TEAM ip:%s	puerto:%s",ip_send,puerto_send);
 
-		switch(tipo_mensaje){
-		case NEW_POKEMON:
-			mensaje = crear_mensaje(5,NEW_POKEMON,args[3],atoi(args[4]),atoi(args[5]),atoi(args[6]));
-			break;
-		case APPEARED_POKEMON:
-			mensaje = crear_mensaje(5,APPEARED_POKEMON,args[3],atoi(args[4]),atoi(args[5]),atoi(args[6]));
-			break;
-		case CATCH_POKEMON:
-			mensaje = crear_mensaje(4,CATCH_POKEMON,args[3],atoi(args[4]),atoi(args[5]));
-			break;
-		case CAUGHT_POKEMON:
-			if(!strcmp(strdup(args[4]),"OK")){
-				mensaje = crear_mensaje(3,CAUGHT_POKEMON,atoi(args[3]),1);
+			if(tipo_mensaje == APPEARED_POKEMON){
+				mensaje = crear_mensaje(5,APPEARED_POKEMON,args[3],atoi(args[4]),atoi(args[5]),ID_DEFAULT);
 				break;
 			}
-			if(!strcmp(strdup(args[4]),"FAIL")){
-				mensaje = crear_mensaje(3,CAUGHT_POKEMON,atoi(args[3]),0);
-				break;
-			}
 			printf("Mensaje invalido\n");
 			return;
-		case GET_POKEMON:
-			mensaje = crear_mensaje(2,GET_POKEMON,args[3]);
 			break;
-		default:
-			printf("Mensaje invalido\n");
+		case GAMECARD:
+			ip_send = config_get_string_value(config,"IP_GAMECARD");
+			puerto_send = config_get_string_value(config,"PUERTO_GAMECARD");
+			socket_aux = connect_to(ip_send,puerto_send,wait_time,logger);
+			log_debug(logger,"Conectado a proceso GAMECARD ip:%s	puerto:%s",ip_send,puerto_send);
+
+			switch(tipo_mensaje){
+				case NEW_POKEMON:
+					mensaje = crear_mensaje(5,NEW_POKEMON,args[3],atoi(args[4]),atoi(args[5]),atoi(args[6]));
+					mensaje->id=atoi(args[7]);
+					break;
+				case CATCH_POKEMON:
+					mensaje = crear_mensaje(4,CATCH_POKEMON,args[3],atoi(args[4]),atoi(args[5]));
+					mensaje->id=atoi(args[6]);
+					break;
+				case GET_POKEMON:
+					mensaje = crear_mensaje(2,GET_POKEMON,args[3]);
+					mensaje->id=atoi(args[4]);
+					break;
+				default:
+					printf("Mensaje invalido\n");
+					return;
+				}
+			break;
+		case SUSCRIPTOR:
+			socket_aux = subscribirse_a_cola(interpretar_cola_mensaje(args[2]));
+			sleep(atoi(args[3]));
+			close(socket_aux);
 			return;
-		}
-		break;
-
-	case TEAM:
-		ip_send = config_get_string_value(config,"IP_TEAM");
-		puerto_send = config_get_string_value(config,"PUERTO_TEAM");
-		socket_aux = connect_to(ip_send,puerto_send,wait_time,logger);
-		log_debug(logger,"Conectado a proceso TEAM ip:%s	puerto:%s",ip_send,puerto_send);
-
-		if(tipo_mensaje == APPEARED_POKEMON){
-			mensaje = crear_mensaje(5,APPEARED_POKEMON,args[3],atoi(args[4]),atoi(args[5]),ID_DEFAULT);
 			break;
 		}
-		printf("Mensaje invalido\n");
-		return;
 
-	case GAMECARD:
-		ip_send = config_get_string_value(config,"IP_GAMECARD");
-	    puerto_send = config_get_string_value(config,"PUERTO_GAMECARD");
-		socket_aux = connect_to(ip_send,puerto_send,wait_time,logger);
-		log_debug(logger,"Conectado a proceso GAMECARD ip:%s	puerto:%s",ip_send,puerto_send);
 
-		switch(tipo_mensaje){
-		case NEW_POKEMON:
-			mensaje = crear_mensaje(5,NEW_POKEMON,args[3],atoi(args[4]),atoi(args[5]),atoi(args[6]));
-			mensaje->id=atoi(args[7]);
-			break;
-		case CATCH_POKEMON:
-			mensaje = crear_mensaje(4,CATCH_POKEMON,args[3],atoi(args[4]),atoi(args[5]));
-			mensaje->id=atoi(args[6]);
-			break;
-		case GET_POKEMON:
-			mensaje = crear_mensaje(2,GET_POKEMON,args[3]);
-			mensaje->id=atoi(args[4]);
-			break;
-		default:
-			printf("Mensaje invalido\n");
-			return;
-		}
-		break;
-
-	case SUSCRIPTOR:
-		socket_aux = subscribirse_a_cola(interpretar_cola_mensaje(args[2]));
-		sleep(atoi(args[3]));
-		close(socket_aux);
-		return;
-	}
 
 	printear_mensaje(mensaje);
-	enviar_mensaje(socket_aux,mensaje);
+	enviar_mensaje(socket_aux,mensaje);//todo chequear que haga el recv del id a esperar
+	printf("envia mensaje\n");
 	check_ack(socket_aux,ACK);
 	printf("ACK recibido con exito\n");
 
@@ -213,8 +225,6 @@ int main(int argc, char**args) {
 
 	logger = log_create("gameboy.log", "log", true, LOG_LEVEL_DEBUG);
 	config = config_create("../config");
-
 	manejar_mensaje(argc,args);
-
 	return EXIT_SUCCESS;
 }
