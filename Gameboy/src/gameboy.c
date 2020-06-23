@@ -83,17 +83,17 @@ tipo_proceso_gameboy interpretar_tipo_proceso(char* proceso){
 }
 
 cola_code interpretar_cola_mensaje(char* cola){
-	if(!strcmp(cola,"COLA_LOCALIZED_POKEMON"))
+	if(!strcmp(cola,"LOCALIZED_POKEMON"))
 		return COLA_LOCALIZED_POKEMON;
-	if(!strcmp(cola,"COLA_GET_POKEMON"))
+	if(!strcmp(cola,"GET_POKEMON"))
 		return COLA_GET_POKEMON;
-	if(!strcmp(cola,"COLA_NEW_POKEMON"))
+	if(!strcmp(cola,"NEW_POKEMON"))
 		return COLA_NEW_POKEMON;
-	if(!strcmp(cola,"COLA_APPEARED_POKEMON"))
+	if(!strcmp(cola,"APPEARED_POKEMON"))
 		return COLA_APPEARED_POKEMON;
-	if(!strcmp(cola,"COLA_CAUGHT_POKEMON"))
+	if(!strcmp(cola,"CAUGHT_POKEMON"))
 		return COLA_CAUGHT_POKEMON;
-	if(!strcmp(cola,"COLA_CATCH_POKEMON"))
+	if(!strcmp(cola,"CATCH_POKEMON"))
 		return COLA_CATCH_POKEMON;
 	perror("Falla interpretar_cola_mensaje");
 	return -1;

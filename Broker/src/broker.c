@@ -34,7 +34,9 @@ void notificar_mensaje_cacheados(int cola, t_suscriptor* suscriptor){
 	void enviar_mensaje_condicional(void* stream){
 		i++;
 		t_partition* particion = (t_partition*)stream;
+		//puts("CHEQUEA SUSCRIPTOR");
 		if(!es_suscriptor_confirmado(particion,suscriptor->id_team)){
+			//puts("NO ES SUSCRIPTOR");
 			mensaje_aux = get_mensaje_cacheado(cola,i);
 			printear_mensaje(mensaje_aux);
 			pthread_mutex_lock(&mutex_enviar);
@@ -48,7 +50,6 @@ void notificar_mensaje_cacheados(int cola, t_suscriptor* suscriptor){
 	pthread_mutex_lock(&mutex_cola_suscriptores[cola]);
 	list_iterate(administracion_colas[cola].particiones,enviar_mensaje_condicional);
 	pthread_mutex_unlock(&mutex_cola_suscriptores[cola]);
-
 }
 
 void manejar_subscripcion(int cola,t_suscriptor* suscriptor){
@@ -170,6 +171,7 @@ void recibir_mensaje(int *socket_cliente){
 
 	t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
 	mensaje->id=++id_mensajes_globales;
+	printear_mensaje(mensaje);
 	manejar_mensaje(*socket_cliente,mensaje);
 }
 
@@ -229,7 +231,7 @@ void descachear_particiones(void* stream){
 	sacar_particion(particion->cola_code,posicion);
 }
 
-/*
+
 void envio_mensaje(){
 	t_pokemon* pokemon;
 	t_pokemon* pokemon1;
@@ -426,7 +428,8 @@ void envio_mensaje(){
 		}
 	}
 }
-*/
+
+
 //=============================SUSCRIPTORES ============================
 
 t_suscriptor* crear_suscriptor(int id, int socket_cliente){
@@ -840,14 +843,6 @@ void* first_fit(int size){
 	int i = -1;
 	t_partition* particion_libre;
 
-	/*if(size_requerido>tamanio_minimo_particion){
-		size=size_requerido;
-		*frag_int = 0;
-	}else{
-		size=tamanio_minimo_particion;
-		*frag_int = tamanio_minimo_particion-size_requerido;
-	}*/
-
 	bool tiene_espacio(void* stream){
 		i++;
 		t_partition* particion_libre = stream;
@@ -867,14 +862,6 @@ void* best_fit(int size){
 	int i = -1;
 	int pos = -1;
 	int tam_min=1000000000;	//Numero muy grande para que tenga valized el algoritmo. Deberia ser el total de la memoria;
-
-	/*if(size_requerido>tamanio_minimo_particion){
-		size=size_requerido;
-		*frag_int = 0;
-	}else{
-		size=tamanio_minimo_particion;
-		*frag_int = tamanio_minimo_particion-size_requerido;
-	}*/
 
 	void espacio_optimo(void* stream){
 		i++;
@@ -973,7 +960,10 @@ void compactar_memoria(){
 		while(list_size(administracion_colas[i].particiones))
 			transpaso_a_aux(list_get(administracion_colas[i].particiones,0));
 
+
 	unificar_particiones_libres();
+	printear_estado_memoria();
+	sleep(5);
 
 	while(list_size(mensajes_aux)){
 		t_mensaje* mensaje = list_remove(mensajes_aux,0);
@@ -981,7 +971,8 @@ void compactar_memoria(){
 		particion->suscriptores_confirmados = dictionary_remove(dicc_suscriptores_particiones,string_itoa(particion->msg_id));
 		//capaz hay leak ya que no libero la auxiliar, hace falta?
 	}
-
+	printear_estado_memoria();
+	sleep(5);
 	list_clean(lista_algoritmo_reemplazo);
 	list_add_all(lista_algoritmo_reemplazo,lista_ar_aux);
 	//puts("MEMORIA COMPACTADA");
@@ -1019,11 +1010,11 @@ void eliminar_particion(){
 
 	int msg_id = (int)list_get(lista_algoritmo_reemplazo,0);
 	encontrar_particion_por_id(msg_id,&cola,&index);
+	printear_estado_memoria();
+	printf("elimina particion id:%d cola:%d index:%d\n", msg_id, cola,index);
+	sleep(5);
 	sacar_particion(cola,index);
  }
-
-
-
 
 /*
  * pmalloc
@@ -1047,7 +1038,7 @@ void* pmalloc(int size){
 				pthread_mutex_unlock(&mutex_particiones_libres);
 				break;
 		}
-		if(!aux){
+		if(!aux){ //todo chequear nuevas condiciones segun frecuencia de compactacion
 			if(!cant_eliminaciones){
 				compactar_memoria();cant_eliminaciones=freq_compactacion;continue;
 			}else if(cant_eliminaciones>0){
@@ -1106,10 +1097,10 @@ adm_cola crear_adm_cola(){
 	return cola;
 }
 
-t_partition* crear_particion_libre(void* stream, int size){
+t_partition* crear_particion_libre(void* stream, int size,int frag_interna){
 	t_partition* particion_libre = malloc(sizeof(t_partition));
 	particion_libre->inicio = stream;
-	particion_libre->size = size;
+	particion_libre->size = size+frag_interna;
 	particion_libre->tipo='L';
 	return particion_libre;
 }
@@ -1123,12 +1114,17 @@ void agregar_particion_libre(t_partition* particion_libre){
 
 //FALTARIA AGREGAR ID?
 
-t_partition* crear_particion(t_mensaje* mensaje){//todo aca vendria validacion del algoritmo de compactacion y
-	//todo contemplar la fragmentacion interna cuando se particiona
+t_partition* crear_particion(t_mensaje* mensaje){
+	t_partition* particion = malloc(sizeof(t_partition));
 	int size;
 	void* magic = memser_mensaje(mensaje, &size);
-	t_partition* particion = malloc(sizeof(t_partition));
-	particion->inicio=pmalloc(size);
+
+	if(size<tamanio_minimo_particion)
+		particion->fragmentacion_interna=tamanio_minimo_particion-size;
+	else
+		particion->fragmentacion_interna=0;
+
+	particion->inicio=pmalloc(size+particion->fragmentacion_interna);
 	particion->msg_id=mensaje->id;
 	particion->cola_code=mensaje->codigo_operacion;
 	particion->tipo='X';
@@ -1143,7 +1139,7 @@ t_partition* crear_particion(t_mensaje* mensaje){//todo aca vendria validacion d
 }
 
 void liberar_particion(t_partition* particion){
-	t_partition* particion_libre = crear_particion_libre(particion->inicio,particion->size);
+	t_partition* particion_libre = crear_particion_libre(particion->inicio,particion->size,particion->fragmentacion_interna);
 	agregar_particion_libre(particion_libre);
 	list_destroy(particion->suscriptores_confirmados);
 	free(particion);
@@ -1175,7 +1171,9 @@ void actualizar_algoritmo_reemplazo(t_partition* particion){
 			break;
 		case LRU:;
 			int msg_id = (int)list_remove_by_condition(lista_algoritmo_reemplazo,es_msg_id);
+			printf("msg_id lru:%d\n", msg_id);
 			list_add(lista_algoritmo_reemplazo,msg_id);
+
 			break;
 	}
 }
@@ -1324,7 +1322,7 @@ void memory_dump(int signum){
 				return "";
 				break;
 			case 'X':
-				return string_itoa((int)list_find(lista_algoritmo_reemplazo,es_msg_id));// todo que devuelva posicion
+				return string_itoa((int)list_find(lista_algoritmo_reemplazo,es_msg_id));
 				break;
 			default:
 				return "";
@@ -1408,7 +1406,7 @@ void printear_estado_memoria(){
 	void printear_particion(void* stream){
 		i++;
 		t_partition* particion = stream;
-		printf("Particion %d | Id:%d | Inicio:%d | Tamaño:%d | sockets confirmados [", i,particion->msg_id,(int)particion->inicio-(int)mem_alloc, particion->size);
+		printf("Particion %d | Id:%d | Inicio:%d | Tamaño:%d | Frag Interna:%d | sockets confirmados [", i,particion->msg_id,(int)particion->inicio-(int)mem_alloc, particion->size, particion->fragmentacion_interna);
 		list_iterate(particion->suscriptores_confirmados,printear_suscriptor);
 		printf("]\n");
 	}
@@ -1454,7 +1452,7 @@ void inicializar_memoria(){
 		administracion_colas[i] = crear_adm_cola();
 	}
 	particiones_libres = list_create();
-	list_add(particiones_libres, crear_particion_libre(mem_alloc,tamanio_memoria));
+	list_add(particiones_libres, crear_particion_libre(mem_alloc,tamanio_memoria,0));
 	lista_algoritmo_reemplazo = list_create();
 	particiones_ocupadas=0;
 }
@@ -1548,8 +1546,8 @@ int main(void) {
 	inicializar_broker();
 	sleep(2);
 	signal(SIGUSR1,memory_dump);
-	//pthread_t envio_mensaje_t;
-	//pthread_create(&envio_mensaje_t, NULL, (void*)envio_mensaje, NULL);
+	pthread_t envio_mensaje_t;
+	pthread_create(&envio_mensaje_t, NULL, (void*)envio_mensaje, NULL);
 	sem_t esperar;
 	sem_init(&esperar, 0,0);
 	sem_wait(&esperar);

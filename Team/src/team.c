@@ -368,7 +368,7 @@ void deadlock(){
 	}
 
 	while(!list_is_empty(entrenadores_bloqueados)){
-		printf("Entra al while\n");
+
 		aux = list_remove(entrenadores_bloqueados,0);
 		pokemones_que_quiere_aux = pokemones_deseados(aux);
 
@@ -399,11 +399,7 @@ void deadlock(){
 
 		list_destroy(pokemones_que_quiere_aux);
 
-		printf("esta por salir del while\n");
-		printf("size de entrenadores bloqueados: %d\n",list_size(entrenadores_bloqueados));
 	}
-
-	printf("Sale del while\n");
 
     list_destroy(entrenadores_bloqueados);
 	pthread_mutex_lock(&mutex_logger);
@@ -455,11 +451,20 @@ bool espera_confirmacion(t_entrenador *entrenador){
 	pthread_mutex_lock(&mutex_logger);
 	log_debug(logger,"El entrenador id:%d intenta atapar al pokemon %s en la posicion x:%d y:%d",entrenador->id,entrenador->objetivo_temporal->nombre,entrenador->posicion_x,entrenador->posicion_y);
 	pthread_mutex_unlock(&mutex_logger);
-	sem_wait(&espera_caught[entrenador->id]);
-	printf("confirmacion:%d\n",respuesta_caught[entrenador->id]);
-	pthread_mutex_lock(&mutex_respuesta);
-	respuesta = respuesta_caught[entrenador->id];
-	pthread_mutex_unlock(&mutex_respuesta);
+
+	pthread_mutex_lock(&mutex_confirmacion);
+		if(broker_conectado){
+			pthread_mutex_unlock(&mutex_confirmacion);
+			sem_wait(&espera_caught[entrenador->id]);
+			printf("confirmacion:%d\n",respuesta_caught[entrenador->id]);
+			pthread_mutex_lock(&mutex_respuesta);
+			respuesta = respuesta_caught[entrenador->id];
+			pthread_mutex_unlock(&mutex_respuesta);}
+		else{
+			pthread_mutex_unlock(&mutex_confirmacion);
+			respuesta = true;
+		}
+
 	return respuesta;
 }
 
@@ -1012,7 +1017,7 @@ void pasar_a_ready_al_pokemon_adecuado(t_list* pokemons, int interacion){
 		aux = remover_pokemon(list_pok_new, aux);
 		pthread_mutex_unlock(&list_pok_new_mutex);
 		mostrar_pokemon(aux);
-		//liberar_pokemon(aux); //NUEVA
+		//liberar_pokemon(aux); //todo
 
 		return;
 	}
@@ -1083,19 +1088,19 @@ t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos,
 	entrenador->posicion_x = atoi(auxiliar[0]);
 	entrenador->posicion_y = atoi(auxiliar[1]);
 
-	//free(auxiliar);
 	free(auxiliar[0]);
 	free(auxiliar[1]);
-    //free(auxiliar);
-
-	char **auxiliar3 = string_split(pokemones,"|"); //ultima posicion tiene null
 
 	entrenador->pokemones = list_create();
+	if(pokemones){
+		char **auxiliar3 = string_split(pokemones,"|"); //ultima posicion tiene null
 
-	while(*auxiliar3){
-		list_add(entrenador->pokemones,*auxiliar3);
-		auxiliar3++;
+		while(*auxiliar3){
+			list_add(entrenador->pokemones,*auxiliar3);
+			auxiliar3++;
+		}
 	}
+
 
 	//free(auxiliar3);
 
@@ -1128,17 +1133,21 @@ void obtener_entrenadores(){
 	while(*lista_de_posiciones){
 		entrenador = crear_entrenador(*lista_de_posiciones, *lista_de_pokemones, *lista_de_objetivos,i);
 		list_add(entrenadores, entrenador);
+
+		if(*lista_de_pokemones != NULL){
+			free(*lista_de_pokemones);
+			lista_de_pokemones++;
+		}
 		free(*lista_de_posiciones);
-		free(*lista_de_pokemones);
 		free(*lista_de_objetivos);
 		lista_de_objetivos++;
-		lista_de_pokemones++;
 		lista_de_posiciones++;
 		i++;
 	}
 	//free(lista_de_posiciones);
 	//free(lista_de_pokemones);
 	//free(lista_de_objetivos);
+
 }
 
 
@@ -1223,7 +1232,7 @@ int subscribirse_a_cola(cola_code cola){
 	broker_conectado = true;
 	pthread_mutex_unlock(&mutex_confirmacion);
 	t_mensaje* mensaje = crear_mensaje(2, SUBSCRIPCION, cola);
-	mensaje->id=15;//todo leer ID_TEAM desde la config
+	mensaje->id=id_team;
 	enviar_mensaje(socket_aux, mensaje);
 	check_ack(socket_aux, ACK);
 	free(mensaje);
@@ -1393,10 +1402,12 @@ void protocolo_recibir_mensaje(cola_code cola){
 		pthread_mutex_lock(&mutex_logger);
 		log_debug(logger,"Error de comunicacion con el broker, se realizara la operacion default");
 		pthread_mutex_unlock(&mutex_logger);
-	    confirmar_respuesta();
+
 		pthread_mutex_lock(&mutex_confirmacion);
 	    broker_conectado = false;
+		confirmar_respuesta();
 		pthread_mutex_unlock(&mutex_confirmacion);
+
 		pthread_mutex_lock(&mutex_logger);
 		log_debug(logger,"Reintentando conexion...");
 		pthread_mutex_unlock(&mutex_logger);
@@ -1425,6 +1436,8 @@ void inicializar_team(){
 
     crear_hilos_planificar_recursos();
 
+	id_team = config_get_int_value(config,"ID_TEAM");
+	log_debug(logger,"ID TEAM:%d",id_team);
 	ip_broker = config_get_string_value(config,"IP_BROKER");
 	log_debug(logger,config_get_string_value(config,"IP_BROKER")); //pido y logueo ip
 	puerto_broker = config_get_string_value(config,"PUERTO_BROKER");
@@ -1457,11 +1470,10 @@ void mostrar_menu(){
 	puts("N -> LISTA DE NEW");
 	puts("R -> LISTA DE READY");
 	puts("o -> DICCIONARIO DE OBJETIVOS");
-	puts("F -> LIBERAR RECURSOS");
+	puts("F -> FINALIZAR PROCESO");
 	puts("r -> DICCIONARIO DE READY");
 	puts("E -> LISTA DE ENTRENADORES");
 	puts("C -> LISTA DE CORTO PLAZO");
-	puts("D -> INICIAR CORRECICON DEADLOCK");
 	puts("Z -> SALIR");
 	puts("---------------------------");
 }
@@ -1498,14 +1510,8 @@ void debug(sem_t* sem){
 				leer_lista_entrenadores(lista_corto_plazo);
 		        puts("----- INGRESE MENSAJE -----");
 				break;
-			case 'D':
-				deadlock();
-				puts("Se corrio el algoritmo de deteccion de deadlock");
-		        puts("----- INGRESE MENSAJE -----");
-				break;
 			case 'F':
-				liberar_recursos_globales();
-				puts("----- SE LIBERARON LOS RECURSOS CORRECTAMENTE -----");
+				puts("----- FINALIZAR -----");
 				sem_post(sem);
 				return;
 		}
@@ -1533,12 +1539,19 @@ int main(void) {
 	for (int i = 0; i<list_size(entrenadores); i++)
 		sem_wait(&entrenador_bloqueado);
 
-	puts("CUMPLIO EL TEAM SU OBJETIVO, IUPIIIII");
-	sem_wait(&sem_debug); //!!!!!!1111
+	puts("El team ya atrapo a todos los pokemones posibles!!!");
+	puts("---------------------------------------------------");
+
+	deadlock();
+
+
+
+	puts("F para finalizar");
+	sem_wait(&sem_debug); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	liberar_recursos_globales();
 
 	log_destroy(logger);
 
-	//liberar_recursos();
 
 	return EXIT_SUCCESS;
 }

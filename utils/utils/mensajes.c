@@ -245,7 +245,7 @@ t_appeared_pokemon deserializar_appeared_pokemon(void* stream){
 
 void* serializar_get_pokemon(t_get_pokemon get_pokemon){
 	void* magic = malloc(strlen(get_pokemon.nombre_pokemon) + 1);
-	memcpy(magic, &(get_pokemon.nombre_pokemon), strlen(get_pokemon.nombre_pokemon)+1);
+	memcpy(magic, get_pokemon.nombre_pokemon, strlen(get_pokemon.nombre_pokemon)+1);
 	return magic;
 }
 

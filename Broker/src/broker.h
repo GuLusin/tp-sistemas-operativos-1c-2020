@@ -63,6 +63,7 @@ typedef struct{
 	int msg_id;
 	int cola_code;
 	int id_correlativo;
+	int fragmentacion_interna;
 	t_list* suscriptores_confirmados;
 	char tipo;
 }t_partition;
@@ -91,6 +92,7 @@ void confirmar_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje);
 void remover_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje);
 void validar_suscriptor(t_suscriptor* suscriptor, t_mensaje* mensaje_aux);
 void compactar_memoria();
+void notificar_mensaje(t_mensaje* mensaje);
 char* cola_string(int cola);
 int encontrar_particion(int msg_id,int cola);
 int puntero_cmp(void* un_puntero, void* otro_puntero);
