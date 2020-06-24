@@ -18,9 +18,13 @@ al proceso Team.
 bool id_validation(int socket_cliente) {
 	send_ack(socket_cliente, ACK); //Broker envia confirmacion del mensaje recibido
 	if(check_ack(socket_cliente, ACK))// Broker espera al team para que confirme la confirmacion
-		send_ack(socket_cliente, id_mensajes_globales++); // Broker le manda el id del mensaje
-		return check_ack(socket_cliente, id_mensajes_globales - 1); //Broker espera la confirmacion del id y sale si es correcta.}
-
+		pthread_mutex_lock(&mutex_id_mensajes_globales);
+      	send_ack(socket_cliente, id_mensajes_globales++); // Broker le manda el id del mensaje
+		pthread_mutex_unlock(&mutex_id_mensajes_globales);
+		pthread_mutex_lock(&mutex_id_mensajes_globales);
+		bool ack = check_ack(socket_cliente, id_mensajes_globales - 1); //Broker espera la confirmacion del id y sale si es correcta.}
+		pthread_mutex_unlock(&mutex_id_mensajes_globales);
+		return ack;
 }
 //#include<readline/readline.h>
 
@@ -47,9 +51,9 @@ void notificar_mensaje_cacheados(int cola, t_suscriptor* suscriptor){
 			pthread_mutex_unlock(&mutex_recibir);
 		}
 	}
-	pthread_mutex_lock(&mutex_cola_suscriptores[cola]);
+	pthread_mutex_lock(&mutex_administracion_colas);
 	list_iterate(administracion_colas[cola].particiones,enviar_mensaje_condicional);
-	pthread_mutex_unlock(&mutex_cola_suscriptores[cola]);
+	pthread_mutex_unlock(&mutex_administracion_colas);
 }
 
 void manejar_subscripcion(int cola,t_suscriptor* suscriptor){
@@ -170,7 +174,9 @@ void recibir_mensaje(int *socket_cliente){
 	send_ack(socket_cliente,ACK);
 
 	t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
+	pthread_mutex_lock(&mutex_id_mensajes_globales);
 	mensaje->id=++id_mensajes_globales;
+	pthread_mutex_unlock(&mutex_id_mensajes_globales);
 	printear_mensaje(mensaje);
 	manejar_mensaje(*socket_cliente,mensaje);
 }
@@ -187,14 +193,18 @@ void recibir_cliente(int *socket_servidor){
 }
 
 void notificar_mensaje(t_mensaje* mensaje){
+
 	void notificar_suscriptores(void* stream){
 		t_suscriptor* suscriptor = stream;
 		enviar_mensaje(suscriptor->socket_cliente,mensaje);
 		validar_suscriptor(suscriptor,mensaje);
 	}
+
 	cachear_mensaje(mensaje);
 	//printear_estado_memoria();
+	pthread_mutex_lock(&mutex_cola_suscriptores[mensaje->codigo_operacion]);
 	list_iterate(suscriptores[mensaje->codigo_operacion],notificar_suscriptores);
+	pthread_mutex_unlock(&mutex_cola_suscriptores[mensaje->codigo_operacion]);
 }
 
 
@@ -202,7 +212,11 @@ void enviar_appeared_pokemon(t_pokemon* pokemon){
 	//puts("envia appeared");
 	int id_correlativo = 455;
 	t_mensaje* mensaje = crear_mensaje(5, APPEARED_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,id_correlativo);
+
+	pthread_mutex_lock(&mutex_cola_suscriptores[APPEARED_POKEMON]);
 	int socket_aux = (int)list_get(suscriptores[APPEARED_POKEMON],0);
+	pthread_mutex_unlock(&mutex_cola_suscriptores[APPEARED_POKEMON]);
+
 	printear_mensaje(mensaje);
 	enviar_mensaje(socket_aux,mensaje);
 	//printf("Se envio el mensaje al socket:%d\n", socket_aux);
@@ -248,7 +262,9 @@ void envio_mensaje(){
 				pokemon = crear_pokemon("Pikachu",-1,2);
 				mensaje_aux = crear_mensaje(5, APPEARED_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,455);
 				puts("envia appeared pokemon");
-				mensaje_aux->id = ++id_mensajes_globales;
+				pthread_mutex_lock(&mutex_id_mensajes_globales);
+				mensaje_aux->id=++id_mensajes_globales;
+				pthread_mutex_unlock(&mutex_id_mensajes_globales);
 				notificar_mensaje(mensaje_aux);
 				break;
 			case 'P':
@@ -266,7 +282,9 @@ void envio_mensaje(){
 				agregar_pokemon_a_especie(especie_pikachu,pokemon4);
 
 				mensaje_aux = crear_mensaje(3, LOCALIZED_POKEMON, 666, especie_pikachu);
-				mensaje_aux->id = ++id_mensajes_globales;
+				pthread_mutex_lock(&mutex_id_mensajes_globales);
+				mensaje_aux->id=++id_mensajes_globales;
+				pthread_mutex_unlock(&mutex_id_mensajes_globales);
 
 				notificar_mensaje(mensaje_aux);
 				break;
@@ -286,7 +304,9 @@ void envio_mensaje(){
 				agregar_pokemon_a_especie(especie_pikachu,pokemon4);
 
 				mensaje_aux = crear_mensaje(3, LOCALIZED_POKEMON, 455, especie_pikachu);
-				mensaje_aux->id = ++id_mensajes_globales;
+				pthread_mutex_lock(&mutex_id_mensajes_globales);
+				mensaje_aux->id=++id_mensajes_globales;
+				pthread_mutex_unlock(&mutex_id_mensajes_globales);
 
 				notificar_mensaje(mensaje_aux);
 				break;
@@ -305,7 +325,9 @@ void envio_mensaje(){
 				agregar_pokemon_a_especie(especie_pikachu,pokemon4);
 
 				mensaje_aux = crear_mensaje(3, LOCALIZED_POKEMON, 4555, especie_pikachu);
-				mensaje_aux->id = ++id_mensajes_globales;
+				pthread_mutex_lock(&mutex_id_mensajes_globales);
+				mensaje_aux->id=++id_mensajes_globales;
+				pthread_mutex_unlock(&mutex_id_mensajes_globales);
 
 				notificar_mensaje(mensaje_aux);
 				break;
@@ -313,21 +335,27 @@ void envio_mensaje(){
 				pokemon = crear_pokemon("Bulbasaur",9,5);
 				mensaje_aux = crear_mensaje(5, APPEARED_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,455);
 				puts("envia appeared pokemon");
-				mensaje_aux->id = ++id_mensajes_globales;
+				pthread_mutex_lock(&mutex_id_mensajes_globales);
+				mensaje_aux->id=++id_mensajes_globales;
+				pthread_mutex_unlock(&mutex_id_mensajes_globales);
 				notificar_mensaje(mensaje_aux);
 				break;
 			case 's':
 				pokemon = crear_pokemon("Squirtle",4,7);
 				mensaje_aux = crear_mensaje(5, APPEARED_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,455);
 				puts("envia appeared pokemon");
-				mensaje_aux->id = ++id_mensajes_globales;
+				pthread_mutex_lock(&mutex_id_mensajes_globales);
+				mensaje_aux->id=++id_mensajes_globales;
+				pthread_mutex_unlock(&mutex_id_mensajes_globales);
 				notificar_mensaje(mensaje_aux);
 				break;
 			case 'c':
 				pokemon = crear_pokemon("Charmander",4,7);
 				mensaje_aux = crear_mensaje(5, APPEARED_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,455);
 				puts("envia appeared pokemon");
-				mensaje_aux->id = ++id_mensajes_globales;
+				pthread_mutex_lock(&mutex_id_mensajes_globales);
+				mensaje_aux->id=++id_mensajes_globales;
+				pthread_mutex_unlock(&mutex_id_mensajes_globales);
 				notificar_mensaje(mensaje_aux);
 				break;
 			case 'r':
@@ -337,33 +365,45 @@ void envio_mensaje(){
 			case 'k':;
 				pokemon = crear_pokemon("Pikachu",-1,2);
 				mensaje_aux = crear_mensaje(5, APPEARED_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,455);
-				mensaje_aux->id = ++id_mensajes_globales;
+				pthread_mutex_lock(&mutex_id_mensajes_globales);
+				mensaje_aux->id=++id_mensajes_globales;
+				pthread_mutex_unlock(&mutex_id_mensajes_globales);
 				cachear_mensaje(mensaje_aux);
 
 				pokemon = crear_pokemon("Bulbasaur",5,-3);
 				mensaje_aux = crear_mensaje(5, NEW_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,7855);
-				mensaje_aux->id = ++id_mensajes_globales;
+				pthread_mutex_lock(&mutex_id_mensajes_globales);
+				mensaje_aux->id=++id_mensajes_globales;
+				pthread_mutex_unlock(&mutex_id_mensajes_globales);
 				cachear_mensaje(mensaje_aux);
 
 				mensaje_aux = crear_mensaje(3, CAUGHT_POKEMON,ID_DEFAULT,1);
-				mensaje_aux->id = ++id_mensajes_globales;
-				cachear_mensaje(mensaje_aux);
+				pthread_mutex_lock(&mutex_id_mensajes_globales);
+				mensaje_aux->id=++id_mensajes_globales;
+				pthread_mutex_unlock(&mutex_id_mensajes_globales);
 
+				cachear_mensaje(mensaje_aux);
 				pokemon = crear_pokemon("Squirtle",12,6);
 				especie_pikachu = crear_pokemon_especie("Squirtle");
 				agregar_pokemon_a_especie(especie_pikachu,pokemon);
 				mensaje_aux = crear_mensaje(3, LOCALIZED_POKEMON,ID_DEFAULT,especie_pikachu);
-				mensaje_aux->id = ++id_mensajes_globales;
+				pthread_mutex_lock(&mutex_id_mensajes_globales);
+				mensaje_aux->id=++id_mensajes_globales;
+				pthread_mutex_unlock(&mutex_id_mensajes_globales);
 				cachear_mensaje(mensaje_aux);
 
 				pokemon = crear_pokemon("Charmander",-45,-6);
 				mensaje_aux = crear_mensaje(2, GET_POKEMON,pokemon->nombre);
-				mensaje_aux->id = ++id_mensajes_globales;
+				pthread_mutex_lock(&mutex_id_mensajes_globales);
+				mensaje_aux->id=++id_mensajes_globales;
+				pthread_mutex_unlock(&mutex_id_mensajes_globales);
 				cachear_mensaje(mensaje_aux);
 
 				pokemon = crear_pokemon("Pikachu",13,0);
 				mensaje_aux = crear_mensaje(4,CATCH_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y);
-				mensaje_aux->id = ++id_mensajes_globales;
+				pthread_mutex_lock(&mutex_id_mensajes_globales);
+				mensaje_aux->id=++id_mensajes_globales;
+				pthread_mutex_unlock(&mutex_id_mensajes_globales);
 				cachear_mensaje(mensaje_aux);
 
 				break;
@@ -377,12 +417,17 @@ void envio_mensaje(){
 				pokemon = crear_pokemon("Squirtle",4,7);
 				mensaje_aux = crear_mensaje(5, NEW_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,455);
 				puts("envia NEW pokemon");
-				mensaje_aux->id = ++id_mensajes_globales;
+				pthread_mutex_lock(&mutex_id_mensajes_globales);
+				mensaje_aux->id=++id_mensajes_globales;
+				pthread_mutex_unlock(&mutex_id_mensajes_globales);
 				notificar_mensaje(mensaje_aux);
 				break;
 			case 'h':
-				for(int i=0;i<CANTIDAD_COLAS;i++)
+				for(int i=0;i<CANTIDAD_COLAS;i++){
+					pthread_mutex_lock(&mutex_administracion_colas);
 					list_iterate(administracion_colas[i].particiones,descachear_particiones);
+					pthread_mutex_unlock(&mutex_administracion_colas);
+				}
 				break;
 			case '0':
 				sacar_particion(NEW_POKEMON,0);
@@ -420,7 +465,9 @@ void envio_mensaje(){
 			case 'm':
 				pokemon = crear_pokemon("PikachuhhhPikachuhhhPikachuhhhPikachuhhhPikachuhhhPikachuhhhPikachuhhhPikachuhhhPikachuhhhPikachuhhhPikachuhhhPikachuhhhPikachuhhhPikachuhhhPikachuhhhPikachuhhhPikachuhhhPikachuhhhPikachuhhhPikachuhhh",13,0);
 				mensaje_aux = crear_mensaje(4,CATCH_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y);
-				mensaje_aux->id = ++id_mensajes_globales;
+				pthread_mutex_lock(&mutex_id_mensajes_globales);
+				mensaje_aux->id=++id_mensajes_globales;
+				pthread_mutex_unlock(&mutex_id_mensajes_globales);
 				cachear_mensaje(mensaje_aux);
 				break;
 			default:
@@ -455,7 +502,9 @@ bool es_suscriptor_confirmado(t_partition* particion,int id_team){
 
 void confirmar_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje){
 	int posicion = encontrar_particion(mensaje->id,mensaje->codigo_operacion);
+	pthread_mutex_lock(&mutex_administracion_colas);
 	t_partition* particion = list_get(administracion_colas[mensaje->codigo_operacion].particiones,posicion);
+	pthread_mutex_unlock(&mutex_administracion_colas);
 	list_add(particion->suscriptores_confirmados,suscriptor->id_team);
 	printear_estado_memoria();
 	//agregar el id_team a esa particion todo?
@@ -468,15 +517,18 @@ void remover_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje){ // Remueve
 		t_suscriptor* suscriptor_lista = stream;
 		return suscriptor->id_team==suscriptor_lista->id_team;
 	}
+	//pthread_mutex_lock(&mutex_cola_suscriptores[mensaje->codigo_operacion]);
 	list_find(suscriptores[mensaje->codigo_operacion], es_suscriptor);
 	liberar_suscriptor(list_remove(suscriptores[mensaje->codigo_operacion],i));
+	//pthread_mutex_unlock(&mutex_cola_suscriptores[mensaje->codigo_operacion]);
+
 	close(suscriptor->socket_cliente);
 }
 
 void validar_suscriptor(t_suscriptor* suscriptor, t_mensaje* mensaje_aux) {
 	if(check_ack(suscriptor->socket_cliente, ACK))
 		confirmar_suscriptor(suscriptor, mensaje_aux);
-	else;
+	else
 		remover_suscriptor(suscriptor, mensaje_aux);
 }
 
@@ -831,8 +883,11 @@ void* asignar_particion_libre(t_partition* particion_libre, int size){
 	void* aux = particion_libre->inicio;
 	particion_libre->inicio += size;
 	particion_libre->size -= size;
-	if(particion_libre->size)
+	if(particion_libre->size){
+		pthread_mutex_lock(&mutex_particiones_libres);
 		list_add(particiones_libres,particion_libre);
+		pthread_mutex_unlock(&mutex_particiones_libres);
+		}
 	else
 		free(particion_libre);
 	unificar_particiones_libres(); //No se si es taaan necesario aca pero me aseguro que la lista global siga ordenada
@@ -848,7 +903,9 @@ void* first_fit(int size){
 		t_partition* particion_libre = stream;
 		return particion_libre->size >= size;
 	}
+	pthread_mutex_lock(&mutex_particiones_libres);
 	void* aux = list_remove_by_condition(particiones_libres,tiene_espacio);
+	pthread_mutex_unlock(&mutex_particiones_libres);
 
 	if(!aux)
 		return NULL;
@@ -871,10 +928,16 @@ void* best_fit(int size){
 			tam_min=particion_libre->size;
 		}
 	}
+	pthread_mutex_lock(&mutex_particiones_libres);
 	list_iterate(particiones_libres,espacio_optimo);
+	pthread_mutex_unlock(&mutex_particiones_libres);
+
 	if(pos==-1)
 		return NULL;
+
+	pthread_mutex_lock(&mutex_particiones_libres);
 	t_partition* particion_libre = list_remove(particiones_libres, pos);
+	pthread_mutex_unlock(&mutex_particiones_libres);
 	//obtener un puntero de tamaño size y descontarle size a la particion libre. luego agregar la particion modificada a la lista
 	// de particiones globales de nuevo y ordenarla y unificar, si hace falta.
 	return asignar_particion_libre(particion_libre, size);
@@ -917,15 +980,17 @@ void unificar_particiones_libres(){
 	bool unificada = false;
 	while(!unificada){
 		unificada = true;
+		pthread_mutex_lock(&mutex_particiones_libres);
 		for(int i=0;i<list_size(particiones_libres)-1;i++){
-			t_partition* una_particion = list_get(particiones_libres,i);
-			t_partition* otra_particion = list_get(particiones_libres,i+1);
-			if(particiones_libres_contiguas(una_particion,otra_particion)){
-				unificar(una_particion, list_remove(particiones_libres,i+1));
-				unificada=false;
-				break;
-			}
-		}
+					t_partition* una_particion = list_get(particiones_libres,i);
+					t_partition* otra_particion = list_get(particiones_libres,i+1);
+					if(particiones_libres_contiguas(una_particion,otra_particion)){
+						unificar(una_particion, list_remove(particiones_libres,i+1));
+						unificada=false;
+						break;
+					}
+				}
+		pthread_mutex_unlock(&mutex_particiones_libres);
 	}
 }
 
@@ -938,7 +1003,10 @@ void normalizar_particiones_libres(){
 		else
 			return false;
 	}
+	pthread_mutex_lock(&mutex_particiones_libres);
 	list_sort(particiones_libres, en_orden);
+	pthread_mutex_unlock(&mutex_particiones_libres);
+
 	unificar_particiones_libres();
 }
 
@@ -946,7 +1014,10 @@ void normalizar_particiones_libres(){
 
 void compactar_memoria(){
 	t_dictionary* dicc_suscriptores_particiones = dictionary_create();
+	pthread_mutex_lock(&mutex_lista_algoritmo_reemplazo);
 	t_list* lista_ar_aux = list_duplicate(lista_algoritmo_reemplazo);
+	pthread_mutex_unlock(&mutex_lista_algoritmo_reemplazo);
+
 	t_list* mensajes_aux = list_create();
 	void transpaso_a_aux(void* stream){
 		t_partition* particion = stream;
@@ -956,14 +1027,16 @@ void compactar_memoria(){
 		sacar_particion(particion->cola_code,pos);
 		list_add(mensajes_aux,mensaje);
 	}
-	for(int i=0;i<CANTIDAD_COLAS;i++)
+	for(int i=0;i<CANTIDAD_COLAS;i++){
+		pthread_mutex_lock(&mutex_administracion_colas);
 		while(list_size(administracion_colas[i].particiones))
 			transpaso_a_aux(list_get(administracion_colas[i].particiones,0));
-
+		pthread_mutex_unlock(&mutex_administracion_colas);
+	}
 
 	unificar_particiones_libres();
 	printear_estado_memoria();
-	sleep(5);
+	//sleep(5);
 
 	while(list_size(mensajes_aux)){
 		t_mensaje* mensaje = list_remove(mensajes_aux,0);
@@ -972,9 +1045,12 @@ void compactar_memoria(){
 		//capaz hay leak ya que no libero la auxiliar, hace falta?
 	}
 	printear_estado_memoria();
-	sleep(5);
+	//sleep(5);
+	pthread_mutex_lock(&mutex_lista_algoritmo_reemplazo);
 	list_clean(lista_algoritmo_reemplazo);
 	list_add_all(lista_algoritmo_reemplazo,lista_ar_aux);
+	pthread_mutex_unlock(&mutex_lista_algoritmo_reemplazo);
+
 	//puts("MEMORIA COMPACTADA");
 	list_destroy(mensajes_aux);
 	list_destroy(lista_ar_aux);
@@ -996,7 +1072,9 @@ void eliminar_particion(){
 		}
 		for(i=0;i<CANTIDAD_COLAS;i++){
 			j=-1;
+			pthread_mutex_lock(&mutex_administracion_colas);
 			list_iterate(administracion_colas[i].particiones,es_msg_id);
+			pthread_mutex_unlock(&mutex_administracion_colas);
 		}
 	}
 
@@ -1007,12 +1085,14 @@ void eliminar_particion(){
 	 *
 	 */
 
-
+	pthread_mutex_lock(&mutex_lista_algoritmo_reemplazo);
 	int msg_id = (int)list_get(lista_algoritmo_reemplazo,0);
+	pthread_mutex_unlock(&mutex_lista_algoritmo_reemplazo);
+
 	encontrar_particion_por_id(msg_id,&cola,&index);
 	printear_estado_memoria();
 	printf("elimina particion id:%d cola:%d index:%d\n", msg_id, cola,index);
-	sleep(5);
+	//sleep(5);
 	sacar_particion(cola,index);
  }
 
@@ -1028,14 +1108,14 @@ void* pmalloc(int size){
 	while(!aux){
 		switch(APL){
 			case FF:
-				pthread_mutex_lock(&mutex_particiones_libres);
+				//pthread_mutex_lock(&mutex_particiones_libres);
 				aux = first_fit(size);
-				pthread_mutex_unlock(&mutex_particiones_libres);
+				//pthread_mutex_unlock(&mutex_particiones_libres);
 				break;
 			case BF:
-				pthread_mutex_lock(&mutex_particiones_libres);
+				//pthread_mutex_lock(&mutex_particiones_libres);
 				aux = best_fit(size);
-				pthread_mutex_unlock(&mutex_particiones_libres);
+				///pthread_mutex_unlock(&mutex_particiones_libres);
 				break;
 		}
 		if(!aux){ //todo chequear nuevas condiciones segun frecuencia de compactacion
@@ -1106,7 +1186,9 @@ t_partition* crear_particion_libre(void* stream, int size,int frag_interna){
 }
 
 void agregar_particion_libre(t_partition* particion_libre){
+	pthread_mutex_lock(&mutex_particiones_libres);
 	list_add(particiones_libres,particion_libre);
+	pthread_mutex_unlock(&mutex_particiones_libres);
 	normalizar_particiones_libres();
 }
 
@@ -1118,12 +1200,10 @@ t_partition* crear_particion(t_mensaje* mensaje){
 	t_partition* particion = malloc(sizeof(t_partition));
 	int size;
 	void* magic = memser_mensaje(mensaje, &size);
-
 	if(size<tamanio_minimo_particion)
 		particion->fragmentacion_interna=tamanio_minimo_particion-size;
 	else
 		particion->fragmentacion_interna=0;
-
 	particion->inicio=pmalloc(size+particion->fragmentacion_interna);
 	particion->msg_id=mensaje->id;
 	particion->cola_code=mensaje->codigo_operacion;
@@ -1132,9 +1212,15 @@ t_partition* crear_particion(t_mensaje* mensaje){
 	memcpy(particion->inicio,magic,size);
 	particion->size = size;
 	particion->suscriptores_confirmados = list_create();
+
+	pthread_mutex_lock(&mutex_lista_algoritmo_reemplazo);
 	list_add(lista_algoritmo_reemplazo,(int)particion->msg_id);
+	pthread_mutex_unlock(&mutex_lista_algoritmo_reemplazo);
+
 	free(magic);
+	pthread_mutex_lock(&mutex_particiones_ocupadas);
 	particiones_ocupadas++;
+	pthread_mutex_unlock(&mutex_particiones_ocupadas);
 	return particion;
 }
 
@@ -1150,15 +1236,21 @@ void agregar_particion(adm_cola adm_cola, t_partition* particion){
 }
 
 void sacar_particion(int cola, int index){//SE USA ASI??
+	pthread_mutex_lock(&mutex_administracion_colas);
 	t_partition* particion = list_remove(administracion_colas[cola].particiones,index);
+	pthread_mutex_unlock(&mutex_administracion_colas);
 	bool es_id_msg(void* stream){
 		int id_msg =(int)stream;
 		return id_msg == particion->msg_id;
 	}
+	pthread_mutex_lock(&mutex_lista_algoritmo_reemplazo);
 	list_remove_by_condition(lista_algoritmo_reemplazo,es_id_msg);
+	pthread_mutex_unlock(&mutex_lista_algoritmo_reemplazo);
 	//printf("libero particion en indice:%d\n",index);
 	liberar_particion(particion);
+	pthread_mutex_lock(&mutex_particiones_ocupadas);
 	particiones_ocupadas--;
+	pthread_mutex_unlock(&mutex_particiones_ocupadas);
 }
 
 void actualizar_algoritmo_reemplazo(t_partition* particion){
@@ -1170,10 +1262,11 @@ void actualizar_algoritmo_reemplazo(t_partition* particion){
 		case FIFO:
 			break;
 		case LRU:;
+			pthread_mutex_lock(&mutex_lista_algoritmo_reemplazo);
 			int msg_id = (int)list_remove_by_condition(lista_algoritmo_reemplazo,es_msg_id);
-			printf("msg_id lru:%d\n", msg_id);
 			list_add(lista_algoritmo_reemplazo,msg_id);
-
+			pthread_mutex_unlock(&mutex_lista_algoritmo_reemplazo);
+			printf("msg_id lru:%d\n", msg_id);
 			break;
 	}
 }
@@ -1223,7 +1316,9 @@ void asignar_id_correlativo_a_mensaje(t_mensaje* mensaje, t_partition* particion
 
 t_partition* cachear_mensaje(t_mensaje* mensaje){
 	t_partition* particion = crear_particion(mensaje);
+	pthread_mutex_lock(&mutex_administracion_colas);
 	agregar_particion(administracion_colas[mensaje->codigo_operacion],particion);
+	pthread_mutex_unlock(&mutex_administracion_colas);
 	return particion;
 }
 
@@ -1241,7 +1336,9 @@ t_mensaje* leer_particion_cache(t_partition* particion){
 }
 
 t_mensaje* get_mensaje_cacheado(int cola_code, int index){
+	pthread_mutex_lock(&mutex_administracion_colas);
 	t_partition* particion = list_get(administracion_colas[cola_code].particiones, index);
+	pthread_mutex_unlock(&mutex_administracion_colas);
 	t_mensaje* mensaje = leer_particion_cache(particion);
 	return mensaje;
 }
@@ -1261,7 +1358,9 @@ int encontrar_particion(int msg_id,int cola){
 		if(particion_lista->msg_id == msg_id)
 			posicion=i;
 	}
+	pthread_mutex_lock(&mutex_administracion_colas);
 	list_iterate(administracion_colas[cola].particiones,corresponde_a_id);
+	pthread_mutex_unlock(&mutex_administracion_colas);
 	if(i==-1)
 		return -1;
 	else
@@ -1364,9 +1463,15 @@ void memory_dump(int signum){
 		t_log* logger_dump = log_create("../mem_dump.log", "log", true, LOG_LEVEL_DEBUG);
 		particiones_totales = list_create();
 
-		for(int i=0;i<CANTIDAD_COLAS;i++)
+		for(int i=0;i<CANTIDAD_COLAS;i++){
+			pthread_mutex_lock(&mutex_administracion_colas);
 			list_add_all(particiones_totales,administracion_colas[i].particiones);
+			pthread_mutex_unlock(&mutex_administracion_colas);
+		}
+
+		pthread_mutex_lock(&mutex_particiones_libres);
 		list_add_all(particiones_totales,particiones_libres);
+		pthread_mutex_unlock(&mutex_particiones_libres);
 		list_sort(particiones_totales, en_orden);
 
 		log_debug(logger_dump,"------------------------------------------------------------------");
@@ -1423,7 +1528,9 @@ void printear_estado_memoria(){
 
 	printf("Particiones Libres\n");
 
+	pthread_mutex_lock(&mutex_particiones_libres);
 	list_iterate(particiones_libres,printear_particion_libre);
+	pthread_mutex_unlock(&mutex_particiones_libres);
 	printf("-------------------------------\n");
 
 	void printear_msg_id(void* stream){
@@ -1444,7 +1551,6 @@ void inicializar_memoria(){
 
 	for(int i=0;i<tamanio_memoria;i++)
 		memcpy(aux+i,&var,1);
-
 
 	pthread_mutex_init(&mutex_particiones_libres, NULL);
 	administracion_colas=malloc(sizeof(adm_cola)*6);
@@ -1492,12 +1598,16 @@ void inicializar_broker(){
 	freq_compactacion = config_get_int_value(config,"FRECUENCIA_COMPACTACION");
 	log_debug(logger,"FRECUENCIA COMPACTACION:%d",freq_compactacion);
 
-
 	id_mensajes_globales=0;
 
 	pthread_t pthread_atender_cliente;
 	pthread_mutex_init(&mutex_recibir, NULL);
 	pthread_mutex_init(&mutex_enviar, NULL);
+	pthread_mutex_init(&mutex_id_mensajes_globales, NULL);
+	pthread_mutex_init(&mutex_logger, NULL);
+	pthread_mutex_init(& mutex_lista_algoritmo_reemplazo, NULL);
+	pthread_mutex_init(&mutex_administracion_colas, NULL);
+	pthread_mutex_init(&mutex_particiones_ocupadas, NULL);
 
 	mutex_cola_suscriptores = malloc(sizeof(pthread_mutex_t)*CANTIDAD_COLAS);
 	for(int i=0;i<CANTIDAD_COLAS;i++)
@@ -1506,8 +1616,6 @@ void inicializar_broker(){
 	suscriptores = malloc(sizeof(t_list)*CANTIDAD_COLAS);
 	for(int i=0;i<CANTIDAD_COLAS;i++)
 		suscriptores[i] = list_create();
-
-
 
 	// INICIA SOCKET DE ESCUCHA
 
@@ -1525,22 +1633,17 @@ void inicializar_broker(){
 	pthread_detach(pthread_atender_cliente);
 	log_debug(logger,"Recibi al cliente");	//Recibi al cliente
 
-
 	inicializar_memoria();
     //-------------------------------------------
-
 
 	/*
 	 * cachear_mensaje para guardarlo en cache
 	 * get_mensaje_cacheado para leer mensaje en cache
 	 * descachear
 	 */
-
-
 }
 
 int main(void) {
-
 
 	printf("id_ proceso:%d\n",process_getpid());
 	inicializar_broker();
@@ -1553,7 +1656,6 @@ int main(void) {
 	sem_wait(&esperar);
 	//printf("cola appeared: %d\ncola caught: %d\ncola localized: %d\n", (int)list_get(sockets_cola_appeared,0),(int)list_get(sockets_cola_caught,0),(int)list_get(sockets_cola_localized,0));
 	close(socket_broker);
-
 
 	return EXIT_SUCCESS;
 }

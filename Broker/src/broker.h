@@ -18,23 +18,29 @@
 
 #define CANTIDAD_COLAS 6
 
-pthread_mutex_t mutex_recibir;
-pthread_mutex_t mutex_enviar;
-pthread_mutex_t* mutex_cola_suscriptores;
-
-t_log* logger;
-t_config* config;
-int socket_broker;
-
 typedef struct{
 	int id_team;
 	int socket_cliente;
 }t_suscriptor;
 
-t_list** suscriptores;
-
+int socket_broker;
 int id_mensajes_globales;
 
+t_log* logger;
+t_config* config;
+t_list** suscriptores;
+
+//=========================COORDINACION BROKER================================
+
+pthread_mutex_t mutex_id_mensajes_globales;
+pthread_mutex_t mutex_logger;
+pthread_mutex_t mutex_lista_algoritmo_reemplazo;
+pthread_mutex_t mutex_particiones_libres;
+pthread_mutex_t mutex_administracion_colas;
+pthread_mutex_t mutex_recibir;
+pthread_mutex_t mutex_enviar;
+pthread_mutex_t mutex_particiones_ocupadas;
+pthread_mutex_t* mutex_cola_suscriptores;
 
 //========================PARTICIONES DINAMICAS===============================
 
@@ -68,20 +74,21 @@ typedef struct{
 	char tipo;
 }t_partition;
 
-int tamanio_memoria,tamanio_minimo_particion,freq_compactacion,particiones_ocupadas;
+int tamanio_memoria;
+int tamanio_minimo_particion;
+int freq_compactacion;
+int particiones_ocupadas;
 
 algoritmo_particion_libre APL;
 algoritmo_reemplazo AR;
 algoritmo_memoria AM;
+
 t_list* lista_algoritmo_reemplazo;
-
-pthread_mutex_t mutex_particiones_libres;
-
 t_list* particiones_libres; 	//LISTA CON LAS PARTICIONES LIBRES DISPONIBLES.
 adm_cola* administracion_colas; // ARREGLO DE LAS 6 COLAS QUE EL BROKER ADMINISTRA EN LA CACHE.
 void* mem_alloc; 				//ESTE PUNTERO ES GLOBAL Y UNICO, NO SE TOCA NI MODIFICA. ES EL PRINCIPIO DE LA CACHE.
 
-
+//================================FUNCIONES===================================
 
 void printear_estado_memoria();
 void asignar_id_correlativo_a_particion(t_partition* particion,t_mensaje* mensaje);
@@ -104,14 +111,4 @@ t_mensaje* leer_particion_cache(t_partition* particion);
 t_suscriptor* crear_suscriptor(int id, int socket_cliente);
 t_partition* cachear_mensaje(t_mensaje* mensaje_aux);
 
-
-
-
-
-
 #endif /* BROKER_H */
-
-
-
-
-
