@@ -101,8 +101,8 @@ void leer_config() {
 
 
 t_metadata* leer_archivo_metadata(char* ruta){
-	char *aux = malloc(strlen(ruta)); // +1 ?
-	strcpy(aux,ruta);
+
+	char* aux = string_from_format(ruta);
 	string_append(&aux,"/Metadata.bin");
 
 	t_config* aux_metadata = config_create(aux);
@@ -114,17 +114,18 @@ t_metadata* leer_archivo_metadata(char* ruta){
 		metadata->size = config_get_int_value(aux_metadata, "SIZE");
 		metadata->blocks = list_create();
 		char** blocks = own_config_get_array_value(aux_metadata, "BLOCKS");
-		while(*blocks){ //blocks
-			list_add(metadata->blocks,atoi(*blocks));
-			free(*blocks);
-			blocks++;
+		if(blocks){
+			while(*blocks){ //blocks
+				printf("while\n");
+				list_add(metadata->blocks,atoi(*blocks));
+				free(*blocks);
+				blocks++;
+			}
 		}
 		metadata->opened = own_config_get_char_value(aux_metadata, "OPEN");
-
 	}
 
 //	config_destroy(aux_metadata); todo por que rompe?
-
 	free(aux);
 	return metadata;
 }
@@ -138,14 +139,24 @@ char* generar_ruta(char* nombre_pokemon){
 	return ruta;
 }
 
-void verificar_y_crear_pokemon_files(char* ruta, t_mensaje* mensaje){
+bool directorioExiste(char* ruta){
 	struct stat st = {0}; // stat(2) precisa de un struct stat a modo de buffer para llenar info del archivo que nosotros no necesitamos.
 	char* aux = malloc(strlen(ruta));
 	strcpy(aux,ruta);
+	bool existe = (stat(aux,&st) != -1);
+	free(aux);
+	return existe;
 
-	if(stat(aux,&st) == -1){
+}
+
+
+
+void verificar_y_crear_pokemon_files(char* ruta, t_mensaje* mensaje){
+	char* aux = string_from_format(ruta);
+
+	if(!directorioExiste(aux)){
 		printf("Se crea un directorio pokemon para %s con su respectivo metadata.bin en %s\n",mensaje->contenido.new_pokemon.pokemon->nombre,aux);
-		mkdir(ruta,0700);
+		mkdir(aux,0700);
 		string_append(&aux,"/Metadata.bin");
 		FILE* new_archivo_metadata=fopen(aux,"w");
 		fprintf(new_archivo_metadata, "DIRECTORY=N\nSIZE=0\nBLOCKS=[]\nOPEN=N");
@@ -270,10 +281,14 @@ void leer_metadata_global(){
 void crear_bloques(){
 	blocks = malloc((global_metadata->blocks) * sizeof(FILE*)); //tamaño de un file: 148 bytes y de un punt file: 4 bytes
 	char* path = string_new();
-	string_append_with_format(&path, "%s/Blocks/", punto_montaje);
+	string_append_with_format(&path, "%s/Blocks", punto_montaje);
+	if(!directorioExiste(path)){
+		printf("No se crean los bloques porque no existe el directorio %s\n",path);
+		return;
+	}
 	for(int i=0; i < global_metadata->blocks ;i++){
 		char* path_relative = string_duplicate(path);
-		string_append_with_format(&path_relative, "%d.bin",i);
+		string_append_with_format(&path_relative, "/%d.bin",i);
 		blocks[i]=fopen(path_relative, "a");
 		free(path_relative);
 	}
