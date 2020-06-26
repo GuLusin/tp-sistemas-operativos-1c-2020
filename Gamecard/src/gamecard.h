@@ -12,6 +12,10 @@
 #include <pthread.h>
 #include <semaphore.h>
 #include <commons/collections/list.h>
+#include <commons/bitarray.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 pthread_mutex_t mutex_recibir;
 
@@ -23,6 +27,7 @@ int tiempo_reintento_conexion, tiempo_reintento_operacion,
 	socket_cola_catch, socket_cola_get, id_gamecard;
 char *ip_broker, *puerto_broker, *punto_montaje;
 
+t_bitarray* bitmap;
 
 typedef struct{
 	int directory;
@@ -38,5 +43,6 @@ typedef struct{
 }t_global_metadata;
 
 t_global_metadata* global_metadata;
+
 FILE** blocks;
 #endif /* GAMECARD_H */

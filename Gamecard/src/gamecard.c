@@ -34,37 +34,66 @@ void leer_config() {
 }
 
 t_metadata* leer_archivo_metadata(char* ruta){
+	printf("%s\n", ruta);
 	t_config* aux_metadata = config_create(ruta);
+	printf("1\n");
 	t_metadata* metadata = malloc(sizeof(t_metadata));
+	printf("1.1\n");
 	metadata->directory = config_get_int_value(aux_metadata, "DIRECTORY");
+	printf("2\n");
+
 	if(metadata->directory == 'N'){
+		printf("3\n");
+
 		metadata->size = config_get_int_value(aux_metadata, "SIZE");
 		metadata->blocks = config_get_array_value(aux_metadata, "BLOCKS");
 		metadata->open = config_get_int_value(aux_metadata, "OPEN");
+		printf("3\n");
+
 	}
+	printf("4\n");
+
 	config_destroy(aux_metadata);
+	printf("5\n");
+
 	return metadata;
 }
 
 
-char* generar_ruta_metadata(char* nombre_pokemon){
+char* generar_ruta(char* nombre_pokemon){
 	char* ruta = string_new();
 	string_append(&ruta,punto_montaje);
 	string_append(&ruta,"/Files/");//ver si hace falta capitalizar con: string_capitalized(char *text)
 	string_append(&ruta,nombre_pokemon);
-	string_append(&ruta,"/Metadata.bin");
 	return ruta;
 }
 
+void verificar_y_crear_pokemon_files(char*ruta, t_mensaje* mensaje){
+	struct stat st = {0};
+	if((stat(ruta,&st) != -1)){
+		mkdir(ruta,0700);
+		string_append(&ruta,"/Metadata.bin");
+		FILE* new_archivo_metadata=fopen(ruta,"w");
+		fprintf(new_archivo_metadata, "DIRECTORY=N\nSIZE=0\nBLOCKS=[]\nOPEN=N");
+		fclose(new_archivo_metadata);
 
-void recibir_new(t_mensaje *mensaje){//TODO
-	char* ruta = generar_ruta_metadata(mensaje->contenido.new_pokemon.pokemon->nombre); //puede fallar
-	puts(ruta);
-	if(!verificar_si_existe(ruta)){
-		crear_dir_pokemon(mensaje->contenido.new_pokemon.pokemon->nombre, ruta);
+	}else{
+		string_append(&ruta,"/Metadata.bin");
 	}
+
+}
+void recibir_new(t_mensaje *mensaje){//TODO
+	char* ruta = generar_ruta(mensaje->contenido.new_pokemon.pokemon->nombre); //puede fallar
+	printf("Sale de generar ruta con: %s\n", ruta);
+	verificar_y_crear_pokemon_files(ruta,mensaje);
+	printf("linea 65 %s\n", ruta);
+
 	t_metadata* metadata;
+	fflush(stdout);
+	printf("%s\n",ruta);
+
 	metadata = leer_archivo_metadata(ruta);
+
 	//agregar_pokemones(metadata);
 
 	/*
@@ -73,6 +102,7 @@ void recibir_new(t_mensaje *mensaje){//TODO
 	   a la actual. En caso de no existir se debe agregar al final del archivo
 	    una nueva línea indicando la cantidad de pokémon pasadas.
 	 */
+	free(ruta);
 	free(metadata);
 }
 
@@ -89,20 +119,28 @@ void recibir_catch(t_mensaje *mensaje){
 
 
 int verificar_si_existe(char* ruta){ //podria fijarse en lista global si esta el pokemon
+
+
+	/*
 	FILE *archivo_pokemon = fopen(ruta, "r");
 	int existe=1;
 	if(!archivo_pokemon){
 		existe = 0;
 	}
 	fclose(archivo_pokemon);
-	return existe;
+	return existe;*/
 }
 
 
 void crear_dir_pokemon(char* nombre_pokemon, char* ruta){
+	//crear carpeta y archivo del pokemon
 
-}
-
+}/*
+DIRECTORY=N
+SIZE=0
+BLOCKS=[]
+OPEN=N
+*/
 void manejar_mensaje(t_mensaje* mensaje){
 	puts("maneja mensaje");
 	switch(mensaje->codigo_operacion){
@@ -193,7 +231,8 @@ void inicializar_gamecard() {
 	leer_config();
 	leer_metadata_global();
 	crear_bloques();
-
+	bitmap = bitarray_create(malloc(global_metadata->blocks), global_metadata->blocks);//para saber que blocks estan abiertos/cerrados
+//TODO
 	pthread_t pthread_cola_new;
 	pthread_t pthread_cola_catch;
 	pthread_t pthread_cola_get;
@@ -220,6 +259,7 @@ void cerrar_gamecard(){
 	}
 	free(global_metadata);
 	free(blocks);
+	bitarray_destroy(bitmap);
 	//close(socket_cola_new);
 }
 
