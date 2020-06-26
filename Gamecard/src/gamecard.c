@@ -1,4 +1,64 @@
+/*	TODO: preguntas
+ *
+ * Que pasa con el bitmap si cambia la cantidad cantidad de bloques del sistema? se sobrescribe?
+ * Puede que al inicio el bitmap no este todo en 0? que hacemos si pasa eso?
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
+
+
+
+
+
+
 #include "gamecard.h"
+
+void debug_print_metadata(t_metadata* metadata){
+	printf("debug_print_metadata:\n");
+	if(metadata->directory == 'N'){
+		printf("DIRECTORY=N\n");
+		printf("SIZE=%d\n",metadata->size);
+		printf("BLOCKS=[");
+		for(int i=0;i<list_size(metadata->blocks);i++){
+			if(i)
+				printf(",");
+			printf("%d",(int)list_get(metadata->blocks,i));
+		}
+		printf("]\n");
+		if(metadata->open == 'Y')
+			printf("OPEN=Y\n");
+		else
+			printf("OPEN=N\n");
+		return;
+	}
+	if(metadata->directory == 'Y'){
+		printf("DIRECTORY=Y\n");
+		return;
+	}
+	printf("metadata invalido\n");
+
+}
+
+char own_config_get_char_value(t_config* config, char *key){
+	char* string = config_get_string_value(config, key);
+	char caracter = string[0];
+	free(string);
+	return caracter;
+}
+
+char** own_config_get_array_value(t_config* config, char *key){
+	char* value_in_dictionary = config_get_string_value(config, key);
+	if(!strcmp(value_in_dictionary,"[]")){
+		return NULL;
+	}
+	return string_get_string_as_array(value_in_dictionary);
+}
+
 
 int subscribirse_a_cola(cola_code cola){
 	int socket_aux = connect_to(ip_broker,puerto_broker, tiempo_reintento_conexion, logger);
@@ -33,29 +93,43 @@ void leer_config() {
 	log_debug(logger,config_get_string_value(config,"ID_GAMECARD"));
 }
 
+
+
+
 t_metadata* leer_archivo_metadata(char* ruta){
-	printf("%s\n", ruta);
-	t_config* aux_metadata = config_create(ruta);
-	printf("1\n");
+	char *aux = malloc(strlen(ruta)); // +1 ?
+	strcpy(aux,ruta);
+	string_append(&aux,"/Metadata.bin");
+
+	t_config* aux_metadata = config_create(aux);
 	t_metadata* metadata = malloc(sizeof(t_metadata));
-	printf("1.1\n");
-	metadata->directory = config_get_int_value(aux_metadata, "DIRECTORY");
-	printf("2\n");
+
+	printf("adsadas\n");
+	metadata->directory = own_config_get_char_value(aux_metadata, "DIRECTORY");
+	printf("metadata->directory == %d\n",metadata->directory);
 
 	if(metadata->directory == 'N'){
-		printf("3\n");
-
 		metadata->size = config_get_int_value(aux_metadata, "SIZE");
-		metadata->blocks = config_get_array_value(aux_metadata, "BLOCKS");
-		metadata->open = config_get_int_value(aux_metadata, "OPEN");
+
+		printf("1\n");
+		metadata->blocks = list_create();
+		printf("2\n");
+		char** blocks = own_config_get_array_value(aux_metadata, "BLOCKS");
 		printf("3\n");
+		while(blocks){ //blocks
+			list_add(metadata->blocks,atoi(*blocks));
+			free(*blocks);
+			blocks++;
+		}
+		printf("4\n");
+
+		metadata->open = config_get_int_value(aux_metadata, "OPEN");
 
 	}
-	printf("4\n");
 
 	config_destroy(aux_metadata);
-	printf("5\n");
 
+	free(aux);
 	return metadata;
 }
 
@@ -91,8 +165,10 @@ void recibir_new(t_mensaje *mensaje){//TODO
 
 	verificar_y_crear_pokemon_files(ruta,mensaje);
 
-	//t_metadata* metadata;
-	//metadata = leer_archivo_metadata(ruta);
+	t_metadata* metadata;
+	metadata = leer_archivo_metadata(ruta);
+	debug_print_metadata(metadata);
+	sleep(10);
 
 	//agregar_pokemones(metadata);
 
@@ -191,6 +267,7 @@ void leer_metadata_global(){
 	global_metadata->blocks = config_get_int_value(aux_metadata, "BLOCKS");
 	global_metadata->magic_number = config_get_string_value(aux_metadata, "MAGIC_NUMBER");
 	config_destroy(aux_metadata);
+	free(ruta);
 }
 
 void crear_bloques(){
@@ -203,6 +280,7 @@ void crear_bloques(){
 		blocks[i]=fopen(path_relative, "a");
 		free(path_relative);
 	}
+	free(path);
 	printf("Se crearon los bloques!\n");
 }
 

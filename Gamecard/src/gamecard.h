@@ -32,7 +32,7 @@ t_bitarray* bitmap;
 typedef struct{
 	int directory;
 	int size;
-	int* blocks;
+	t_list* blocks;
 	int open;
 }t_metadata;
 
