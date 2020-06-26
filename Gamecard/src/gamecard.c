@@ -68,31 +68,31 @@ char* generar_ruta(char* nombre_pokemon){
 	return ruta;
 }
 
-void verificar_y_crear_pokemon_files(char*ruta, t_mensaje* mensaje){
-	struct stat st = {0};
-	if((stat(ruta,&st) != -1)){
+void verificar_y_crear_pokemon_files(char* ruta, t_mensaje* mensaje){
+	struct stat st = {0}; // stat(2) precisa de un struct stat a modo de buffer para llenar info del archivo que nosotros no necesitamos.
+	char* aux = malloc(strlen(ruta));
+	strcpy(aux,ruta);
+
+	if(stat(aux,&st) == -1){
+		printf("Se crea un directorio pokemon para %s con su respectivo metadata.bin en %s\n",mensaje->contenido.new_pokemon.pokemon->nombre,aux);
 		mkdir(ruta,0700);
-		string_append(&ruta,"/Metadata.bin");
-		FILE* new_archivo_metadata=fopen(ruta,"w");
+		string_append(&aux,"/Metadata.bin");
+		FILE* new_archivo_metadata=fopen(aux,"w");
 		fprintf(new_archivo_metadata, "DIRECTORY=N\nSIZE=0\nBLOCKS=[]\nOPEN=N");
 		fclose(new_archivo_metadata);
+	}else
+		printf("Se encuentra un directorio pokemon para %s\n",mensaje->contenido.new_pokemon.pokemon->nombre);
 
-	}else{
-		string_append(&ruta,"/Metadata.bin");
-	}
+	free(aux);
 
 }
 void recibir_new(t_mensaje *mensaje){//TODO
 	char* ruta = generar_ruta(mensaje->contenido.new_pokemon.pokemon->nombre); //puede fallar
-	printf("Sale de generar ruta con: %s\n", ruta);
+
 	verificar_y_crear_pokemon_files(ruta,mensaje);
-	printf("linea 65 %s\n", ruta);
 
-	t_metadata* metadata;
-	fflush(stdout);
-	printf("%s\n",ruta);
-
-	metadata = leer_archivo_metadata(ruta);
+	//t_metadata* metadata;
+	//metadata = leer_archivo_metadata(ruta);
 
 	//agregar_pokemones(metadata);
 
@@ -102,8 +102,9 @@ void recibir_new(t_mensaje *mensaje){//TODO
 	   a la actual. En caso de no existir se debe agregar al final del archivo
 	    una nueva línea indicando la cantidad de pokémon pasadas.
 	 */
+	liberar_mensaje(mensaje);
 	free(ruta);
-	free(metadata);
+	//free(metadata);
 }
 
 void recibir_get(t_mensaje *mensaje){
@@ -118,29 +119,7 @@ void recibir_catch(t_mensaje *mensaje){
 
 
 
-int verificar_si_existe(char* ruta){ //podria fijarse en lista global si esta el pokemon
 
-
-	/*
-	FILE *archivo_pokemon = fopen(ruta, "r");
-	int existe=1;
-	if(!archivo_pokemon){
-		existe = 0;
-	}
-	fclose(archivo_pokemon);
-	return existe;*/
-}
-
-
-void crear_dir_pokemon(char* nombre_pokemon, char* ruta){
-	//crear carpeta y archivo del pokemon
-
-}/*
-DIRECTORY=N
-SIZE=0
-BLOCKS=[]
-OPEN=N
-*/
 void manejar_mensaje(t_mensaje* mensaje){
 	puts("maneja mensaje");
 	switch(mensaje->codigo_operacion){
@@ -215,7 +194,7 @@ void leer_metadata_global(){
 }
 
 void crear_bloques(){
-	blocks = malloc((global_metadata->blocks) * sizeof(FILE*));//tamaño de un file: 148 bytes y de un punt file: 4 bytes
+	blocks = malloc((global_metadata->blocks) * sizeof(FILE*)); //tamaño de un file: 148 bytes y de un punt file: 4 bytes
 	char* path = string_new();
 	string_append_with_format(&path, "%s/Blocks/", punto_montaje);
 	for(int i=0; i < global_metadata->blocks ;i++){
@@ -224,6 +203,7 @@ void crear_bloques(){
 		blocks[i]=fopen(path_relative, "a");
 		free(path_relative);
 	}
+	printf("Se crearon los bloques!\n");
 }
 
 void inicializar_gamecard() {
@@ -263,9 +243,47 @@ void cerrar_gamecard(){
 	//close(socket_cola_new);
 }
 
+void mostrar_menu(){
+	puts("-----------MENU -----------");
+	puts("INGRESE UN VALOR");
+	puts("M -> MOSTRAR MENU");
+	puts("N -> SIMULAR NEW SQUIRTLE");
+	puts("Z -> SALIR");
+	puts("---------------------------");
+}
+
+void debug(){
+	mostrar_menu();
+
+	t_pokemon* pokemon;
+	t_mensaje* mensaje;
+
+	while(true){
+		char msg;
+		scanf("%c",&msg);
+		switch(msg){
+			case 'M':
+				mostrar_menu();
+				break;
+			case 'N':
+				pokemon = crear_pokemon("Squirtle",4,7);
+				mensaje = crear_mensaje(5, NEW_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,455);;
+				recibir_new(mensaje);
+				break;
+			case 'F':
+				puts("----- SE FINALIZA EL PROCESO... -----");
+				return;
+		}
+	}
+}
+
+
+
 int main() {
 	inicializar_gamecard();
-	getchar();
+
+	debug();
+
 	cerrar_gamecard();
 	return EXIT_SUCCESS;
 }
