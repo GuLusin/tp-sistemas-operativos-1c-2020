@@ -30,7 +30,7 @@ void debug_print_metadata(t_metadata* metadata){
 			printf("%d",(int)list_get(metadata->blocks,i));
 		}
 		printf("]\n");
-		if(metadata->open == 'Y')
+		if(metadata->opened == 'Y')
 			printf("OPEN=Y\n");
 		else
 			printf("OPEN=N\n");
@@ -54,9 +54,13 @@ char own_config_get_char_value(t_config* config, char *key){
 char** own_config_get_array_value(t_config* config, char *key){
 	char* value_in_dictionary = config_get_string_value(config, key);
 	if(!strcmp(value_in_dictionary,"[]")){
+		free(value_in_dictionary);
 		return NULL;
 	}
-	return string_get_string_as_array(value_in_dictionary);
+
+	char** string_as_array = string_get_string_as_array(value_in_dictionary);
+	free(value_in_dictionary);
+	return string_as_array;
 }
 
 
@@ -104,30 +108,22 @@ t_metadata* leer_archivo_metadata(char* ruta){
 	t_config* aux_metadata = config_create(aux);
 	t_metadata* metadata = malloc(sizeof(t_metadata));
 
-	printf("adsadas\n");
 	metadata->directory = own_config_get_char_value(aux_metadata, "DIRECTORY");
-	printf("metadata->directory == %d\n",metadata->directory);
 
 	if(metadata->directory == 'N'){
 		metadata->size = config_get_int_value(aux_metadata, "SIZE");
-
-		printf("1\n");
 		metadata->blocks = list_create();
-		printf("2\n");
 		char** blocks = own_config_get_array_value(aux_metadata, "BLOCKS");
-		printf("3\n");
-		while(blocks){ //blocks
+		while(*blocks){ //blocks
 			list_add(metadata->blocks,atoi(*blocks));
 			free(*blocks);
 			blocks++;
 		}
-		printf("4\n");
-
-		metadata->open = config_get_int_value(aux_metadata, "OPEN");
+		metadata->opened = own_config_get_char_value(aux_metadata, "OPEN");
 
 	}
 
-	config_destroy(aux_metadata);
+//	config_destroy(aux_metadata); todo por que rompe?
 
 	free(aux);
 	return metadata;
@@ -168,7 +164,8 @@ void recibir_new(t_mensaje *mensaje){//TODO
 	t_metadata* metadata;
 	metadata = leer_archivo_metadata(ruta);
 	debug_print_metadata(metadata);
-	sleep(10);
+
+	printf("----------------------------------------\n");
 
 	//agregar_pokemones(metadata);
 
@@ -348,7 +345,7 @@ void debug(){
 				mensaje = crear_mensaje(5, NEW_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,455);;
 				recibir_new(mensaje);
 				break;
-			case 'F':
+			case 'Z':
 				puts("----- SE FINALIZA EL PROCESO... -----");
 				return;
 		}

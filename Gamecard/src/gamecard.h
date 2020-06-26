@@ -33,7 +33,7 @@ typedef struct{
 	int directory;
 	int size;
 	t_list* blocks;
-	int open;
+	int opened;
 }t_metadata;
 
 typedef struct{
