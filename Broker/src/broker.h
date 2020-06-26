@@ -36,11 +36,15 @@ pthread_mutex_t mutex_id_mensajes_globales;
 pthread_mutex_t mutex_logger;
 pthread_mutex_t mutex_lista_algoritmo_reemplazo;
 pthread_mutex_t mutex_particiones_libres;
-pthread_mutex_t mutex_administracion_colas;
 pthread_mutex_t mutex_recibir;
 pthread_mutex_t mutex_enviar;
 pthread_mutex_t mutex_particiones_ocupadas;
 pthread_mutex_t* mutex_cola_suscriptores;
+pthread_mutex_t* mutex_administracion_colas;
+
+sem_t sem_recibir;
+sem_t sem_memoria;
+sem_t sem_suscriptores;
 
 //========================PARTICIONES DINAMICAS===============================
 
@@ -112,3 +116,6 @@ t_suscriptor* crear_suscriptor(int id, int socket_cliente);
 t_partition* cachear_mensaje(t_mensaje* mensaje_aux);
 
 #endif /* BROKER_H */
+
+
+

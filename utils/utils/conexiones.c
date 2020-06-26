@@ -33,7 +33,7 @@ bool check_ack(int socket_cliente, uint32_t value){
  */
 
 bool send_ack(int socket_cliente, uint32_t ack){
-	return ((send(socket_cliente,&ack,sizeof(uint32_t), 0))>0);
+	return ((send(socket_cliente,&ack,sizeof(uint32_t), MSG_NOSIGNAL))>0);
 }
 
 /* wait_ack: espera el ACK para confirmacion del mensaje recibido
