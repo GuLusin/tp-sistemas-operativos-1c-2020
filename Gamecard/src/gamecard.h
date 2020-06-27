@@ -44,5 +44,4 @@ typedef struct{
 
 t_global_metadata* global_metadata;
 
-FILE** blocks;
 #endif /* GAMECARD_H */

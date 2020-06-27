@@ -44,6 +44,22 @@ void debug_print_metadata(t_metadata* metadata){
 
 }
 
+void debug_print_string_list(t_list* list){
+	printf("UBICACIONES=[");
+	for(int i=0;i<list_size(list);i++){
+		if(i)
+			printf(",");
+		printf("%s",(char*)list_get(list,i));
+	}
+	printf("]\n");
+
+}
+
+
+
+
+
+
 char own_config_get_char_value(t_config* config, char *key){
 	char* string = config_get_string_value(config, key);
 	char caracter = string[0];
@@ -151,8 +167,9 @@ bool directorioExiste(char* ruta){
 
 
 
-void verificar_y_crear_pokemon_files(char* ruta, t_mensaje* mensaje){
-	char* aux = string_from_format(ruta);
+void verificar_y_crear_pokemon_files(t_mensaje* mensaje){
+
+	char* aux = generar_ruta(mensaje->contenido.new_pokemon.pokemon->nombre);
 
 	if(!directorioExiste(aux)){
 		printf("Se crea un directorio pokemon para %s con su respectivo metadata.bin en %s\n",mensaje->contenido.new_pokemon.pokemon->nombre,aux);
@@ -167,18 +184,129 @@ void verificar_y_crear_pokemon_files(char* ruta, t_mensaje* mensaje){
 	free(aux);
 
 }
-void recibir_new(t_mensaje *mensaje){//TODO
-	char* ruta = generar_ruta(mensaje->contenido.new_pokemon.pokemon->nombre); //puede fallar
 
-	verificar_y_crear_pokemon_files(ruta,mensaje);
+
+FILE* pedido_abrir_bloque(int num_bloque){
+	char* ruta = string_from_format("%s/Blocks/%d.bin",punto_montaje,num_bloque);
+	printf("Intento de apertura path: %s\n",ruta);
+
+	/*
+
+	while(1){
+		if(se_puede_abrir()) //consulta metadata
+			break;
+		else
+			sleep(tiempo_reintento_operacion);
+
+	}
+	actualizar_metadata_apertura();
+
+	 */
+
+
+	FILE* file = fopen(ruta,"w+b"); //todo revisar tipo de apertura
+	free(ruta);
+	return file;
+}
+
+void aviso_cerrar_bloque(int num_bloque,FILE* file){
+
+
+
+	printf("Tiempo de espera falopa de 10s como retardo de operacion...\n");
+	sleep(10);
+	fclose(file);
+	// Modificar metadata
+	printf("Bloque %d cerrado!\n",num_bloque);
+
+
+
+}
+
+
+
+bool pokemon_en_bloque_entonces_escribir(t_mensaje* mensaje, int num_bloque){
+	printf("Se solicita abrir el bloque %d\n",num_bloque);
+	FILE *f = pedido_abrir_bloque(num_bloque);
+
+	/*
+
+	 Revisar si el pokemon esta y si es el caso aumentarlo, aviso_cerrar_bloque, y devuelvo true
+
+
+	 */
+
+
+
+
+
+	aviso_cerrar_bloque(num_bloque,f);
+	return false;
+}
+
+
+void agregar_pokemones(t_mensaje* mensaje){
+	char* ruta = generar_ruta(mensaje->contenido.new_pokemon.pokemon->nombre);
 
 	t_metadata* metadata;
 	metadata = leer_archivo_metadata(ruta);
 	debug_print_metadata(metadata);
 
+	//check blocks list size !=0
+
+	// y casos base raros
+
+
+
+	void* pokemons_string = string_new();
+	FILE **block_file = malloc(sizeof(FILE*)*list_size(metadata->blocks));
+	for(int i=0 ; i<list_size(metadata->blocks) ; i++){
+		block_file[i] = pedido_abrir_bloque(list_get(metadata->blocks,i));
+
+		fseek(block_file[i],0,SEEK_END);
+		int block_size = ftell(block_file[i]);
+		fseek(block_file[i],0,SEEK_SET); //rewind(FILE* f);
+		fread(pokemons_string,block_size,1,block_file[i]);
+
+
+	}
+
+
+	t_list* poke_strings_list = list_create();
+	char** poke_strings = string_split(pokemons_string,"\n");
+	while (*poke_strings){
+		list_add(poke_strings_list,*poke_strings);
+		printf("while iteracion: %s\n",*poke_strings);
+		free(*poke_strings); // ojo aca!
+		poke_strings++;
+	}
+
+
+
+
+
+
+
+
+	//aviso_cerrar_bloque(todos_los_bloques_que_quedaron_abiertos!)
+
+
+	free(ruta);
+}
+
+
+
+
+void recibir_new(t_mensaje *mensaje){//TODO
+
+
+	verificar_y_crear_pokemon_files(mensaje);
+
+
+
 	printf("----------------------------------------\n");
 
-	//agregar_pokemones(metadata);
+	agregar_pokemones(mensaje);
 
 	/*
 	 Verificar si las posiciones ya existen dentro del archivo.
@@ -187,7 +315,7 @@ void recibir_new(t_mensaje *mensaje){//TODO
 	    una nueva línea indicando la cantidad de pokémon pasadas.
 	 */
 	liberar_mensaje(mensaje);
-	free(ruta);
+
 	//free(metadata);
 }
 
@@ -279,7 +407,6 @@ void leer_metadata_global(){
 }
 
 void crear_bloques(){
-	blocks = malloc((global_metadata->blocks) * sizeof(FILE*)); //tamaño de un file: 148 bytes y de un punt file: 4 bytes
 	char* path = string_new();
 	string_append_with_format(&path, "%s/Blocks", punto_montaje);
 	if(!directorioExiste(path)){
@@ -289,8 +416,9 @@ void crear_bloques(){
 	for(int i=0; i < global_metadata->blocks ;i++){
 		char* path_relative = string_duplicate(path);
 		string_append_with_format(&path_relative, "/%d.bin",i);
-		blocks[i]=fopen(path_relative, "a");
+		FILE* f = fopen(path_relative, "a");
 		free(path_relative);
+		fclose(f);
 	}
 	free(path);
 	printf("Se crearon los bloques!\n");
@@ -324,11 +452,7 @@ void inicializar_gamecard() {
 void cerrar_gamecard(){
 	log_destroy(logger);
 	config_destroy(config);
-	for(int i=0; i < global_metadata->blocks; i++){
-		fclose(blocks[i]);
-	}
 	free(global_metadata);
-	free(blocks);
 	bitarray_destroy(bitmap);
 	//close(socket_cola_new);
 }
@@ -375,5 +499,9 @@ int main() {
 	debug();
 
 	cerrar_gamecard();
+
+
+
+
 	return EXIT_SUCCESS;
 }
