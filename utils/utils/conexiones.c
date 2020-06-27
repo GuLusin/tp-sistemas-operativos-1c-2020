@@ -64,7 +64,6 @@ int sendall(int s, void *buf, int len)
 
     while(total < len) {
         n = send(s, buf+total, bytesleft, MSG_NOSIGNAL);
-        //printf("VALOR DE LA N: %d", n);
         if (n == -1) { break; }
         total += n;
         bytesleft -= n;

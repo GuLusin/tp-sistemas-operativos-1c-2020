@@ -35,40 +35,30 @@ void notificar_mensaje_cacheados(int cola, t_suscriptor* suscriptor){
 		i++;
 		t_partition* particion = (t_partition*)stream;
 		puts("CHEQUEA SUSCRIPTOR");
-		if(!es_suscriptor_confirmado(particion,suscriptor->id_team)){
+		if(!es_suscriptor_confirmado(particion,suscriptor->id_team) && es_suscriptor_cola(cola, suscriptor)){
 			puts("NO ES SUSCRIPTOR");
 			mensaje_aux = get_mensaje_cacheado(cola,i);
 			printear_mensaje(mensaje_aux);
-			//pthread_mutex_lock(&mutex_enviar);
 			enviar_mensaje(suscriptor->socket_cliente,mensaje_aux);
-			//pthread_mutex_unlock(&mutex_enviar);
-			//pthread_mutex_lock(&mutex_recibir);
-			puts("Asd");
 			validar_suscriptor(suscriptor, mensaje_aux);
-			puts("Asdaaaaaa");
-			//pthread_mutex_unlock(&mutex_recibir);//todo estan al pedo? porque son sockets diferentes entre hilos?
 		}
 	}
 	sem_wait(&sem_memoria);
-	//pthread_mutex_lock(&mutex_cola_suscriptores[cola]);
+	sem_wait(&sem_suscriptores);
 	list_iterate(administracion_colas[cola].particiones,enviar_mensaje_condicional);
+	sem_post(&sem_suscriptores);
 	sem_post(&sem_memoria);
-	//pthread_mutex_unlock(&mutex_cola_suscriptores[cola]);
+
 }
 
 void manejar_subscripcion(int cola,t_suscriptor* suscriptor){
 
-	//pthread_mutex_lock(&mutex_cola_suscriptores[cola]);
 	sem_wait(&sem_suscriptores);
 	list_add(suscriptores[cola],suscriptor);
 	sem_post(&sem_suscriptores);
-	//pthread_mutex_unlock(&mutex_cola_suscriptores[cola]);
 
-	//puts("Mensaje recibido con exito!");
-	//pthread_mutex_lock(&mutex_enviar);//todo estan al pedo? porque son sockets diferentes entre hilos?
 	send_ack(suscriptor->socket_cliente,ACK);
-	//pthread_mutex_unlock(&mutex_enviar);
-	//puts("Aviso de retorno con exito!");
+
 	notificar_mensaje_cacheados(cola,suscriptor);
 	sem_post(&sem_recibir);
 	return;
@@ -76,17 +66,14 @@ void manejar_subscripcion(int cola,t_suscriptor* suscriptor){
 
 void manejar_catch(int socket_cliente,t_mensaje* mensaje){
 	send_ack(socket_cliente,mensaje->id);
-
 }
 
 void manejar_get(int socket_cliente,t_mensaje* mensaje){
 	send_ack(socket_cliente,mensaje->id);
-
 }
 
 void manejar_caught(int socket_cliente,t_mensaje* mensaje){
 	send_ack(socket_cliente,mensaje->id);
-
 }
 
 void manejar_localized(int socket_cliente,t_mensaje* mensaje){
@@ -208,11 +195,11 @@ void notificar_mensaje(t_mensaje* mensaje){
 	cachear_mensaje(mensaje);
 	sem_post(&sem_memoria);
 	//printear_estado_memoria();
-	//pthread_mutex_lock(&mutex_cola_suscriptores[mensaje->codigo_operacion]);
+
 	sem_wait(&sem_suscriptores);
 	list_iterate(suscriptores[mensaje->codigo_operacion],notificar_suscriptores);
 	sem_post(&sem_suscriptores);
-	//pthread_mutex_unlock(&mutex_cola_suscriptores[mensaje->codigo_operacion]);
+
 }
 
 
@@ -459,11 +446,20 @@ void liberar_suscriptor(t_suscriptor* suscriptor){//todo liberar suscriptor cheq
 	free(suscriptor);
 }
 
+bool es_suscriptor_cola(int cola, t_suscriptor* suscriptor){
+	bool es_suscriptor(void* stream){
+		t_suscriptor* suscriptor_lista = stream;
+		//printf("id_lista:%d vs id_sus:%d\n", suscriptor_lista->id_team, suscriptor->id_team);
+		return suscriptor->id_team==suscriptor_lista->id_team;
+	}
+
+	return (bool)list_find(suscriptores[cola],es_suscriptor);
+
+}
+
 bool es_suscriptor_confirmado(t_partition* particion,int id_team){
-	//puts("entra a suscr confir");
 	bool pertenece(void* stream){
 		int id_team_lista=(int)stream;
-		//printf("id_team_lista:%d vs id_team:%d \n", id_team_lista, id_team);
 		return id_team_lista == id_team;
 	}
 	return list_any_satisfy(particion->suscriptores_confirmados,pertenece);
@@ -471,40 +467,30 @@ bool es_suscriptor_confirmado(t_partition* particion,int id_team){
 
 void confirmar_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje){
 	int posicion = encontrar_particion(mensaje->id,mensaje->codigo_operacion);
-	//pthread_mutex_lock(&mutex_administracion_colas[mensaje->codigo_operacion]);
 	t_partition* particion = list_get(administracion_colas[mensaje->codigo_operacion].particiones,posicion);
-	//pthread_mutex_unlock(&mutex_administracion_colas[mensaje->codigo_operacion]);
 
-	//pthread_mutex_lock(&mutex_cola_suscriptores[mensaje->codigo_operacion]);
 	list_add(particion->suscriptores_confirmados,suscriptor->id_team);
-	//pthread_mutex_unlock(&mutex_cola_suscriptores[mensaje->codigo_operacion]);
-
 	printear_estado_memoria();
-	//agregar el id_team a esa particion todo?
 }
 
-void remover_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje){ // Remueve suscriptor de la cola correspondiente a ese tipo de mensaje
-	//todo corregir, esta removiendo a todos si uno falla y no encuentra a nadie?
-	int i=-1;
+void remover_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje){
+
 	bool es_suscriptor(void* stream){
-		i++;
 		t_suscriptor* suscriptor_lista = stream;
+		printf("id_lista:%d vs id_sus:%d\n", suscriptor_lista->id_team, suscriptor->id_team);
 		return suscriptor->id_team==suscriptor_lista->id_team;
 	}
-	//pthread_mutex_lock(&mutex_cola_suscriptores[mensaje->codigo_operacion]);
-	list_find(suscriptores[mensaje->codigo_operacion], es_suscriptor);//ACA ES EL MUTEX HDP QUE ROMPE TODO
-	liberar_suscriptor(list_remove(suscriptores[mensaje->codigo_operacion],i));
-	//pthread_mutex_unlock(&mutex_cola_suscriptores[mensaje->codigo_operacion]);
+
+	liberar_suscriptor(list_remove_by_condition(suscriptores[mensaje->codigo_operacion], es_suscriptor));
 	close(suscriptor->socket_cliente);
 }
 
 void validar_suscriptor(t_suscriptor* suscriptor, t_mensaje* mensaje_aux) {
-	sem_wait(&sem_suscriptores);
-	if(check_ack(suscriptor->socket_cliente, ACK))
-		confirmar_suscriptor(suscriptor, mensaje_aux);
-	else
-		remover_suscriptor(suscriptor, mensaje_aux);
-	sem_post(&sem_suscriptores);
+	if(check_ack(suscriptor->socket_cliente, ACK)){
+		puts("conf");confirmar_suscriptor(suscriptor, mensaje_aux);puts("checkquep");
+	}else{
+		puts("remov");remover_suscriptor(suscriptor, mensaje_aux);puts("checkquep");
+	}
 }
 
 //=========================PARTICIONES DINAMICAS==================================
@@ -1058,14 +1044,10 @@ void* pmalloc(int size){
 	while(!aux){
 		switch(APL){
 			case FF:
-				//pthread_mutex_lock(&mutex_particiones_libres);
 				aux = first_fit(size);
-				//pthread_mutex_unlock(&mutex_particiones_libres);
 				break;
 			case BF:
-				//pthread_mutex_lock(&mutex_particiones_libres);
 				aux = best_fit(size);
-				//pthread_mutex_unlock(&mutex_particiones_libres);
 				break;
 		}
 		printf("cant_eliminaciones:%d\n", cant_eliminaciones);
@@ -1084,6 +1066,10 @@ void* pmalloc(int size){
 			}
 		}
 	}
+
+	// asignar_particion_libre_buddy devuelve un puntero void* ptr
+	// busco la particion libre con ptr y le asigno con asignar_particion_libre.
+	// que me devuelve el puntero que deberia retornar pmalloc
 	return aux;
 }
 

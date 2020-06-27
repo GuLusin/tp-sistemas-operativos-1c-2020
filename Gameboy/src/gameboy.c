@@ -189,8 +189,6 @@ void manejar_mensaje(int argc, char** args){
 	case SUSCRIPTOR:
 		socket_aux = subscribirse_a_cola(interpretar_cola_mensaje(args[2]));
 		sleep(atoi(args[3]));
-		send_ack(socket_aux,ACK);//todo capaz rompe todo el broker
-		send_ack(socket_aux,ACK);
 		close(socket_aux);
 		return;
 	}

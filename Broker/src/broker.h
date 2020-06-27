@@ -109,6 +109,7 @@ int encontrar_particion(int msg_id,int cola);
 int puntero_cmp(void* un_puntero, void* otro_puntero);
 bool particiones_libres_contiguas(t_partition* particion1,t_partition* particion2);
 bool es_suscriptor_confirmado(t_partition* particion,int id_team);
+bool es_suscriptor_cola(int cola, t_suscriptor* suscriptor);
 t_mensaje* get_mensaje_cacheado(int cola_code, int index);
 t_mensaje* leer_cache(void* stream);
 t_mensaje* leer_particion_cache(t_partition* particion);
