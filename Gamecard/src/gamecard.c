@@ -1,9 +1,6 @@
 /*	TODO: preguntas
  *
  * Que pasa con el bitmap si cambia la cantidad cantidad de bloques del sistema? se sobrescribe?
- * Puede que al inicio el bitmap no este todo en 0? que hacemos si pasa eso?
- *
- *
  *
  *
  *
@@ -116,7 +113,7 @@ void leer_config() {
 
 
 
-t_metadata* leer_archivo_metadata(char* ruta){
+t_metadata* leer_archivo_metadata_y_notificar_apertura(char* ruta){
 
 	char* aux = string_from_format(ruta);
 	string_append(&aux,"/Metadata.bin");
@@ -138,6 +135,8 @@ t_metadata* leer_archivo_metadata(char* ruta){
 				blocks++;
 			}
 		}
+
+		//Si el file esta abierto debe ciclar aca hasta que aparezca como cerrado
 		metadata->opened = own_config_get_char_value(aux_metadata, "OPEN");
 	}
 
@@ -186,23 +185,9 @@ void verificar_y_crear_pokemon_files(t_mensaje* mensaje){
 }
 
 
-FILE* pedido_abrir_bloque(int num_bloque){
+FILE* abrir_bloque(int num_bloque){
 	char* ruta = string_from_format("%s/Blocks/%d.bin",punto_montaje,num_bloque);
 	printf("Intento de apertura path: %s\n",ruta);
-
-	/*
-
-	while(1){
-		if(se_puede_abrir()) //consulta metadata
-			break;
-		else
-			sleep(tiempo_reintento_operacion);
-
-	}
-	actualizar_metadata_apertura();
-
-	 */
-
 
 	FILE* file = fopen(ruta,"w+b"); //todo revisar tipo de apertura
 	free(ruta);
@@ -223,63 +208,137 @@ void aviso_cerrar_bloque(int num_bloque,FILE* file){
 
 }
 
+char* mensaje_to_pokedata(t_mensaje* mensaje){
+	char* pokedata = string_new();
+	int cod = mensaje->codigo_operacion;
+	switch(cod){
+		case NEW_POKEMON:;
+			int pos_x = mensaje->contenido.new_pokemon.pokemon->pos_x;
+			int pos_y = mensaje->contenido.new_pokemon.pokemon->pos_y;
+			int cantidad = mensaje->contenido.new_pokemon.cantidad;
+
+			string_append_with_format(&pokedata,"%d-%d=%d",pos_x,pos_y,cantidad);
+
+			break;
+		default:
+			printf("INVALID CODE_OP\n");
+			free(pokedata);
+			return NULL;
+	}
+
+	return pokedata;
+}
+
+void modificar_poke_string_list(t_list* poke_strings_list, t_mensaje* mensaje){
+
+	bool misma_posicion(char* pok_1, char* pok_2){
+		char* posicion = * string_n_split(pok_1,2,"=");
+		bool retorno = string_starts_with(pok_2,posicion);
+		free(posicion);
+		return retorno;
+	}
+
+	char* incrementar_cantidad(char* pok_1, char* pok_2){
+		char **datos_pok1 = string_n_split(pok_1,2,"=");
+		char **datos_pok2 = string_n_split(pok_2,2,"=");
+
+		int cantidad_1 = atoi(datos_pok1[1]);
+		int cantidad_2 = atoi(datos_pok2[1]);
+
+		char* pok_aux = string_from_format("%s=%d",datos_pok1[0],cantidad_1+cantidad_2);
+
+		free(datos_pok1[0]);
+		free(datos_pok1[1]);
+		free(datos_pok1);
+
+		free(datos_pok2[0]);
+		free(datos_pok2[1]);
+		free(datos_pok2);
+
+		return pok_aux;
+
+	}
 
 
-bool pokemon_en_bloque_entonces_escribir(t_mensaje* mensaje, int num_bloque){
-	printf("Se solicita abrir el bloque %d\n",num_bloque);
-	FILE *f = pedido_abrir_bloque(num_bloque);
 
-	/*
+	char* data = mensaje_to_pokedata(mensaje);
 
-	 Revisar si el pokemon esta y si es el caso aumentarlo, aviso_cerrar_bloque, y devuelvo true
+	printf("data: %s\n",data);
 
+	int cod = mensaje->codigo_operacion;
+	switch(cod){
+	case NEW_POKEMON:
+		for (int i = 0 ; i < list_size(poke_strings_list) ; i++){
+			if(misma_posicion(list_get(poke_strings_list,i),data)){
+				char* old_pok = list_remove(poke_strings_list,i);
+				char* new_pok = incrementar_cantidad(old_pok,data);
 
-	 */
-
-
-
-
-
-	aviso_cerrar_bloque(num_bloque,f);
-	return false;
+				//free(old_pok); //no se porque rompe esto
+				list_add(poke_strings_list,new_pok);
+				return;
+			}
+		}
+		list_add(poke_strings_list,data);
+		break;
+	default:
+		printf("INVALID CODE_OP\n");
+		return;
+	}
 }
 
 
 void agregar_pokemones(t_mensaje* mensaje){
 	char* ruta = generar_ruta(mensaje->contenido.new_pokemon.pokemon->nombre);
 
+	//solicitar apertura aqui
+
 	t_metadata* metadata;
-	metadata = leer_archivo_metadata(ruta);
+	metadata = leer_archivo_metadata_y_notificar_apertura(ruta);
 	debug_print_metadata(metadata);
+
 
 	//check blocks list size !=0
 
 	// y casos base raros
 
 
+	// hacer funcion pasar_bloques_a_pokelist
 
 	void* pokemons_string = string_new();
 	FILE **block_file = malloc(sizeof(FILE*)*list_size(metadata->blocks));
 	for(int i=0 ; i<list_size(metadata->blocks) ; i++){
-		block_file[i] = pedido_abrir_bloque(list_get(metadata->blocks,i));
+		block_file[i] = abrir_bloque((int)list_get(metadata->blocks,i));
 
 		fseek(block_file[i],0,SEEK_END);
 		int block_size = ftell(block_file[i]);
 		fseek(block_file[i],0,SEEK_SET); //rewind(FILE* f);
+
 		fread(pokemons_string,block_size,1,block_file[i]);
 
 
 	}
 
-
 	t_list* poke_strings_list = list_create();
-	char** poke_strings = string_split(pokemons_string,"\n");
-	while (*poke_strings){
-		list_add(poke_strings_list,*poke_strings);
-		printf("while iteracion: %s\n",*poke_strings);
-		free(*poke_strings); // ojo aca!
-		poke_strings++;
-	}
+
+	if(!list_is_empty(metadata->blocks)){
+
+		char** poke_strings = string_split(pokemons_string,"\n");
+		while (*poke_strings){
+			list_add(poke_strings_list,*poke_strings);
+			printf("while iteracion: %s\n",*poke_strings);
+			free(*poke_strings); // ojo aca!
+			poke_strings++;
+		}
+
+		printf("Lista leida de los bloques ya presentes:\n");
+		debug_print_string_list(poke_strings_list);
+	}else
+		printf("El pokemon no tenia bloques asignados\n");
+
+	modificar_poke_string_list(poke_strings_list,mensaje);
+
+
+
 
 
 
@@ -481,7 +540,7 @@ void debug(){
 				break;
 			case 'N':
 				pokemon = crear_pokemon("Squirtle",4,7);
-				mensaje = crear_mensaje(5, NEW_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,455);;
+				mensaje = crear_mensaje(5, NEW_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,455);
 				recibir_new(mensaje);
 				break;
 			case 'Z':
@@ -494,12 +553,31 @@ void debug(){
 
 
 int main() {
-	inicializar_gamecard();
+	//inicializar_gamecard();
 
-	debug();
+	//debug();
 
-	cerrar_gamecard();
+	//cerrar_gamecard();
 
+
+	t_list* poke_debug = list_create();
+	list_add(poke_debug,"1-1=7");
+	list_add(poke_debug,"4-7=3");
+	list_add(poke_debug,"9-1=4");
+	list_add(poke_debug,"2-1=5");
+
+
+	t_pokemon* pokemon;
+	t_mensaje* mensaje;
+
+	pokemon = crear_pokemon("Squirtle",4,7);
+	mensaje = crear_mensaje(5, NEW_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,455);
+
+	debug_print_string_list(poke_debug);
+
+	modificar_poke_string_list(poke_debug,mensaje);
+
+	debug_print_string_list(poke_debug);
 
 
 
