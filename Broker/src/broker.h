@@ -12,6 +12,8 @@
 #include <commons/process.h>
 #include <commons/temporal.h>
 #include <commons/collections/list.h>
+#include <commons/bitarray.h>
+#include <math.h>
 #include <pthread.h>
 #include <signal.h>
 #include <semaphore.h>
@@ -92,6 +94,18 @@ t_list* particiones_libres; 	//LISTA CON LAS PARTICIONES LIBRES DISPONIBLES.
 adm_cola* administracion_colas; // ARREGLO DE LAS 6 COLAS QUE EL BROKER ADMINISTRA EN LA CACHE.
 void* mem_alloc; 				//ESTE PUNTERO ES GLOBAL Y UNICO, NO SE TOCA NI MODIFICA. ES EL PRINCIPIO DE LA CACHE.
 
+
+//==============================BUDDY SYSTEM ==============================
+
+typedef struct{
+	int largo;
+	int peso_maximo;
+	int peso_minimo;
+	t_bitarray** bitmap_array;
+}t_bitmap;
+
+t_bitmap* bitmap;
+
 //================================FUNCIONES===================================
 
 void printear_estado_memoria();
@@ -104,17 +118,23 @@ void remover_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje);
 void validar_suscriptor(t_suscriptor* suscriptor, t_mensaje* mensaje_aux);
 void compactar_memoria();
 void notificar_mensaje(t_mensaje* mensaje);
+void particion_a_bitmap(t_partition* particion, int* indice, int* pos);
+void partir_particion(t_bitmap* bitmap, int indice, int pos);
 char* cola_string(int cola);
 int encontrar_particion(int msg_id,int cola);
 int puntero_cmp(void* un_puntero, void* otro_puntero);
+int asignar_buddy_libre(t_bitmap* bitmap,int size);
 bool particiones_libres_contiguas(t_partition* particion1,t_partition* particion2);
 bool es_suscriptor_confirmado(t_partition* particion,int id_team);
 bool es_suscriptor_cola(int cola, t_suscriptor* suscriptor);
+bool bit_test(t_bitarray* bitarray, int index);
+bool condicion_bs(t_partition* una_particion, t_partition* otra_particion);
 t_mensaje* get_mensaje_cacheado(int cola_code, int index);
 t_mensaje* leer_cache(void* stream);
 t_mensaje* leer_particion_cache(t_partition* particion);
 t_suscriptor* crear_suscriptor(int id, int socket_cliente);
 t_partition* cachear_mensaje(t_mensaje* mensaje_aux);
+t_partition* encontrar_particion_libre_por_ptr(int puntero_relativo);
 
 #endif /* BROKER_H */
 

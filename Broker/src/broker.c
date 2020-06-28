@@ -59,8 +59,10 @@ void manejar_subscripcion(int cola,t_suscriptor* suscriptor){
 
 	send_ack(suscriptor->socket_cliente,ACK);
 
-	notificar_mensaje_cacheados(cola,suscriptor);
 	sem_post(&sem_recibir);
+
+	notificar_mensaje_cacheados(cola,suscriptor);
+
 	return;
 }
 
@@ -128,7 +130,7 @@ void manejar_mensaje(int socket_cliente,t_mensaje* mensaje){
 
 
 void recibir_mensaje(int *socket_cliente){
-	sem_wait(&sem_recibir);
+	//sem_wait(&sem_recibir);
 
 
 	uint32_t codigo_operacion;
@@ -371,10 +373,7 @@ void envio_mensaje(){
 
 				break;
 			case 'd':
-				for(int i=0;i<CANTIDAD_COLAS;i++){
-					mensaje_aux = get_mensaje_cacheado(i,0);
-					printear_mensaje(mensaje_aux);
-				}
+				dividir_particion(list_get(particiones_libres,0));
 				break;
 			case 'j':
 				pokemon = crear_pokemon("Squirtle",4,7);
@@ -845,9 +844,7 @@ void* asignar_particion_libre(t_partition* particion_libre, int size){
 	particion_libre->inicio += size;
 	particion_libre->size -= size;
 	if(particion_libre->size){
-		//pthread_mutex_lock(&mutex_particiones_libres);
 		list_add(particiones_libres,particion_libre);
-		//pthread_mutex_unlock(&mutex_particiones_libres);
 	}else
 		free(particion_libre);
 	unificar_particiones_libres(); //No se si es taaan necesario aca pero me aseguro que la lista global siga ordenada
@@ -929,21 +926,19 @@ void unificar_particiones_libres(){
 		particion1->size += particion2->size;
 		free(particion2);
 	}
-	//pthread_mutex_lock(&mutex_particiones_libres);
 	bool unificada = false;
 	while(!unificada){
 		unificada = true;
 		for(int i=0;i<list_size(particiones_libres)-1;i++){
 			t_partition* una_particion = list_get(particiones_libres,i);
 			t_partition* otra_particion = list_get(particiones_libres,i+1);
-			if(particiones_libres_contiguas(una_particion,otra_particion)){
+			if(particiones_libres_contiguas(una_particion,otra_particion) && condicion_bs(una_particion,otra_particion)){
 				unificar(una_particion, list_remove(particiones_libres,i+1));
 				unificada=false;
 				break;
 			}
 		}
 	}
-	//pthread_mutex_unlock(&mutex_particiones_libres);
 }
 
 void normalizar_particiones_libres(){
@@ -955,9 +950,7 @@ void normalizar_particiones_libres(){
 		else
 			return false;
 	}
-	//pthread_mutex_lock(&mutex_particiones_libres);
 	list_sort(particiones_libres, en_orden);
-	//pthread_mutex_unlock(&mutex_particiones_libres);
 	unificar_particiones_libres();
 }
 
@@ -988,10 +981,8 @@ void compactar_memoria(){
 		//capaz hay leak ya que no libero la auxiliar, hace falta?
 	}
 
-	//pthread_mutex_lock(&mutex_lista_algoritmo_reemplazo);
 	list_clean(lista_algoritmo_reemplazo);
 	list_add_all(lista_algoritmo_reemplazo,lista_ar_aux);
-	//pthread_mutex_unlock(&mutex_lista_algoritmo_reemplazo);
 	puts("MEMORIA COMPACTADA");
 	list_destroy(mensajes_aux);
 	list_destroy(lista_ar_aux);
@@ -1032,6 +1023,46 @@ void eliminar_particion(){
 	sacar_particion(cola,index);
  }
 
+
+void* pmalloc_particiones(int size){
+	switch(APL){
+		case FF:
+			return first_fit(size);
+			break;
+		case BF:
+			return best_fit(size);
+			break;
+	}
+}
+
+void* pmalloc_BS(int size){
+	int ptr_relativo;
+	t_partition* particion;
+	switch(APL){
+		case FF:
+			break;
+		case BF:
+			puts("APL");
+			ptr_relativo = asignar_buddy_libre(bitmap,size);
+			puts("APL");
+			/*
+			 * en asignar buddy libre, ademas de tener consistencia logica en el bitmap, tambien
+			 * la tendra en la memoria. Esta funcion se encargara de partir cada particion al medio
+			 * en caso de que lo necesite y pueda.
+			 */
+
+			if(ptr_relativo==-1) // Falla encontrar a un ancestro al cual partir, entonces es necesario
+				return NULL;  // eliminar una particion.
+			puts("APL");
+			particion = encontrar_particion_libre_por_ptr(ptr_relativo);
+			puts("APL");
+			asignar_particion_libre(particion,size);
+
+			break;
+		}
+
+}
+
 /*
  * pmalloc
  *
@@ -1042,15 +1073,14 @@ void* pmalloc(int size){
 	int cant_eliminaciones = freq_compactacion;
 	void* aux=NULL;
 	while(!aux){
-		switch(APL){
-			case FF:
-				aux = first_fit(size);
+		switch(AM){
+			case PARTICIONES:
+				aux = pmalloc_particiones(size);
 				break;
-			case BF:
-				aux = best_fit(size);
+			case BS:
+				aux = pmalloc_BS(size);
 				break;
 		}
-		printf("cant_eliminaciones:%d\n", cant_eliminaciones);
 		if(!aux){ //todo chequear nuevas condiciones segun frecuencia de compactacion
 			if(!cant_eliminaciones){
 				compactar_memoria();cant_eliminaciones=freq_compactacion;continue;
@@ -1128,10 +1158,13 @@ t_partition* crear_particion_libre(void* stream, int size,int frag_interna){
 }
 
 void agregar_particion_libre(t_partition* particion_libre){
-	//pthread_mutex_lock(&mutex_particiones_libres);
 	list_add(particiones_libres,particion_libre);
-	//pthread_mutex_unlock(&mutex_particiones_libres);
 	normalizar_particiones_libres();
+}
+
+void dividir_particion(t_partition* particion){
+	particion->size/=2;
+	agregar_particion_libre(crear_particion_libre(particion->inicio+particion->size,particion->size,0));
 }
 
 //----------------------------------PARTICION-------------------------------------
@@ -1157,9 +1190,7 @@ t_partition* crear_particion(t_mensaje* mensaje){
 	particion->size = size;
 	particion->suscriptores_confirmados = list_create();
 
-	//pthread_mutex_lock(&mutex_lista_algoritmo_reemplazo);
 	list_add(lista_algoritmo_reemplazo,(int)particion->msg_id);
-	//pthread_mutex_unlock(&mutex_lista_algoritmo_reemplazo);
 
 	free(magic);
 
@@ -1178,23 +1209,18 @@ void liberar_particion(t_partition* particion){
 }
 
 void agregar_particion(adm_cola adm_cola, t_partition* particion){
-	//pthread_mutex_lock(&mutex_administracion_colas[particion->cola_code]);
 	list_add(adm_cola.particiones,particion);
-	//pthread_mutex_unlock(&mutex_administracion_colas[particion->cola_code]);
 }
 
 void sacar_particion(int cola, int index){//SE USA ASI??
-	//pthread_mutex_lock(&mutex_administracion_colas[cola]);
 	t_partition* particion = list_remove(administracion_colas[cola].particiones,index);
-	//pthread_mutex_unlock(&mutex_administracion_colas[cola]);
 	bool es_id_msg(void* stream){
 		int id_msg =(int)stream;
 		return id_msg == particion->msg_id;
 	}
-	//pthread_mutex_lock(&mutex_lista_algoritmo_reemplazo);
+
 	list_remove_by_condition(lista_algoritmo_reemplazo,es_id_msg);
-	//pthread_mutex_unlock(&mutex_lista_algoritmo_reemplazo);
-	//printf("libero particion en indice:%d\n",index);
+
 	liberar_particion(particion);
 	pthread_mutex_lock(&mutex_particiones_ocupadas);
 	particiones_ocupadas--;
@@ -1210,11 +1236,8 @@ void actualizar_algoritmo_reemplazo(t_partition* particion){
 		case FIFO:
 			break;
 		case LRU:;
-			//pthread_mutex_lock(&mutex_lista_algoritmo_reemplazo);
-			int msg_id = (int)list_remove_by_condition(lista_algoritmo_reemplazo,es_msg_id); //todo check mutex
-			//printf("msg_id lru:%d\n", msg_id);
+			int msg_id = (int)list_remove_by_condition(lista_algoritmo_reemplazo,es_msg_id);
 			list_add(lista_algoritmo_reemplazo,msg_id);
-			//pthread_mutex_unlock(&mutex_lista_algoritmo_reemplazo);
 			break;
 	}
 }
@@ -1281,10 +1304,8 @@ t_mensaje* leer_particion_cache(t_partition* particion){
 	return mensaje;
 }
 
-t_mensaje* get_mensaje_cacheado(int cola_code, int index){//todo check mutex
-	//pthread_mutex_lock(&mutex_administracion_colas[cola_code]);
+t_mensaje* get_mensaje_cacheado(int cola_code, int index){
 	t_partition* particion = list_get(administracion_colas[cola_code].particiones, index);
-	//pthread_mutex_unlock(&mutex_administracion_colas[cola_code]);
 
 	t_mensaje* mensaje = leer_particion_cache(particion);
 	return mensaje;
@@ -1305,13 +1326,27 @@ int encontrar_particion(int msg_id,int cola){
 		if(particion_lista->msg_id == msg_id)
 			posicion=i;
 	}
-	//pthread_mutex_lock(&mutex_administracion_colas[cola]);
+
 	list_iterate(administracion_colas[cola].particiones,corresponde_a_id);
-	//pthread_mutex_unlock(&mutex_administracion_colas[cola]);
 	if(i==-1)
 		return -1;
 	else
 		return posicion;
+}
+
+t_partition* encontrar_particion_libre_por_ptr(int puntero_relativo){
+	int pos,cola,i,indice=-1;
+	void* aux = mem_alloc+puntero_relativo;
+	void es_particion(void* stream){
+		indice++;
+		t_partition* particion_lista = (t_partition*)stream;
+		if((int)particion_lista->inicio == (int)aux){
+			pos=indice;
+			cola=i;
+		}
+	}
+	list_iterate(particiones_libres,es_particion);
+	return (t_partition*)list_get(particiones_libres,pos);
 }
 
 //============================ INTERPRETADORES ===================================
@@ -1343,6 +1378,264 @@ char* cola_string(int cola){
 	if(cola==COLA_LOCALIZED_POKEMON) return "COLA_LOCALIZED_POKEMON";
 	return NULL;
 }
+
+//===================================== BUDDY SYSTEM ========================
+
+int encontrar_exponente(int potencia_de_dos){
+	int res=potencia_de_dos;
+	int exp = 0;
+	while(res!=1){
+		res/=2;
+		exp++;
+	}
+	return exp;
+}
+
+bool es_buddy(int x, int y){
+	if(!(x%2))
+		return x+1==y;
+	return y+1==x;
+}
+
+bool buddy_libre(t_bitarray* bitarray, int pos){
+	if(!(pos%2))
+		return bit_test(bitarray,pos+1);
+	return bit_test(bitarray,pos-1);
+}
+
+
+int indice_correcto(t_bitmap* bitmap, int size){
+	if((int)pow(2,bitmap->peso_maximo)<size)
+		return -1;
+	int aux_size = (int)pow(2,bitmap->peso_maximo);
+	int i=-1;
+	while(aux_size>=size && aux_size>=(int)pow(2,bitmap->peso_minimo)){
+		aux_size/=2;
+		i++;
+	}
+	return i;
+}
+
+bool condicion_bs(t_partition* una_particion, t_partition* otra_particion){
+	int una_pos,otra_pos,un_indice,otro_indice;
+	switch(APL){
+		case PARTICIONES:
+			return true;
+			break;
+		case BS:
+			particion_a_bitmap(una_particion,&un_indice,&una_pos);
+			particion_a_bitmap(otra_particion,&otro_indice,&otra_pos);
+			return es_buddy(una_pos,otra_pos) && un_indice==otro_indice;
+			break;
+	}
+
+}
+
+
+// =========================== BITARRAY ===============================
+
+t_bitarray* crear_bitarray(int tamanio){
+	return bitarray_create_with_mode(malloc(tamanio),tamanio,LSB_FIRST);
+}
+
+void bit_up(t_bitarray* bitarray, int index){
+	bitarray_set_bit(bitarray,index);
+}
+
+void bit_down(t_bitarray* bitarray, int index){
+	bitarray_clean_bit(bitarray,index);
+}
+
+bool bit_test(t_bitarray* bitarray, int index){
+	return bitarray_test_bit(bitarray,index);
+}
+
+int bitarray_any(t_bitarray* bitarray){
+	for(int i=0;i<bitarray->size;i++)
+		if(bit_test(bitarray,i))
+			return i;
+	return -1;
+}
+
+// =========================== BITMAP ===============================
+
+t_bitmap* bitmap_create(int peso_maximo, int peso_minimo){
+	puts("creo bitmap");
+	t_bitmap* bitmap = malloc(sizeof(t_bitmap));
+	bitmap->peso_maximo = encontrar_exponente(peso_maximo);
+	bitmap->peso_minimo = encontrar_exponente(peso_minimo);
+	bitmap->largo = bitmap->peso_maximo-bitmap->peso_minimo;
+
+	bitmap->bitmap_array = malloc(sizeof(t_bitarray)*bitmap->largo); //todo puede fallar si no llega al ultimo falta uno pal malloc
+
+	for(int i=0;i<=bitmap->largo;i++)
+		bitmap->bitmap_array[i]=crear_bitarray(pow(2,i));
+
+	bitmap_clean(bitmap);
+
+
+	return bitmap;
+}
+
+void bitmap_up(t_bitmap* bitmap, int columna, int fila){
+	bit_up(bitmap->bitmap_array[columna],fila);
+}
+
+void bitmap_down(t_bitmap* bitmap, int columna, int fila){
+	bit_down(bitmap->bitmap_array[columna],fila);
+}
+
+void bitmap_test(t_bitmap* bitmap, int columna, int fila){
+	bit_test(bitmap->bitmap_array[columna],fila);
+}
+
+void bitmap_set(t_bitmap* bitmap){
+	for(int i=0;i<=bitmap->largo;i++)
+		for(int j=0;j<bitmap->bitmap_array[i]->size;j++)
+			bit_up(bitmap->bitmap_array[i],j);
+}
+
+void bitmap_clean(t_bitmap* bitmap){
+	for(int i=0;i<=bitmap->largo;i++)
+		for(int j=0;j<bitmap->bitmap_array[i]->size;j++)
+			bit_down(bitmap->bitmap_array[i],j);
+}
+
+void bitmap_show(t_bitmap* bitmap){
+	for(int i=0;i<=bitmap->largo;i++){
+		printf("i:%d -- tamanio:%-4d -- largo:%-2d%-5s",i, (int)pow(2,bitmap->peso_maximo-i), bitmap->bitmap_array[i]->size," ---");
+		for(int j=0;j<bitmap->bitmap_array[i]->size;j++)
+			printf("|%d|",bit_test(bitmap->bitmap_array[i],j));
+		printf("\n");
+	}
+	puts("");
+}
+
+void padres_down(t_bitmap* bitmap, int indice, int pos){
+	if(indice==0)
+		return;
+	bit_down(bitmap->bitmap_array[indice-1], pos/2);
+	padres_down(bitmap, indice-1,pos/2);
+}
+
+void hijos_down(t_bitmap* bitmap, int indice, int pos){
+	if(indice==bitmap->largo)
+		return;
+	bit_down(bitmap->bitmap_array[indice+1],pos*2);
+	bit_down(bitmap->bitmap_array[indice+1],pos*2+1);
+	hijos_down(bitmap, indice+1,pos*2);
+	hijos_down(bitmap, indice+1,pos*2+1);
+}
+
+void padres_up(t_bitmap* bitmap, int indice, int pos){
+	int pos_buddy;
+	if(pos%2)
+		pos_buddy=pos-1;
+	else
+		pos_buddy=pos+1;
+
+	if(indice==0)
+		return;
+
+	if(buddy_libre(bitmap->bitmap_array[indice], pos)){
+		bit_up(bitmap->bitmap_array[indice-1], pos/2);
+		bitmap_down(bitmap,indice,pos);
+		bitmap_down(bitmap,indice,pos_buddy);
+		padres_up(bitmap, indice-1,pos/2);
+	}
+}
+
+void hijos_up(t_bitmap* bitmap, int indice, int pos){
+	if(indice==bitmap->largo)
+		return;
+	bit_up(bitmap->bitmap_array[indice+1],pos*2);
+	bit_up(bitmap->bitmap_array[indice+1],pos*2+1);
+	hijos_up(bitmap, indice+1,pos*2);
+	hijos_up(bitmap, indice+1,pos*2+1);
+}
+
+int partir_ancestro(t_bitmap* bitmap, int indice){
+	printf("indice:%d\n", indice);
+	int pos_aux;
+	if(indice==-1)
+		return -1;
+
+	int pos;
+	if((pos=bitarray_any(bitmap->bitmap_array[indice]))==-1){
+		if((pos_aux=partir_ancestro(bitmap,indice-1))==-1){
+			bitmap_show(bitmap);
+			return pos_aux;
+		}else{
+			partir_particion(bitmap,indice-1,pos_aux);
+			pos_aux=bitarray_any(bitmap->bitmap_array[indice]);
+			bitmap_show(bitmap);
+			return pos_aux;
+		}
+	}else{
+		partir_particion(bitmap,indice,pos);
+		bitmap_show(bitmap);
+		return pos;
+	}
+}
+
+/*
+ * devuelve un int que es el que tengo de relacion con la particion libre
+ */
+
+int asignar_buddy_libre(t_bitmap* bitmap,int size){// todo separar por los dos metodos BF FF
+	int pos,pos_aux;
+	int indice = indice_correcto(bitmap,size);
+	printf("indice:%d\n", indice);
+
+	if((pos=bitarray_any(bitmap->bitmap_array[indice]))!=-1){
+		printf("pos_bitarray true:%d\n",pos);
+		bit_down(bitmap->bitmap_array[indice], pos);
+		return bitmap_a_puntero(bitmap->peso_maximo-indice,pos);
+	}else if((pos_aux=partir_ancestro(bitmap,indice))==-1)
+		return -1;
+	else{
+		pos_aux=bitarray_any(bitmap->bitmap_array[indice]);
+		printf("pos_auxxx:%d\n",pos_aux);
+		bit_down(bitmap->bitmap_array[indice], pos_aux);
+		return bitmap_a_puntero(bitmap->peso_maximo-indice,pos_aux);
+	}
+}
+
+void bitmap_liberar_particion(t_bitmap* bitmap, int indice, int pos){
+	bitmap_up(bitmap,indice, pos);
+	padres_up(bitmap,indice,pos);
+}
+
+void partir_particion(t_bitmap* bitmap, int indice, int pos){//todo incorporar tambien partir la parte fisica
+	bit_up(bitmap->bitmap_array[indice+1],pos*2);
+	bit_up(bitmap->bitmap_array[indice+1],pos*2+1);
+	bit_down(bitmap->bitmap_array[indice],pos);
+	puts("rel");
+	int ptr_rel = bitmap_a_puntero(indice,pos);
+	printf("ptr:%d\n", ptr_rel);
+	t_partition* particion = encontrar_particion_libre_por_ptr(ptr_rel);
+	printf("inicio:%d\n", (int)particion->inicio);
+	puts("divide");
+	dividir_particion(particion);
+	printear_estado_memoria();
+}
+
+/*
+ * tener en cuenta que al inicio hay que restarle memalloc cuando se pase;
+ *
+ */
+
+void particion_a_bitmap(t_partition* particion, int* indice, int* pos){
+	*indice = encontrar_exponente(particion->size+particion->fragmentacion_interna);
+	*pos = ((int)particion->inicio - (int)mem_alloc)/(particion->size+particion->fragmentacion_interna);
+}
+
+int bitmap_a_puntero(int indice,int pos){
+	return (int)pow(2,indice)*pos;
+}
+
+//================================================================
+
 
 void memory_dump(int signum){
 	t_list* particiones_totales;
@@ -1479,12 +1772,18 @@ void printear_estado_memoria(){
 	printf("Lista reemplazo\n");
 	list_iterate(lista_algoritmo_reemplazo,printear_msg_id);
 	printf("\n");
+
+	bitmap_show(bitmap);
 }
 
 //============================== INICIALIZACION ==============================
 
 void inicializar_memoria(){
 	mem_alloc = malloc(tamanio_memoria);
+
+	if(AM==BS)
+		bitmap = bitmap_create(tamanio_memoria,tamanio_minimo_particion);bitmap_up(bitmap,0,0);
+
 	void* aux = mem_alloc;
 	int var = 0;
 
@@ -1498,7 +1797,7 @@ void inicializar_memoria(){
 		administracion_colas[i] = crear_adm_cola();
 	}
 	particiones_libres = list_create();
-	list_add(particiones_libres, crear_particion_libre(mem_alloc,tamanio_memoria,0));
+	agregar_particion_libre(crear_particion_libre(mem_alloc,tamanio_memoria,0));
 	lista_algoritmo_reemplazo = list_create();
 	particiones_ocupadas=0;
 }
