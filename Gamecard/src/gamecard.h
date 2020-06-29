@@ -1,23 +1,32 @@
 #ifndef GAMECARD_H
 #define GAMECARD_H
 
-#include <utils/conexiones.h>
-#include <utils/mensajes.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include <utils/conexiones.h>
+#include <utils/mensajes.h>
+
 #include <commons/log.h>
 #include <commons/string.h>
 #include <commons/config.h>
 #include <commons/txt.h>
-#include <pthread.h>
-#include <semaphore.h>
 #include <commons/collections/list.h>
 #include <commons/bitarray.h>
+
+#include <pthread.h>
+#include <semaphore.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <sys/mman.h>
+#include <fcntl.h> //esto es para el mmap
+
+#include <errno.h>
 
 pthread_mutex_t mutex_recibir;
+pthread_mutex_t mutex_bitmap;
+
 
 t_config* config;
 
