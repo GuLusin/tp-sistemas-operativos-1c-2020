@@ -3140,3 +3140,419 @@
 [DEBUG] 00:11:31:905 log/(22997:22998): Fallo conexion, reintentando en 10 segundos...
 [DEBUG] 00:11:41:906 log/(22997:22998): Fallo conexion, reintentando en 10 segundos...
 [DEBUG] 00:11:51:909 log/(22997:22998): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 12:30:13:164 log/(4326:4326): 10
+[DEBUG] 12:30:13:165 log/(4326:4326): 5
+[DEBUG] 12:30:13:165 log/(4326:4326): 5
+[DEBUG] 12:30:13:165 log/(4326:4326): 127.0.0.1
+[DEBUG] 12:30:13:165 log/(4326:4326): 5002
+[DEBUG] 12:30:13:165 log/(4326:4326): ../mnt/TALL_GRASS
+[DEBUG] 12:30:13:165 log/(4326:4326): 12
+[DEBUG] 12:30:13:167 log/(4326:4329): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 12:30:21:975 log/(4338:4338): 10
+[DEBUG] 12:30:21:975 log/(4338:4338): 5
+[DEBUG] 12:30:21:975 log/(4338:4338): 5
+[DEBUG] 12:30:21:975 log/(4338:4338): 127.0.0.1
+[DEBUG] 12:30:21:975 log/(4338:4338): 5002
+[DEBUG] 12:30:21:975 log/(4338:4338): ../mnt/TALL_GRASS
+[DEBUG] 12:30:21:976 log/(4338:4338): 12
+[DEBUG] 12:30:21:976 log/(4338:4341): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 12:30:31:976 log/(4338:4341): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 12:32:49:251 log/(4478:4478): 10
+[DEBUG] 12:32:49:251 log/(4478:4478): 5
+[DEBUG] 12:32:49:251 log/(4478:4478): 5
+[DEBUG] 12:32:49:251 log/(4478:4478): 127.0.0.1
+[DEBUG] 12:32:49:251 log/(4478:4478): 5002
+[DEBUG] 12:32:49:251 log/(4478:4478): ../mnt/TALL_GRASS
+[DEBUG] 12:32:49:251 log/(4478:4478): 12
+[DEBUG] 12:32:49:252 log/(4478:4481): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 12:39:16:351 log/(4574:4574): 10
+[DEBUG] 12:39:16:387 log/(4574:4574): 5
+[DEBUG] 12:39:16:391 log/(4574:4574): 5
+[DEBUG] 12:39:16:392 log/(4574:4574): 127.0.0.1
+[DEBUG] 12:39:16:393 log/(4574:4574): 5002
+[DEBUG] 12:39:16:393 log/(4574:4574): ../mnt/TALL_GRASS
+[DEBUG] 12:39:16:394 log/(4574:4574): 12
+[DEBUG] 12:39:16:446 log/(4574:4575): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 12:39:32:608 log/(4590:4590): 10
+[DEBUG] 12:39:32:649 log/(4590:4590): 5
+[DEBUG] 12:39:32:652 log/(4590:4590): 5
+[DEBUG] 12:39:32:653 log/(4590:4590): 127.0.0.1
+[DEBUG] 12:39:32:654 log/(4590:4590): 5002
+[DEBUG] 12:39:32:655 log/(4590:4590): ../mnt/TALL_GRASS
+[DEBUG] 12:39:32:656 log/(4590:4590): 12
+[DEBUG] 12:39:32:707 log/(4590:4591): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 12:39:59:789 log/(4618:4618): 10
+[DEBUG] 12:39:59:831 log/(4618:4618): 5
+[DEBUG] 12:39:59:835 log/(4618:4618): 5
+[DEBUG] 12:39:59:836 log/(4618:4618): 127.0.0.1
+[DEBUG] 12:39:59:837 log/(4618:4618): 5002
+[DEBUG] 12:39:59:838 log/(4618:4618): ../mnt/TALL_GRASS
+[DEBUG] 12:39:59:839 log/(4618:4618): 12
+[DEBUG] 12:39:59:890 log/(4618:4619): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 12:40:09:907 log/(4618:4619): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 12:45:04:746 log/(4706:4706): 10
+[DEBUG] 12:45:04:784 log/(4706:4706): 5
+[DEBUG] 12:45:04:788 log/(4706:4706): 5
+[DEBUG] 12:45:04:788 log/(4706:4706): 127.0.0.1
+[DEBUG] 12:45:04:789 log/(4706:4706): 5002
+[DEBUG] 12:45:04:790 log/(4706:4706): ../mnt/TALL_GRASS
+[DEBUG] 12:45:04:791 log/(4706:4706): 12
+[DEBUG] 12:45:04:840 log/(4706:4707): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 12:48:05:16 log/(4809:4809): 10
+[DEBUG] 12:48:06:54 log/(4809:4809): 5
+[DEBUG] 12:48:06:58 log/(4809:4809): 5
+[DEBUG] 12:48:06:59 log/(4809:4809): 127.0.0.1
+[DEBUG] 12:48:06:59 log/(4809:4809): 5002
+[DEBUG] 12:48:06:60 log/(4809:4809): ../mnt/TALL_GRASS
+[DEBUG] 12:48:06:61 log/(4809:4809): 12
+[DEBUG] 12:48:06:125 log/(4809:4810): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:05:10:849 log/(6363:6363): 10
+[DEBUG] 13:05:10:849 log/(6363:6363): 5
+[DEBUG] 13:05:10:849 log/(6363:6363): 5
+[DEBUG] 13:05:10:849 log/(6363:6363): 127.0.0.1
+[DEBUG] 13:05:10:850 log/(6363:6363): 5002
+[DEBUG] 13:05:10:850 log/(6363:6363): ../mnt/TALL_GRASS
+[DEBUG] 13:05:10:850 log/(6363:6363): 12
+[DEBUG] 13:05:10:850 log/(6363:6366): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:08:30:95 log/(6496:6496): 10
+[DEBUG] 13:08:30:95 log/(6496:6496): 5
+[DEBUG] 13:08:30:96 log/(6496:6496): 5
+[DEBUG] 13:08:30:96 log/(6496:6496): 127.0.0.1
+[DEBUG] 13:08:30:96 log/(6496:6496): 5002
+[DEBUG] 13:08:30:96 log/(6496:6496): ../mnt/TALL_GRASS
+[DEBUG] 13:08:30:96 log/(6496:6496): 12
+[DEBUG] 13:08:30:97 log/(6496:6499): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:08:47:551 log/(6505:6505): 10
+[DEBUG] 13:08:47:588 log/(6505:6505): 5
+[DEBUG] 13:08:47:591 log/(6505:6505): 5
+[DEBUG] 13:08:47:592 log/(6505:6505): 127.0.0.1
+[DEBUG] 13:08:47:593 log/(6505:6505): 5002
+[DEBUG] 13:08:47:594 log/(6505:6505): ../mnt/TALL_GRASS
+[DEBUG] 13:08:47:595 log/(6505:6505): 12
+[DEBUG] 13:08:47:662 log/(6505:6506): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:08:57:679 log/(6505:6506): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:09:07:680 log/(6505:6506): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:09:17:681 log/(6505:6506): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:09:30:56 log/(6568:6568): 10
+[DEBUG] 13:09:31:96 log/(6568:6568): 5
+[DEBUG] 13:09:31:99 log/(6568:6568): 5
+[DEBUG] 13:09:31:100 log/(6568:6568): 127.0.0.1
+[DEBUG] 13:09:31:100 log/(6568:6568): 5002
+[DEBUG] 13:09:31:101 log/(6568:6568): ../mnt/TALL_GRASS
+[DEBUG] 13:09:31:102 log/(6568:6568): 12
+[DEBUG] 13:09:31:163 log/(6568:6569): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:09:41:179 log/(6568:6569): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:10:17:175 log/(6581:6581): 10
+[DEBUG] 13:10:17:175 log/(6581:6581): 5
+[DEBUG] 13:10:17:175 log/(6581:6581): 5
+[DEBUG] 13:10:17:175 log/(6581:6581): 127.0.0.1
+[DEBUG] 13:10:17:175 log/(6581:6581): 5002
+[DEBUG] 13:10:17:175 log/(6581:6581): ../mnt/TALL_GRASS
+[DEBUG] 13:10:17:175 log/(6581:6581): 12
+[DEBUG] 13:10:17:176 log/(6581:6584): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:10:27:720 log/(6590:6590): 10
+[DEBUG] 13:10:27:721 log/(6590:6590): 5
+[DEBUG] 13:10:27:721 log/(6590:6590): 5
+[DEBUG] 13:10:27:721 log/(6590:6590): 127.0.0.1
+[DEBUG] 13:10:27:721 log/(6590:6590): 5002
+[DEBUG] 13:10:27:721 log/(6590:6590): ../mnt/TALL_GRASS
+[DEBUG] 13:10:27:721 log/(6590:6590): 12
+[DEBUG] 13:10:27:722 log/(6590:6593): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:12:14:221 log/(6709:6709): 10
+[DEBUG] 13:12:14:222 log/(6709:6709): 5
+[DEBUG] 13:12:14:222 log/(6709:6709): 5
+[DEBUG] 13:12:14:222 log/(6709:6709): 127.0.0.1
+[DEBUG] 13:12:14:222 log/(6709:6709): 5002
+[DEBUG] 13:12:14:222 log/(6709:6709): ../mnt/TALL_GRASS
+[DEBUG] 13:12:14:222 log/(6709:6709): 12
+[DEBUG] 13:12:14:234 log/(6709:6712): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:12:54:54 log/(6770:6770): 10
+[DEBUG] 13:12:54:54 log/(6770:6770): 5
+[DEBUG] 13:12:54:57 log/(6770:6770): 5
+[DEBUG] 13:12:54:57 log/(6770:6770): 127.0.0.1
+[DEBUG] 13:12:54:57 log/(6770:6770): 5002
+[DEBUG] 13:12:54:57 log/(6770:6770): ../mnt/TALL_GRASS
+[DEBUG] 13:12:54:57 log/(6770:6770): 12
+[DEBUG] 13:12:54:58 log/(6770:6773): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:13:13:784 log/(6784:6784): 10
+[DEBUG] 13:13:13:785 log/(6784:6784): 5
+[DEBUG] 13:13:13:785 log/(6784:6784): 5
+[DEBUG] 13:13:13:785 log/(6784:6784): 127.0.0.1
+[DEBUG] 13:13:13:785 log/(6784:6784): 5002
+[DEBUG] 13:13:13:785 log/(6784:6784): ../mnt/TALL_GRASS
+[DEBUG] 13:13:13:785 log/(6784:6784): 12
+[DEBUG] 13:13:13:786 log/(6784:6787): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:14:01:787 log/(6814:6814): 10
+[DEBUG] 13:14:01:825 log/(6814:6814): 5
+[DEBUG] 13:14:01:828 log/(6814:6814): 5
+[DEBUG] 13:14:01:829 log/(6814:6814): 127.0.0.1
+[DEBUG] 13:14:01:830 log/(6814:6814): 5002
+[DEBUG] 13:14:01:830 log/(6814:6814): ../mnt/TALL_GRASS
+[DEBUG] 13:14:01:831 log/(6814:6814): 12
+[DEBUG] 13:14:01:885 log/(6814:6815): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:14:21:403 log/(6832:6832): 10
+[DEBUG] 13:14:21:403 log/(6832:6832): 5
+[DEBUG] 13:14:21:403 log/(6832:6832): 5
+[DEBUG] 13:14:21:403 log/(6832:6832): 127.0.0.1
+[DEBUG] 13:14:21:403 log/(6832:6832): 5002
+[DEBUG] 13:14:21:403 log/(6832:6832): ../mnt/TALL_GRASS
+[DEBUG] 13:14:21:403 log/(6832:6832): 12
+[DEBUG] 13:14:21:404 log/(6832:6835): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:19:27:533 log/(6910:6910): 10
+[DEBUG] 13:19:27:570 log/(6910:6910): 5
+[DEBUG] 13:19:27:573 log/(6910:6910): 5
+[DEBUG] 13:19:27:574 log/(6910:6910): 127.0.0.1
+[DEBUG] 13:19:27:574 log/(6910:6910): 5002
+[DEBUG] 13:19:27:575 log/(6910:6910): ../mnt/TALL_GRASS
+[DEBUG] 13:19:27:576 log/(6910:6910): 12
+[DEBUG] 13:19:27:637 log/(6910:6911): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:22:24:142 log/(7011:7011): 10
+[DEBUG] 13:22:24:179 log/(7011:7011): 5
+[DEBUG] 13:22:24:182 log/(7011:7011): 5
+[DEBUG] 13:22:24:183 log/(7011:7011): 127.0.0.1
+[DEBUG] 13:22:24:184 log/(7011:7011): 5002
+[DEBUG] 13:22:24:185 log/(7011:7011): ../mnt/TALL_GRASS
+[DEBUG] 13:22:24:186 log/(7011:7011): 12
+[DEBUG] 13:22:24:250 log/(7011:7012): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:49:47:784 log/(7511:7511): 10
+[DEBUG] 13:49:47:821 log/(7511:7511): 5
+[DEBUG] 13:49:47:824 log/(7511:7511): 5
+[DEBUG] 13:49:47:825 log/(7511:7511): 127.0.0.1
+[DEBUG] 13:49:47:826 log/(7511:7511): 5002
+[DEBUG] 13:49:47:826 log/(7511:7511): ../mnt/TALL_GRASS
+[DEBUG] 13:49:47:827 log/(7511:7511): 12
+[DEBUG] 13:49:47:876 log/(7511:7512): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:49:57:892 log/(7511:7512): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:50:39:305 log/(7566:7566): 10
+[DEBUG] 13:50:39:345 log/(7566:7566): 5
+[DEBUG] 13:50:39:349 log/(7566:7566): 5
+[DEBUG] 13:50:39:350 log/(7566:7566): 127.0.0.1
+[DEBUG] 13:50:39:350 log/(7566:7566): 5002
+[DEBUG] 13:50:39:351 log/(7566:7566): ../mnt/TALL_GRASS
+[DEBUG] 13:50:39:352 log/(7566:7566): 12
+[DEBUG] 13:50:39:412 log/(7566:7567): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:50:49:430 log/(7566:7567): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:53:36:664 log/(7610:7610): 10
+[DEBUG] 13:53:36:700 log/(7610:7610): 5
+[DEBUG] 13:53:36:704 log/(7610:7610): 5
+[DEBUG] 13:53:36:705 log/(7610:7610): 127.0.0.1
+[DEBUG] 13:53:36:705 log/(7610:7610): 5002
+[DEBUG] 13:53:36:706 log/(7610:7610): ../mnt/TALL_GRASS
+[DEBUG] 13:53:36:707 log/(7610:7610): 12
+[DEBUG] 13:53:36:776 log/(7610:7611): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:53:59:249 log/(7648:7648): 10
+[DEBUG] 13:53:59:286 log/(7648:7648): 5
+[DEBUG] 13:53:59:289 log/(7648:7648): 5
+[DEBUG] 13:53:59:290 log/(7648:7648): 127.0.0.1
+[DEBUG] 13:53:59:290 log/(7648:7648): 5002
+[DEBUG] 13:53:59:291 log/(7648:7648): ../mnt/TALL_GRASS
+[DEBUG] 13:53:59:292 log/(7648:7648): 12
+[DEBUG] 13:53:59:353 log/(7648:7649): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:55:00:215 log/(7701:7701): 10
+[DEBUG] 13:55:00:252 log/(7701:7701): 5
+[DEBUG] 13:55:00:256 log/(7701:7701): 5
+[DEBUG] 13:55:00:257 log/(7701:7701): 127.0.0.1
+[DEBUG] 13:55:00:257 log/(7701:7701): 5002
+[DEBUG] 13:55:00:258 log/(7701:7701): ../mnt/TALL_GRASS
+[DEBUG] 13:55:00:259 log/(7701:7701): 12
+[DEBUG] 13:55:00:309 log/(7701:7702): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:56:48:953 log/(7774:7774): 10
+[DEBUG] 13:56:48:989 log/(7774:7774): 5
+[DEBUG] 13:56:48:993 log/(7774:7774): 5
+[DEBUG] 13:56:48:994 log/(7774:7774): 127.0.0.1
+[DEBUG] 13:56:48:994 log/(7774:7774): 5002
+[DEBUG] 13:56:48:995 log/(7774:7774): ../mnt/TALL_GRASS
+[DEBUG] 13:56:48:996 log/(7774:7774): 12
+[DEBUG] 13:56:49:58 log/(7774:7775): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 13:59:06:515 log/(7883:7883): 10
+[DEBUG] 13:59:06:559 log/(7883:7883): 5
+[DEBUG] 13:59:06:562 log/(7883:7883): 5
+[DEBUG] 13:59:06:563 log/(7883:7883): 127.0.0.1
+[DEBUG] 13:59:06:563 log/(7883:7883): 5002
+[DEBUG] 13:59:06:564 log/(7883:7883): ../mnt/TALL_GRASS
+[DEBUG] 13:59:06:565 log/(7883:7883): 12
+[DEBUG] 13:59:06:638 log/(7883:7884): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:02:53:677 log/(7945:7945): 10
+[DEBUG] 14:02:53:715 log/(7945:7945): 5
+[DEBUG] 14:02:53:719 log/(7945:7945): 5
+[DEBUG] 14:02:53:719 log/(7945:7945): 127.0.0.1
+[DEBUG] 14:02:53:720 log/(7945:7945): 5002
+[DEBUG] 14:02:53:721 log/(7945:7945): ../mnt/TALL_GRASS
+[DEBUG] 14:02:53:722 log/(7945:7945): 12
+[DEBUG] 14:02:53:787 log/(7945:7946): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:06:17:118 log/(8049:8049): 10
+[DEBUG] 14:06:17:157 log/(8049:8049): 5
+[DEBUG] 14:06:17:160 log/(8049:8049): 5
+[DEBUG] 14:06:17:161 log/(8049:8049): 127.0.0.1
+[DEBUG] 14:06:17:162 log/(8049:8049): 5002
+[DEBUG] 14:06:17:162 log/(8049:8049): ../mnt/TALL_GRASS
+[DEBUG] 14:06:17:163 log/(8049:8049): 12
+[DEBUG] 14:06:17:226 log/(8049:8050): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:06:27:241 log/(8049:8050): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:06:37:244 log/(8049:8050): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:06:47:248 log/(8049:8050): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:06:57:250 log/(8049:8050): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:13:48:961 log/(8301:8301): 10
+[DEBUG] 14:13:48:998 log/(8301:8301): 5
+[DEBUG] 14:13:48:1 log/(8301:8301): 5
+[DEBUG] 14:13:48:2 log/(8301:8301): 127.0.0.1
+[DEBUG] 14:13:48:3 log/(8301:8301): 5002
+[DEBUG] 14:13:48:4 log/(8301:8301): ../mnt/TALL_GRASS
+[DEBUG] 14:13:48:5 log/(8301:8301): 12
+[DEBUG] 14:13:49:65 log/(8301:8302): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:13:56:977 log/(8306:8306): 10
+[DEBUG] 14:13:57:14 log/(8306:8306): 5
+[DEBUG] 14:13:57:18 log/(8306:8306): 5
+[DEBUG] 14:13:57:18 log/(8306:8306): 127.0.0.1
+[DEBUG] 14:13:57:19 log/(8306:8306): 5002
+[DEBUG] 14:13:57:20 log/(8306:8306): ../mnt/TALL_GRASS
+[DEBUG] 14:13:57:21 log/(8306:8306): 12
+[DEBUG] 14:13:57:71 log/(8306:8307): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:14:07:87 log/(8306:8307): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:14:17:96 log/(8306:8307): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:14:27:98 log/(8306:8307): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:14:37:100 log/(8306:8307): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:14:47:103 log/(8306:8307): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:18:22:347 log/(8469:8469): 10
+[DEBUG] 14:18:22:384 log/(8469:8469): 5
+[DEBUG] 14:18:22:387 log/(8469:8469): 5
+[DEBUG] 14:18:22:388 log/(8469:8469): 127.0.0.1
+[DEBUG] 14:18:22:389 log/(8469:8469): 5002
+[DEBUG] 14:18:22:390 log/(8469:8469): ../mnt/TALL_GRASS
+[DEBUG] 14:18:22:391 log/(8469:8469): 12
+[DEBUG] 14:18:22:453 log/(8469:8470): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:18:59:185 log/(8475:8475): 10
+[DEBUG] 14:18:59:222 log/(8475:8475): 5
+[DEBUG] 14:18:59:225 log/(8475:8475): 5
+[DEBUG] 14:18:59:226 log/(8475:8475): 127.0.0.1
+[DEBUG] 14:18:59:227 log/(8475:8475): 5002
+[DEBUG] 14:18:59:227 log/(8475:8475): ../mnt/TALL_GRASS
+[DEBUG] 14:18:59:229 log/(8475:8475): 12
+[DEBUG] 14:18:59:292 log/(8475:8476): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:19:17:423 log/(8486:8486): 10
+[DEBUG] 14:19:17:460 log/(8486:8486): 5
+[DEBUG] 14:19:17:463 log/(8486:8486): 5
+[DEBUG] 14:19:17:464 log/(8486:8486): 127.0.0.1
+[DEBUG] 14:19:17:465 log/(8486:8486): 5002
+[DEBUG] 14:19:17:466 log/(8486:8486): ../mnt/TALL_GRASS
+[DEBUG] 14:19:17:467 log/(8486:8486): 12
+[DEBUG] 14:19:17:526 log/(8486:8487): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:19:27:126 log/(8494:8494): 10
+[DEBUG] 14:19:27:164 log/(8494:8494): 5
+[DEBUG] 14:19:27:167 log/(8494:8494): 5
+[DEBUG] 14:19:27:168 log/(8494:8494): 127.0.0.1
+[DEBUG] 14:19:27:169 log/(8494:8494): 5002
+[DEBUG] 14:19:27:169 log/(8494:8494): ../mnt/TALL_GRASS
+[DEBUG] 14:19:27:170 log/(8494:8494): 12
+[DEBUG] 14:19:27:221 log/(8494:8495): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:19:37:235 log/(8494:8495): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:19:47:239 log/(8494:8495): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:19:57:241 log/(8494:8495): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:20:07:244 log/(8494:8495): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:46:52:890 log/(9147:9147): 10
+[DEBUG] 14:46:52:927 log/(9147:9147): 5
+[DEBUG] 14:46:52:930 log/(9147:9147): 5
+[DEBUG] 14:46:52:931 log/(9147:9147): 127.0.0.1
+[DEBUG] 14:46:52:931 log/(9147:9147): 5002
+[DEBUG] 14:46:52:932 log/(9147:9147): ../mnt/TALL_GRASS
+[DEBUG] 14:46:52:933 log/(9147:9147): 12
+[DEBUG] 14:46:52:984 log/(9147:9148): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:52:42:788 log/(9277:9277): 10
+[DEBUG] 14:52:42:828 log/(9277:9277): 5
+[DEBUG] 14:52:42:832 log/(9277:9277): 5
+[DEBUG] 14:52:42:833 log/(9277:9277): 127.0.0.1
+[DEBUG] 14:52:42:834 log/(9277:9277): 5002
+[DEBUG] 14:52:42:834 log/(9277:9277): ../mnt/TALL_GRASS
+[DEBUG] 14:52:42:836 log/(9277:9277): 12
+[DEBUG] 14:52:42:913 log/(9277:9278): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:52:53:855 log/(9282:9282): 10
+[DEBUG] 14:52:53:896 log/(9282:9282): 5
+[DEBUG] 14:52:53:899 log/(9282:9282): 5
+[DEBUG] 14:52:53:900 log/(9282:9282): 127.0.0.1
+[DEBUG] 14:52:53:901 log/(9282:9282): 5002
+[DEBUG] 14:52:53:901 log/(9282:9282): ../mnt/TALL_GRASS
+[DEBUG] 14:52:53:903 log/(9282:9282): 12
+[DEBUG] 14:52:53:956 log/(9282:9283): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:54:29:886 log/(9349:9349): 10
+[DEBUG] 14:54:29:925 log/(9349:9349): 5
+[DEBUG] 14:54:29:928 log/(9349:9349): 5
+[DEBUG] 14:54:29:929 log/(9349:9349): 127.0.0.1
+[DEBUG] 14:54:29:929 log/(9349:9349): 5002
+[DEBUG] 14:54:29:930 log/(9349:9349): ../mnt/TALL_GRASS
+[DEBUG] 14:54:29:931 log/(9349:9349): 12
+[DEBUG] 14:54:29:996 log/(9349:9350): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:57:35:30 log/(9437:9437): 10
+[DEBUG] 14:57:36:67 log/(9437:9437): 5
+[DEBUG] 14:57:36:70 log/(9437:9437): 5
+[DEBUG] 14:57:36:71 log/(9437:9437): 127.0.0.1
+[DEBUG] 14:57:36:71 log/(9437:9437): 5002
+[DEBUG] 14:57:36:72 log/(9437:9437): ../mnt/TALL_GRASS
+[DEBUG] 14:57:36:73 log/(9437:9437): 12
+[DEBUG] 14:57:36:139 log/(9437:9438): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:57:46:152 log/(9437:9438): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:57:56:156 log/(9437:9438): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:58:06:159 log/(9437:9438): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:58:16:175 log/(9437:9438): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:58:26:178 log/(9437:9438): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:58:36:180 log/(9437:9438): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:58:46:181 log/(9437:9438): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:58:56:182 log/(9437:9438): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 14:59:00:696 log/(9501:9501): 10
+[DEBUG] 14:59:00:734 log/(9501:9501): 5
+[DEBUG] 14:59:00:737 log/(9501:9501): 5
+[DEBUG] 14:59:00:738 log/(9501:9501): 127.0.0.1
+[DEBUG] 14:59:00:739 log/(9501:9501): 5002
+[DEBUG] 14:59:00:740 log/(9501:9501): ../mnt/TALL_GRASS
+[DEBUG] 14:59:00:741 log/(9501:9501): 12
+[DEBUG] 14:59:00:804 log/(9501:9502): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 15:03:40:998 log/(9526:9526): 10
+[DEBUG] 15:03:41:35 log/(9526:9526): 5
+[DEBUG] 15:03:41:38 log/(9526:9526): 5
+[DEBUG] 15:03:41:39 log/(9526:9526): 127.0.0.1
+[DEBUG] 15:03:41:40 log/(9526:9526): 5002
+[DEBUG] 15:03:41:41 log/(9526:9526): ../mnt/TALL_GRASS
+[DEBUG] 15:03:41:42 log/(9526:9526): 12
+[DEBUG] 15:03:41:92 log/(9526:9527): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 15:03:51:109 log/(9526:9527): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 15:04:05:268 log/(9530:9530): 10
+[DEBUG] 15:04:05:305 log/(9530:9530): 5
+[DEBUG] 15:04:05:309 log/(9530:9530): 5
+[DEBUG] 15:04:05:309 log/(9530:9530): 127.0.0.1
+[DEBUG] 15:04:05:310 log/(9530:9530): 5002
+[DEBUG] 15:04:05:311 log/(9530:9530): ../mnt/TALL_GRASS
+[DEBUG] 15:04:05:312 log/(9530:9530): 12
+[DEBUG] 15:04:05:387 log/(9530:9531): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 15:04:15:402 log/(9530:9531): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 15:04:25:406 log/(9530:9531): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 15:04:35:408 log/(9530:9531): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 15:07:13:15 log/(9592:9592): 10
+[DEBUG] 15:07:14:53 log/(9592:9592): 5
+[DEBUG] 15:07:14:57 log/(9592:9592): 5
+[DEBUG] 15:07:14:57 log/(9592:9592): 127.0.0.1
+[DEBUG] 15:07:14:58 log/(9592:9592): 5002
+[DEBUG] 15:07:14:59 log/(9592:9592): ../mnt/TALL_GRASS
+[DEBUG] 15:07:14:60 log/(9592:9592): 12
+[DEBUG] 15:07:14:110 log/(9592:9593): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 15:14:32:383 log/(9733:9733): 10
+[DEBUG] 15:14:32:420 log/(9733:9733): 5
+[DEBUG] 15:14:32:424 log/(9733:9733): 5
+[DEBUG] 15:14:32:424 log/(9733:9733): 127.0.0.1
+[DEBUG] 15:14:32:425 log/(9733:9733): 5002
+[DEBUG] 15:14:32:426 log/(9733:9733): ../mnt/TALL_GRASS
+[DEBUG] 15:14:32:427 log/(9733:9733): 12
+[DEBUG] 15:14:32:491 log/(9733:9734): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 15:14:42:505 log/(9733:9734): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 15:15:50:275 log/(9742:9742): 10
+[DEBUG] 15:15:50:312 log/(9742:9742): 5
+[DEBUG] 15:15:50:316 log/(9742:9742): 5
+[DEBUG] 15:15:50:316 log/(9742:9742): 127.0.0.1
+[DEBUG] 15:15:50:317 log/(9742:9742): 5002
+[DEBUG] 15:15:50:318 log/(9742:9742): ../mnt/TALL_GRASS
+[DEBUG] 15:15:50:319 log/(9742:9742): 12
+[DEBUG] 15:15:50:382 log/(9742:9743): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 15:16:00:397 log/(9742:9743): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 15:16:10:404 log/(9742:9743): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 15:16:20:407 log/(9742:9743): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 15:16:30:410 log/(9742:9743): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 15:16:40:413 log/(9742:9743): Fallo conexion, reintentando en 10 segundos...
+[DEBUG] 15:16:50:416 log/(9742:9743): Fallo conexion, reintentando en 10 segundos...

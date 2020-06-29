@@ -1,13 +1,3 @@
-/*	TODO: preguntas
- *
- * Que pasa con el bitmap si cambia la cantidad cantidad de bloques del sistema? se sobrescribe?
- *
- *
- *
- *
- */
-
-
 #include "gamecard.h"
 
 void debug_print_metadata(t_metadata* metadata){
@@ -64,12 +54,12 @@ char own_config_get_char_value(t_config* config, char *key){
 char** own_config_get_array_value(t_config* config, char *key){
 	char* value_in_dictionary = config_get_string_value(config, key);
 	if(!strcmp(value_in_dictionary,"[]")){
-		free(value_in_dictionary);
+		//free(value_in_dictionary);
 		return NULL;
 	}
 
 	char** string_as_array = string_get_string_as_array(value_in_dictionary);
-	free(value_in_dictionary);
+	//free(value_in_dictionary);
 	return string_as_array;
 }
 
@@ -81,6 +71,46 @@ int subscribirse_a_cola(cola_code cola){
 	enviar_mensaje(socket_aux, mensaje);
 	check_ack(socket_aux, ACK);
 	return socket_aux;
+}
+
+t_metadata* leer_archivo_metadata_y_notificar_apertura(char* ruta){
+
+	char* aux = string_from_format(ruta);
+	string_append(&aux,"/Metadata.bin");
+
+	t_config* aux_metadata = config_create(aux);
+	t_metadata* metadata = malloc(sizeof(t_metadata));
+
+	metadata->directory = own_config_get_char_value(aux_metadata, "DIRECTORY");
+
+	if(metadata->directory == 'N'){
+		metadata->size = config_get_int_value(aux_metadata, "SIZE");
+		metadata->blocks = list_create();
+		char** blocks = own_config_get_array_value(aux_metadata, "BLOCKS");
+		if(blocks){
+			while(*blocks){
+				list_add(metadata->blocks,atoi(*blocks));
+				free(*blocks);
+				blocks++;
+			}
+		}
+
+		metadata->opened = own_config_get_char_value(aux_metadata, "OPEN");
+
+		if(metadata->opened == 'Y'){
+			printf("No se puede abrir el file ya estaba abierto, reintentando\n");
+			config_destroy(aux_metadata);
+			free(aux);
+			free(metadata);
+			return NULL;
+		}
+		config_set_value(aux_metadata,"OPEN","Y");
+		config_save_in_file(aux_metadata,aux);
+	}
+
+	config_destroy(aux_metadata);
+	free(aux);
+	return metadata;
 }
 
 void leer_config() {
@@ -107,37 +137,14 @@ void leer_config() {
 	log_debug(logger,config_get_string_value(config,"ID_GAMECARD"));
 }
 
-
-
-
-t_metadata* leer_archivo_metadata_y_notificar_apertura(char* ruta){
-
-	char* aux = string_from_format(ruta);
-	string_append(&aux,"/Metadata.bin");
-
-	t_config* aux_metadata = config_create(aux);
-	t_metadata* metadata = malloc(sizeof(t_metadata));
-
-	metadata->directory = own_config_get_char_value(aux_metadata, "DIRECTORY");
-
-	if(metadata->directory == 'N'){
-		metadata->size = config_get_int_value(aux_metadata, "SIZE");
-		metadata->blocks = list_create();
-		char** blocks = own_config_get_array_value(aux_metadata, "BLOCKS");
-		if(blocks){
-			while(*blocks){ //blocks
-				list_add(metadata->blocks,atoi(*blocks));
-				free(*blocks);
-				blocks++;
-			}
-		}
-
-		//Si el file esta abierto debe ciclar aca hasta que aparezca como cerrado
-		metadata->opened = own_config_get_char_value(aux_metadata, "OPEN");
+t_metadata* leer_metadata(char* ruta){
+	t_metadata* metadata = leer_archivo_metadata_y_notificar_apertura(ruta);
+	while(!metadata){
+		printf("Sleep de %d segundos para volver a intentar abrir...\n",tiempo_reintento_operacion);
+		sleep(tiempo_reintento_operacion);
+		metadata = leer_archivo_metadata_y_notificar_apertura(ruta);
 	}
-
-	config_destroy(aux_metadata); //todo por que rompe?
-	free(aux);
+	printf("Se logro leer el metadata %s\n",ruta);
 	return metadata;
 }
 
@@ -148,29 +155,34 @@ void escribir_archivo_metadata_y_cerrar(t_metadata* metadata, char* ruta){
 		for(int i=0;i<list_size(block_list);i++){
 			if(i)
 				string_append(&string,",");
-			printf("for iteracion %d\n",i);
-
 			string_append(&string,string_itoa((int)list_get(block_list,i)));
-			printf("for iteracion %d\n",i);
 		}
 		string_append(&string,"]");
-		printf("EL STRING DE BLOQUES ES: %s\n",string);
-
 		return string;
 	}
 
 	char* aux = string_from_format(ruta);
 	string_append(&aux,"/Metadata.bin");
 
+	printf("Llega a escribir metadata con la siguiente metadata:\n");
+	debug_print_metadata(metadata);
+
+	printf("Sleep de %d segundos para simular tiempo de operacion...\n",tiempo_retardo_operacion);
+	sleep(tiempo_retardo_operacion);
+
 	t_config* aux_metadata = config_create(aux);
 
 	config_set_value(aux_metadata,"SIZE",string_itoa(metadata->size));
 	config_set_value(aux_metadata,"BLOCKS",block_list_to_array(metadata->blocks));
+	config_set_value(aux_metadata,"OPEN","N");
 
 	config_save_in_file(aux_metadata,aux);
 
+	printf("Se cerro el archivo de %s\n",aux);
 	config_destroy(aux_metadata);
 	free(aux);
+
+
 
 }
 
@@ -198,8 +210,8 @@ void verificar_y_crear_pokemon_files(t_mensaje* mensaje){
 	if(!directorioExiste(aux)){
 		mkdir(aux,0700);
 		string_append(&aux,"/Metadata.bin");
-		FILE* new_archivo_metadata=fopen(aux,"w");
-		fprintf(new_archivo_metadata, "DIRECTORY=N\nSIZE=0\nBLOCKS=[]\nOPEN=N");
+		FILE* new_archivo_metadata = fopen(aux,"w");
+		fprintf(new_archivo_metadata, "DIRECTORY=N\nSIZE=0\nBLOCKS=[]\nOPEN=N\n");
 		fclose(new_archivo_metadata);
 	}else
 		printf("Se encuentra un directorio pokemon para %s\n",mensaje->contenido.new_pokemon.pokemon->nombre);
@@ -256,9 +268,12 @@ char* mensaje_to_pokedata(t_mensaje* mensaje){
 void modificar_poke_string_list(t_list* poke_strings_list, t_mensaje* mensaje){
 
 	bool misma_posicion(char* pok_1, char* pok_2){
-		char* posicion = * string_n_split(pok_1,2,"=");
-		bool retorno = string_starts_with(pok_2,posicion);
-		free(posicion);
+		char** stringything = string_n_split(pok_1,2,"=");
+		bool retorno = string_starts_with(pok_2,stringything[0]);
+		free(stringything[0]);
+		free(stringything[1]);
+		free(stringything);
+
 		return retorno;
 	}
 
@@ -316,7 +331,7 @@ char* poke_list_a_poke_string(t_list* list){
 }
 
 int cantidad_bloques_necesarios(char* str){
-	int tam_bloque = 64; //todo tam_bloque hardcodeado, leerlo de la config!
+	int tam_bloque = global_metadata->block_size;
 	int tam_str = strlen(str);
 
 	return (tam_str + (tam_bloque-1)) / tam_bloque; // la division es asi para que haga el redondeo para arriba
@@ -338,39 +353,46 @@ FILE* abrir_bloque(int num_bloque,char* open_mode){
 t_list* pokemon_data_de_bloques(t_list* bloques){
 
 	t_list* poke_data = list_create();
-	void* poke_data_string = string_new();
+	char* poke_data_string = string_new();
 
 	for(int i=0 ; i < list_size(bloques) ; i++){
 
-		FILE* block_file = abrir_bloque((int)list_get(bloques,i),"r"); //todo revisar
+		FILE* block_file = abrir_bloque((int)list_get(bloques,i),"r");
 
 		fseek(block_file,0,SEEK_END);
 		int block_size = ftell(block_file);
-		fseek(block_file,0,SEEK_SET); //rewind(FILE* f);
+		rewind(block_file);	// = fseek(block_file,0,SEEK_SET)
 
-		fread(poke_data_string,block_size,1,block_file);
+		char* aux = malloc(block_size+1);
+		fread(aux,1,block_size,block_file);
+
+		string_append(&poke_data_string,aux);
+		free(aux);
 
 		fclose(block_file);
 
 	}
 
+	printf("Se leyo el siguiente char* de los bloques \n%s\n",poke_data_string);
+	printf("De peso %d\n",strlen(poke_data_string));
+
+
 	if(!list_is_empty(bloques)){
 		char** poke_strings = string_split(poke_data_string,"\n");
 		while (*poke_strings){
 			list_add(poke_data,*poke_strings);
-			free(*poke_strings); // ojo aca!
+			free(*poke_strings);
 			poke_strings++;
 		}
 	}
 
-	free(poke_data_string); //ojo aca tambien!
+	free(poke_data_string);
 
 	return poke_data;
 
 }
 
-//[1]
-//"1234567\n"
+
 
 void escribir_bloques(t_list* blocklist,char* data){
 
@@ -384,13 +406,13 @@ void escribir_bloques(t_list* blocklist,char* data){
 		FILE *file_stream = abrir_bloque(num_bloque,"w");
 
 		if(remaining_data >= global_metadata->block_size){
-			char* data_que_falta_enviar = string_substring_from(data_aux,sent_data); //sent_data+1?
+			char* data_que_falta_enviar = string_substring_from(data_aux,sent_data);
 			fwrite(data_que_falta_enviar,global_metadata->block_size,1,file_stream);
 			remaining_data -= global_metadata->block_size;
 			sent_data += global_metadata->block_size;
 			free(data_que_falta_enviar);
 		}else{
-			char* data_que_falta_enviar = string_substring_from(data_aux,sent_data); //sent_data+1?
+			char* data_que_falta_enviar = string_substring_from(data_aux,sent_data);
 			fwrite(data_que_falta_enviar,1,remaining_data,file_stream); // TODO aca sin valgrind no funciona >:C
 			free(data_que_falta_enviar);
 		}
@@ -401,9 +423,6 @@ void escribir_bloques(t_list* blocklist,char* data){
 	free(data_aux);
 
 }
-
-
-
 
 /*
  Verificar si las posiciones ya existen dentro del archivo.
@@ -416,7 +435,7 @@ void agregar_pokemones(t_mensaje* mensaje){
 	char* ruta = generar_ruta(mensaje->contenido.new_pokemon.pokemon->nombre);
 
 	t_metadata* metadata;
-	metadata = leer_archivo_metadata_y_notificar_apertura(ruta); //solicitar apertura aqui
+	metadata = leer_metadata(ruta);
 	debug_print_metadata(metadata);
 
 	t_list* poke_strings_list = pokemon_data_de_bloques(metadata->blocks);
@@ -424,11 +443,9 @@ void agregar_pokemones(t_mensaje* mensaje){
 	modificar_poke_string_list(poke_strings_list,mensaje);
 
 	/* En este punto se comianza a revisar segun la cantidad de bloques
-	 * que tenga asignado el metadata, se elalua si esa cantidad se debe aumentar
-	 * o se puede disminuir, y se procede a hacer eso interactuando con el bitmap
+	 * que tenga asignado el metadata, se evalua si esa cantidad se debe aumentar
+	 * o se puede disminuir, y se procede a hacer eso interactuando con el bitarray global
 	 */
-
-	// hacer funcion pasar poke_list_a_poke_string
 
 	char* poke_string = poke_list_a_poke_string(poke_strings_list);
 	int cant_bloq_necesarios = cantidad_bloques_necesarios(poke_string);
@@ -440,29 +457,30 @@ void agregar_pokemones(t_mensaje* mensaje){
 		bitarray_devolver_bloque( (int) list_remove(metadata->blocks,list_size(metadata->blocks)-1));
 
 	escribir_bloques(metadata->blocks,poke_string);
+	metadata->size = strlen(poke_string);
 
 	escribir_archivo_metadata_y_cerrar(metadata,ruta);
 
-
-	//poner en N el open del metadata
-
-
+	free(poke_string);
+	list_destroy_and_destroy_elements(metadata->blocks,free);
+	free(metadata);
 	free(ruta);
 }
 
 
 
 
-void recibir_new(t_mensaje *mensaje){//TODO
-
+void recibir_new(t_mensaje *mensaje){
 
 	verificar_y_crear_pokemon_files(mensaje);
 
 	agregar_pokemones(mensaje);
 
+	//todo enviar APPEARED_POKEMON al broker con los datos del mensaje NEW
+
 	liberar_mensaje(mensaje);
 
-	//free(metadata);
+
 }
 
 void recibir_get(t_mensaje *mensaje){
@@ -482,7 +500,7 @@ void manejar_mensaje(t_mensaje* mensaje){
 	puts("maneja mensaje");
 	switch(mensaje->codigo_operacion){
 		case NEW_POKEMON:
-			recibir_new(mensaje); //crear hilo que haga recibir_new(mensaje) y que muera al finalizar
+			recibir_new(mensaje);
 			break;
 		case CATCH_POKEMON:;
 		//TODO implementar logica
@@ -576,7 +594,8 @@ void crear_bloques(){
 
 t_bitarray* crear_bitarray_y_mapear(){
 
-	int fd = open("../mnt/TALL_GRASS/Metadata/Bitmap.bin", O_CREAT | O_RDWR, 0664); //todo hacer que sea con puntomontaje
+	char* ruta = string_from_format("%s//Metadata/Bitmap.bin",punto_montaje);
+	int fd = open(ruta, O_CREAT | O_RDWR, 0664);
 
 	if (fd == -1) {
 		perror("open file");
@@ -598,6 +617,7 @@ t_bitarray* crear_bitarray_y_mapear(){
 	close(fd);
 //	munmap(bmap, size);
 
+	free(ruta);
 	return bitmap;
 }
 
@@ -694,10 +714,11 @@ void debug(){
 }
 
 int main() {
+
+
+
 	inicializar_gamecard();
-
 	debug();
-
 	cerrar_gamecard();
 
 /* DEBUGGING!
