@@ -997,6 +997,7 @@ void eliminar_particion(){
 		void es_msg_id(void* stream){
 			j++;
 			t_partition* particion = (t_partition*)stream;
+			printf("id part:%d, id sacado:%d\n", particion->msg_id,msg_id);
 			if(particion->msg_id == msg_id){
 				*cola = i;
 				*index = j;
@@ -1017,9 +1018,11 @@ void eliminar_particion(){
 
 
 	int msg_id = (int)list_get(lista_algoritmo_reemplazo,0);
-	encontrar_particion_por_id(msg_id,&cola,&index);
-	//printear_estado_memoria();
 	printf("elimina particion id:%d cola:%d index:%d\n", msg_id, cola,index);
+	encontrar_particion_por_id(msg_id,&cola,&index);
+	printf("elimina particion id:%d cola:%d index:%d\n", msg_id, cola,index);
+	printear_estado_memoria();
+
 	sacar_particion(cola,index);
  }
 
@@ -1035,7 +1038,7 @@ void* pmalloc_particiones(int size){
 	}
 }
 
-void* pmalloc_BS(int size){
+void* pmalloc_BS(int size){//todo actualizar bitmap cuando consolida y chequear lo de eliminar y compactar con BS
 	int ptr_relativo;
 	t_partition* particion;
 	switch(APL){
@@ -1045,6 +1048,7 @@ void* pmalloc_BS(int size){
 			puts("APL");
 			ptr_relativo = asignar_buddy_libre(bitmap,size);
 			puts("APL");
+
 			/*
 			 * en asignar buddy libre, ademas de tener consistencia logica en el bitmap, tambien
 			 * la tendra en la memoria. Esta funcion se encargara de partir cada particion al medio
@@ -1055,8 +1059,10 @@ void* pmalloc_BS(int size){
 				return NULL;  // eliminar una particion.
 			puts("APL");
 			particion = encontrar_particion_libre_por_ptr(ptr_relativo);
+			printear_estado_memoria();
+			//sleep(5);
 			puts("APL");
-			asignar_particion_libre(particion,size);
+			return asignar_particion_libre(particion,size);
 
 			break;
 		}
@@ -1153,6 +1159,7 @@ t_partition* crear_particion_libre(void* stream, int size,int frag_interna){
 	t_partition* particion_libre = malloc(sizeof(t_partition));
 	particion_libre->inicio = stream;
 	particion_libre->size = size+frag_interna;
+	particion_libre->fragmentacion_interna=0;
 	particion_libre->tipo='L';
 	return particion_libre;
 }
@@ -1164,7 +1171,11 @@ void agregar_particion_libre(t_partition* particion_libre){
 
 void dividir_particion(t_partition* particion){
 	particion->size/=2;
-	agregar_particion_libre(crear_particion_libre(particion->inicio+particion->size,particion->size,0));
+	printf("size part:%d\n", particion->size);
+	t_partition* particion_aux = crear_particion_libre(particion->inicio+particion->size,particion->size,0);
+	list_add(particiones_libres,particion);
+	list_add(particiones_libres,particion_aux);
+	//agregar_particion_libre(crear_particion_libre(particion->inicio+particion->size,particion->size,0));
 }
 
 //----------------------------------PARTICION-------------------------------------
@@ -1221,10 +1232,13 @@ void sacar_particion(int cola, int index){//SE USA ASI??
 
 	list_remove_by_condition(lista_algoritmo_reemplazo,es_id_msg);
 
+	bitmap_actualizar_particion(particion);
 	liberar_particion(particion);
 	pthread_mutex_lock(&mutex_particiones_ocupadas);
 	particiones_ocupadas--;
 	pthread_mutex_unlock(&mutex_particiones_ocupadas);
+
+
 }
 
 void actualizar_algoritmo_reemplazo(t_partition* particion){
@@ -1346,7 +1360,7 @@ t_partition* encontrar_particion_libre_por_ptr(int puntero_relativo){
 		}
 	}
 	list_iterate(particiones_libres,es_particion);
-	return (t_partition*)list_get(particiones_libres,pos);
+	return (t_partition*)list_remove(particiones_libres,pos);
 }
 
 //============================ INTERPRETADORES ===================================
@@ -1382,6 +1396,7 @@ char* cola_string(int cola){
 //===================================== BUDDY SYSTEM ========================
 
 int encontrar_exponente(int potencia_de_dos){
+	printf("pot de dos:%d\n",potencia_de_dos);
 	int res=potencia_de_dos;
 	int exp = 0;
 	while(res!=1){
@@ -1418,13 +1433,21 @@ int indice_correcto(t_bitmap* bitmap, int size){
 
 bool condicion_bs(t_partition* una_particion, t_partition* otra_particion){
 	int una_pos,otra_pos,un_indice,otro_indice;
-	switch(APL){
+	puts("condicion_buddy");
+	printf("APL:%d\n",APL);
+	printf("AM:%d\n",AM);
+	switch(AM){
 		case PARTICIONES:
+			puts("PARTICION");
 			return true;
 			break;
 		case BS:
+			puts("BS");
 			particion_a_bitmap(una_particion,&un_indice,&una_pos);
+			puts("BS");
 			particion_a_bitmap(otra_particion,&otro_indice,&otra_pos);
+			puts("BS");
+			printf("es buddy:%d  indices iguales:%d\n",es_buddy(una_pos,otra_pos), un_indice==otro_indice );
 			return es_buddy(una_pos,otra_pos) && un_indice==otro_indice;
 			break;
 	}
@@ -1555,7 +1578,7 @@ void hijos_up(t_bitmap* bitmap, int indice, int pos){
 }
 
 int partir_ancestro(t_bitmap* bitmap, int indice){
-	printf("indice:%d\n", indice);
+	printf("ancestro indice:%d\n", indice);
 	int pos_aux;
 	if(indice==-1)
 		return -1;
@@ -1572,7 +1595,6 @@ int partir_ancestro(t_bitmap* bitmap, int indice){
 			return pos_aux;
 		}
 	}else{
-		partir_particion(bitmap,indice,pos);
 		bitmap_show(bitmap);
 		return pos;
 	}
@@ -1590,20 +1612,27 @@ int asignar_buddy_libre(t_bitmap* bitmap,int size){// todo separar por los dos m
 	if((pos=bitarray_any(bitmap->bitmap_array[indice]))!=-1){
 		printf("pos_bitarray true:%d\n",pos);
 		bit_down(bitmap->bitmap_array[indice], pos);
-		return bitmap_a_puntero(bitmap->peso_maximo-indice,pos);
+		return bitmap_a_puntero(indice,pos);
 	}else if((pos_aux=partir_ancestro(bitmap,indice))==-1)
 		return -1;
 	else{
 		pos_aux=bitarray_any(bitmap->bitmap_array[indice]);
 		printf("pos_auxxx:%d\n",pos_aux);
 		bit_down(bitmap->bitmap_array[indice], pos_aux);
-		return bitmap_a_puntero(bitmap->peso_maximo-indice,pos_aux);
+		return bitmap_a_puntero(indice,pos_aux);
 	}
 }
 
 void bitmap_liberar_particion(t_bitmap* bitmap, int indice, int pos){
 	bitmap_up(bitmap,indice, pos);
 	padres_up(bitmap,indice,pos);
+}
+
+void bitmap_actualizar_particion(t_partition* particion){
+	int indice,pos;
+	particion_a_bitmap(particion,&indice,&pos);
+	printf("indice:%d pos:%d\n", indice, pos);
+	bitmap_up(bitmap,indice,pos);
 }
 
 void partir_particion(t_bitmap* bitmap, int indice, int pos){//todo incorporar tambien partir la parte fisica
@@ -1626,12 +1655,18 @@ void partir_particion(t_bitmap* bitmap, int indice, int pos){//todo incorporar t
  */
 
 void particion_a_bitmap(t_partition* particion, int* indice, int* pos){
-	*indice = encontrar_exponente(particion->size+particion->fragmentacion_interna);
+	puts("part a bitmap");
+
+	*indice = indice_correcto(bitmap,particion->size+particion->fragmentacion_interna);
+	puts("indice");
 	*pos = ((int)particion->inicio - (int)mem_alloc)/(particion->size+particion->fragmentacion_interna);
+	puts("pos");
 }
 
 int bitmap_a_puntero(int indice,int pos){
-	return (int)pow(2,indice)*pos;
+	printf("indice:%d pos:%d\n", indice,pos);
+	printf("bitmap a ptr:%d\n",((int)pow(2,bitmap->peso_maximo)/(int)pow(2,indice)*pos));
+	return ((int)pow(2,bitmap->peso_maximo)/(int)pow(2,indice))*pos;
 }
 
 //================================================================
