@@ -26,7 +26,7 @@
 
 pthread_mutex_t mutex_recibir;
 pthread_mutex_t mutex_bitmap;
-
+pthread_mutex_t mutex_metadata;
 
 t_config* config;
 

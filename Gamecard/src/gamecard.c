@@ -75,8 +75,7 @@ int subscribirse_a_cola(cola_code cola){
 
 t_metadata* leer_archivo_metadata_y_notificar_apertura(char* ruta){
 
-	char* aux = string_from_format(ruta);
-	string_append(&aux,"/Metadata.bin");
+	char* aux = string_from_format("%s/Metadata.bin",ruta);
 
 	t_config* aux_metadata = config_create(aux);
 	t_metadata* metadata = malloc(sizeof(t_metadata));
@@ -93,6 +92,7 @@ t_metadata* leer_archivo_metadata_y_notificar_apertura(char* ruta){
 				free(*blocks);
 				blocks++;
 			}
+			free(blocks); // todo new
 		}
 
 		metadata->opened = own_config_get_char_value(aux_metadata, "OPEN");
@@ -138,11 +138,15 @@ void leer_config() {
 }
 
 t_metadata* leer_metadata(char* ruta){
+	pthread_mutex_lock(&mutex_metadata);
 	t_metadata* metadata = leer_archivo_metadata_y_notificar_apertura(ruta);
+	pthread_mutex_unlock(&mutex_metadata);
 	while(!metadata){
 		printf("Sleep de %d segundos para volver a intentar abrir...\n",tiempo_reintento_operacion);
 		sleep(tiempo_reintento_operacion);
+		pthread_mutex_lock(&mutex_metadata);
 		metadata = leer_archivo_metadata_y_notificar_apertura(ruta);
+		pthread_mutex_unlock(&mutex_metadata);
 	}
 	printf("Se logro leer el metadata %s\n",ruta);
 	return metadata;
@@ -172,9 +176,11 @@ void escribir_archivo_metadata_y_cerrar(t_metadata* metadata, char* ruta){
 
 	t_config* aux_metadata = config_create(aux);
 
+	char* block_list_string = block_list_to_array(metadata->blocks);
 	config_set_value(aux_metadata,"SIZE",string_itoa(metadata->size));
-	config_set_value(aux_metadata,"BLOCKS",block_list_to_array(metadata->blocks));
+	config_set_value(aux_metadata,"BLOCKS",block_list_string);
 	config_set_value(aux_metadata,"OPEN","N");
+	free(block_list_string);
 
 	config_save_in_file(aux_metadata,aux);
 
@@ -182,21 +188,26 @@ void escribir_archivo_metadata_y_cerrar(t_metadata* metadata, char* ruta){
 	config_destroy(aux_metadata);
 	free(aux);
 
-
-
 }
 
-char* generar_ruta(char* nombre_pokemon){
-	char* ruta = string_new();
-	string_append(&ruta,punto_montaje);
-	string_append(&ruta,"/Files/");
-	string_append(&ruta,nombre_pokemon);
-	return ruta;
+char* generar_ruta(t_mensaje* mensaje){
+
+	switch(mensaje->codigo_operacion){
+	case NEW_POKEMON:
+		return string_from_format("%s/Files/%s",punto_montaje,mensaje->contenido.new_pokemon.pokemon->nombre);
+	case CATCH_POKEMON:
+		return string_from_format("%s/Files/%s",punto_montaje,mensaje->contenido.catch_pokemon.pokemon->nombre);
+	case GET_POKEMON:
+		return string_from_format("%s/Files/%s",punto_montaje,mensaje->contenido.get_pokemon.nombre_pokemon);
+	default:
+		printf("ERROR cod_op generar_ruta\n");
+		return NULL;
+	}
 }
 
 bool directorioExiste(char* ruta){
 	struct stat st = {0}; // stat(2) precisa de un struct stat a modo de buffer para llenar info del archivo que nosotros no necesitamos.
-	char* aux = string_from_format(ruta);
+	char* aux = string_duplicate(ruta);
 	bool existe = (stat(aux,&st) != -1);
 	free(aux);
 	return existe;
@@ -205,7 +216,7 @@ bool directorioExiste(char* ruta){
 
 void verificar_y_crear_pokemon_files(t_mensaje* mensaje){
 
-	char* aux = generar_ruta(mensaje->contenido.new_pokemon.pokemon->nombre);
+	char* aux = generar_ruta(mensaje);
 
 	if(!directorioExiste(aux)){
 		mkdir(aux,0700);
@@ -225,7 +236,7 @@ int bitarray_pedir_bloque(){
 	for (int i=0 ; i < bitarray_get_max_bit(bitmap) ; i++ ){
 		if(!bitarray_test_bit(bitmap,i)){
 			bitarray_set_bit(bitmap,i);
-			//mysync()
+			msync(bitmap, global_metadata->blocks,MS_SYNC); //puedo cambiar el flag por MS_ASYNC si quiero que le escritura sea asincrona y no bloqueante
 			pthread_mutex_unlock(&mutex_bitmap);
 			return i;
 		}
@@ -238,7 +249,7 @@ int bitarray_pedir_bloque(){
 void bitarray_devolver_bloque(int bloque){
 	pthread_mutex_lock(&mutex_bitmap);
 	bitarray_set_bit(bitmap,bloque);
-	//mysync()
+	msync(bitmap, global_metadata->blocks,MS_SYNC);
 	pthread_mutex_unlock(&mutex_bitmap);
 }
 
@@ -247,17 +258,22 @@ void bitarray_devolver_bloque(int bloque){
 char* mensaje_to_pokedata(t_mensaje* mensaje){
 	char* pokedata = string_new();
 	int cod = mensaje->codigo_operacion;
+	int pos_x;
+	int pos_y;
 	switch(cod){
-		case NEW_POKEMON:;
-			int pos_x = mensaje->contenido.new_pokemon.pokemon->pos_x;
-			int pos_y = mensaje->contenido.new_pokemon.pokemon->pos_y;
+		case NEW_POKEMON:
+			pos_x = mensaje->contenido.new_pokemon.pokemon->pos_x;
+			pos_y = mensaje->contenido.new_pokemon.pokemon->pos_y;
 			int cantidad = mensaje->contenido.new_pokemon.cantidad;
-
 			string_append_with_format(&pokedata,"%d-%d=%d",pos_x,pos_y,cantidad);
-
+			break;
+		case CATCH_POKEMON:
+			pos_x = mensaje->contenido.catch_pokemon.pokemon->pos_x;
+			pos_y = mensaje->contenido.catch_pokemon.pokemon->pos_y;
+			string_append_with_format(&pokedata,"%d-%d=%d",pos_x,pos_y,0);
 			break;
 		default:
-			printf("INVALID CODE_OP\n");
+			printf("INVALID CODE_OP mensaje_to_pokedata\n");
 			free(pokedata);
 			return NULL;
 	}
@@ -265,7 +281,8 @@ char* mensaje_to_pokedata(t_mensaje* mensaje){
 	return pokedata;
 }
 
-void modificar_poke_string_list(t_list* poke_strings_list, t_mensaje* mensaje){
+bool modificar_poke_string_list(t_list* poke_strings_list, t_mensaje* mensaje){
+	bool operacion_exitosa;
 
 	bool misma_posicion(char* pok_1, char* pok_2){
 		char** stringything = string_n_split(pok_1,2,"=");
@@ -298,6 +315,27 @@ void modificar_poke_string_list(t_list* poke_strings_list, t_mensaje* mensaje){
 
 	}
 
+	char* disminuir_cantidad(char* pok){
+		char **datos_pok = string_n_split(pok,2,"=");
+		int cantidad = atoi(datos_pok[1]);
+		cantidad--;
+
+		if(!cantidad){
+			free(datos_pok[0]);
+			free(datos_pok[1]);
+			free(datos_pok);
+			return NULL;
+		}
+
+		char* pok_aux = string_from_format("%s=%d",datos_pok[0],cantidad);
+
+		free(datos_pok[0]);
+		free(datos_pok[1]);
+		free(datos_pok);
+		return pok_aux;
+
+	}
+
 	char* data = mensaje_to_pokedata(mensaje);
 
 	int cod = mensaje->codigo_operacion;
@@ -308,16 +346,29 @@ void modificar_poke_string_list(t_list* poke_strings_list, t_mensaje* mensaje){
 				char* old_pok = list_remove(poke_strings_list,i);
 				char* new_pok = incrementar_cantidad(old_pok,data);
 
-				//free(old_pok); //no se porque rompe esto
+				free(old_pok);
 				list_add(poke_strings_list,new_pok);
-				return;
+				return true;
 			}
 		}
 		list_add(poke_strings_list,data);
-		break;
+		return true;
+	case CATCH_POKEMON:
+		for (int i = 0 ; i < list_size(poke_strings_list) ; i++){
+			if(misma_posicion(list_get(poke_strings_list,i),data)){
+				char* old_pok = list_remove(poke_strings_list,i);
+				char* new_pok = disminuir_cantidad(old_pok); //devuelve NULL si la nueva cantidad es 0
+
+				free(old_pok);
+				if(new_pok)
+					list_add(poke_strings_list,new_pok);
+				return true;
+			}
+		}
+		return false;
 	default:
 		printf("INVALID CODE_OP\n");
-		return;
+		return false;
 	}
 }
 
@@ -431,8 +482,10 @@ void escribir_bloques(t_list* blocklist,char* data){
   una nueva línea indicando la cantidad de pokémon pasadas.
  */
 
-void agregar_pokemones(t_mensaje* mensaje){
-	char* ruta = generar_ruta(mensaje->contenido.new_pokemon.pokemon->nombre);
+bool agregar_pokemones(t_mensaje* mensaje){
+	bool operacion_exitosa;
+
+	char* ruta = generar_ruta(mensaje);
 
 	t_metadata* metadata;
 	metadata = leer_metadata(ruta);
@@ -440,7 +493,7 @@ void agregar_pokemones(t_mensaje* mensaje){
 
 	t_list* poke_strings_list = pokemon_data_de_bloques(metadata->blocks);
 
-	modificar_poke_string_list(poke_strings_list,mensaje);
+	operacion_exitosa = modificar_poke_string_list(poke_strings_list,mensaje);
 
 	/* En este punto se comianza a revisar segun la cantidad de bloques
 	 * que tenga asignado el metadata, se evalua si esa cantidad se debe aumentar
@@ -462,9 +515,13 @@ void agregar_pokemones(t_mensaje* mensaje){
 	escribir_archivo_metadata_y_cerrar(metadata,ruta);
 
 	free(poke_string);
-	list_destroy_and_destroy_elements(metadata->blocks,free);
+	list_destroy_and_destroy_elements(poke_strings_list,free); //todo new
+	list_destroy(metadata->blocks);
+	//list_destroy_and_destroy_elements(metadata->blocks,free);
 	free(metadata);
 	free(ruta);
+
+	return operacion_exitosa;
 }
 
 
@@ -479,17 +536,39 @@ void recibir_new(t_mensaje *mensaje){
 	//todo enviar APPEARED_POKEMON al broker con los datos del mensaje NEW
 
 	liberar_mensaje(mensaje);
+	free(mensaje);
 
 
 }
 
 void recibir_get(t_mensaje *mensaje){
 
-
+	liberar_mensaje(mensaje);
+	free(mensaje);
 }
 
 
 void recibir_catch(t_mensaje *mensaje){
+
+	char* aux = generar_ruta(mensaje);
+
+	if(!directorioExiste(aux)){
+		printf("El archivo pokemon no se encuentra en el FILE SYSTEM!! :c\n");
+		liberar_mensaje(mensaje);
+		free(mensaje);
+		free(aux);
+		return;
+	}
+
+	free(aux);
+
+	bool operacion_exitosa = agregar_pokemones(mensaje);
+
+	printf("Estado de la operacion: %d\n",operacion_exitosa);
+	//todo enviar CAUGHT_POKEMON al broker con los datos
+
+	liberar_mensaje(mensaje);
+	free(mensaje);
 
 }
 
@@ -503,12 +582,10 @@ void manejar_mensaje(t_mensaje* mensaje){
 			recibir_new(mensaje);
 			break;
 		case CATCH_POKEMON:;
-		//TODO implementar logica
-
+			recibir_catch(mensaje);
 			break;
 		case GET_POKEMON:;
 		//TODO implementar logica
-
 			break;
 		default:
 
@@ -540,7 +617,6 @@ bool recibir_mensaje(int un_socket){
 	mensaje->id=id;
 	printear_mensaje(mensaje);
 	manejar_mensaje(mensaje);
-	free(mensaje);
 	free(stream);
 	return true;
 }
@@ -594,7 +670,7 @@ void crear_bloques(){
 
 t_bitarray* crear_bitarray_y_mapear(){
 
-	char* ruta = string_from_format("%s//Metadata/Bitmap.bin",punto_montaje);
+	char* ruta = string_from_format("%s/Metadata/Bitmap.bin",punto_montaje);
 	int fd = open(ruta, O_CREAT | O_RDWR, 0664);
 
 	if (fd == -1) {
@@ -621,6 +697,50 @@ t_bitarray* crear_bitarray_y_mapear(){
 	return bitmap;
 }
 
+void esperar_mensaje(int *socket){
+
+	uint32_t codigo_operacion;
+
+	if(recv(*socket, &(codigo_operacion),sizeof(uint32_t), MSG_WAITALL)==-1){
+		perror("Falla recv() op_code");
+	}
+
+	uint32_t id;
+
+	if(recv(*socket, &(id), sizeof(uint32_t), MSG_WAITALL) == -1){
+		perror("Falla recv() id");
+	}
+
+	uint32_t size_contenido_mensaje;
+
+	if(recv(*socket, &(size_contenido_mensaje), sizeof(uint32_t), MSG_WAITALL) == -1){
+		perror("Falla recv() size_contenido_mensaje");
+	}
+
+	void* stream = malloc(size_contenido_mensaje);
+
+	if(recv(*socket, stream, size_contenido_mensaje, MSG_WAITALL) == -1){
+		perror("Falla recv() contenido");
+	}
+
+	t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
+
+	send_ack(*socket,ACK);
+
+	manejar_mensaje(mensaje);
+
+}
+
+void protocolo_escuchar_gameboy(){
+	char* ip_gameboy_escucha = "127.0.0.3";
+	char* puerto_gameboy_escucha = "5001";
+	int socket_escucha = listen_to(ip_gameboy_escucha,puerto_gameboy_escucha);
+
+	while(1)
+		esperar_cliente(socket_escucha,esperar_mensaje);
+
+}
+
 
 void inicializar_gamecard() {
 	logger = log_create("../gamecard.log","log",1,LOG_LEVEL_DEBUG);
@@ -633,19 +753,23 @@ void inicializar_gamecard() {
 	pthread_t pthread_cola_new;
 	pthread_t pthread_cola_catch;
 	pthread_t pthread_cola_get;
-
+	pthread_t escuchar_gameboy;
 
 	pthread_mutex_init(&mutex_bitmap, NULL);
     pthread_mutex_init(&mutex_recibir, NULL);
+    pthread_mutex_init(&mutex_metadata, NULL);
 
-	pthread_create(&pthread_cola_new, NULL,(void*)protocolo_recibir_mensaje, COLA_NEW_POKEMON);
+	pthread_create(&pthread_cola_new, NULL,(void*)protocolo_recibir_mensaje,(void*) COLA_NEW_POKEMON);
 	pthread_detach(pthread_cola_new);
 
-	pthread_create(&pthread_cola_catch, NULL,(void*)protocolo_recibir_mensaje, COLA_CATCH_POKEMON);
+	pthread_create(&pthread_cola_catch, NULL,(void*)protocolo_recibir_mensaje,(void*) COLA_CATCH_POKEMON);
 	pthread_detach(pthread_cola_catch);
 
-	pthread_create(&pthread_cola_get, NULL,(void*)protocolo_recibir_mensaje, COLA_GET_POKEMON);
+	pthread_create(&pthread_cola_get, NULL,(void*)protocolo_recibir_mensaje,(void*) COLA_GET_POKEMON);
 	pthread_detach(pthread_cola_get);
+
+	pthread_create(&escuchar_gameboy, NULL, (void*)protocolo_escuchar_gameboy,NULL);
+	pthread_detach(escuchar_gameboy);
 
 }
 
@@ -715,42 +839,9 @@ void debug(){
 
 int main() {
 
-
-
 	inicializar_gamecard();
 	debug();
 	cerrar_gamecard();
 
-/* DEBUGGING!
-
-	t_list* poke_debug = list_create();
-	list_add(poke_debug,"1-1=7");
-	list_add(poke_debug,"4-7=3");
-	list_add(poke_debug,"9-1=4");
-	list_add(poke_debug,"2-1=5");
-
-
-	t_pokemon* pokemon;
-	t_mensaje* mensaje;
-
-	pokemon = crear_pokemon("Squirtle",4,7);
-	mensaje = crear_mensaje(5, NEW_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,455);
-
-	printf("Lista antes de modificacion:\n");
-	debug_print_string_list(poke_debug);
-
-	modificar_poke_string_list(poke_debug,mensaje);
-
-	printf("Lista despues de modificacion:\n");
-	debug_print_string_list(poke_debug);
-
-	char *stringlist = poke_list_a_poke_string(poke_debug);
-
-	printf("stringlist:\n%s\n",stringlist);
-	printf("size: %d\n",strlen(stringlist));
-
-	printf("necesito %d bloques para alocarlo\n", cantidad_bloques_necesarios(stringlist));
-
-*/
 	return EXIT_SUCCESS;
 }
