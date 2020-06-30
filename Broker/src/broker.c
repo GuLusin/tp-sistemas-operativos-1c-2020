@@ -1182,15 +1182,46 @@ void dividir_particion(t_partition* particion){
 
 //FALTARIA AGREGAR ID?
 
+int proximo_multiplo_de_2(int size){
+	int vector_de_tamanios[20];
+	for(int i=0;i<20;i++){
+		vector_de_tamanios[i]=pow(2,i);
+	}
+	for(int i=0;i<20;i++){
+		if(size<vector_de_tamanios[i]){
+			return vector_de_tamanios[i];
+		}
+	}
+	return -1;
+}
+
+void calcular_fragmentacion(t_partition *particion,int size){
+	switch(AM){
+	    	case PARTICIONES:
+	    		if(size<tamanio_minimo_particion)
+	    				particion->fragmentacion_interna=tamanio_minimo_particion-size;
+	    			else
+	    				particion->fragmentacion_interna=0;
+	    		break;
+			case BS:
+				if(size<tamanio_minimo_particion){
+    				particion->fragmentacion_interna=tamanio_minimo_particion-size;
+                    break;
+				}
+	    		if(size<proximo_multiplo_de_2(size))
+	    				particion->fragmentacion_interna=proximo_multiplo_de_2(size)-size;
+	    			else
+	    				particion->fragmentacion_interna=0;
+				break;
+	    }
+}
+
 t_partition* crear_particion(t_mensaje* mensaje){
 	t_partition* particion = malloc(sizeof(t_partition));
 	int size;
 	void* magic = memser_mensaje(mensaje, &size);
 
-	if(size<tamanio_minimo_particion)
-		particion->fragmentacion_interna=tamanio_minimo_particion-size;
-	else
-		particion->fragmentacion_interna=0;
+	calcular_fragmentacion(particion,size);
 
 	particion->inicio=pmalloc(size+particion->fragmentacion_interna); //todo mutex
 	particion->msg_id=mensaje->id;
