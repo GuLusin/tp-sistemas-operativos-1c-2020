@@ -63,6 +63,16 @@ char** own_config_get_array_value(t_config* config, char *key){
 	return string_as_array;
 }
 
+void liberar_argpointer(char** array){
+	char **a;
+
+	for (a = array ; *a ; a++)
+		free (*a);
+
+	free(array);
+
+}
+
 
 int subscribirse_a_cola(cola_code cola){
 	int socket_aux = connect_to(ip_broker,puerto_broker, tiempo_reintento_conexion, logger);
@@ -92,7 +102,7 @@ t_metadata* leer_archivo_metadata_y_notificar_apertura(char* ruta){
 				free(*blocks);
 				blocks++;
 			}
-			free(blocks); // todo new
+			//free(blocks); // todo new
 		}
 
 		metadata->opened = own_config_get_char_value(aux_metadata, "OPEN");
@@ -282,16 +292,24 @@ char* mensaje_to_pokedata(t_mensaje* mensaje){
 }
 
 bool modificar_poke_string_list(t_list* poke_strings_list, t_mensaje* mensaje){
-	bool operacion_exitosa;
 
-	bool misma_posicion(char* pok_1, char* pok_2){
-		char** stringything = string_n_split(pok_1,2,"=");
-		bool retorno = string_starts_with(pok_2,stringything[0]);
-		free(stringything[0]);
-		free(stringything[1]);
-		free(stringything);
+	bool misma_posicion(char* str1, char* str2){
 
-		return retorno;
+		printf("DEBUG entra a mismaposicion con los string: %s   %s   largos:%d  %d\n",str1,str2,strlen(str1),strlen(str2));
+
+		int i=0;
+		while(str1[i] != '=' && str2[i] != '='){
+			if(str1[i] == str2[i]){
+				i++;
+				continue;
+			}
+			else
+				return false;
+		}
+		if(str1[i] == str2[i])
+			return true;
+		else
+			return false;
 	}
 
 	char* incrementar_cantidad(char* pok_1, char* pok_2){
@@ -303,13 +321,8 @@ bool modificar_poke_string_list(t_list* poke_strings_list, t_mensaje* mensaje){
 
 		char* pok_aux = string_from_format("%s=%d",datos_pok1[0],cantidad_1+cantidad_2);
 
-		free(datos_pok1[0]);
-		free(datos_pok1[1]);
-		free(datos_pok1);
-
-		free(datos_pok2[0]);
-		free(datos_pok2[1]);
-		free(datos_pok2);
+		liberar_argpointer(datos_pok1);
+		liberar_argpointer(datos_pok2);
 
 		return pok_aux;
 
@@ -329,9 +342,7 @@ bool modificar_poke_string_list(t_list* poke_strings_list, t_mensaje* mensaje){
 
 		char* pok_aux = string_from_format("%s=%d",datos_pok[0],cantidad);
 
-		free(datos_pok[0]);
-		free(datos_pok[1]);
-		free(datos_pok);
+		liberar_argpointer(datos_pok);
 		return pok_aux;
 
 	}
@@ -400,6 +411,7 @@ FILE* abrir_bloque(int num_bloque,char* open_mode){
 
 
 
+
 //recibe una t_list de int bloques y devuelve un t_list con su contenido:["1-1=4",...,"5-7=1"]
 t_list* pokemon_data_de_bloques(t_list* bloques){
 
@@ -412,7 +424,7 @@ t_list* pokemon_data_de_bloques(t_list* bloques){
 
 		fseek(block_file,0,SEEK_END);
 		int block_size = ftell(block_file);
-		rewind(block_file);	// = fseek(block_file,0,SEEK_SET)
+		rewind(block_file);
 
 		char* aux = malloc(block_size+1);
 		fread(aux,1,block_size,block_file);
@@ -430,11 +442,12 @@ t_list* pokemon_data_de_bloques(t_list* bloques){
 
 	if(!list_is_empty(bloques)){
 		char** poke_strings = string_split(poke_data_string,"\n");
-		while (*poke_strings){
-			list_add(poke_data,*poke_strings);
-			free(*poke_strings);
-			poke_strings++;
-		}
+
+		for(char** aux = poke_strings ; *aux ; aux++)
+			list_add(poke_data,*aux);
+
+		free(poke_strings);
+
 	}
 
 	free(poke_data_string);
@@ -454,6 +467,7 @@ void escribir_bloques(t_list* blocklist,char* data){
 	for(int i=0 ; i<list_size(blocklist) ; i++){
 
 		int num_bloque = (int) list_get(blocklist,i);
+		pthread_mutex_lock(&mutex_testeo);
 		FILE *file_stream = abrir_bloque(num_bloque,"w");
 
 		if(remaining_data >= global_metadata->block_size){
@@ -465,10 +479,14 @@ void escribir_bloques(t_list* blocklist,char* data){
 		}else{
 			char* data_que_falta_enviar = string_substring_from(data_aux,sent_data);
 			fwrite(data_que_falta_enviar,1,remaining_data,file_stream); // TODO aca sin valgrind no funciona >:C
+			//perror(errno);
+			printf("Aca sin valgrind no llega\n");
 			free(data_que_falta_enviar);
 		}
 
+
 		fclose(file_stream);
+		pthread_mutex_unlock(&mutex_testeo);
 	}
 
 	free(data_aux);
@@ -491,6 +509,7 @@ bool agregar_pokemones(t_mensaje* mensaje){
 	metadata = leer_metadata(ruta);
 	debug_print_metadata(metadata);
 
+	//["22-4=1",""]
 	t_list* poke_strings_list = pokemon_data_de_bloques(metadata->blocks);
 
 	operacion_exitosa = modificar_poke_string_list(poke_strings_list,mensaje);
@@ -515,7 +534,7 @@ bool agregar_pokemones(t_mensaje* mensaje){
 	escribir_archivo_metadata_y_cerrar(metadata,ruta);
 
 	free(poke_string);
-	list_destroy_and_destroy_elements(poke_strings_list,free); //todo new
+	//list_destroy_and_destroy_elements(poke_strings_list,free); //todo new
 	list_destroy(metadata->blocks);
 	//list_destroy_and_destroy_elements(metadata->blocks,free);
 	free(metadata);
@@ -758,6 +777,7 @@ void inicializar_gamecard() {
 	pthread_mutex_init(&mutex_bitmap, NULL);
     pthread_mutex_init(&mutex_recibir, NULL);
     pthread_mutex_init(&mutex_metadata, NULL);
+	pthread_mutex_init(&mutex_testeo, NULL);
 
 	pthread_create(&pthread_cola_new, NULL,(void*)protocolo_recibir_mensaje,(void*) COLA_NEW_POKEMON);
 	pthread_detach(pthread_cola_new);
