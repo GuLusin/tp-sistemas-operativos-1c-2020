@@ -1,3 +1,10 @@
+/*TODO
+ * cuando recibo un new, si estoy desconectado del broker, voy a dejar un hilo abierto intentando mandar el appeared indefinidamente hasta que me habran el broker
+ * problema escala mucho en los testeos cuando me mandan muchos mensajes sin el broker abierto
+ *
+ */
+
+
 #include "gamecard.h"
 
 void debug_print_metadata(t_metadata* metadata){
@@ -543,11 +550,24 @@ void recibir_new(t_mensaje *mensaje){
 
 	agregar_pokemones(mensaje);
 
-	//todo enviar APPEARED_POKEMON al broker con los datos del mensaje NEW
+	t_mensaje* mensajeAEnviar = crear_mensaje(5,APPEARED_POKEMON,mensaje->contenido.new_pokemon.pokemon->nombre,mensaje->contenido.new_pokemon.pokemon->pos_x,mensaje->contenido.new_pokemon.pokemon->pos_y,mensaje->id);
+	printf("Se intenta enviar al broker el siguiente mensaje:\n");
+	printear_mensaje(mensajeAEnviar);
+
+	pthread_mutex_lock(&mutex_envio_mensaje);
+
+	int socket_broker = connect_to(ip_broker,puerto_broker,tiempo_reintento_conexion,logger);
+	enviar_mensaje(socket_broker,mensajeAEnviar);
+	wait_ack(socket_broker);
+	close(socket_broker);
+
+	pthread_mutex_unlock(&mutex_envio_mensaje);
+
+	liberar_mensaje(mensajeAEnviar);
+	free(mensajeAEnviar);
 
 	liberar_mensaje(mensaje);
 	free(mensaje);
-
 
 }
 
@@ -574,8 +594,21 @@ void recibir_catch(t_mensaje *mensaje){
 
 	bool operacion_exitosa = agregar_pokemones(mensaje);
 
-	printf("Estado de la operacion: %d\n",operacion_exitosa);
-	//todo enviar CAUGHT_POKEMON al broker con los datos
+	t_mensaje* mensajeAEnviar = crear_mensaje(3, CAUGHT_POKEMON,mensaje->id,operacion_exitosa);
+	printf("Se intenta enviar al broker el siguiente mensaje:\n");
+	printear_mensaje(mensajeAEnviar);
+
+	pthread_mutex_lock(&mutex_envio_mensaje);
+
+	int socket_broker = connect_to(ip_broker,puerto_broker,tiempo_reintento_conexion,logger);
+	enviar_mensaje(socket_broker,mensajeAEnviar);
+	wait_ack(socket_broker);
+	close(socket_broker);
+
+	pthread_mutex_unlock(&mutex_envio_mensaje);
+
+	liberar_mensaje(mensajeAEnviar);
+	free(mensajeAEnviar);
 
 	liberar_mensaje(mensaje);
 	free(mensaje);
@@ -634,9 +667,9 @@ bool recibir_mensaje(int un_socket){
 
 void protocolo_recibir_mensaje(cola_code cola){
 	while(true){
-		pthread_mutex_lock(&mutex_recibir);
+		pthread_mutex_lock(&mutex_envio_mensaje);
 		int socket_cola = subscribirse_a_cola(cola);
-		pthread_mutex_unlock(&mutex_recibir);
+		pthread_mutex_unlock(&mutex_envio_mensaje);
 		printf("socket_suscripcion:%d\n",socket_cola);
 		while(recibir_mensaje(socket_cola));
 		close(socket_cola);
@@ -701,7 +734,6 @@ t_bitarray* crear_bitarray_y_mapear(){
 	t_bitarray* bitmap = bitarray_create_with_mode((char*) bmap, global_metadata->blocks, LSB_FIRST);
 
 	close(fd);
-//	munmap(bmap, size);
 
 	free(ruta);
 	return bitmap;
@@ -765,7 +797,7 @@ void inicializar_gamecard() {
 	pthread_t escuchar_gameboy;
 
 	pthread_mutex_init(&mutex_bitmap, NULL);
-    pthread_mutex_init(&mutex_recibir, NULL);
+    pthread_mutex_init(&mutex_envio_mensaje, NULL);
     pthread_mutex_init(&mutex_metadata, NULL);
 
 	pthread_create(&pthread_cola_new, NULL,(void*)protocolo_recibir_mensaje,(void*) COLA_NEW_POKEMON);
