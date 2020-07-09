@@ -27,7 +27,6 @@
 pthread_mutex_t mutex_recibir;
 pthread_mutex_t mutex_bitmap;
 pthread_mutex_t mutex_metadata;
-pthread_mutex_t mutex_testeo;
 
 t_config* config;
 

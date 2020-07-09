@@ -57,10 +57,7 @@ char** own_config_get_array_value(t_config* config, char *key){
 		//free(value_in_dictionary);
 		return NULL;
 	}
-
-	char** string_as_array = string_get_string_as_array(value_in_dictionary);
-	//free(value_in_dictionary);
-	return string_as_array;
+	return string_get_string_as_array(value_in_dictionary);
 }
 
 void liberar_argpointer(char** array){
@@ -97,12 +94,9 @@ t_metadata* leer_archivo_metadata_y_notificar_apertura(char* ruta){
 		metadata->blocks = list_create();
 		char** blocks = own_config_get_array_value(aux_metadata, "BLOCKS");
 		if(blocks){
-			while(*blocks){
-				list_add(metadata->blocks,atoi(*blocks));
-				free(*blocks);
-				blocks++;
-			}
-			//free(blocks); // todo new
+			for(char** aux = blocks ; *aux ; aux++)
+				list_add(metadata->blocks,(void*)atoi(*aux));
+			free(blocks);
 		}
 
 		metadata->opened = own_config_get_char_value(aux_metadata, "OPEN");
@@ -169,7 +163,9 @@ void escribir_archivo_metadata_y_cerrar(t_metadata* metadata, char* ruta){
 		for(int i=0;i<list_size(block_list);i++){
 			if(i)
 				string_append(&string,",");
-			string_append(&string,string_itoa((int)list_get(block_list,i)));
+			char* _bloque = string_itoa((int)list_get(block_list,i));
+			string_append(&string,_bloque);
+			free(_bloque);
 		}
 		string_append(&string,"]");
 		return string;
@@ -178,7 +174,6 @@ void escribir_archivo_metadata_y_cerrar(t_metadata* metadata, char* ruta){
 	char* aux = string_from_format(ruta);
 	string_append(&aux,"/Metadata.bin");
 
-	printf("Llega a escribir metadata con la siguiente metadata:\n");
 	debug_print_metadata(metadata);
 
 	printf("Sleep de %d segundos para simular tiempo de operacion...\n",tiempo_retardo_operacion);
@@ -187,9 +182,13 @@ void escribir_archivo_metadata_y_cerrar(t_metadata* metadata, char* ruta){
 	t_config* aux_metadata = config_create(aux);
 
 	char* block_list_string = block_list_to_array(metadata->blocks);
-	config_set_value(aux_metadata,"SIZE",string_itoa(metadata->size));
+	char* size = string_itoa(metadata->size);
+
+	config_set_value(aux_metadata,"SIZE",size);
 	config_set_value(aux_metadata,"BLOCKS",block_list_string);
 	config_set_value(aux_metadata,"OPEN","N");
+
+	free(size);
 	free(block_list_string);
 
 	config_save_in_file(aux_metadata,aux);
@@ -294,9 +293,6 @@ char* mensaje_to_pokedata(t_mensaje* mensaje){
 bool modificar_poke_string_list(t_list* poke_strings_list, t_mensaje* mensaje){
 
 	bool misma_posicion(char* str1, char* str2){
-
-		printf("DEBUG entra a mismaposicion con los string: %s   %s   largos:%d  %d\n",str1,str2,strlen(str1),strlen(str2));
-
 		int i=0;
 		while(str1[i] != '=' && str2[i] != '='){
 			if(str1[i] == str2[i]){
@@ -424,21 +420,18 @@ t_list* pokemon_data_de_bloques(t_list* bloques){
 
 		fseek(block_file,0,SEEK_END);
 		int block_size = ftell(block_file);
-		rewind(block_file);
+		fseek(block_file,0,SEEK_SET);
 
-		char* aux = malloc(block_size+1);
-		fread(aux,1,block_size,block_file);
+		char* auxiliar = malloc(block_size+1);
+		fread(auxiliar,1,block_size,block_file);
+		auxiliar[block_size] = '\0';
 
-		string_append(&poke_data_string,aux);
-		free(aux);
+		string_append(&poke_data_string,auxiliar);
+		free(auxiliar);
 
 		fclose(block_file);
 
 	}
-
-	printf("Se leyo el siguiente char* de los bloques \n%s\n",poke_data_string);
-	printf("De peso %d\n",strlen(poke_data_string));
-
 
 	if(!list_is_empty(bloques)){
 		char** poke_strings = string_split(poke_data_string,"\n");
@@ -460,14 +453,15 @@ t_list* pokemon_data_de_bloques(t_list* bloques){
 
 void escribir_bloques(t_list* blocklist,char* data){
 
-	char* data_aux = string_from_format(data);
+	char* data_aux = string_duplicate(data);
+
 	int remaining_data = strlen(data_aux);
 	int sent_data = 0;
 
 	for(int i=0 ; i<list_size(blocklist) ; i++){
 
 		int num_bloque = (int) list_get(blocklist,i);
-		pthread_mutex_lock(&mutex_testeo);
+		//pthread_mutex_lock(&mutex_testeo);
 		FILE *file_stream = abrir_bloque(num_bloque,"w");
 
 		if(remaining_data >= global_metadata->block_size){
@@ -478,15 +472,13 @@ void escribir_bloques(t_list* blocklist,char* data){
 			free(data_que_falta_enviar);
 		}else{
 			char* data_que_falta_enviar = string_substring_from(data_aux,sent_data);
-			fwrite(data_que_falta_enviar,1,remaining_data,file_stream); // TODO aca sin valgrind no funciona >:C
-			//perror(errno);
-			printf("Aca sin valgrind no llega\n");
+			fwrite(data_que_falta_enviar,1,remaining_data,file_stream);
 			free(data_que_falta_enviar);
 		}
 
 
 		fclose(file_stream);
-		pthread_mutex_unlock(&mutex_testeo);
+		//pthread_mutex_unlock(&mutex_testeo);
 	}
 
 	free(data_aux);
@@ -522,9 +514,9 @@ bool agregar_pokemones(t_mensaje* mensaje){
 	char* poke_string = poke_list_a_poke_string(poke_strings_list);
 	int cant_bloq_necesarios = cantidad_bloques_necesarios(poke_string);
 
-	if(cant_bloq_necesarios > list_size(metadata->blocks)){
+	if(cant_bloq_necesarios > list_size(metadata->blocks))
 		list_add(metadata->blocks,(void*)bitarray_pedir_bloque());
-	}
+
 	else if(cant_bloq_necesarios < list_size(metadata->blocks))
 		bitarray_devolver_bloque( (int) list_remove(metadata->blocks,list_size(metadata->blocks)-1));
 
@@ -534,9 +526,8 @@ bool agregar_pokemones(t_mensaje* mensaje){
 	escribir_archivo_metadata_y_cerrar(metadata,ruta);
 
 	free(poke_string);
-	//list_destroy_and_destroy_elements(poke_strings_list,free); //todo new
+	list_destroy_and_destroy_elements(poke_strings_list,free);
 	list_destroy(metadata->blocks);
-	//list_destroy_and_destroy_elements(metadata->blocks,free);
 	free(metadata);
 	free(ruta);
 
@@ -768,7 +759,6 @@ void inicializar_gamecard() {
 	//crear_bloques();
 	bitmap = crear_bitarray_y_mapear();
 
-//TODO
 	pthread_t pthread_cola_new;
 	pthread_t pthread_cola_catch;
 	pthread_t pthread_cola_get;
@@ -777,7 +767,6 @@ void inicializar_gamecard() {
 	pthread_mutex_init(&mutex_bitmap, NULL);
     pthread_mutex_init(&mutex_recibir, NULL);
     pthread_mutex_init(&mutex_metadata, NULL);
-	pthread_mutex_init(&mutex_testeo, NULL);
 
 	pthread_create(&pthread_cola_new, NULL,(void*)protocolo_recibir_mensaje,(void*) COLA_NEW_POKEMON);
 	pthread_detach(pthread_cola_new);
@@ -817,7 +806,6 @@ void mostrar_menu(){
 void debug(){
 	mostrar_menu();
 
-	t_pokemon* pokemon;
 	t_mensaje* mensaje;
 
 	while(true){
@@ -828,14 +816,12 @@ void debug(){
 				mostrar_menu();
 				break;
 			case 'N':
-				pokemon = crear_pokemon("Squirtle",4,7);
-				mensaje = crear_mensaje(5, NEW_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,455);
+				mensaje = crear_mensaje(5, NEW_POKEMON,"Squirtle",4,7,455);
 				recibir_new(mensaje);
 				break;
 			case 'R':
 				srand(time(NULL));
-				pokemon = crear_pokemon("Squirtle",rand()%10,rand()%10);
-				mensaje = crear_mensaje(5, NEW_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y,rand()%500);
+				mensaje = crear_mensaje(5, NEW_POKEMON,"Squirtle",rand()%10,rand()%10,rand()%500);
 				printf("Se recibe un new random del siguiente mensaje: \n");
 				printear_mensaje(mensaje);
 				recibir_new(mensaje);
@@ -847,7 +833,7 @@ void debug(){
 				size_t tope = bitarray_get_max_bit(bitmap);
 				for(int i = 0; i < tope; i++)
 					 bitarray_clean_bit(bitmap, i);
-				debug_print_bitarray(bitmap);
+				printf("Se limpio el bitarray\n");
 				break;
 			case 'B':
 				debug_print_bitarray(bitmap);
