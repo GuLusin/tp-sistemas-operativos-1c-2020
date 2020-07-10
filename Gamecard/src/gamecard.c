@@ -1,10 +1,3 @@
-/*TODO
- * cuando recibo un new, si estoy desconectado del broker, voy a dejar un hilo abierto intentando mandar el appeared indefinidamente hasta que me habran el broker
- * problema escala mucho en los testeos cuando me mandan muchos mensajes sin el broker abierto
- *
- */
-
-
 #include "gamecard.h"
 
 void debug_print_metadata(t_metadata* metadata){
@@ -64,7 +57,7 @@ char** own_config_get_array_value(t_config* config, char *key){
 		//free(value_in_dictionary);
 		return NULL;
 	}
-	return string_get_string_as_array(value_in_dictionary);
+	return config_get_array_value(config,key);
 }
 
 void liberar_argpointer(char** array){
@@ -103,7 +96,7 @@ t_metadata* leer_archivo_metadata_y_notificar_apertura(char* ruta){
 		if(blocks){
 			for(char** aux = blocks ; *aux ; aux++)
 				list_add(metadata->blocks,(void*)atoi(*aux));
-			free(blocks);
+			liberar_argpointer(blocks);
 		}
 
 		metadata->opened = own_config_get_char_value(aux_metadata, "OPEN");
@@ -181,7 +174,7 @@ void escribir_archivo_metadata_y_cerrar(t_metadata* metadata, char* ruta){
 	char* aux = string_from_format(ruta);
 	string_append(&aux,"/Metadata.bin");
 
-	debug_print_metadata(metadata);
+	//debug_print_metadata(metadata);
 
 	printf("Sleep de %d segundos para simular tiempo de operacion...\n",tiempo_retardo_operacion);
 	sleep(tiempo_retardo_operacion);
@@ -362,6 +355,7 @@ bool modificar_poke_string_list(t_list* poke_strings_list, t_mensaje* mensaje){
 
 				free(old_pok);
 				list_add(poke_strings_list,new_pok);
+				free(data);
 				return true;
 			}
 		}
@@ -376,12 +370,15 @@ bool modificar_poke_string_list(t_list* poke_strings_list, t_mensaje* mensaje){
 				free(old_pok);
 				if(new_pok)
 					list_add(poke_strings_list,new_pok);
+				free(data);
 				return true;
 			}
 		}
+		free(data);
 		return false;
 	default:
 		printf("INVALID CODE_OP\n");
+		free(data);
 		return false;
 	}
 }
@@ -402,18 +399,14 @@ int cantidad_bloques_necesarios(char* str){
 	return (tam_str + (tam_bloque-1)) / tam_bloque; // la division es asi para que haga el redondeo para arriba
 }
 
-
 FILE* abrir_bloque(int num_bloque,char* open_mode){
 	char* ruta = string_from_format("%s/Blocks/%d.bin",punto_montaje,num_bloque);
-	printf("Intento de apertura en modo %s path: %s\n",open_mode,ruta);
+	printf("Apertura en modo %s path: %s\n",open_mode,ruta);
 
 	FILE* file = fopen(ruta,open_mode);
 	free(ruta);
 	return file;
 }
-
-
-
 
 //recibe una t_list de int bloques y devuelve un t_list con su contenido:["1-1=4",...,"5-7=1"]
 t_list* pokemon_data_de_bloques(t_list* bloques){
@@ -506,7 +499,7 @@ bool agregar_pokemones(t_mensaje* mensaje){
 
 	t_metadata* metadata;
 	metadata = leer_metadata(ruta);
-	debug_print_metadata(metadata);
+	//debug_print_metadata(metadata);
 
 	//["22-4=1",""]
 	t_list* poke_strings_list = pokemon_data_de_bloques(metadata->blocks);
@@ -556,10 +549,19 @@ void recibir_new(t_mensaje *mensaje){
 
 	pthread_mutex_lock(&mutex_envio_mensaje);
 
-	int socket_broker = connect_to(ip_broker,puerto_broker,tiempo_reintento_conexion,logger);
-	enviar_mensaje(socket_broker,mensajeAEnviar);
-	wait_ack(socket_broker);
-	close(socket_broker);
+	int socket_broker = try_connect_to(ip_broker,puerto_broker);
+
+	if(socket_broker != -1){
+		enviar_mensaje(socket_broker,mensajeAEnviar);
+		wait_ack(socket_broker);
+		close(socket_broker);
+
+	}
+	else{
+		//todo logear que no se pudo conectar con el broker
+		printf("No se pudo establecer la conexion con el broker para enviarle el mensaje appeared\n");
+
+	}
 
 	pthread_mutex_unlock(&mutex_envio_mensaje);
 
@@ -570,13 +572,6 @@ void recibir_new(t_mensaje *mensaje){
 	free(mensaje);
 
 }
-
-void recibir_get(t_mensaje *mensaje){
-
-	liberar_mensaje(mensaje);
-	free(mensaje);
-}
-
 
 void recibir_catch(t_mensaje *mensaje){
 
@@ -600,10 +595,17 @@ void recibir_catch(t_mensaje *mensaje){
 
 	pthread_mutex_lock(&mutex_envio_mensaje);
 
-	int socket_broker = connect_to(ip_broker,puerto_broker,tiempo_reintento_conexion,logger);
-	enviar_mensaje(socket_broker,mensajeAEnviar);
-	wait_ack(socket_broker);
-	close(socket_broker);
+	int socket_broker = try_connect_to(ip_broker,puerto_broker);
+
+	if(socket_broker != -1){
+		enviar_mensaje(socket_broker,mensajeAEnviar);
+		wait_ack(socket_broker);
+		close(socket_broker);
+	}
+	else{
+		//todo logear que no se pudo conectar con el broker
+		printf("No se pudo establecer la conexion con el broker para enviarle el mensaje caught\n");
+	}
 
 	pthread_mutex_unlock(&mutex_envio_mensaje);
 
@@ -611,6 +613,76 @@ void recibir_catch(t_mensaje *mensaje){
 	free(mensajeAEnviar);
 
 	liberar_mensaje(mensaje);
+	free(mensaje);
+
+}
+
+void recibir_get(t_mensaje *mensaje){
+
+	char* ruta = generar_ruta(mensaje);
+
+	if(!directorioExiste(ruta)){
+		printf("El archivo pokemon no se encuentra en el FILE SYSTEM!! :c\n");
+		liberar_mensaje(mensaje);
+		free(mensaje);
+		free(ruta);
+		return;
+	}
+
+	t_metadata* metadata;
+	metadata = leer_metadata(ruta);
+
+	if(!metadata->blocks){ //Cash archivo vacio
+		printf("El archivo esta vacio!\n");
+
+		//TODO
+		// ...
+		//hay que volver a cerrar el archivo tambien ojo
+
+		free(mensaje);
+		free(ruta);
+		return;
+
+	}
+	t_list* poke_strings_list = pokemon_data_de_bloques(metadata->blocks);
+
+	t_pokemon_especie* poke_especie = crear_pokemon_especie(mensaje->contenido.get_pokemon.nombre_pokemon);
+
+	for (int i=0 ; i<list_size(poke_strings_list) ; i++)
+		agregar_ubicacion_a_especie(poke_especie,list_get(poke_strings_list,i));
+
+	escribir_archivo_metadata_y_cerrar(metadata,ruta);
+	free(ruta);
+
+	t_mensaje* mensajeAEnviar = crear_mensaje(3, LOCALIZED_POKEMON, mensaje->id, poke_especie);
+
+	printf("Se intenta enviar al broker el siguiente mensaje:\n");
+	//printear_mensaje(mensajeAEnviar);
+
+	pthread_mutex_lock(&mutex_envio_mensaje);
+
+	int socket_broker = try_connect_to(ip_broker,puerto_broker);
+
+	if(socket_broker != -1){
+		enviar_mensaje(socket_broker,mensajeAEnviar);
+		wait_ack(socket_broker);
+		close(socket_broker);
+	}
+	else{
+		//todo logear que no se pudo conectar con el broker
+		printf("No se pudo establecer la conexion con el broker para enviarle el mensaje LOCALIZED_POKEMON\n");
+	}
+
+	pthread_mutex_unlock(&mutex_envio_mensaje);
+
+	list_destroy_and_destroy_elements(poke_strings_list,free);
+
+	list_destroy(metadata->blocks);
+	free(metadata);
+
+	liberar_mensaje(mensajeAEnviar);
+	free(mensajeAEnviar);
+
 	free(mensaje);
 
 }
@@ -628,7 +700,7 @@ void manejar_mensaje(t_mensaje* mensaje){
 			recibir_catch(mensaje);
 			break;
 		case GET_POKEMON:;
-		//TODO implementar logica
+			recibir_get(mensaje);
 			break;
 		default:
 
@@ -667,9 +739,9 @@ bool recibir_mensaje(int un_socket){
 
 void protocolo_recibir_mensaje(cola_code cola){
 	while(true){
-		pthread_mutex_lock(&mutex_envio_mensaje);
+		pthread_mutex_lock(&mutex_subscripcion);
 		int socket_cola = subscribirse_a_cola(cola);
-		pthread_mutex_unlock(&mutex_envio_mensaje);
+		pthread_mutex_unlock(&mutex_subscripcion);
 		printf("socket_suscripcion:%d\n",socket_cola);
 		while(recibir_mensaje(socket_cola));
 		close(socket_cola);
@@ -799,6 +871,8 @@ void inicializar_gamecard() {
 	pthread_mutex_init(&mutex_bitmap, NULL);
     pthread_mutex_init(&mutex_envio_mensaje, NULL);
     pthread_mutex_init(&mutex_metadata, NULL);
+    pthread_mutex_init(&mutex_subscripcion, NULL);
+
 
 	pthread_create(&pthread_cola_new, NULL,(void*)protocolo_recibir_mensaje,(void*) COLA_NEW_POKEMON);
 	pthread_detach(pthread_cola_new);
@@ -826,11 +900,12 @@ void cerrar_gamecard(){
 void mostrar_menu(){
 	puts("-----------MENU -----------");
 	puts("INGRESE UN VALOR");
+	puts("B -> PRINT ESTADO BITARRAY");
+	puts("G -> SIMULAR GET SQUIRTLE");
 	puts("M -> MOSTRAR MENU");
 	puts("N -> SIMULAR NEW SQUIRTLE 4-7=455");
 	puts("R -> SIMULAR NEW SQUIRTLE DATOS RANDOM");
-	puts("B -> PRINT ESTADO BITARRAY");
-	puts("C -> BITARRAY CLEAN, OJO CON ESTO QUE ESTA MAPEADO A MEMORIA NO APRETAR 'C' SI NO ESTAS SEGURO DE LO QUE HACES LCDTM");
+	puts("X -> BITARRAY CLEAN, OJO CON ESTO QUE ESTA MAPEADO A MEMORIA NO APRETAR 'C' SI NO ESTAS SEGURO DE LO QUE HACES LCDTM");
 	puts("Z -> SALIR");
 	puts("---------------------------");
 }
@@ -844,6 +919,14 @@ void debug(){
 		char msg;
 		scanf("%c",&msg);
 		switch(msg){
+			case 'B':
+				debug_print_bitarray(bitmap);
+				break;
+			case 'G':
+				mensaje = crear_mensaje(5, GET_POKEMON,"Squirtle");
+				mensaje->id =123;
+				recibir_get(mensaje);
+				break;
 			case 'M':
 				mostrar_menu();
 				break;
@@ -858,18 +941,15 @@ void debug(){
 				printear_mensaje(mensaje);
 				recibir_new(mensaje);
 				break;
-			case 'Z':
-				puts("----- SE FINALIZA EL PROCESO... -----");
-				return;
-			case 'C':;
+			case 'X':;
 				size_t tope = bitarray_get_max_bit(bitmap);
 				for(int i = 0; i < tope; i++)
 					 bitarray_clean_bit(bitmap, i);
 				printf("Se limpio el bitarray\n");
 				break;
-			case 'B':
-				debug_print_bitarray(bitmap);
-				break;
+			case 'Z':
+				puts("----- SE FINALIZA EL PROCESO... -----");
+				return;
 
 		}
 	}

@@ -102,8 +102,6 @@ int connect_to(char* ip_aux, char* puerto_aux,int wait_time,t_log* logger){
 		return -1;
 	}
 
-
-
 	// INTENTA CONEXION INDEFINIDAMENTE
 	while(connect(socket_cliente,server_info->ai_addr,server_info->ai_addrlen)== -1){
 		log_debug(logger,"Fallo conexion, reintentando en %d segundos...",wait_time);
@@ -114,6 +112,46 @@ int connect_to(char* ip_aux, char* puerto_aux,int wait_time,t_log* logger){
 	freeaddrinfo(server_info);
 	return socket_cliente;
 }
+
+/* try_connect_to
+ * igual que connect_to pero solo lo intenta una vez
+ * devuelve socket si ok
+ * duvuelve -1 si fail
+ * no logea nada
+ * ip = ip a conectarse
+ * puerto = puerto del socket a conectarse
+ */
+
+int try_connect_to(char* ip_aux, char* puerto_aux){
+	char* ip = ip_aux;
+	char* puerto = puerto_aux;
+	struct addrinfo hints;
+	struct addrinfo* server_info;
+
+	int socket_cliente;
+
+	memset(&hints,0,sizeof(hints));
+	hints.ai_family = AF_INET;
+	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_flags=AI_PASSIVE;
+
+	getaddrinfo(ip, puerto, &hints, &server_info);
+
+	if((socket_cliente = socket(server_info->ai_family,server_info->ai_socktype,server_info->ai_protocol)) == -1){
+		perror("No se pudo crear socket");
+		return -1;
+	}
+
+	// INTENTA CONEXION UNA VEZ
+	if(connect(socket_cliente,server_info->ai_addr,server_info->ai_addrlen)== -1){
+		freeaddrinfo(server_info);
+		return -1;
+	}
+
+	freeaddrinfo(server_info);
+	return socket_cliente;
+}
+
 
 /* esperar_cliente
  * socket_servidor = socket en la cual se aceptaran comunicaciones

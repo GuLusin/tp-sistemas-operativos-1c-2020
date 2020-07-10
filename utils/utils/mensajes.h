@@ -127,7 +127,8 @@ char* posicion_string_pokemon(t_pokemon* pokemon);
 void logear_llegada_mensaje(t_log* logger, t_mensaje* mensaje);
 char* crear_pokestring(t_pokemon* pokemon);
 char* especie_pokemon_a_string(t_pokemon_especie* pokemon_especie);
-
+void agregar_ubicacion_a_especie(t_pokemon_especie* pokemon_especie, char* posicionycantidad);
+t_pokemon_especie* crear_pokemon_especie(char* nombre_especie);
 
 t_pokemon_especie* deserializar_pokemon_especie(void* string);
 

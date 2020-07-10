@@ -27,6 +27,7 @@
 pthread_mutex_t mutex_bitmap;
 pthread_mutex_t mutex_metadata;
 pthread_mutex_t mutex_envio_mensaje;
+pthread_mutex_t mutex_subscripcion;
 
 t_config* config;
 

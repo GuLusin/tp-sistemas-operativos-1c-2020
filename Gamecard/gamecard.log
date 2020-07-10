@@ -4560,3 +4560,219 @@
 [DEBUG] 18:59:24:280 log/(3831:3831): ../mnt/TALL_GRASS
 [DEBUG] 18:59:24:280 log/(3831:3831): 12
 [DEBUG] 18:59:24:282 log/(3831:3834): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 22:31:11:439 log/(7306:7306): 30
+[DEBUG] 22:31:11:441 log/(7306:7306): 5
+[DEBUG] 22:31:11:441 log/(7306:7306): 1
+[DEBUG] 22:31:11:441 log/(7306:7306): 127.0.0.1
+[DEBUG] 22:31:11:441 log/(7306:7306): 5002
+[DEBUG] 22:31:11:441 log/(7306:7306): ../mnt/TALL_GRASS
+[DEBUG] 22:31:11:441 log/(7306:7306): 12
+[DEBUG] 22:31:11:444 log/(7306:7309): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 22:31:41:445 log/(7306:7309): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 22:34:02:550 log/(7457:7457): 30
+[DEBUG] 22:34:02:550 log/(7457:7457): 5
+[DEBUG] 22:34:02:550 log/(7457:7457): 1
+[DEBUG] 22:34:02:551 log/(7457:7457): 127.0.0.1
+[DEBUG] 22:34:02:551 log/(7457:7457): 5002
+[DEBUG] 22:34:02:551 log/(7457:7457): ../mnt/TALL_GRASS
+[DEBUG] 22:34:02:551 log/(7457:7457): 12
+[DEBUG] 22:34:02:552 log/(7457:7460): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 22:41:22:270 log/(7682:7682): 30
+[DEBUG] 22:41:22:270 log/(7682:7682): 5
+[DEBUG] 22:41:22:270 log/(7682:7682): 1
+[DEBUG] 22:41:22:270 log/(7682:7682): 127.0.0.1
+[DEBUG] 22:41:22:270 log/(7682:7682): 5002
+[DEBUG] 22:41:22:270 log/(7682:7682): ../mnt/TALL_GRASS
+[DEBUG] 22:41:22:270 log/(7682:7682): 12
+[DEBUG] 22:41:22:271 log/(7682:7685): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 22:43:03:682 log/(7752:7752): 30
+[DEBUG] 22:43:03:740 log/(7752:7752): 5
+[DEBUG] 22:43:03:744 log/(7752:7752): 1
+[DEBUG] 22:43:03:744 log/(7752:7752): 127.0.0.1
+[DEBUG] 22:43:03:745 log/(7752:7752): 5002
+[DEBUG] 22:43:03:746 log/(7752:7752): ../mnt/TALL_GRASS
+[DEBUG] 22:43:03:747 log/(7752:7752): 12
+[DEBUG] 22:43:03:816 log/(7752:7753): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 22:50:36:219 log/(7900:7900): 30
+[DEBUG] 22:50:36:271 log/(7900:7900): 5
+[DEBUG] 22:50:36:276 log/(7900:7900): 1
+[DEBUG] 22:50:36:277 log/(7900:7900): 127.0.0.1
+[DEBUG] 22:50:36:286 log/(7900:7900): 5002
+[DEBUG] 22:50:36:287 log/(7900:7900): ../mnt/TALL_GRASS
+[DEBUG] 22:50:36:289 log/(7900:7900): 12
+[DEBUG] 22:50:36:462 log/(7900:7901): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:05:15:782 log/(8136:8136): 30
+[DEBUG] 23:05:15:841 log/(8136:8136): 5
+[DEBUG] 23:05:15:846 log/(8136:8136): 1
+[DEBUG] 23:05:15:854 log/(8136:8136): 127.0.0.1
+[DEBUG] 23:05:15:855 log/(8136:8136): 5002
+[DEBUG] 23:05:15:861 log/(8136:8136): ../mnt/TALL_GRASS
+[DEBUG] 23:05:15:863 log/(8136:8136): 12
+[DEBUG] 23:05:16:40 log/(8136:8137): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:13:22:949 log/(8435:8435): 30
+[DEBUG] 23:13:23:12 log/(8435:8435): 5
+[DEBUG] 23:13:23:15 log/(8435:8435): 1
+[DEBUG] 23:13:23:16 log/(8435:8435): 127.0.0.1
+[DEBUG] 23:13:23:17 log/(8435:8435): 5002
+[DEBUG] 23:13:23:17 log/(8435:8435): ../mnt/TALL_GRASS
+[DEBUG] 23:13:23:19 log/(8435:8435): 12
+[DEBUG] 23:13:23:91 log/(8435:8436): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:15:21:420 log/(8523:8523): 30
+[DEBUG] 23:15:21:478 log/(8523:8523): 5
+[DEBUG] 23:15:21:481 log/(8523:8523): 1
+[DEBUG] 23:15:21:482 log/(8523:8523): 127.0.0.1
+[DEBUG] 23:15:21:483 log/(8523:8523): 5002
+[DEBUG] 23:15:21:484 log/(8523:8523): ../mnt/TALL_GRASS
+[DEBUG] 23:15:21:485 log/(8523:8523): 12
+[DEBUG] 23:15:21:558 log/(8523:8524): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:17:38:155 log/(8663:8663): 30
+[DEBUG] 23:17:38:213 log/(8663:8663): 5
+[DEBUG] 23:17:38:216 log/(8663:8663): 1
+[DEBUG] 23:17:38:217 log/(8663:8663): 127.0.0.1
+[DEBUG] 23:17:38:218 log/(8663:8663): 5002
+[DEBUG] 23:17:38:219 log/(8663:8663): ../mnt/TALL_GRASS
+[DEBUG] 23:17:38:220 log/(8663:8663): 12
+[DEBUG] 23:17:38:330 log/(8663:8664): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:24:19:233 log/(8908:8908): 30
+[DEBUG] 23:24:19:286 log/(8908:8908): 5
+[DEBUG] 23:24:19:290 log/(8908:8908): 1
+[DEBUG] 23:24:19:291 log/(8908:8908): 127.0.0.1
+[DEBUG] 23:24:19:291 log/(8908:8908): 5002
+[DEBUG] 23:24:19:292 log/(8908:8908): ../mnt/TALL_GRASS
+[DEBUG] 23:24:19:293 log/(8908:8908): 12
+[DEBUG] 23:24:19:367 log/(8908:8909): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:24:49:398 log/(8908:8909): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:25:19:400 log/(8908:8909): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:25:54:623 log/(8965:8965): 30
+[DEBUG] 23:25:54:661 log/(8965:8965): 5
+[DEBUG] 23:25:54:665 log/(8965:8965): 1
+[DEBUG] 23:25:54:665 log/(8965:8965): 127.0.0.1
+[DEBUG] 23:25:54:666 log/(8965:8965): 5002
+[DEBUG] 23:25:54:667 log/(8965:8965): ../mnt/TALL_GRASS
+[DEBUG] 23:25:54:668 log/(8965:8965): 12
+[DEBUG] 23:25:54:720 log/(8965:8966): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:26:25:239 log/(8991:8991): 30
+[DEBUG] 23:26:25:296 log/(8991:8991): 5
+[DEBUG] 23:26:25:299 log/(8991:8991): 1
+[DEBUG] 23:26:25:300 log/(8991:8991): 127.0.0.1
+[DEBUG] 23:26:25:301 log/(8991:8991): 5002
+[DEBUG] 23:26:25:301 log/(8991:8991): ../mnt/TALL_GRASS
+[DEBUG] 23:26:25:302 log/(8991:8991): 12
+[DEBUG] 23:26:25:377 log/(8991:8992): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:29:05:947 log/(9096:9096): 30
+[DEBUG] 23:29:06:12 log/(9096:9096): 5
+[DEBUG] 23:29:06:16 log/(9096:9096): 1
+[DEBUG] 23:29:06:16 log/(9096:9096): 127.0.0.1
+[DEBUG] 23:29:06:17 log/(9096:9096): 5002
+[DEBUG] 23:29:06:18 log/(9096:9096): ../mnt/TALL_GRASS
+[DEBUG] 23:29:06:19 log/(9096:9096): 12
+[DEBUG] 23:29:06:93 log/(9096:9097): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:31:09:890 log/(9169:9169): 30
+[DEBUG] 23:31:09:949 log/(9169:9169): 5
+[DEBUG] 23:31:09:953 log/(9169:9169): 1
+[DEBUG] 23:31:09:954 log/(9169:9169): 127.0.0.1
+[DEBUG] 23:31:09:954 log/(9169:9169): 5002
+[DEBUG] 23:31:09:955 log/(9169:9169): ../mnt/TALL_GRASS
+[DEBUG] 23:31:09:956 log/(9169:9169): 12
+[DEBUG] 23:31:10:31 log/(9169:9170): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:33:23:999 log/(9243:9243): 30
+[DEBUG] 23:33:24:63 log/(9243:9243): 5
+[DEBUG] 23:33:24:66 log/(9243:9243): 1
+[DEBUG] 23:33:24:67 log/(9243:9243): 127.0.0.1
+[DEBUG] 23:33:24:68 log/(9243:9243): 5002
+[DEBUG] 23:33:24:69 log/(9243:9243): ../mnt/TALL_GRASS
+[DEBUG] 23:33:24:70 log/(9243:9243): 12
+[DEBUG] 23:33:24:144 log/(9243:9244): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:33:54:157 log/(9243:9244): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:38:54:914 log/(9350:9350): 30
+[DEBUG] 23:38:54:969 log/(9350:9350): 5
+[DEBUG] 23:38:54:973 log/(9350:9350): 1
+[DEBUG] 23:38:54:973 log/(9350:9350): 127.0.0.1
+[DEBUG] 23:38:54:974 log/(9350:9350): 5002
+[DEBUG] 23:38:54:975 log/(9350:9350): ../mnt/TALL_GRASS
+[DEBUG] 23:38:54:976 log/(9350:9350): 12
+[DEBUG] 23:38:55:50 log/(9350:9351): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:39:25:73 log/(9350:9351): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:43:37:643 log/(9517:9517): 30
+[DEBUG] 23:43:37:699 log/(9517:9517): 5
+[DEBUG] 23:43:37:702 log/(9517:9517): 1
+[DEBUG] 23:43:37:703 log/(9517:9517): 127.0.0.1
+[DEBUG] 23:43:37:704 log/(9517:9517): 5002
+[DEBUG] 23:43:37:704 log/(9517:9517): ../mnt/TALL_GRASS
+[DEBUG] 23:43:37:706 log/(9517:9517): 12
+[DEBUG] 23:43:37:776 log/(9517:9518): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:49:14:14 log/(9701:9701): 30
+[DEBUG] 23:49:15:76 log/(9701:9701): 5
+[DEBUG] 23:49:15:80 log/(9701:9701): 1
+[DEBUG] 23:49:15:80 log/(9701:9701): 127.0.0.1
+[DEBUG] 23:49:15:81 log/(9701:9701): 5002
+[DEBUG] 23:49:15:82 log/(9701:9701): ../mnt/TALL_GRASS
+[DEBUG] 23:49:15:83 log/(9701:9701): 12
+[DEBUG] 23:49:15:158 log/(9701:9702): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:49:35:447 log/(9718:9718): 30
+[DEBUG] 23:49:35:503 log/(9718:9718): 5
+[DEBUG] 23:49:35:506 log/(9718:9718): 1
+[DEBUG] 23:49:35:507 log/(9718:9718): 127.0.0.1
+[DEBUG] 23:49:35:508 log/(9718:9718): 5002
+[DEBUG] 23:49:35:509 log/(9718:9718): ../mnt/TALL_GRASS
+[DEBUG] 23:49:35:510 log/(9718:9718): 12
+[DEBUG] 23:49:35:583 log/(9718:9719): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:50:06:577 log/(9745:9745): 30
+[DEBUG] 23:50:06:635 log/(9745:9745): 5
+[DEBUG] 23:50:06:638 log/(9745:9745): 1
+[DEBUG] 23:50:06:639 log/(9745:9745): 127.0.0.1
+[DEBUG] 23:50:06:640 log/(9745:9745): 5002
+[DEBUG] 23:50:06:641 log/(9745:9745): ../mnt/TALL_GRASS
+[DEBUG] 23:50:06:642 log/(9745:9745): 12
+[DEBUG] 23:50:06:716 log/(9745:9746): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:50:36:733 log/(9745:9746): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:52:29:656 log/(9823:9823): 30
+[DEBUG] 23:52:29:712 log/(9823:9823): 5
+[DEBUG] 23:52:29:716 log/(9823:9823): 1
+[DEBUG] 23:52:29:717 log/(9823:9823): 127.0.0.1
+[DEBUG] 23:52:29:717 log/(9823:9823): 5002
+[DEBUG] 23:52:29:718 log/(9823:9823): ../mnt/TALL_GRASS
+[DEBUG] 23:52:29:719 log/(9823:9823): 12
+[DEBUG] 23:52:29:790 log/(9823:9824): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:52:59:813 log/(9823:9824): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:55:46:404 log/(9917:9917): 30
+[DEBUG] 23:55:46:461 log/(9917:9917): 5
+[DEBUG] 23:55:46:464 log/(9917:9917): 1
+[DEBUG] 23:55:46:465 log/(9917:9917): 127.0.0.1
+[DEBUG] 23:55:46:466 log/(9917:9917): 5002
+[DEBUG] 23:55:46:467 log/(9917:9917): ../mnt/TALL_GRASS
+[DEBUG] 23:55:46:468 log/(9917:9917): 12
+[DEBUG] 23:55:46:538 log/(9917:9918): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:56:19:491 log/(9929:9929): 30
+[DEBUG] 23:56:19:491 log/(9929:9929): 5
+[DEBUG] 23:56:19:491 log/(9929:9929): 1
+[DEBUG] 23:56:19:491 log/(9929:9929): 127.0.0.1
+[DEBUG] 23:56:19:491 log/(9929:9929): 5002
+[DEBUG] 23:56:19:491 log/(9929:9929): ../mnt/TALL_GRASS
+[DEBUG] 23:56:19:491 log/(9929:9929): 12
+[DEBUG] 23:56:19:492 log/(9929:9932): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:57:43:391 log/(9943:9943): 30
+[DEBUG] 23:57:43:431 log/(9943:9943): 5
+[DEBUG] 23:57:43:435 log/(9943:9943): 1
+[DEBUG] 23:57:43:436 log/(9943:9943): 127.0.0.1
+[DEBUG] 23:57:43:436 log/(9943:9943): 5002
+[DEBUG] 23:57:43:437 log/(9943:9943): ../mnt/TALL_GRASS
+[DEBUG] 23:57:43:438 log/(9943:9943): 12
+[DEBUG] 23:57:43:491 log/(9943:9944): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:58:13:505 log/(9943:9944): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 23:59:37:742 log/(9956:9956): 30
+[DEBUG] 23:59:37:795 log/(9956:9956): 5
+[DEBUG] 23:59:37:799 log/(9956:9956): 1
+[DEBUG] 23:59:37:800 log/(9956:9956): 127.0.0.1
+[DEBUG] 23:59:37:801 log/(9956:9956): 5002
+[DEBUG] 23:59:37:801 log/(9956:9956): ../mnt/TALL_GRASS
+[DEBUG] 23:59:37:803 log/(9956:9956): 12
+[DEBUG] 23:59:37:885 log/(9956:9957): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 00:00:11:9 log/(9972:9972): 30
+[DEBUG] 00:00:12:50 log/(9972:9972): 5
+[DEBUG] 00:00:12:54 log/(9972:9972): 1
+[DEBUG] 00:00:12:54 log/(9972:9972): 127.0.0.1
+[DEBUG] 00:00:12:55 log/(9972:9972): 5002
+[DEBUG] 00:00:12:56 log/(9972:9972): ../mnt/TALL_GRASS
+[DEBUG] 00:00:12:57 log/(9972:9972): 12
+[DEBUG] 00:00:12:138 log/(9972:9973): Fallo conexion, reintentando en 30 segundos...
