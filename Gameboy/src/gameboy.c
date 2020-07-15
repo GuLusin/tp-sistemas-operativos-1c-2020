@@ -1,7 +1,7 @@
 
 #include "gameboy.h"
 
-int subscribirse_a_cola(cola_code cola){
+void subscribirse_a_cola(cola_code cola){//todo recibir mensajes y hacer ACK por cada mensaje.
 	char *ip_send = config_get_string_value(config,"IP_BROKER");
 	char *puerto_send = config_get_string_value(config,"PUERTO_BROKER");
 	int socket_aux = connect_to(ip_send,puerto_send,wait_time,logger);
@@ -10,14 +10,12 @@ int subscribirse_a_cola(cola_code cola){
 	enviar_mensaje(socket_aux, mensaje);
 	check_ack(socket_aux,ACK);
 	log_debug(logger,"Subscrito a cola %d",cola);
-	return socket_aux;
-
+	recibir_broker(&socket_aux);
 }
 
-/*
-void escuchar_broker(int *socket_servidor){
+
+void recibir_broker(int *socket_servidor){
 	while(true){
-		//puts("escuchar_broker");
 		uint32_t codigo_operacion;
 
 		if(recv(*socket_servidor, &(codigo_operacion),sizeof(uint32_t), 0)==-1){
@@ -48,10 +46,12 @@ void escuchar_broker(int *socket_servidor){
 			perror("Falla recv() contenido");
 		}
 
-		t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
+		send_ack(*socket_servidor,ACK);
+
+		free(stream);
 	}
 }
-*/
+
 
 
 op_code interpretar_tipo_mensaje(char* tipo){
@@ -99,6 +99,13 @@ cola_code interpretar_cola_mensaje(char* cola){
 	return -1;
 }
 
+void sleep_hasta(int* tiempo){
+	sleep(*tiempo);
+	int pid = process_getpid();
+	close(socket_aux);
+	kill(pid,SIGKILL);
+}
+
 
 void manejar_mensaje(int argc, char** args){
 
@@ -108,7 +115,6 @@ void manejar_mensaje(int argc, char** args){
 	op_code tipo_mensaje = interpretar_tipo_mensaje(args[2]);
 
 	t_mensaje* mensaje;
-	int socket_aux;
 
 	switch(proceso){
 
@@ -186,10 +192,14 @@ void manejar_mensaje(int argc, char** args){
 		}
 		break;
 
-	case SUSCRIPTOR:
-		socket_aux = subscribirse_a_cola(interpretar_cola_mensaje(args[2]));
-		sleep(atoi(args[3]));
-		close(socket_aux);
+	case SUSCRIPTOR:;
+
+		int time = atoi(args[3]);
+		printf("tiempo:%d\n", time);
+		pthread_create(&pthread_mensajes_broker,NULL, sleep_hasta,&time);//crear un thread que le paso el tiempo y el socket y luego de ese tiempo cierra el socket y joinea
+		pthread_detach(pthread_mensajes_broker);
+		subscribirse_a_cola(interpretar_cola_mensaje(args[2]));
+		puts("Asd");
 		return;
 	}
 

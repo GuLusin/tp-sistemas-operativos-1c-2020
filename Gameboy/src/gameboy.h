@@ -18,6 +18,7 @@
 #include <netdb.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <commons/process.h>
 
 
 
@@ -32,13 +33,13 @@ t_log* logger;
 t_config* config;
 
 int wait_time=3;
+int socket_aux;
+
+pthread_t pthread_mensajes_broker;
 
 
-pthread_t pthread_recibir_mensajes_broker;
 
-
-
-
+void recibir_broker(int *socket_servidor);
 op_code interpretar_tipo_mensaje(char* tipo);
 cola_code interpretar_cola_mensaje(char* tipo);
 tipo_proceso_gameboy interpretar_tipo_proceso(char* tipo);

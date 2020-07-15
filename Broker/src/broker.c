@@ -51,6 +51,24 @@ void notificar_mensaje_cacheados(int cola, t_suscriptor* suscriptor){
 
 }
 
+char* cola_a_string(int cola){
+	switch(cola){
+		case COLA_LOCALIZED_POKEMON:
+			return "LOCALIZED";
+		case COLA_GET_POKEMON:
+			return "GET";
+		case COLA_NEW_POKEMON:
+			return "NEW";
+		case COLA_APPEARED_POKEMON:
+			return "APPEARED";
+		case COLA_CAUGHT_POKEMON:
+			return "CAUGHT";
+		case COLA_CATCH_POKEMON:
+			return "CATCH";
+	}
+		return "";
+}
+
 void manejar_subscripcion(int cola,t_suscriptor* suscriptor){
 
 	sem_wait(&sem_suscriptores);
@@ -61,12 +79,15 @@ void manejar_subscripcion(int cola,t_suscriptor* suscriptor){
 
 	sem_post(&sem_recibir);
 
+	log_debug(logger,"Se suscribe proceso id:%d a la cola:%s", suscriptor->id_team, cola_a_string(cola));
+
 	notificar_mensaje_cacheados(cola,suscriptor);
 
 	return;
 }
 
 void manejar_catch(int socket_cliente,t_mensaje* mensaje){
+	printf("id corr:%d\n", mensaje->id);
 	send_ack(socket_cliente,mensaje->id);
 }
 
@@ -91,6 +112,9 @@ void manejar_appeared(int socket_cliente,t_mensaje* mensaje){
 }
 
 void manejar_mensaje(int socket_cliente,t_mensaje* mensaje){
+
+	log_debug(logger, "Llega mensaje de socket:%d con id:%d a la cola:%s",socket_cliente,mensaje->id,cola_a_string(mensaje->codigo_operacion));
+
     switch(mensaje->codigo_operacion){
     	case GET_POKEMON:
     		manejar_get(socket_cliente,mensaje);
@@ -132,6 +156,7 @@ void manejar_mensaje(int socket_cliente,t_mensaje* mensaje){
 void recibir_mensaje(int *socket_cliente){
 	//sem_wait(&sem_recibir);
 
+	log_debug(logger,"Se conecta un proceso con socket:%d al Broker", *socket_cliente);
 
 	uint32_t codigo_operacion;
 
@@ -165,7 +190,7 @@ void recibir_mensaje(int *socket_cliente){
 		perror("Falla recv() contenido");
 	}
 
-	send_ack(socket_cliente,ACK);
+	send_ack(*socket_cliente,ACK);
 
 
 	t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
@@ -190,6 +215,7 @@ void recibir_cliente(int *socket_servidor){
 void notificar_mensaje(t_mensaje* mensaje){
 	void notificar_suscriptores(void* stream){
 		t_suscriptor* suscriptor = stream;
+		log_debug(logger,"Se envia mensaje al suscriptor id:%d de la cola:%s", suscriptor->id_team, cola_a_string(mensaje->codigo_operacion));
 		enviar_mensaje(suscriptor->socket_cliente,mensaje);
 		validar_suscriptor(suscriptor,mensaje);
 	}
@@ -420,7 +446,7 @@ void envio_mensaje(){
 				printf("%d",process_getpid());
 				break;
 			case 'm':
-				pokemon = crear_pokemon("10CARACTER10CARACTER1010CARACTER10CARACTER",13,0);
+				pokemon = crear_pokemon("10CARACTER10CARACTER10CARACTER10CARACTER10CARACTER10CARACTER",13,0);
 				mensaje_aux = crear_mensaje(4,CATCH_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y);
 				mensaje_aux->id = ++id_mensajes_globales;
 				cachear_mensaje(mensaje_aux);
@@ -441,7 +467,7 @@ t_suscriptor* crear_suscriptor(int id, int socket_cliente){
 	return suscriptor;
 }
 
-void liberar_suscriptor(t_suscriptor* suscriptor){//todo liberar suscriptor chequear que se confirmen bien
+void liberar_suscriptor(t_suscriptor* suscriptor){
 	free(suscriptor);
 }
 
@@ -468,7 +494,7 @@ void confirmar_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje){
 	int posicion = encontrar_particion(mensaje->id,mensaje->codigo_operacion);
 	t_partition* particion = list_get(administracion_colas[mensaje->codigo_operacion].particiones,posicion);
 
-	list_add(particion->suscriptores_confirmados,suscriptor->id_team);
+	list_add(particion->suscriptores_confirmados,(int)suscriptor->id_team);
 	printear_estado_memoria();
 }
 
@@ -487,6 +513,7 @@ void remover_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje){
 void validar_suscriptor(t_suscriptor* suscriptor, t_mensaje* mensaje_aux) {
 	if(check_ack(suscriptor->socket_cliente, ACK)){
 		puts("conf");confirmar_suscriptor(suscriptor, mensaje_aux);puts("checkquep");
+		log_debug(logger,"Se confirma Acknowledgement del suscriptor:%d", suscriptor->id_team);
 	}else{
 		puts("remov");remover_suscriptor(suscriptor, mensaje_aux);puts("checkquep");
 	}
@@ -952,11 +979,15 @@ void normalizar_particiones_libres(){
 	}
 	list_sort(particiones_libres, en_orden);
 	unificar_particiones_libres();
+
 }
 
 //========================== COMPACTACION =====================================
 
 void compactar_memoria(){
+
+	log_debug(logger,"Inicio Compactacion");
+
 	t_dictionary* dicc_suscriptores_particiones = dictionary_create();
 	t_list* lista_ar_aux = list_duplicate(lista_algoritmo_reemplazo);
 	t_list* mensajes_aux = list_create();
@@ -991,7 +1022,7 @@ void compactar_memoria(){
 
 void eliminar_particion(){
 	int i,j,cola=-1,index=-1;
-	//printf("Eliminar Particion\n");
+	printf("Eliminar Particion\n");
 	void encontrar_particion_por_id(int msg_id,int* cola, int* index){
 
 		void es_msg_id(void* stream){
@@ -1016,7 +1047,7 @@ void eliminar_particion(){
 	 *
 	 */
 
-
+	//printear_estado_memoria();
 	int msg_id = (int)list_get(lista_algoritmo_reemplazo,0);
 	printf("elimina particion id:%d cola:%d index:%d\n", msg_id, cola,index);
 	encontrar_particion_por_id(msg_id,&cola,&index);
@@ -1036,9 +1067,10 @@ void* pmalloc_particiones(int size){
 			return best_fit(size);
 			break;
 	}
+	return NULL;
 }
 
-void* pmalloc_BS(int size){//todo actualizar bitmap cuando consolida y chequear lo de eliminar y compactar con BS
+void* pmalloc_BS(int size){
 	int ptr_relativo;
 	t_partition* particion;
 	switch(APL){
@@ -1063,9 +1095,9 @@ void* pmalloc_BS(int size){//todo actualizar bitmap cuando consolida y chequear 
 			//sleep(5);
 			puts("APL");
 			return asignar_particion_libre(particion,size);
-
 			break;
 		}
+	return NULL;
 
 }
 
@@ -1087,13 +1119,13 @@ void* pmalloc(int size){
 				aux = pmalloc_BS(size);
 				break;
 		}
-		if(!aux){ //todo chequear nuevas condiciones segun frecuencia de compactacion
-			if(!cant_eliminaciones){
+		if(!aux){
+			if(!cant_eliminaciones && AM != BS){
 				compactar_memoria();cant_eliminaciones=freq_compactacion;continue;
 			}else if(cant_eliminaciones>0){
 				eliminar_particion();cant_eliminaciones--;
-			}else if(cant_eliminaciones<0){
-				if(particiones_ocupadas>1){
+			}else if(cant_eliminaciones<=0){
+				if(particiones_ocupadas>1 || AM==BS){
 					eliminar_particion();
 				}else if(particiones_ocupadas==1){
 					eliminar_particion();
@@ -1188,7 +1220,7 @@ int proximo_multiplo_de_2(int size){
 		vector_de_tamanios[i]=pow(2,i);
 	}
 	for(int i=0;i<20;i++){
-		if(size<vector_de_tamanios[i]){
+		if(size<=vector_de_tamanios[i]){
 			return vector_de_tamanios[i];
 		}
 	}
@@ -1204,11 +1236,11 @@ void calcular_fragmentacion(t_partition *particion,int size){
 	    				particion->fragmentacion_interna=0;
 	    		break;
 			case BS:
-				if(size<tamanio_minimo_particion){
+				if(size<=tamanio_minimo_particion){
     				particion->fragmentacion_interna=tamanio_minimo_particion-size;
                     break;
 				}
-	    		if(size<proximo_multiplo_de_2(size))
+	    		if(size<=proximo_multiplo_de_2(size))
 	    				particion->fragmentacion_interna=proximo_multiplo_de_2(size)-size;
 	    			else
 	    				particion->fragmentacion_interna=0;
@@ -1223,7 +1255,7 @@ t_partition* crear_particion(t_mensaje* mensaje){
 
 	calcular_fragmentacion(particion,size);
 
-	particion->inicio=pmalloc(size+particion->fragmentacion_interna); //todo mutex
+	particion->inicio=pmalloc(size+particion->fragmentacion_interna);
 	particion->msg_id=mensaje->id;
 	particion->cola_code=mensaje->codigo_operacion;
 	particion->tipo='X';
@@ -1232,7 +1264,7 @@ t_partition* crear_particion(t_mensaje* mensaje){
 	particion->size = size;
 	particion->suscriptores_confirmados = list_create();
 
-	list_add(lista_algoritmo_reemplazo,(int)particion->msg_id);
+	list_add(lista_algoritmo_reemplazo,(int)particion->msg_id); // todo chequear que no rompa aca!!
 
 	free(magic);
 
@@ -1263,13 +1295,14 @@ void sacar_particion(int cola, int index){//SE USA ASI??
 
 	list_remove_by_condition(lista_algoritmo_reemplazo,es_id_msg);
 
-	bitmap_actualizar_particion(particion);
+	if(AM==BS)
+		bitmap_actualizar_particion(particion);
+
+	log_debug(logger,"Se elimina particion de la cola:%s con ubicacion:%d", cola_a_string(particion->cola_code),particion->inicio-mem_alloc);
 	liberar_particion(particion);
 	pthread_mutex_lock(&mutex_particiones_ocupadas);
 	particiones_ocupadas--;
 	pthread_mutex_unlock(&mutex_particiones_ocupadas);
-
-
 }
 
 void actualizar_algoritmo_reemplazo(t_partition* particion){
@@ -1282,7 +1315,7 @@ void actualizar_algoritmo_reemplazo(t_partition* particion){
 			break;
 		case LRU:;
 			int msg_id = (int)list_remove_by_condition(lista_algoritmo_reemplazo,es_msg_id);
-			list_add(lista_algoritmo_reemplazo,msg_id);
+			list_add(lista_algoritmo_reemplazo,(int)msg_id);//todo guarda que seguro rompe aca!!
 			break;
 	}
 }
@@ -1333,6 +1366,7 @@ void asignar_id_correlativo_a_mensaje(t_mensaje* mensaje, t_partition* particion
 t_partition* cachear_mensaje(t_mensaje* mensaje){
 	t_partition* particion = crear_particion(mensaje);
 	agregar_particion(administracion_colas[mensaje->codigo_operacion],particion);
+	log_debug(logger,"Se almacena mensaje id:%d de tipo:%s en ubicacion %d de la memoria", mensaje->id,cola_a_string(mensaje->codigo_operacion),particion->inicio-mem_alloc);
 	return particion;
 }
 
@@ -1379,15 +1413,14 @@ int encontrar_particion(int msg_id,int cola){
 		return posicion;
 }
 
-t_partition* encontrar_particion_libre_por_ptr(int puntero_relativo){
-	int pos,cola,i,indice=-1;
+t_partition* encontrar_particion_libre_por_ptr(int puntero_relativo){//si rompe algo es aca GUARDAA! sacamos cola e i porq no se usaban
+	int pos,indice=-1;
 	void* aux = mem_alloc+puntero_relativo;
 	void es_particion(void* stream){
 		indice++;
 		t_partition* particion_lista = (t_partition*)stream;
 		if((int)particion_lista->inicio == (int)aux){
 			pos=indice;
-			cola=i;
 		}
 	}
 	list_iterate(particiones_libres,es_particion);
@@ -1473,15 +1506,18 @@ bool condicion_bs(t_partition* una_particion, t_partition* otra_particion){
 			return true;
 			break;
 		case BS:
-			puts("BS");
 			particion_a_bitmap(una_particion,&un_indice,&una_pos);
-			puts("BS");
 			particion_a_bitmap(otra_particion,&otro_indice,&otra_pos);
-			puts("BS");
 			printf("es buddy:%d  indices iguales:%d\n",es_buddy(una_pos,otra_pos), un_indice==otro_indice );
-			return es_buddy(una_pos,otra_pos) && un_indice==otro_indice;
+			if(es_buddy(una_pos,otra_pos) && un_indice==otro_indice){
+				puts("BS");
+				log_debug(logger,"Asocia particiones con inicio en:%d y %d", (int)bitmap_a_puntero(un_indice,una_pos), (int)bitmap_a_puntero(otro_indice,otra_pos));
+				return true;
+			}else
+				return false;
 			break;
 	}
+	return false;
 
 }
 
@@ -1519,15 +1555,11 @@ t_bitmap* bitmap_create(int peso_maximo, int peso_minimo){
 	bitmap->peso_maximo = encontrar_exponente(peso_maximo);
 	bitmap->peso_minimo = encontrar_exponente(peso_minimo);
 	bitmap->largo = bitmap->peso_maximo-bitmap->peso_minimo;
-
-	bitmap->bitmap_array = malloc(sizeof(t_bitarray)*bitmap->largo); //todo puede fallar si no llega al ultimo falta uno pal malloc
+	bitmap->bitmap_array = malloc(sizeof(t_bitarray)*bitmap->largo);
 
 	for(int i=0;i<=bitmap->largo;i++)
 		bitmap->bitmap_array[i]=crear_bitarray(pow(2,i));
-
 	bitmap_clean(bitmap);
-
-
 	return bitmap;
 }
 
@@ -1663,10 +1695,12 @@ void bitmap_actualizar_particion(t_partition* particion){
 	int indice,pos;
 	particion_a_bitmap(particion,&indice,&pos);
 	printf("indice:%d pos:%d\n", indice, pos);
-	bitmap_up(bitmap,indice,pos);
+	bitmap_liberar_particion(bitmap, indice, pos);
+
+
 }
 
-void partir_particion(t_bitmap* bitmap, int indice, int pos){//todo incorporar tambien partir la parte fisica
+void partir_particion(t_bitmap* bitmap, int indice, int pos){
 	bit_up(bitmap->bitmap_array[indice+1],pos*2);
 	bit_up(bitmap->bitmap_array[indice+1],pos*2+1);
 	bit_down(bitmap->bitmap_array[indice],pos);
@@ -1704,6 +1738,9 @@ int bitmap_a_puntero(int indice,int pos){
 
 
 void memory_dump(int signum){
+
+	log_debug(logger, "Se realiza un MEMORY DUMP de la cache");
+
 	t_list* particiones_totales;
 	if(signum==SIGUSR1){
 
@@ -1839,7 +1876,8 @@ void printear_estado_memoria(){
 	list_iterate(lista_algoritmo_reemplazo,printear_msg_id);
 	printf("\n");
 
-	bitmap_show(bitmap);
+	if(AM==BS)
+		bitmap_show(bitmap);
 }
 
 //============================== INICIALIZACION ==============================
@@ -1847,8 +1885,10 @@ void printear_estado_memoria(){
 void inicializar_memoria(){
 	mem_alloc = malloc(tamanio_memoria);
 
-	if(AM==BS)
-		bitmap = bitmap_create(tamanio_memoria,tamanio_minimo_particion);bitmap_up(bitmap,0,0);
+	if(AM==BS){
+		bitmap = bitmap_create(tamanio_memoria,tamanio_minimo_particion);
+		bitmap_up(bitmap,0,0);
+	}
 
 	void* aux = mem_alloc;
 	int var = 0;
@@ -1964,7 +2004,6 @@ void inicializar_broker(){
 }
 
 int main(void) {
-
 
 	printf("id_ proceso:%d\n",process_getpid());
 	inicializar_broker();
