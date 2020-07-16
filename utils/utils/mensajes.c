@@ -95,7 +95,8 @@ t_mensaje* crear_mensaje(int num, ...){
 			//return mensaje;
 			break;
 		case LOCALIZED_POKEMON:;
-			mensaje->contenido.localized_pokemon.id_correlativo = va_arg(args, uint32_t);
+			mensaje->contenido.localized_pokemon.id_correlativo = 1234;
+			va_arg(args, uint32_t);
 			mensaje->contenido.localized_pokemon.pokemon_especie = va_arg(args, t_pokemon_especie*);
 			va_end(args);
 			break;
@@ -135,7 +136,7 @@ void liberar_mensaje(t_mensaje* mensaje){
 			free(mensaje->contenido.get_pokemon.nombre_pokemon);
 			break;
 		case LOCALIZED_POKEMON:
-			liberar_pokemon_especie(mensaje->contenido.localized_pokemon.pokemon_especie);
+			//liberar_pokemon_especie(mensaje->contenido.localized_pokemon.pokemon_especie);
 			free(mensaje->contenido.localized_pokemon.pokemon_especie);
 			break;
 	}

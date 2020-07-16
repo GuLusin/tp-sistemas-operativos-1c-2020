@@ -18,11 +18,16 @@ typedef struct {
    int posicion_y;
    int bloq_exec;
    int exit;
+   //Algoritmo SJF
+   float estimacion_anterior;
+   float estimacion_actual;
+   int distancia_actual;
+   int real_anterior;
+   //-
    t_pokemon *objetivo_temporal;
    t_list *pokemones;
    t_list *objetivos;
 }t_entrenador;
-
 t_config* config;
 t_log* logger;
 

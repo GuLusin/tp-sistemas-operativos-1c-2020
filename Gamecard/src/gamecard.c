@@ -566,10 +566,8 @@ void recibir_new(t_mensaje *mensaje){
 	pthread_mutex_unlock(&mutex_envio_mensaje);
 
 	liberar_mensaje(mensajeAEnviar);
-	free(mensajeAEnviar);
 
 	liberar_mensaje(mensaje);
-	free(mensaje);
 
 }
 
@@ -580,7 +578,6 @@ void recibir_catch(t_mensaje *mensaje){
 	if(!directorioExiste(aux)){
 		printf("El archivo pokemon no se encuentra en el FILE SYSTEM!! :c\n");
 		liberar_mensaje(mensaje);
-		free(mensaje);
 		free(aux);
 		return;
 	}
@@ -624,7 +621,7 @@ void recibir_get(t_mensaje *mensaje){
 	if(!directorioExiste(ruta)){
 		printf("El archivo pokemon no se encuentra en el FILE SYSTEM!! :c\n");
 		liberar_mensaje(mensaje);
-		free(mensaje);
+
 		free(ruta);
 		return;
 	}
@@ -657,7 +654,7 @@ void recibir_get(t_mensaje *mensaje){
 	t_mensaje* mensajeAEnviar = crear_mensaje(3, LOCALIZED_POKEMON, mensaje->id, poke_especie);
 
 	printf("Se intenta enviar al broker el siguiente mensaje:\n");
-	//printear_mensaje(mensajeAEnviar);
+	printear_mensaje(mensajeAEnviar);
 
 	pthread_mutex_lock(&mutex_envio_mensaje);
 
@@ -681,9 +678,8 @@ void recibir_get(t_mensaje *mensaje){
 	free(metadata);
 
 	liberar_mensaje(mensajeAEnviar);
-	free(mensajeAEnviar);
 
-	free(mensaje);
+	free(mensaje); //todo revisar
 
 }
 
