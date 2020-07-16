@@ -33,6 +33,9 @@ bool check_ack(int socket_cliente, uint32_t value){
  */
 
 bool send_ack(int socket_cliente, uint32_t ack){
+	//puts("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+	printf("ID: %d",ack);
+	//puts("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 	return ((send(socket_cliente,&ack,sizeof(uint32_t), MSG_NOSIGNAL))>0);
 }
 
@@ -46,6 +49,9 @@ bool send_ack(int socket_cliente, uint32_t ack){
 uint32_t wait_ack(int socket_cliente){
 	uint32_t ack;
 	recv(socket_cliente, &(ack),sizeof(uint32_t), MSG_WAITALL);
+	//puts("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+	printf("ID: %d",ack);
+	//puts("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 	return ack;
 }
 

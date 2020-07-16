@@ -1262,12 +1262,14 @@ int subscribirse_a_cola(cola_code cola){
 }
 
 void enviar_un_mensaje_get(char* nombre_pokemon, void* data){
-	pthread_mutex_lock(&mutex_recibir);
+	puts("asdas");
+
 	int socket_broker = connect_to(ip_broker,puerto_broker,wait_time,logger);
 	t_mensaje* mensaje = crear_mensaje(2,GET_POKEMON,nombre_pokemon);
 	enviar_mensaje(socket_broker,mensaje);
 	int id_correlativo = wait_ack(socket_broker);
-	pthread_mutex_unlock(&mutex_recibir);
+	id_correlativo = wait_ack(socket_broker);
+    printf("ID CORRELATIVO: %d",id_correlativo);
 	dictionary_put(ids_a_esperar_localized,string_itoa(id_correlativo),(void*)LOCALIZED_POKEMON);
 
 	liberar_mensaje(mensaje);
@@ -1275,7 +1277,9 @@ void enviar_un_mensaje_get(char* nombre_pokemon, void* data){
 }
 
 void enviar_mensajes_get(){
+	pthread_mutex_lock(&mutex_recibir);
 	dictionary_iterator(dic_pok_obj,enviar_un_mensaje_get);
+	pthread_mutex_unlock(&mutex_recibir);
 }
 
 void agregar_id_esperado(int id_entrenador,int id){
@@ -1369,9 +1373,7 @@ void manejar_mensaje(t_mensaje* mensaje){
 				pthread_mutex_unlock(&list_pok_new_mutex);
 			}else
 			{
-				printf("asdsadsadsa1\n");
 				liberar_mensaje(mensaje);
-				printf("gadgdsfdfsd5\n");
 			}
 				break;
 		case CAUGHT_POKEMON:
@@ -1501,6 +1503,7 @@ void inicializar_team(){
 	pthread_create(&recibir_cola_localized, NULL, (void*)protocolo_recibir_mensaje, (void*)COLA_LOCALIZED_POKEMON);
 	pthread_detach(recibir_cola_localized);
 
+	sleep(10);
 	//Mandar los gets
 	pthread_create(&mandar_gets, NULL, (void*)enviar_mensajes_get,NULL);
 	pthread_detach(mandar_gets);

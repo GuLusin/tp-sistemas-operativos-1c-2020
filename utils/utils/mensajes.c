@@ -95,8 +95,7 @@ t_mensaje* crear_mensaje(int num, ...){
 			//return mensaje;
 			break;
 		case LOCALIZED_POKEMON:;
-			mensaje->contenido.localized_pokemon.id_correlativo = 1234;
-			va_arg(args, uint32_t);
+			mensaje->contenido.localized_pokemon.id_correlativo = va_arg(args, uint32_t);
 			mensaje->contenido.localized_pokemon.pokemon_especie = va_arg(args, t_pokemon_especie*);
 			va_end(args);
 			break;
@@ -110,7 +109,8 @@ void liberar_pokemon(t_pokemon* pokemon){
 
 void liberar_pokemon_especie(t_pokemon_especie* pokemon_especie){
 	free(pokemon_especie->nombre_especie);
-	dictionary_destroy_and_destroy_elements(pokemon_especie->posiciones_especie,free);
+	//dictionary_destroy_and_destroy_elements(pokemon_especie->posiciones_especie,free);
+	dictionary_destroy(pokemon_especie->posiciones_especie);
 }
 
 void liberar_mensaje(t_mensaje* mensaje){
@@ -136,10 +136,11 @@ void liberar_mensaje(t_mensaje* mensaje){
 			free(mensaje->contenido.get_pokemon.nombre_pokemon);
 			break;
 		case LOCALIZED_POKEMON:
-			//liberar_pokemon_especie(mensaje->contenido.localized_pokemon.pokemon_especie);
+			liberar_pokemon_especie(mensaje->contenido.localized_pokemon.pokemon_especie);
 			free(mensaje->contenido.localized_pokemon.pokemon_especie);
 			break;
 	}
+	free(mensaje);
 }
 
 
@@ -200,15 +201,15 @@ void printear_mensaje(t_mensaje* mensaje){
 		case SUBSCRIPCION:// se le pasa el tipo y la cola a subscribirse
 			printf("suscripcion:%d\n",mensaje->contenido.subscripcion);
 			break;
-		case NEW_POKEMON:;
+		case NEW_POKEMON:
 			printear_pokemon(mensaje->contenido.new_pokemon.pokemon);
 			printf("cantidad:%d\n", mensaje->contenido.new_pokemon.cantidad);
 			break;
-		case APPEARED_POKEMON:;
+		case APPEARED_POKEMON:
 			printear_pokemon(mensaje->contenido.appeared_pokemon.pokemon);
 			printf("id correlativo:%d\n", mensaje->contenido.appeared_pokemon.id_correlativo);
 			break;
-		case CATCH_POKEMON:;
+		case CATCH_POKEMON:
 			printear_pokemon(mensaje->contenido.catch_pokemon.pokemon);
 			break;
 		case CAUGHT_POKEMON:
@@ -217,8 +218,8 @@ void printear_mensaje(t_mensaje* mensaje){
 		case GET_POKEMON:
 			printf("Pokemon:%s\n", mensaje->contenido.get_pokemon.nombre_pokemon);
 			break;
-		case LOCALIZED_POKEMON:;
-			printf("id_correlativo:%d\n"),mensaje->contenido.localized_pokemon.id_correlativo;
+		case LOCALIZED_POKEMON:
+			printf("id_correlativo:%d\n",mensaje->contenido.localized_pokemon.id_correlativo);
 			printear_pokemon_especie(mensaje->contenido.localized_pokemon.pokemon_especie);
 			break;
 	}
@@ -350,7 +351,9 @@ t_localized_pokemon deserializar_localized_pokemon(void* stream){
 	int offset = 0;
 	memcpy(&localized_pokemon.id_correlativo, stream, sizeof(uint32_t));
 	offset += sizeof(uint32_t);
+	puts("adasdsaddada");
 	localized_pokemon.pokemon_especie = deserializar_pokemon_especie((stream + offset));
+	puts("adasdsaddada");
 	return localized_pokemon;
 }
 
@@ -682,7 +685,7 @@ int tamanio_pokemon_especie(t_pokemon_especie* especie_pokemon){
 }
 
 void printear_posicion(char* key, char* value){
-	printf("[%s|%s]",key, value);
+	//printf("[%s|%s]",key, value);
 }
 
 int cant_coordenadas_especie_pokemon(t_pokemon_especie *pokemon_especie){
@@ -697,9 +700,11 @@ int cant_coordenadas_especie_pokemon(t_pokemon_especie *pokemon_especie){
 }
 
 void printear_pokemon_especie(t_pokemon_especie* pokemon_especie){
-	printf("Especie:%s\n[", pokemon_especie->nombre_especie);
-	dictionary_iterator(pokemon_especie->posiciones_especie,printear_posicion);
-	printf("]\n");
+	//printf("Especie:%s\n[", pokemon_especie->nombre_especie);
+	//dictionary_iterator(pokemon_especie->posiciones_especie,printear_posicion);
+	//printf("]\n");
+	especie_pokemon_a_string(pokemon_especie);
+
 }
 
 char* posiciones_a_string(t_dictionary* posiciones){

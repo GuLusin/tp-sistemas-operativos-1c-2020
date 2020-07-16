@@ -565,9 +565,9 @@ void recibir_new(t_mensaje *mensaje){
 
 	pthread_mutex_unlock(&mutex_envio_mensaje);
 
-	liberar_mensaje(mensajeAEnviar);
+	//liberar_mensaje(mensajeAEnviar);
 
-	liberar_mensaje(mensaje);
+	//liberar_mensaje(mensaje);
 
 }
 
@@ -606,11 +606,11 @@ void recibir_catch(t_mensaje *mensaje){
 
 	pthread_mutex_unlock(&mutex_envio_mensaje);
 
-	liberar_mensaje(mensajeAEnviar);
-	free(mensajeAEnviar);
+	//liberar_mensaje(mensajeAEnviar);
+	//free(mensajeAEnviar);
 
-	liberar_mensaje(mensaje);
-	free(mensaje);
+	//liberar_mensaje(mensaje);
+	//free(mensaje);
 
 }
 
@@ -650,9 +650,21 @@ void recibir_get(t_mensaje *mensaje){
 
 	escribir_archivo_metadata_y_cerrar(metadata,ruta);
 	free(ruta);
+/*
+	t_pokemon *pokemon1 = crear_pokemon("Squirtle",-12,12);
+	t_pokemon *pokemon2 = crear_pokemon("Squirtle",-12,12);
+	t_pokemon *pokemon3 = crear_pokemon("Squirtle",12,12);
+	t_pokemon *pokemon4 = crear_pokemon("Squirtle",-12,12);
+	t_pokemon_especie *especie_pikachu = crear_pokemon_especie("Squirtle");
+	agregar_pokemon_a_especie(especie_pikachu,pokemon1);
+	agregar_pokemon_a_especie(especie_pikachu,pokemon2);
+	agregar_pokemon_a_especie(especie_pikachu,pokemon3);
+	agregar_pokemon_a_especie(especie_pikachu,pokemon4);
+*/
 
 	t_mensaje* mensajeAEnviar = crear_mensaje(3, LOCALIZED_POKEMON, mensaje->id, poke_especie);
-
+    //printf("IDm :%d",mensaje->id);
+    //printf("IDc :%d",mensajeAEnviar->contenido.localized_pokemon.id_correlativo);
 	printf("Se intenta enviar al broker el siguiente mensaje:\n");
 	printear_mensaje(mensajeAEnviar);
 
@@ -671,20 +683,12 @@ void recibir_get(t_mensaje *mensaje){
 	}
 
 	pthread_mutex_unlock(&mutex_envio_mensaje);
-
-	list_destroy_and_destroy_elements(poke_strings_list,free);
-
-	list_destroy(metadata->blocks);
-	free(metadata);
-
-	liberar_mensaje(mensajeAEnviar);
-
-	free(mensaje); //todo revisar
-
+	//list_destroy_and_destroy_elements(poke_strings_list,free);
+	//list_destroy(metadata->blocks);
+	//free(metadata);
+	//liberar_mensaje(mensajeAEnviar);
+	//free(mensaje); //todo revisar
 }
-
-
-
 
 void manejar_mensaje(t_mensaje* mensaje){
 	puts("maneja mensaje");
