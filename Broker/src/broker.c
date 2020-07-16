@@ -92,6 +92,7 @@ void manejar_catch(int socket_cliente,t_mensaje* mensaje){
 }
 
 void manejar_get(int socket_cliente,t_mensaje* mensaje){
+	printf("ID CORRELATIVO: %d",mensaje->id);
 	send_ack(socket_cliente,mensaje->id);
 }
 
@@ -154,7 +155,8 @@ void manejar_mensaje(int socket_cliente,t_mensaje* mensaje){
 
 
 void recibir_mensaje(int *socket_cliente){
-	//sem_wait(&sem_recibir);
+	sem_wait(&sem_recibir);
+	puts("1");
 
 	log_debug(logger,"Se conecta un proceso con socket:%d al Broker", *socket_cliente);
 
@@ -164,18 +166,21 @@ void recibir_mensaje(int *socket_cliente){
 		perror("Falla recv() op_code");
 	}
 
+	printf("CODIGO OPERACION: %d",codigo_operacion);
 	uint32_t id;
 
 	if(recv(*socket_cliente, &(id), sizeof(uint32_t), MSG_WAITALL) == -1){
 		perror("Falla recv() id");
 	}
 
+	printf("CODIGO OPERACION: %d",id);
 	uint32_t size_contenido_mensaje;
 
 	if(recv(*socket_cliente, &(size_contenido_mensaje), sizeof(uint32_t), MSG_WAITALL) == -1){
 		perror("Falla recv() size_contenido_mensaje");
 	}
 
+	printf("CODIGO OPERACION: %d",size_contenido_mensaje);
 	if(codigo_operacion==SUBSCRIPCION){
 		int cola;
 		recv(*socket_cliente, &(cola),size_contenido_mensaje, MSG_WAITALL);
@@ -192,11 +197,13 @@ void recibir_mensaje(int *socket_cliente){
 
 	send_ack(*socket_cliente,ACK);
 
-
+    puts("2");
 	t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
+	puts("3");
 	pthread_mutex_lock(&mutex_id_mensajes_globales);
 	mensaje->id=++id_mensajes_globales;
 	pthread_mutex_unlock(&mutex_id_mensajes_globales);
+	puts("MENSAJEEEE");
 	printear_mensaje(mensaje);
 	manejar_mensaje(*socket_cliente,mensaje);
 }
@@ -224,10 +231,13 @@ void notificar_mensaje(t_mensaje* mensaje){
 	sem_post(&sem_memoria);
 	//printear_estado_memoria();
 
+	puts("1");
 	sem_wait(&sem_suscriptores);
+	puts("2");
 	list_iterate(suscriptores[mensaje->codigo_operacion],notificar_suscriptores);
+	puts("3");
 	sem_post(&sem_suscriptores);
-
+	puts("4");
 }
 
 
@@ -557,7 +567,8 @@ int tamanio_mensaje_memoria(t_mensaje* mensaje){
 		case LOCALIZED_POKEMON:
 			i = cant_coordenadas_especie_pokemon(mensaje->contenido.localized_pokemon.pokemon_especie);
 			tamanio += sizeof(uint32_t) + strlen(mensaje->contenido.localized_pokemon.pokemon_especie->nombre_especie) +
-			sizeof(uint32_t) + i*2*sizeof(uint32_t);
+			sizeof(uint32_t) + i*3*sizeof(uint32_t);
+			printf("tamanio loc:%d\n", tamanio);
 			break;
 	}
 	return tamanio;
@@ -640,30 +651,40 @@ void* memser_localized_pokemon(t_localized_pokemon localized_pokemon, int size){
 	memcpy(magic+offset,localized_pokemon.pokemon_especie->nombre_especie,str_len);
 	offset += str_len;
 
+	puts("cant cords");
 	cant_coords = cant_coordenadas_especie_pokemon(localized_pokemon.pokemon_especie);
+
+	printf("cant corsd:%d\n", cant_coords);
 
 	memcpy(magic+offset, &cant_coords, sizeof(uint32_t));
 	offset += sizeof(uint32_t);
 
 	void memser_posiciones(char* key, void* stream){
-		int posx,posy,cant,i;
-		cant = (int)stream;
+		puts("pos");
+		int posx,posy,cant;
 		char** str_aux = string_split(key,"|");
 		posx = atoi(str_aux[0]);
 		posy = atoi(str_aux[1]);
+		cant = (int)stream;
 
-		for(i=0;i<cant;i++){
-			memcpy(magic+offset, &posx, sizeof(uint32_t));
-			offset += sizeof(uint32_t);
-			memcpy(magic+offset, &posy, sizeof(uint32_t));
-			offset += sizeof(uint32_t);
-		}
+		memcpy(magic+offset, &posx, sizeof(uint32_t));
+		offset += sizeof(uint32_t);
+		printf("x\n");
+		memcpy(magic+offset, &posy, sizeof(uint32_t));
+		offset += sizeof(uint32_t);
+		printf("y\n");
+		memcpy(magic+offset, &(cant), sizeof(uint32_t));
+		offset += sizeof(uint32_t);
+		printf("cant\n");
 	}
+	printf("entra\n");
 	dictionary_iterator(localized_pokemon.pokemon_especie->posiciones_especie, memser_posiciones);
+	printf("sale\n");
 	return magic;
 }
 
 void* memser_mensaje(t_mensaje* mensaje, int *ret_size){
+	puts("memser");
 	uint32_t size = tamanio_mensaje_memoria(mensaje);
 	void* stream;
 	switch(mensaje->codigo_operacion){

@@ -26,13 +26,13 @@ endif
 all: Gamecard
 
 dependents:
-	-cd /home/utnso/tp-2020-1c-cumpleDeFabian/utils/Debug && $(MAKE) clean all
+	-cd /home/utnso/workspace/tp-2020-1c-cumpleDeFabian/utils/Debug && $(MAKE) clean all
 
 # Tool invocations
-Gamecard: $(OBJS) $(USER_OBJS) /home/utnso/tp-2020-1c-cumpleDeFabian/utils/Debug/libutils.so
+Gamecard: $(OBJS) $(USER_OBJS) /home/utnso/workspace/tp-2020-1c-cumpleDeFabian/utils/Debug/libutils.so
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C Linker'
-	gcc -L"/home/utnso/tp-2020-1c-cumpleDeFabian/utils/Debug" -o "Gamecard" $(OBJS) $(USER_OBJS) $(LIBS)
+	gcc -L"/home/utnso/workspace/tp-2020-1c-cumpleDeFabian/utils/Debug" -o "Gamecard" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -42,6 +42,6 @@ clean:
 	-@echo ' '
 
 .PHONY: all clean dependents
-/home/utnso/tp-2020-1c-cumpleDeFabian/utils/Debug/libutils.so:
+/home/utnso/workspace/tp-2020-1c-cumpleDeFabian/utils/Debug/libutils.so:
 
 -include ../makefile.targets

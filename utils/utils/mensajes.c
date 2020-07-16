@@ -109,7 +109,8 @@ void liberar_pokemon(t_pokemon* pokemon){
 
 void liberar_pokemon_especie(t_pokemon_especie* pokemon_especie){
 	free(pokemon_especie->nombre_especie);
-	dictionary_destroy_and_destroy_elements(pokemon_especie->posiciones_especie,free);
+	//dictionary_destroy_and_destroy_elements(pokemon_especie->posiciones_especie,free);
+	dictionary_destroy(pokemon_especie->posiciones_especie);
 }
 
 void liberar_mensaje(t_mensaje* mensaje){
@@ -139,6 +140,7 @@ void liberar_mensaje(t_mensaje* mensaje){
 			free(mensaje->contenido.localized_pokemon.pokemon_especie);
 			break;
 	}
+	free(mensaje);
 }
 
 
@@ -199,15 +201,15 @@ void printear_mensaje(t_mensaje* mensaje){
 		case SUBSCRIPCION:// se le pasa el tipo y la cola a subscribirse
 			printf("suscripcion:%d\n",mensaje->contenido.subscripcion);
 			break;
-		case NEW_POKEMON:;
+		case NEW_POKEMON:
 			printear_pokemon(mensaje->contenido.new_pokemon.pokemon);
 			printf("cantidad:%d\n", mensaje->contenido.new_pokemon.cantidad);
 			break;
-		case APPEARED_POKEMON:;
+		case APPEARED_POKEMON:
 			printear_pokemon(mensaje->contenido.appeared_pokemon.pokemon);
 			printf("id correlativo:%d\n", mensaje->contenido.appeared_pokemon.id_correlativo);
 			break;
-		case CATCH_POKEMON:;
+		case CATCH_POKEMON:
 			printear_pokemon(mensaje->contenido.catch_pokemon.pokemon);
 			break;
 		case CAUGHT_POKEMON:
@@ -216,8 +218,8 @@ void printear_mensaje(t_mensaje* mensaje){
 		case GET_POKEMON:
 			printf("Pokemon:%s\n", mensaje->contenido.get_pokemon.nombre_pokemon);
 			break;
-		case LOCALIZED_POKEMON:;
-			printf("id_correlativo:%d\n"),mensaje->contenido.localized_pokemon.id_correlativo;
+		case LOCALIZED_POKEMON:
+			printf("id_correlativo:%d\n",mensaje->contenido.localized_pokemon.id_correlativo);
 			printear_pokemon_especie(mensaje->contenido.localized_pokemon.pokemon_especie);
 			break;
 	}
@@ -349,7 +351,9 @@ t_localized_pokemon deserializar_localized_pokemon(void* stream){
 	int offset = 0;
 	memcpy(&localized_pokemon.id_correlativo, stream, sizeof(uint32_t));
 	offset += sizeof(uint32_t);
+	puts("adasdsaddada");
 	localized_pokemon.pokemon_especie = deserializar_pokemon_especie((stream + offset));
+	puts("adasdsaddada");
 	return localized_pokemon;
 }
 
@@ -637,13 +641,13 @@ void agregar_ubicacion_a_especie(t_pokemon_especie* pokemon_especie, char* posic
 	char** posiciones = string_split(datos[0],"-"); // ["4","8"]
 
 	posicion_pokemon = string_from_format("%s|%s",posiciones[0],posiciones[1]);
-	dictionary_put(pokemon_especie->posiciones_especie,posicion_pokemon, (void*)datos[1]);
+	dictionary_put(pokemon_especie->posiciones_especie,posicion_pokemon, (void*)atoi(datos[1]));
 
 	free(posicion_pokemon);
 	free(posiciones[1]);
 	free(posiciones[0]);
 	free(posiciones);
-	//datos[1] no se hace free porque queda siendo parte de diccionario
+	free(datos[1]); // no se hace free porque queda siendo parte de diccionario
 	free(datos[0]);
 	free(datos);
 
@@ -681,14 +685,13 @@ int tamanio_pokemon_especie(t_pokemon_especie* especie_pokemon){
 }
 
 void printear_posicion(char* key, char* value){
-	printf("[%s|%s]",key, value);
+	//printf("[%s|%s]",key, value);
 }
 
 int cant_coordenadas_especie_pokemon(t_pokemon_especie *pokemon_especie){
 	int contador_aux = 0;
 	void contador(char *key,void *stream){
-		int cantidad = (int)stream;
-		contador_aux += cantidad;
+		contador_aux += 1;
 	}
 	dictionary_iterator(pokemon_especie->posiciones_especie, contador);
     printf("Contador devuelve:%d\n",contador_aux);
@@ -696,9 +699,9 @@ int cant_coordenadas_especie_pokemon(t_pokemon_especie *pokemon_especie){
 }
 
 void printear_pokemon_especie(t_pokemon_especie* pokemon_especie){
-	printf("Especie:%s\n[", pokemon_especie->nombre_especie);
-	dictionary_iterator(pokemon_especie->posiciones_especie,printear_posicion);
-	printf("]\n");
+	char* aux = especie_pokemon_a_string(pokemon_especie);
+	puts(aux);
+	free(aux);
 }
 
 char* posiciones_a_string(t_dictionary* posiciones){
@@ -723,6 +726,7 @@ t_pokemon_especie* string_a_pokemon_especie(char* string){
 	t_pokemon pokemon_aux;
 	int i = 1;
 	char** posiciones;
+	puts("entra a poke a especie");
 	char* str_aux = string_new();
 	int int_aux;
 	while(main_str[i]!=NULL){
