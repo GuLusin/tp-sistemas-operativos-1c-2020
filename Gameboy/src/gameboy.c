@@ -183,8 +183,9 @@ void manejar_mensaje(int argc, char** args){
 			mensaje->id=atoi(args[6]);
 			break;
 		case GET_POKEMON:
-			mensaje = crear_mensaje(2,GET_POKEMON,args[3]);
+			mensaje = crear_mensaje(2,GET_POKEMON,args[3]); // ./Gameboy GAMECARD GET_POKEMON Squirtle 2
 			mensaje->id=atoi(args[4]);
+			printf("id mensaje:%d\n",mensaje->id);
 			break;
 		default:
 			printf("Mensaje invalido\n");

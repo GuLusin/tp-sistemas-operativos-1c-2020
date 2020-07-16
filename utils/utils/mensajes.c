@@ -641,13 +641,13 @@ void agregar_ubicacion_a_especie(t_pokemon_especie* pokemon_especie, char* posic
 	char** posiciones = string_split(datos[0],"-"); // ["4","8"]
 
 	posicion_pokemon = string_from_format("%s|%s",posiciones[0],posiciones[1]);
-	dictionary_put(pokemon_especie->posiciones_especie,posicion_pokemon, (void*)datos[1]);
+	dictionary_put(pokemon_especie->posiciones_especie,posicion_pokemon, (void*)atoi(datos[1]));
 
 	free(posicion_pokemon);
 	free(posiciones[1]);
 	free(posiciones[0]);
 	free(posiciones);
-	//datos[1] no se hace free porque queda siendo parte de diccionario
+	free(datos[1]); // no se hace free porque queda siendo parte de diccionario
 	free(datos[0]);
 	free(datos);
 
@@ -691,8 +691,7 @@ void printear_posicion(char* key, char* value){
 int cant_coordenadas_especie_pokemon(t_pokemon_especie *pokemon_especie){
 	int contador_aux = 0;
 	void contador(char *key,void *stream){
-		int cantidad = (int)stream;
-		contador_aux += cantidad;
+		contador_aux += 1;
 	}
 	dictionary_iterator(pokemon_especie->posiciones_especie, contador);
     printf("Contador devuelve:%d\n",contador_aux);
@@ -700,11 +699,9 @@ int cant_coordenadas_especie_pokemon(t_pokemon_especie *pokemon_especie){
 }
 
 void printear_pokemon_especie(t_pokemon_especie* pokemon_especie){
-	//printf("Especie:%s\n[", pokemon_especie->nombre_especie);
-	//dictionary_iterator(pokemon_especie->posiciones_especie,printear_posicion);
-	//printf("]\n");
-	especie_pokemon_a_string(pokemon_especie);
-
+	char* aux = especie_pokemon_a_string(pokemon_especie);
+	puts(aux);
+	free(aux);
 }
 
 char* posiciones_a_string(t_dictionary* posiciones){
@@ -729,6 +726,7 @@ t_pokemon_especie* string_a_pokemon_especie(char* string){
 	t_pokemon pokemon_aux;
 	int i = 1;
 	char** posiciones;
+	puts("entra a poke a especie");
 	char* str_aux = string_new();
 	int int_aux;
 	while(main_str[i]!=NULL){

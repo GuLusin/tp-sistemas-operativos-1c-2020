@@ -616,6 +616,9 @@ void recibir_catch(t_mensaje *mensaje){
 
 void recibir_get(t_mensaje *mensaje){
 
+	printf("recibo mensaje\n");
+	printear_mensaje(mensaje);
+
 	char* ruta = generar_ruta(mensaje);
 
 	if(!directorioExiste(ruta)){
@@ -641,7 +644,8 @@ void recibir_get(t_mensaje *mensaje){
 		return;
 
 	}
-	t_list* poke_strings_list = pokemon_data_de_bloques(metadata->blocks);
+	t_list* poke_strings_list = pokemon_data_de_bloques(metadata->blocks); // "x-y=cantidad
+	debug_print_string_list(poke_strings_list);
 
 	t_pokemon_especie* poke_especie = crear_pokemon_especie(mensaje->contenido.get_pokemon.nombre_pokemon);
 
@@ -650,7 +654,7 @@ void recibir_get(t_mensaje *mensaje){
 
 	escribir_archivo_metadata_y_cerrar(metadata,ruta);
 	free(ruta);
-/*
+
 	t_pokemon *pokemon1 = crear_pokemon("Squirtle",-12,12);
 	t_pokemon *pokemon2 = crear_pokemon("Squirtle",-12,12);
 	t_pokemon *pokemon3 = crear_pokemon("Squirtle",12,12);
@@ -660,7 +664,7 @@ void recibir_get(t_mensaje *mensaje){
 	agregar_pokemon_a_especie(especie_pikachu,pokemon2);
 	agregar_pokemon_a_especie(especie_pikachu,pokemon3);
 	agregar_pokemon_a_especie(especie_pikachu,pokemon4);
-*/
+
 
 	t_mensaje* mensajeAEnviar = crear_mensaje(3, LOCALIZED_POKEMON, mensaje->id, poke_especie);
     //printf("IDm :%d",mensaje->id);
@@ -838,6 +842,7 @@ void esperar_mensaje(int *socket){
 	}
 
 	t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
+	mensaje->id=id;
 
 	send_ack(*socket,ACK);
 

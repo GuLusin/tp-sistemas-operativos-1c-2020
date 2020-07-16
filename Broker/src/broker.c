@@ -567,7 +567,8 @@ int tamanio_mensaje_memoria(t_mensaje* mensaje){
 		case LOCALIZED_POKEMON:
 			i = cant_coordenadas_especie_pokemon(mensaje->contenido.localized_pokemon.pokemon_especie);
 			tamanio += sizeof(uint32_t) + strlen(mensaje->contenido.localized_pokemon.pokemon_especie->nombre_especie) +
-			sizeof(uint32_t) + i*2*sizeof(uint32_t);
+			sizeof(uint32_t) + i*3*sizeof(uint32_t);
+			printf("tamanio loc:%d\n", tamanio);
 			break;
 	}
 	return tamanio;
@@ -650,30 +651,40 @@ void* memser_localized_pokemon(t_localized_pokemon localized_pokemon, int size){
 	memcpy(magic+offset,localized_pokemon.pokemon_especie->nombre_especie,str_len);
 	offset += str_len;
 
+	puts("cant cords");
 	cant_coords = cant_coordenadas_especie_pokemon(localized_pokemon.pokemon_especie);
+
+	printf("cant corsd:%d\n", cant_coords);
 
 	memcpy(magic+offset, &cant_coords, sizeof(uint32_t));
 	offset += sizeof(uint32_t);
 
 	void memser_posiciones(char* key, void* stream){
-		int posx,posy,cant,i;
-		cant = (int)stream;
+		puts("pos");
+		int posx,posy,cant;
 		char** str_aux = string_split(key,"|");
 		posx = atoi(str_aux[0]);
 		posy = atoi(str_aux[1]);
+		cant = (int)stream;
 
-		for(i=0;i<cant;i++){
-			memcpy(magic+offset, &posx, sizeof(uint32_t));
-			offset += sizeof(uint32_t);
-			memcpy(magic+offset, &posy, sizeof(uint32_t));
-			offset += sizeof(uint32_t);
-		}
+		memcpy(magic+offset, &posx, sizeof(uint32_t));
+		offset += sizeof(uint32_t);
+		printf("x\n");
+		memcpy(magic+offset, &posy, sizeof(uint32_t));
+		offset += sizeof(uint32_t);
+		printf("y\n");
+		memcpy(magic+offset, &(cant), sizeof(uint32_t));
+		offset += sizeof(uint32_t);
+		printf("cant\n");
 	}
+	printf("entra\n");
 	dictionary_iterator(localized_pokemon.pokemon_especie->posiciones_especie, memser_posiciones);
+	printf("sale\n");
 	return magic;
 }
 
 void* memser_mensaje(t_mensaje* mensaje, int *ret_size){
+	puts("memser");
 	uint32_t size = tamanio_mensaje_memoria(mensaje);
 	void* stream;
 	switch(mensaje->codigo_operacion){
