@@ -337,12 +337,14 @@ t_new_pokemon deserializar_new_pokemon(void* stream){
 // ------------------- SERIALIZAR LOCALIZED_POKEMON ---------------------//
 
 void* serializar_localized_pokemon(t_localized_pokemon localized_pokemon){
-	void* magic = malloc(sizeof(uint32_t) + tamanio_pokemon_especie(localized_pokemon.pokemon_especie));
+	void *magic = malloc(sizeof(uint32_t) + tamanio_pokemon_especie(localized_pokemon.pokemon_especie));
+	char *especie = especie_pokemon_a_string(localized_pokemon.pokemon_especie);
 	int offset=0;
 	memcpy(magic, &localized_pokemon.id_correlativo, sizeof(uint32_t));
 	offset += sizeof(uint32_t);
-	memcpy(magic+offset, especie_pokemon_a_string(localized_pokemon.pokemon_especie), tamanio_pokemon_especie(localized_pokemon.pokemon_especie));
+	memcpy(magic+offset,especie, tamanio_pokemon_especie(localized_pokemon.pokemon_especie));
 	offset += tamanio_pokemon_especie(localized_pokemon.pokemon_especie);
+	free(especie);
 	return magic;
 }
 
@@ -391,8 +393,6 @@ int tamanio_contenido_mensaje(t_mensaje* mensaje){
 		case LOCALIZED_POKEMON:
 			tamanio += sizeof(uint32_t) + tamanio_pokemon_especie(mensaje->contenido.localized_pokemon.pokemon_especie);
 			break;
-
-
 	}
 	return tamanio;
 }
@@ -627,6 +627,7 @@ void agregar_pokemon_a_especie(t_pokemon_especie* pokemon_especie, t_pokemon* po
 			dictionary_put(pokemon_especie->posiciones_especie,posicion_pokemon, (void*)1);
 		}
 	}
+	free(posicion_pokemon); //todo ojo
 }
 
 
@@ -666,6 +667,7 @@ void sacar_pokemon_de_especie(t_pokemon_especie* pokemon_especie, t_pokemon* pok
 				dictionary_put(pokemon_especie->posiciones_especie,posicion_pokemon,(void*)cantidad);
 		}
 	}
+	free(posicion_pokemon); //todo ojo
 }
 
 /*
@@ -681,12 +683,12 @@ bool hay_pokemon_en_posicion(t_pokemon_especie* pokemon_especie, char* key){
 }
 
 int tamanio_pokemon_especie(t_pokemon_especie* especie_pokemon){
-	return strlen(especie_pokemon->nombre_especie) + 1 + strlen(posiciones_a_string(especie_pokemon->posiciones_especie)) + 1;
+	char *posiciones = posiciones_a_string(especie_pokemon->posiciones_especie);
+	int tamanio = strlen(especie_pokemon->nombre_especie) + 1 + strlen(posiciones) + 1;
+    free(posiciones);
+	return tamanio;
 }
 
-void printear_posicion(char* key, char* value){
-	//printf("[%s|%s]",key, value);
-}
 
 int cant_coordenadas_especie_pokemon(t_pokemon_especie *pokemon_especie){
 	int contador_aux = 0;
@@ -717,6 +719,7 @@ char* especie_pokemon_a_string(t_pokemon_especie* pokemon_especie){
 	string_append_with_format(&string,"%s,",pokemon_especie->nombre_especie);
 	char* posiciones = posiciones_a_string(pokemon_especie->posiciones_especie);
 	string_append(&string,posiciones);
+	free(posiciones);
 	return string;
 }
 

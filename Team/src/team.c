@@ -1112,6 +1112,7 @@ t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos,
 
 	free(auxiliar[0]);
 	free(auxiliar[1]);
+    free(auxiliar);
 
 	entrenador->pokemones = list_create();
 	if(pokemones){
@@ -1121,10 +1122,8 @@ t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos,
 			list_add(entrenador->pokemones,*auxiliar3);
 			auxiliar3++;
 		}
+		free(auxiliar3);
 	}
-
-
-	//free(auxiliar3);
 
 	char **auxiliar2 = string_split(objetivos,"|"); //ultima posicion tiene null
 
@@ -1134,9 +1133,7 @@ t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos,
 		auxiliar2++;
 	}
 
-	//OJO CON LOS CHAR * Q SE PASAN POR PARAMETRO, SE LIBERAN???
-	//puts("ASDSAD");
-	//free(auxiliar2);
+	free(auxiliar2);
 	return entrenador;
 }
 
@@ -1265,7 +1262,7 @@ void enviar_un_mensaje_get(char* nombre_pokemon, void* data){
 	puts("asdas");
 
 	int socket_broker = connect_to(ip_broker,puerto_broker,wait_time,logger);
-	t_mensaje* mensaje = crear_mensaje(2,GET_POKEMON,nombre_pokemon);
+	t_mensaje* mensaje = crear_mensaje(2,GET_POKEMON,string_duplicate(nombre_pokemon));
 	enviar_mensaje(socket_broker,mensaje);
 	int id_correlativo = wait_ack(socket_broker);
 	id_correlativo = wait_ack(socket_broker);
@@ -1364,6 +1361,7 @@ void manejar_mensaje(t_mensaje* mensaje){
 	switch(mensaje->codigo_operacion){
 		case APPEARED_POKEMON:
 			manejar_appeared_pokemon(mensaje->contenido.appeared_pokemon);
+			free(mensaje);
 			break;
 		case LOCALIZED_POKEMON:;
 			if(comprobar_id_esperado(mensaje->contenido.localized_pokemon.id_correlativo)){
@@ -1371,6 +1369,7 @@ void manejar_mensaje(t_mensaje* mensaje){
 				pthread_mutex_lock(&list_pok_new_mutex);
 				list_iterate(list_pok_new,(void *)printear_pokemon);
 				pthread_mutex_unlock(&list_pok_new_mutex);
+				free(mensaje); //todo liberar algo mas?
 			}else
 			{
 				liberar_mensaje(mensaje);
@@ -1380,6 +1379,7 @@ void manejar_mensaje(t_mensaje* mensaje){
 			if(comprobar_id_esperado_catch(mensaje->contenido.caught_pokemon.id_correlativo)){
 				id_entrenador = remover_id_catch(mensaje->contenido.caught_pokemon.id_correlativo);
 				avisar_caught(id_entrenador,mensaje->contenido.caught_pokemon.caught_confirmation);
+				free(mensaje); //todo liberar algo mas?
 			}else
 				liberar_mensaje(mensaje);
 			break;
@@ -1503,7 +1503,7 @@ void inicializar_team(){
 	pthread_create(&recibir_cola_localized, NULL, (void*)protocolo_recibir_mensaje, (void*)COLA_LOCALIZED_POKEMON);
 	pthread_detach(recibir_cola_localized);
 
-	sleep(10);
+	//sleep(10);
 	//Mandar los gets
 	pthread_create(&mandar_gets, NULL, (void*)enviar_mensajes_get,NULL);
 	pthread_detach(mandar_gets);

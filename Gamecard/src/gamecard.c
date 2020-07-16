@@ -77,6 +77,7 @@ int subscribirse_a_cola(cola_code cola){
 	mensaje->id=id_gamecard;
 	enviar_mensaje(socket_aux, mensaje);
 	check_ack(socket_aux, ACK);
+	liberar_mensaje(mensaje);
 	return socket_aux;
 }
 
@@ -545,7 +546,7 @@ void recibir_new(t_mensaje *mensaje){
 
 	t_mensaje* mensajeAEnviar = crear_mensaje(5,APPEARED_POKEMON,mensaje->contenido.new_pokemon.pokemon->nombre,mensaje->contenido.new_pokemon.pokemon->pos_x,mensaje->contenido.new_pokemon.pokemon->pos_y,mensaje->id);
 	printf("Se intenta enviar al broker el siguiente mensaje:\n");
-	printear_mensaje(mensajeAEnviar);
+	//printear_mensaje(mensajeAEnviar);
 
 	pthread_mutex_lock(&mutex_envio_mensaje);
 
@@ -565,30 +566,28 @@ void recibir_new(t_mensaje *mensaje){
 
 	pthread_mutex_unlock(&mutex_envio_mensaje);
 
-	//liberar_mensaje(mensajeAEnviar);
-
-	//liberar_mensaje(mensaje);
+	liberar_mensaje(mensajeAEnviar);
+	liberar_mensaje(mensaje);
 
 }
 
 void recibir_catch(t_mensaje *mensaje){
 
 	char* aux = generar_ruta(mensaje);
+	bool operacion_exitosa;
 
 	if(!directorioExiste(aux)){
 		printf("El archivo pokemon no se encuentra en el FILE SYSTEM!! :c\n");
-		liberar_mensaje(mensaje);
-		free(aux);
-		return;
+		operacion_exitosa = false;
 	}
-
+	else{
+		operacion_exitosa = agregar_pokemones(mensaje);
+	}
 	free(aux);
-
-	bool operacion_exitosa = agregar_pokemones(mensaje);
 
 	t_mensaje* mensajeAEnviar = crear_mensaje(3, CAUGHT_POKEMON,mensaje->id,operacion_exitosa);
 	printf("Se intenta enviar al broker el siguiente mensaje:\n");
-	printear_mensaje(mensajeAEnviar);
+	//printear_mensaje(mensajeAEnviar);
 
 	pthread_mutex_lock(&mutex_envio_mensaje);
 
@@ -606,18 +605,15 @@ void recibir_catch(t_mensaje *mensaje){
 
 	pthread_mutex_unlock(&mutex_envio_mensaje);
 
-	//liberar_mensaje(mensajeAEnviar);
-	//free(mensajeAEnviar);
-
-	//liberar_mensaje(mensaje);
-	//free(mensaje);
+	liberar_mensaje(mensajeAEnviar);
+	liberar_mensaje(mensaje);
 
 }
 
 void recibir_get(t_mensaje *mensaje){
 
 	printf("recibo mensaje\n");
-	printear_mensaje(mensaje);
+	//printear_mensaje(mensaje);
 
 	char* ruta = generar_ruta(mensaje);
 
@@ -655,22 +651,11 @@ void recibir_get(t_mensaje *mensaje){
 	escribir_archivo_metadata_y_cerrar(metadata,ruta);
 	free(ruta);
 
-	t_pokemon *pokemon1 = crear_pokemon("Squirtle",-12,12);
-	t_pokemon *pokemon2 = crear_pokemon("Squirtle",-12,12);
-	t_pokemon *pokemon3 = crear_pokemon("Squirtle",12,12);
-	t_pokemon *pokemon4 = crear_pokemon("Squirtle",-12,12);
-	t_pokemon_especie *especie_pikachu = crear_pokemon_especie("Squirtle");
-	agregar_pokemon_a_especie(especie_pikachu,pokemon1);
-	agregar_pokemon_a_especie(especie_pikachu,pokemon2);
-	agregar_pokemon_a_especie(especie_pikachu,pokemon3);
-	agregar_pokemon_a_especie(especie_pikachu,pokemon4);
-
-
 	t_mensaje* mensajeAEnviar = crear_mensaje(3, LOCALIZED_POKEMON, mensaje->id, poke_especie);
     //printf("IDm :%d",mensaje->id);
     //printf("IDc :%d",mensajeAEnviar->contenido.localized_pokemon.id_correlativo);
 	printf("Se intenta enviar al broker el siguiente mensaje:\n");
-	printear_mensaje(mensajeAEnviar);
+	////printear_mensaje(mensajeAEnviar);
 
 	pthread_mutex_lock(&mutex_envio_mensaje);
 
@@ -688,10 +673,10 @@ void recibir_get(t_mensaje *mensaje){
 
 	pthread_mutex_unlock(&mutex_envio_mensaje);
 	//list_destroy_and_destroy_elements(poke_strings_list,free);
-	//list_destroy(metadata->blocks);
-	//free(metadata);
-	//liberar_mensaje(mensajeAEnviar);
-	//free(mensaje); //todo revisar
+	list_destroy(metadata->blocks);
+	free(metadata);
+	liberar_mensaje(mensajeAEnviar);
+	liberar_mensaje(mensaje); //todo revisar
 }
 
 void manejar_mensaje(t_mensaje* mensaje){
@@ -734,7 +719,7 @@ bool recibir_mensaje(int un_socket){
 
 	t_mensaje* mensaje = deserializar_mensaje(codigo_operacion, stream);
 	mensaje->id=id;
-	printear_mensaje(mensaje);
+	////printear_mensaje(mensaje);
 	manejar_mensaje(mensaje);
 	free(stream);
 	return true;
@@ -941,9 +926,9 @@ void debug(){
 				break;
 			case 'R':
 				srand(time(NULL));
-				mensaje = crear_mensaje(5, NEW_POKEMON,"Squirtle",rand()%10,rand()%10,rand()%500);
+				mensaje = crear_mensaje(5, NEW_POKEMON,"Squirtle",rand()%10,rand()%10,rand()%5);
 				printf("Se recibe un new random del siguiente mensaje: \n");
-				printear_mensaje(mensaje);
+				//printear_mensaje_(mensaje);
 				recibir_new(mensaje);
 				break;
 			case 'X':;
