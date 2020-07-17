@@ -561,7 +561,6 @@ void recibir_new(t_mensaje *mensaje){
 	else{
 		//todo logear que no se pudo conectar con el broker
 		printf("No se pudo establecer la conexion con el broker para enviarle el mensaje appeared\n");
-
 	}
 
 	pthread_mutex_unlock(&mutex_envio_mensaje);
@@ -587,7 +586,7 @@ void recibir_catch(t_mensaje *mensaje){
 
 	t_mensaje* mensajeAEnviar = crear_mensaje(3, CAUGHT_POKEMON,mensaje->id,operacion_exitosa);
 	printf("Se intenta enviar al broker el siguiente mensaje:\n");
-	//printear_mensaje(mensajeAEnviar);
+	printear_mensaje(mensajeAEnviar);
 
 	pthread_mutex_lock(&mutex_envio_mensaje);
 
@@ -595,7 +594,11 @@ void recibir_catch(t_mensaje *mensaje){
 
 	if(socket_broker != -1){
 		enviar_mensaje(socket_broker,mensajeAEnviar);
-		wait_ack(socket_broker);
+		puts("------------------------------------------------------------");
+		check_ack(socket_broker,ACK);
+		puts("1");
+		check_ack(socket_broker,ACK);
+		puts("------------------------------------------------------------");
 		close(socket_broker);
 	}
 	else{
@@ -619,7 +622,7 @@ void recibir_get(t_mensaje *mensaje){
 
 	if(!directorioExiste(ruta)){
 		printf("El archivo pokemon no se encuentra en el FILE SYSTEM!! :c\n");
-		liberar_mensaje(mensaje);
+		//liberar_mensaje(mensaje);
 
 		free(ruta);
 		return;
@@ -655,7 +658,7 @@ void recibir_get(t_mensaje *mensaje){
     //printf("IDm :%d",mensaje->id);
     //printf("IDc :%d",mensajeAEnviar->contenido.localized_pokemon.id_correlativo);
 	printf("Se intenta enviar al broker el siguiente mensaje:\n");
-	////printear_mensaje(mensajeAEnviar);
+	printear_mensaje(mensajeAEnviar);
 
 	pthread_mutex_lock(&mutex_envio_mensaje);
 
@@ -663,7 +666,11 @@ void recibir_get(t_mensaje *mensaje){
 
 	if(socket_broker != -1){
 		enviar_mensaje(socket_broker,mensajeAEnviar);
-		wait_ack(socket_broker);
+		puts("------------------------------------------------------------");
+		check_ack(socket_broker,ACK);
+		puts("1");
+		check_ack(socket_broker,ACK);
+		puts("------------------------------------------------------------");
 		close(socket_broker);
 	}
 	else{
@@ -676,7 +683,7 @@ void recibir_get(t_mensaje *mensaje){
 	list_destroy(metadata->blocks);
 	free(metadata);
 	liberar_mensaje(mensajeAEnviar);
-	liberar_mensaje(mensaje); //todo revisar
+	//liberar_mensaje(mensaje); //todo revisar
 }
 
 void manejar_mensaje(t_mensaje* mensaje){
@@ -836,8 +843,8 @@ void esperar_mensaje(int *socket){
 }
 
 void protocolo_escuchar_gameboy(){
-	char* ip_gameboy_escucha = "127.0.0.3";
-	char* puerto_gameboy_escucha = "5001";
+	char* ip_gameboy_escucha = "127.0.0.5";
+	char* puerto_gameboy_escucha = "5005";
 	int socket_escucha = listen_to(ip_gameboy_escucha,puerto_gameboy_escucha);
 
 	while(1)

@@ -5655,3 +5655,305 @@
 [DEBUG] 16:59:38:630 log/(16043:16045): Se logra establecer la conexion
 [DEBUG] 16:59:38:633 log/(16043:16046): Se logra establecer la conexion
 [DEBUG] 17:05:19:950 log/(16043:16046): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 00:17:13:628 log/(5306:5306): 30
+[DEBUG] 00:17:13:628 log/(5306:5306): 5
+[DEBUG] 00:17:13:628 log/(5306:5306): 1
+[DEBUG] 00:17:13:628 log/(5306:5306): 127.0.0.1
+[DEBUG] 00:17:13:628 log/(5306:5306): 5002
+[DEBUG] 00:17:13:628 log/(5306:5306): ../mnt/TALL_GRASS
+[DEBUG] 00:17:13:628 log/(5306:5306): 12
+[DEBUG] 00:17:13:631 log/(5306:5309): Se logra establecer la conexion
+[DEBUG] 00:17:13:632 log/(5306:5308): Se logra establecer la conexion
+[DEBUG] 00:17:13:647 log/(5306:5307): Se logra establecer la conexion
+[DEBUG] 00:28:30:749 log/(6090:6090): 30
+[DEBUG] 00:28:30:749 log/(6090:6090): 5
+[DEBUG] 00:28:30:749 log/(6090:6090): 1
+[DEBUG] 00:28:30:749 log/(6090:6090): 127.0.0.1
+[DEBUG] 00:28:30:750 log/(6090:6090): 5002
+[DEBUG] 00:28:30:750 log/(6090:6090): ../mnt/TALL_GRASS
+[DEBUG] 00:28:30:750 log/(6090:6090): 12
+[DEBUG] 00:28:30:751 log/(6090:6093): Se logra establecer la conexion
+[DEBUG] 00:28:30:751 log/(6090:6092): Se logra establecer la conexion
+[DEBUG] 00:28:30:752 log/(6090:6091): Se logra establecer la conexion
+[DEBUG] 00:30:42:285 log/(6090:6091): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 00:31:12:286 log/(6090:6091): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 00:33:00:713 log/(6158:6158): 30
+[DEBUG] 00:33:00:713 log/(6158:6158): 5
+[DEBUG] 00:33:00:713 log/(6158:6158): 1
+[DEBUG] 00:33:00:713 log/(6158:6158): 127.0.0.1
+[DEBUG] 00:33:00:713 log/(6158:6158): 5002
+[DEBUG] 00:33:00:713 log/(6158:6158): ../mnt/TALL_GRASS
+[DEBUG] 00:33:00:713 log/(6158:6158): 12
+[DEBUG] 00:33:00:714 log/(6158:6161): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 00:33:10:74 log/(6166:6166): 30
+[DEBUG] 00:33:10:74 log/(6166:6166): 5
+[DEBUG] 00:33:10:74 log/(6166:6166): 1
+[DEBUG] 00:33:10:74 log/(6166:6166): 127.0.0.1
+[DEBUG] 00:33:10:74 log/(6166:6166): 5002
+[DEBUG] 00:33:10:74 log/(6166:6166): ../mnt/TALL_GRASS
+[DEBUG] 00:33:10:74 log/(6166:6166): 12
+[DEBUG] 00:33:10:76 log/(6166:6169): Se logra establecer la conexion
+[DEBUG] 00:33:10:76 log/(6166:6168): Se logra establecer la conexion
+[DEBUG] 00:33:10:77 log/(6166:6167): Se logra establecer la conexion
+[DEBUG] 00:37:18:937 log/(6249:6249): 30
+[DEBUG] 00:37:18:937 log/(6249:6249): 5
+[DEBUG] 00:37:18:937 log/(6249:6249): 1
+[DEBUG] 00:37:18:937 log/(6249:6249): 127.0.0.1
+[DEBUG] 00:37:18:937 log/(6249:6249): 5002
+[DEBUG] 00:37:18:937 log/(6249:6249): ../mnt/TALL_GRASS
+[DEBUG] 00:37:18:937 log/(6249:6249): 12
+[DEBUG] 00:37:18:938 log/(6249:6252): Se logra establecer la conexion
+[DEBUG] 00:37:18:939 log/(6249:6251): Se logra establecer la conexion
+[DEBUG] 00:37:18:939 log/(6249:6250): Se logra establecer la conexion
+[DEBUG] 00:48:17:463 log/(6456:6456): 30
+[DEBUG] 00:48:17:463 log/(6456:6456): 5
+[DEBUG] 00:48:17:463 log/(6456:6456): 1
+[DEBUG] 00:48:17:463 log/(6456:6456): 127.0.0.1
+[DEBUG] 00:48:17:463 log/(6456:6456): 5002
+[DEBUG] 00:48:17:463 log/(6456:6456): ../mnt/TALL_GRASS
+[DEBUG] 00:48:17:463 log/(6456:6456): 12
+[DEBUG] 00:48:17:464 log/(6456:6459): Se logra establecer la conexion
+[DEBUG] 00:48:17:465 log/(6456:6458): Se logra establecer la conexion
+[DEBUG] 00:48:17:466 log/(6456:6457): Se logra establecer la conexion
+[DEBUG] 00:48:24:730 log/(6456:6457): Se logra establecer la conexion
+[DEBUG] 00:48:24:731 log/(6456:6457): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 00:50:38:468 log/(6495:6495): 30
+[DEBUG] 00:50:38:468 log/(6495:6495): 5
+[DEBUG] 00:50:38:468 log/(6495:6495): 1
+[DEBUG] 00:50:38:468 log/(6495:6495): 127.0.0.1
+[DEBUG] 00:50:38:468 log/(6495:6495): 5002
+[DEBUG] 00:50:38:468 log/(6495:6495): ../mnt/TALL_GRASS
+[DEBUG] 00:50:38:469 log/(6495:6495): 12
+[DEBUG] 00:50:38:470 log/(6495:6498): Se logra establecer la conexion
+[DEBUG] 00:50:38:471 log/(6495:6497): Se logra establecer la conexion
+[DEBUG] 00:50:38:472 log/(6495:6496): Se logra establecer la conexion
+[DEBUG] 00:50:54:407 log/(6495:6496): Se logra establecer la conexion
+[DEBUG] 00:50:54:407 log/(6495:6496): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 00:54:16:705 log/(6588:6588): 30
+[DEBUG] 00:54:16:705 log/(6588:6588): 5
+[DEBUG] 00:54:16:705 log/(6588:6588): 1
+[DEBUG] 00:54:16:705 log/(6588:6588): 127.0.0.1
+[DEBUG] 00:54:16:705 log/(6588:6588): 5002
+[DEBUG] 00:54:16:705 log/(6588:6588): ../mnt/TALL_GRASS
+[DEBUG] 00:54:16:705 log/(6588:6588): 12
+[DEBUG] 00:54:16:706 log/(6588:6591): Se logra establecer la conexion
+[DEBUG] 00:54:16:707 log/(6588:6590): Se logra establecer la conexion
+[DEBUG] 00:54:16:707 log/(6588:6589): Se logra establecer la conexion
+[DEBUG] 01:01:22:835 log/(6758:6758): 30
+[DEBUG] 01:01:22:838 log/(6758:6758): 5
+[DEBUG] 01:01:22:838 log/(6758:6758): 1
+[DEBUG] 01:01:22:838 log/(6758:6758): 127.0.0.1
+[DEBUG] 01:01:22:838 log/(6758:6758): 5002
+[DEBUG] 01:01:22:838 log/(6758:6758): ../mnt/TALL_GRASS
+[DEBUG] 01:01:22:839 log/(6758:6758): 12
+[DEBUG] 01:01:22:840 log/(6758:6762): Se logra establecer la conexion
+[DEBUG] 01:01:22:841 log/(6758:6761): Se logra establecer la conexion
+[DEBUG] 01:01:22:842 log/(6758:6760): Se logra establecer la conexion
+[DEBUG] 01:01:44:146 log/(6775:6775): 30
+[DEBUG] 01:01:44:147 log/(6775:6775): 5
+[DEBUG] 01:01:44:147 log/(6775:6775): 1
+[DEBUG] 01:01:44:147 log/(6775:6775): 127.0.0.1
+[DEBUG] 01:01:44:147 log/(6775:6775): 5002
+[DEBUG] 01:01:44:147 log/(6775:6775): ../mnt/TALL_GRASS
+[DEBUG] 01:01:44:147 log/(6775:6775): 12
+[DEBUG] 01:01:44:148 log/(6775:6779): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 01:01:56:576 log/(6785:6785): 30
+[DEBUG] 01:01:56:580 log/(6785:6785): 5
+[DEBUG] 01:01:56:580 log/(6785:6785): 1
+[DEBUG] 01:01:56:580 log/(6785:6785): 127.0.0.1
+[DEBUG] 01:01:56:580 log/(6785:6785): 5002
+[DEBUG] 01:01:56:580 log/(6785:6785): ../mnt/TALL_GRASS
+[DEBUG] 01:01:56:580 log/(6785:6785): 12
+[DEBUG] 01:01:56:581 log/(6785:6789): Se logra establecer la conexion
+[DEBUG] 01:01:56:583 log/(6785:6788): Se logra establecer la conexion
+[DEBUG] 01:01:56:584 log/(6785:6787): Se logra establecer la conexion
+[DEBUG] 01:08:44:922 log/(6925:6925): 30
+[DEBUG] 01:08:44:922 log/(6925:6925): 5
+[DEBUG] 01:08:44:922 log/(6925:6925): 1
+[DEBUG] 01:08:44:923 log/(6925:6925): 127.0.0.1
+[DEBUG] 01:08:44:923 log/(6925:6925): 5002
+[DEBUG] 01:08:44:923 log/(6925:6925): ../mnt/TALL_GRASS
+[DEBUG] 01:08:44:923 log/(6925:6925): 12
+[DEBUG] 01:08:44:925 log/(6925:6929): Se logra establecer la conexion
+[DEBUG] 01:08:44:929 log/(6925:6928): Se logra establecer la conexion
+[DEBUG] 01:08:44:933 log/(6925:6927): Se logra establecer la conexion
+[DEBUG] 01:18:31:510 log/(7137:7137): 30
+[DEBUG] 01:18:31:510 log/(7137:7137): 5
+[DEBUG] 01:18:31:510 log/(7137:7137): 1
+[DEBUG] 01:18:31:510 log/(7137:7137): 127.0.0.1
+[DEBUG] 01:18:31:511 log/(7137:7137): 5002
+[DEBUG] 01:18:31:511 log/(7137:7137): ../mnt/TALL_GRASS
+[DEBUG] 01:18:31:511 log/(7137:7137): 12
+[DEBUG] 01:18:31:512 log/(7137:7141): Se logra establecer la conexion
+[DEBUG] 01:18:31:516 log/(7137:7140): Se logra establecer la conexion
+[DEBUG] 01:18:31:517 log/(7137:7139): Se logra establecer la conexion
+[DEBUG] 01:23:59:886 log/(7277:7277): 30
+[DEBUG] 01:23:59:888 log/(7277:7277): 5
+[DEBUG] 01:23:59:888 log/(7277:7277): 1
+[DEBUG] 01:23:59:888 log/(7277:7277): 127.0.0.1
+[DEBUG] 01:23:59:888 log/(7277:7277): 5002
+[DEBUG] 01:23:59:888 log/(7277:7277): ../mnt/TALL_GRASS
+[DEBUG] 01:23:59:888 log/(7277:7277): 12
+[DEBUG] 01:23:59:895 log/(7277:7281): Se logra establecer la conexion
+[DEBUG] 01:23:59:901 log/(7277:7280): Se logra establecer la conexion
+[DEBUG] 01:23:59:901 log/(7277:7279): Se logra establecer la conexion
+[DEBUG] 01:32:37:257 log/(7486:7486): 30
+[DEBUG] 01:32:37:257 log/(7486:7486): 5
+[DEBUG] 01:32:37:257 log/(7486:7486): 1
+[DEBUG] 01:32:37:258 log/(7486:7486): 127.0.0.1
+[DEBUG] 01:32:37:258 log/(7486:7486): 5002
+[DEBUG] 01:32:37:258 log/(7486:7486): ../mnt/TALL_GRASS
+[DEBUG] 01:32:37:258 log/(7486:7486): 12
+[DEBUG] 01:32:37:259 log/(7486:7490): Se logra establecer la conexion
+[DEBUG] 01:32:37:262 log/(7486:7489): Se logra establecer la conexion
+[DEBUG] 01:32:37:264 log/(7486:7488): Se logra establecer la conexion
+[DEBUG] 01:35:40:429 log/(7622:7622): 30
+[DEBUG] 01:35:40:429 log/(7622:7622): 5
+[DEBUG] 01:35:40:429 log/(7622:7622): 1
+[DEBUG] 01:35:40:430 log/(7622:7622): 127.0.0.1
+[DEBUG] 01:35:40:430 log/(7622:7622): 5002
+[DEBUG] 01:35:40:430 log/(7622:7622): ../mnt/TALL_GRASS
+[DEBUG] 01:35:40:430 log/(7622:7622): 12
+[DEBUG] 01:35:40:431 log/(7622:7626): Se logra establecer la conexion
+[DEBUG] 01:35:40:434 log/(7622:7625): Se logra establecer la conexion
+[DEBUG] 01:35:40:435 log/(7622:7624): Se logra establecer la conexion
+[DEBUG] 01:40:10:756 log/(7766:7766): 30
+[DEBUG] 01:40:10:760 log/(7766:7766): 5
+[DEBUG] 01:40:10:760 log/(7766:7766): 1
+[DEBUG] 01:40:10:760 log/(7766:7766): 127.0.0.1
+[DEBUG] 01:40:10:760 log/(7766:7766): 5002
+[DEBUG] 01:40:10:760 log/(7766:7766): ../mnt/TALL_GRASS
+[DEBUG] 01:40:10:760 log/(7766:7766): 12
+[DEBUG] 01:40:10:761 log/(7766:7770): Se logra establecer la conexion
+[DEBUG] 01:40:10:762 log/(7766:7769): Se logra establecer la conexion
+[DEBUG] 01:40:10:763 log/(7766:7768): Se logra establecer la conexion
+[DEBUG] 01:44:35:858 log/(7937:7937): 30
+[DEBUG] 01:44:35:865 log/(7937:7937): 5
+[DEBUG] 01:44:35:865 log/(7937:7937): 1
+[DEBUG] 01:44:35:865 log/(7937:7937): 127.0.0.1
+[DEBUG] 01:44:35:865 log/(7937:7937): 5002
+[DEBUG] 01:44:35:865 log/(7937:7937): ../mnt/TALL_GRASS
+[DEBUG] 01:44:35:866 log/(7937:7937): 12
+[DEBUG] 01:44:35:874 log/(7937:7941): Se logra establecer la conexion
+[DEBUG] 01:44:35:876 log/(7937:7940): Se logra establecer la conexion
+[DEBUG] 01:44:35:877 log/(7937:7939): Se logra establecer la conexion
+[DEBUG] 01:52:28:19 log/(8112:8112): 30
+[DEBUG] 01:52:28:20 log/(8112:8112): 5
+[DEBUG] 01:52:28:20 log/(8112:8112): 1
+[DEBUG] 01:52:28:20 log/(8112:8112): 127.0.0.1
+[DEBUG] 01:52:28:20 log/(8112:8112): 5002
+[DEBUG] 01:52:28:20 log/(8112:8112): ../mnt/TALL_GRASS
+[DEBUG] 01:52:28:20 log/(8112:8112): 12
+[DEBUG] 01:52:28:21 log/(8112:8116): Se logra establecer la conexion
+[DEBUG] 01:52:28:453 log/(8112:8115): Se logra establecer la conexion
+[DEBUG] 01:52:28:454 log/(8112:8114): Se logra establecer la conexion
+[DEBUG] 02:01:16:244 log/(8112:8115): Se logra establecer la conexion
+[DEBUG] 02:01:16:247 log/(8112:8116): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 02:01:46:247 log/(8112:8116): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 02:02:16:248 log/(8112:8116): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 02:02:46:249 log/(8112:8116): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 02:04:35:63 log/(8372:8372): 30
+[DEBUG] 02:04:35:66 log/(8372:8372): 5
+[DEBUG] 02:04:35:67 log/(8372:8372): 1
+[DEBUG] 02:04:35:67 log/(8372:8372): 127.0.0.1
+[DEBUG] 02:04:35:67 log/(8372:8372): 5002
+[DEBUG] 02:04:35:67 log/(8372:8372): ../mnt/TALL_GRASS
+[DEBUG] 02:04:35:67 log/(8372:8372): 12
+[DEBUG] 02:04:35:68 log/(8372:8376): Se logra establecer la conexion
+[DEBUG] 02:04:35:70 log/(8372:8375): Se logra establecer la conexion
+[DEBUG] 02:04:35:71 log/(8372:8374): Se logra establecer la conexion
+[DEBUG] 02:04:41:119 log/(8372:8375): Se logra establecer la conexion
+[DEBUG] 02:04:41:119 log/(8372:8375): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 02:05:11:119 log/(8372:8375): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 02:05:41:119 log/(8372:8375): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 02:06:11:120 log/(8372:8375): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 02:06:49:509 log/(8431:8431): 30
+[DEBUG] 02:06:49:509 log/(8431:8431): 5
+[DEBUG] 02:06:49:509 log/(8431:8431): 1
+[DEBUG] 02:06:49:509 log/(8431:8431): 127.0.0.1
+[DEBUG] 02:06:49:509 log/(8431:8431): 5002
+[DEBUG] 02:06:49:509 log/(8431:8431): ../mnt/TALL_GRASS
+[DEBUG] 02:06:49:509 log/(8431:8431): 12
+[DEBUG] 02:06:49:510 log/(8431:8435): Se logra establecer la conexion
+[DEBUG] 02:06:49:514 log/(8431:8434): Se logra establecer la conexion
+[DEBUG] 02:06:49:515 log/(8431:8433): Se logra establecer la conexion
+[DEBUG] 02:08:53:573 log/(8482:8482): 30
+[DEBUG] 02:08:53:573 log/(8482:8482): 5
+[DEBUG] 02:08:53:573 log/(8482:8482): 1
+[DEBUG] 02:08:53:573 log/(8482:8482): 127.0.0.1
+[DEBUG] 02:08:53:573 log/(8482:8482): 5002
+[DEBUG] 02:08:53:573 log/(8482:8482): ../mnt/TALL_GRASS
+[DEBUG] 02:08:53:573 log/(8482:8482): 12
+[DEBUG] 02:08:53:574 log/(8482:8486): Se logra establecer la conexion
+[DEBUG] 02:08:53:578 log/(8482:8485): Se logra establecer la conexion
+[DEBUG] 02:08:53:580 log/(8482:8484): Se logra establecer la conexion
+[DEBUG] 02:11:19:37 log/(8541:8541): 30
+[DEBUG] 02:11:20:79 log/(8541:8541): 5
+[DEBUG] 02:11:20:82 log/(8541:8541): 1
+[DEBUG] 02:11:20:83 log/(8541:8541): 127.0.0.1
+[DEBUG] 02:11:20:84 log/(8541:8541): 5002
+[DEBUG] 02:11:20:85 log/(8541:8541): ../mnt/TALL_GRASS
+[DEBUG] 02:11:20:86 log/(8541:8541): 12
+[DEBUG] 02:11:20:141 log/(8541:8544): Se logra establecer la conexion
+[DEBUG] 02:11:20:184 log/(8541:8545): Se logra establecer la conexion
+[DEBUG] 02:11:20:187 log/(8541:8546): Se logra establecer la conexion
+[DEBUG] 02:12:16:894 log/(8567:8567): 30
+[DEBUG] 02:12:16:935 log/(8567:8567): 5
+[DEBUG] 02:12:16:939 log/(8567:8567): 1
+[DEBUG] 02:12:16:940 log/(8567:8567): 127.0.0.1
+[DEBUG] 02:12:16:940 log/(8567:8567): 5002
+[DEBUG] 02:12:16:941 log/(8567:8567): ../mnt/TALL_GRASS
+[DEBUG] 02:12:16:942 log/(8567:8567): 12
+[DEBUG] 02:12:17:10 log/(8567:8571): Se logra establecer la conexion
+[DEBUG] 02:12:17:51 log/(8567:8572): Se logra establecer la conexion
+[DEBUG] 02:12:17:53 log/(8567:8573): Se logra establecer la conexion
+[DEBUG] 02:13:27:597 log/(8658:8658): 30
+[DEBUG] 02:13:27:637 log/(8658:8658): 5
+[DEBUG] 02:13:27:641 log/(8658:8658): 1
+[DEBUG] 02:13:27:642 log/(8658:8658): 127.0.0.1
+[DEBUG] 02:13:27:643 log/(8658:8658): 5002
+[DEBUG] 02:13:27:643 log/(8658:8658): ../mnt/TALL_GRASS
+[DEBUG] 02:13:27:645 log/(8658:8658): 12
+[DEBUG] 02:13:27:705 log/(8658:8662): Se logra establecer la conexion
+[DEBUG] 02:13:27:744 log/(8658:8663): Se logra establecer la conexion
+[DEBUG] 02:13:27:747 log/(8658:8664): Se logra establecer la conexion
+[DEBUG] 02:14:09:78 log/(8711:8711): 30
+[DEBUG] 02:14:09:119 log/(8711:8711): 5
+[DEBUG] 02:14:09:123 log/(8711:8711): 1
+[DEBUG] 02:14:09:124 log/(8711:8711): 127.0.0.1
+[DEBUG] 02:14:09:125 log/(8711:8711): 5002
+[DEBUG] 02:14:09:125 log/(8711:8711): ../mnt/TALL_GRASS
+[DEBUG] 02:14:09:126 log/(8711:8711): 12
+[DEBUG] 02:14:09:181 log/(8711:8714): Se logra establecer la conexion
+[DEBUG] 02:14:09:223 log/(8711:8715): Se logra establecer la conexion
+[DEBUG] 02:14:09:225 log/(8711:8716): Se logra establecer la conexion
+[DEBUG] 02:14:31:626 log/(8729:8729): 30
+[DEBUG] 02:14:31:667 log/(8729:8729): 5
+[DEBUG] 02:14:31:671 log/(8729:8729): 1
+[DEBUG] 02:14:31:672 log/(8729:8729): 127.0.0.1
+[DEBUG] 02:14:31:672 log/(8729:8729): 5002
+[DEBUG] 02:14:31:673 log/(8729:8729): ../mnt/TALL_GRASS
+[DEBUG] 02:14:31:674 log/(8729:8729): 12
+[DEBUG] 02:14:31:731 log/(8729:8733): Se logra establecer la conexion
+[DEBUG] 02:14:31:770 log/(8729:8734): Se logra establecer la conexion
+[DEBUG] 02:14:31:772 log/(8729:8735): Se logra establecer la conexion
+[DEBUG] 02:14:36:72 log/(8729:8735): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 02:15:06:74 log/(8729:8735): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 02:15:36:75 log/(8729:8735): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 02:16:06:76 log/(8729:8735): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 02:16:36:77 log/(8729:8735): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 02:17:06:78 log/(8729:8735): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 02:17:36:79 log/(8729:8735): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 02:18:58:506 log/(8855:8855): 30
+[DEBUG] 02:18:58:549 log/(8855:8855): 5
+[DEBUG] 02:18:58:553 log/(8855:8855): 1
+[DEBUG] 02:18:58:554 log/(8855:8855): 127.0.0.1
+[DEBUG] 02:18:58:554 log/(8855:8855): 5002
+[DEBUG] 02:18:58:555 log/(8855:8855): ../mnt/TALL_GRASS
+[DEBUG] 02:18:58:557 log/(8855:8855): 12
+[DEBUG] 02:18:58:614 log/(8855:8859): Se logra establecer la conexion
+[DEBUG] 02:18:58:655 log/(8855:8860): Se logra establecer la conexion
+[DEBUG] 02:18:58:658 log/(8855:8861): Se logra establecer la conexion
+[DEBUG] 02:19:39:312 log/(8855:8861): Se logra establecer la conexion
+[DEBUG] 02:19:39:317 log/(8855:8860): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 02:20:09:318 log/(8855:8860): Fallo conexion, reintentando en 30 segundos...

@@ -440,7 +440,6 @@ void enviar_catch(t_entrenador* entrenador){
 	check_ack(socket_broker,ACK);
 
 	int id_correlativo = wait_ack(socket_broker);
-
 	printf("id_correlativo: %d\n",id_correlativo);
 
 	send_ack(socket_broker,id_correlativo);
@@ -1138,25 +1137,40 @@ t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos,
 }
 
 
+char** own_config_get_array_value(t_config* config, char *key){
+	char* value_in_dictionary = config_get_string_value(config, key);
+	if(!strcmp(value_in_dictionary,"[]")){
+		//free(value_in_dictionary);
+		return NULL;
+	}
+	return config_get_array_value(config,key);
+}
+
 void obtener_entrenadores(){
 	char **lista_de_objetivos, **lista_de_pokemones, **lista_de_posiciones;
 	t_entrenador* entrenador;
 
-	lista_de_posiciones = config_get_array_value(config,"POSICIONES_ENTRENADORES");
+	lista_de_posiciones = own_config_get_array_value(config,"POSICIONES_ENTRENADORES");
 
-	lista_de_pokemones = config_get_array_value(config,"POKEMON_ENTRENADORES");
+	lista_de_pokemones = own_config_get_array_value(config,"POKEMON_ENTRENADORES");
 
-	lista_de_objetivos = config_get_array_value(config,"OBJETIVOS_ENTRENADORES");
+	lista_de_objetivos = own_config_get_array_value(config,"OBJETIVOS_ENTRENADORES");
 
     int i =0;
 	while(*lista_de_posiciones){
+		if(lista_de_pokemones==NULL){
+			entrenador = crear_entrenador(*lista_de_posiciones, NULL, *lista_de_objetivos,i);
+			list_add(entrenadores, entrenador);
+		}else{
 		entrenador = crear_entrenador(*lista_de_posiciones, *lista_de_pokemones, *lista_de_objetivos,i);
 		list_add(entrenadores, entrenador);
+		}
 
-		if(*lista_de_pokemones != NULL){
+		if(lista_de_pokemones != NULL){
 			free(*lista_de_pokemones);
 			lista_de_pokemones++;
 		}
+
 		free(*lista_de_posiciones);
 		free(*lista_de_objetivos);
 		lista_de_objetivos++;
@@ -1236,8 +1250,9 @@ void esperar_mensaje(int *socket){
 
 
 void protocolo_escuchar_gameboy(){
-	char* ip_gameboy_escucha = "127.0.0.1";
-	char* puerto_gameboy_escucha = "5005";
+
+	char* ip_gameboy_escucha = config_get_string_value(config,"RE");
+	char* puerto_gameboy_escucha = config_get_string_value(config,"RETA");
 	int socket_escucha = listen_to(ip_gameboy_escucha,puerto_gameboy_escucha);
 
 	while(1)
