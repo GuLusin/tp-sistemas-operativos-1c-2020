@@ -133,6 +133,15 @@ void manejar_mensaje(int argc, char** args){
 			break;
 		case CATCH_POKEMON:
 			mensaje = crear_mensaje(4,CATCH_POKEMON,args[3],atoi(args[4]),atoi(args[5]));
+			printear_mensaje(mensaje);
+			enviar_mensaje(socket_aux,mensaje);
+			check_ack(socket_aux,ACK);
+			check_ack(socket_aux,ACK);
+			printf("ACK recibido con exito\n");
+			free(mensaje);
+			close(socket_aux);
+			printf("Socket cerrado\n");
+			return;
 			break;
 		case CAUGHT_POKEMON:
 			if(!strcmp(strdup(args[4]),"OK")){
@@ -147,6 +156,15 @@ void manejar_mensaje(int argc, char** args){
 			return;
 		case GET_POKEMON:
 			mensaje = crear_mensaje(2,GET_POKEMON,args[3]);
+			printear_mensaje(mensaje);
+			enviar_mensaje(socket_aux,mensaje);
+			check_ack(socket_aux,ACK);
+			check_ack(socket_aux,ACK);
+			printf("ACK recibido con exito\n");
+			free(mensaje);
+			close(socket_aux);
+			printf("Socket cerrado\n");
+			return;
 			break;
 		default:
 			printf("Mensaje invalido\n");
@@ -208,7 +226,6 @@ void manejar_mensaje(int argc, char** args){
 	enviar_mensaje(socket_aux,mensaje);
 	check_ack(socket_aux,ACK);
 	printf("ACK recibido con exito\n");
-
 	free(mensaje);
 	close(socket_aux);
 	printf("Socket cerrado\n");

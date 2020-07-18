@@ -97,7 +97,7 @@ void manejar_get(int socket_cliente,t_mensaje* mensaje){
 }
 
 void manejar_caught(int socket_cliente,t_mensaje* mensaje){
-	send_ack(socket_cliente,mensaje->id);
+
 }
 
 void manejar_localized(int socket_cliente,t_mensaje* mensaje){

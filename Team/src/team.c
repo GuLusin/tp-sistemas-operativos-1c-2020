@@ -1279,8 +1279,8 @@ void enviar_un_mensaje_get(char* nombre_pokemon, void* data){
 	int socket_broker = connect_to(ip_broker,puerto_broker,wait_time,logger);
 	t_mensaje* mensaje = crear_mensaje(2,GET_POKEMON,string_duplicate(nombre_pokemon));
 	enviar_mensaje(socket_broker,mensaje);
+	check_ack(socket_broker,ACK);
 	int id_correlativo = wait_ack(socket_broker);
-	id_correlativo = wait_ack(socket_broker);
     printf("ID CORRELATIVO: %d",id_correlativo);
 	dictionary_put(ids_a_esperar_localized,string_itoa(id_correlativo),(void*)LOCALIZED_POKEMON);
 

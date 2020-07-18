@@ -554,7 +554,7 @@ void recibir_new(t_mensaje *mensaje){
 
 	if(socket_broker != -1){
 		enviar_mensaje(socket_broker,mensajeAEnviar);
-		wait_ack(socket_broker);
+		check_ack(socket_broker,ACK);
 		close(socket_broker);
 
 	}
@@ -595,8 +595,6 @@ void recibir_catch(t_mensaje *mensaje){
 	if(socket_broker != -1){
 		enviar_mensaje(socket_broker,mensajeAEnviar);
 		puts("------------------------------------------------------------");
-		check_ack(socket_broker,ACK);
-		puts("1");
 		check_ack(socket_broker,ACK);
 		puts("------------------------------------------------------------");
 		close(socket_broker);
@@ -667,8 +665,6 @@ void recibir_get(t_mensaje *mensaje){
 	if(socket_broker != -1){
 		enviar_mensaje(socket_broker,mensajeAEnviar);
 		puts("------------------------------------------------------------");
-		check_ack(socket_broker,ACK);
-		puts("1");
 		check_ack(socket_broker,ACK);
 		puts("------------------------------------------------------------");
 		close(socket_broker);
@@ -843,8 +839,8 @@ void esperar_mensaje(int *socket){
 }
 
 void protocolo_escuchar_gameboy(){
-	char* ip_gameboy_escucha = "127.0.0.5";
-	char* puerto_gameboy_escucha = "5005";
+	char* ip_gameboy_escucha = "127.0.0.1";
+	char* puerto_gameboy_escucha = "5003";
 	int socket_escucha = listen_to(ip_gameboy_escucha,puerto_gameboy_escucha);
 
 	while(1)
