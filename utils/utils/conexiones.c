@@ -50,7 +50,7 @@ uint32_t wait_ack(int socket_cliente){
 	uint32_t ack;
 	recv(socket_cliente, &(ack),sizeof(uint32_t), MSG_WAITALL);
 	//puts("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-	printf("ID: %d",ack);
+	printf("ACK: %d\n",ack);
 	//puts("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 	return ack;
 }

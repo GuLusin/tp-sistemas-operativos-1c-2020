@@ -76,9 +76,7 @@ void manejar_subscripcion(int cola,t_suscriptor* suscriptor){
 	sem_post(&sem_suscriptores);
 
 	send_ack(suscriptor->socket_cliente,ACK);
-
 	sem_post(&sem_recibir);
-
 	log_debug(logger,"Se suscribe proceso id:%d a la cola:%s", suscriptor->id_team, cola_a_string(cola));
 
 	notificar_mensaje_cacheados(cola,suscriptor);
@@ -142,6 +140,7 @@ void manejar_mensaje(int socket_cliente,t_mensaje* mensaje){
     close(socket_cliente);
     sem_post(&sem_recibir);
     notificar_mensaje(mensaje);
+
 }
 
 
@@ -205,6 +204,7 @@ void recibir_mensaje(int *socket_cliente){
 	pthread_mutex_unlock(&mutex_id_mensajes_globales);
 	puts("MENSAJEEEE");
 	printear_mensaje(mensaje);
+	//sem_post(&sem_recibir);
 	manejar_mensaje(*socket_cliente,mensaje);
 }
 
@@ -228,16 +228,17 @@ void notificar_mensaje(t_mensaje* mensaje){
 	}
 	sem_wait(&sem_memoria);
 	cachear_mensaje(mensaje);
-	sem_post(&sem_memoria);
+	//sem_post(&sem_memoria);
 	//printear_estado_memoria();
 
 	puts("1");
-	sem_wait(&sem_suscriptores);
+	//sem_wait(&sem_suscriptores);
 	puts("2");
 	list_iterate(suscriptores[mensaje->codigo_operacion],notificar_suscriptores);
 	puts("3");
-	sem_post(&sem_suscriptores);
+	//sem_post(&sem_suscriptores);
 	puts("4");
+	sem_post(&sem_memoria);
 }
 
 
@@ -503,7 +504,6 @@ bool es_suscriptor_confirmado(t_partition* particion,int id_team){
 void confirmar_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje){
 	int posicion = encontrar_particion(mensaje->id,mensaje->codigo_operacion);
 	t_partition* particion = list_get(administracion_colas[mensaje->codigo_operacion].particiones,posicion);
-
 	list_add(particion->suscriptores_confirmados,(int)suscriptor->id_team);
 	printear_estado_memoria();
 }
@@ -522,10 +522,14 @@ void remover_suscriptor(t_suscriptor* suscriptor,t_mensaje* mensaje){
 
 void validar_suscriptor(t_suscriptor* suscriptor, t_mensaje* mensaje_aux) {
 	if(check_ack(suscriptor->socket_cliente, ACK)){
-		puts("conf");confirmar_suscriptor(suscriptor, mensaje_aux);puts("checkquep");
+		puts("conf");
+		confirmar_suscriptor(suscriptor, mensaje_aux);
+		puts("checkquep");
 		log_debug(logger,"Se confirma Acknowledgement del suscriptor:%d", suscriptor->id_team);
 	}else{
-		puts("remov");remover_suscriptor(suscriptor, mensaje_aux);puts("checkquep");
+		puts("remov");
+		remover_suscriptor(suscriptor, mensaje_aux);
+		puts("checkquep");
 	}
 }
 

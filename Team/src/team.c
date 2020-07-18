@@ -1111,7 +1111,7 @@ t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos,
 
 	free(auxiliar[0]);
 	free(auxiliar[1]);
-    free(auxiliar);
+    //free(auxiliar); todo se podran usar los free de auxiliares o por lo menos usar el mismo
 
 	entrenador->pokemones = list_create();
 	if(pokemones){
@@ -1119,9 +1119,9 @@ t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos,
 
 		while(*auxiliar3){
 			list_add(entrenador->pokemones,*auxiliar3);
-			auxiliar3++;
+	     	auxiliar3++;
 		}
-		free(auxiliar3);
+		//free(auxiliar3);
 	}
 
 	char **auxiliar2 = string_split(objetivos,"|"); //ultima posicion tiene null
@@ -1132,7 +1132,7 @@ t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos,
 		auxiliar2++;
 	}
 
-	free(auxiliar2);
+	//free(auxiliar2);
 	return entrenador;
 }
 
@@ -1177,7 +1177,7 @@ void obtener_entrenadores(){
 		lista_de_posiciones++;
 		i++;
 	}
-	//free(lista_de_posiciones);
+	//free(lista_de_posiciones); todo se podran hacer estos?
 	//free(lista_de_pokemones);
 	//free(lista_de_objetivos);
 
