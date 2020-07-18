@@ -103,34 +103,31 @@ typedef struct{
 
 //size se envia en la serializacion aunque no este en el struct
 
-t_mensaje* crear_mensaje(int num, ...);
-int enviar_mensaje(int socket_a_enviar, t_mensaje* mensaje);
-int cant_coordenadas_especie_pokemon(t_pokemon_especie *pokemon_especie);
-void* serializar_subscripcion(cola_code cola);
-cola_code deserializar_subscripcion(void* stream);
-t_mensaje* deserializar_mensaje(int codigo_operacion, void* stream);
-char* especie_pokemon_a_string(t_pokemon_especie* pokemon_especie);
-
+void logear_llegada_mensaje(t_log* logger, t_mensaje* mensaje);
 void printear_pokemon(t_pokemon* pokemon);
 void printear_pokemon_especie(t_pokemon_especie* pokemon_especie);
 void printear_mensaje(t_mensaje* mensaje);
 void liberar_mensaje(t_mensaje* mensaje);
 void liberar_pokemon(t_pokemon* pokemon);
-
-t_pokemon* crear_pokemon(char* nombre,uint32_t px, uint32_t py);
+void agregar_ubicacion_a_especie(t_pokemon_especie* pokemon_especie, char* posicionycantidad);
+void* serializar_subscripcion(cola_code cola);
 void* serializar_pokemon(t_pokemon* pokemon);
-t_pokemon* string_a_pokemon(char* pokestring);
-t_pokemon* deserializar_pokemon(void* stream);
+int enviar_mensaje(int socket_a_enviar, t_mensaje* mensaje);
+int cant_coordenadas_especie_pokemon(t_pokemon_especie *pokemon_especie);
 int tamanio_pokemon(t_pokemon* pokemon);
+char* especie_pokemon_a_string(t_pokemon_especie* pokemon_especie);
 char* posiciones_a_string(t_dictionary* posiciones);
 char* posicion_string_pokemon(t_pokemon* pokemon);
-
-void logear_llegada_mensaje(t_log* logger, t_mensaje* mensaje);
 char* crear_pokestring(t_pokemon* pokemon);
 char* especie_pokemon_a_string(t_pokemon_especie* pokemon_especie);
-void agregar_ubicacion_a_especie(t_pokemon_especie* pokemon_especie, char* posicionycantidad);
+t_mensaje* crear_mensaje(int num, ...);
+t_mensaje* deserializar_mensaje(int codigo_operacion, void* stream);
+cola_code deserializar_subscripcion(void* stream);
+t_pokemon* crear_pokemon(char* nombre,uint32_t px, uint32_t py);
+t_pokemon* string_a_pokemon(char* pokestring);
+t_pokemon* deserializar_pokemon(void* stream);
 t_pokemon_especie* crear_pokemon_especie(char* nombre_especie);
-
 t_pokemon_especie* deserializar_pokemon_especie(void* string);
+
 
 #endif /* MENSAJES_H */

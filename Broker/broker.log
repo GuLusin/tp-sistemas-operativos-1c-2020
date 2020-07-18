@@ -18483,3 +18483,1423 @@
 [DEBUG] 23:52:00:771 log/(13579:13581): Se almacena mensaje id:30 de tipo:APPEARED en ubicacion 32 de la memoria
 [DEBUG] 23:52:00:771 log/(13579:13581): Se envia mensaje al suscriptor id:1 de la cola:APPEARED
 [DEBUG] 23:52:00:772 log/(13579:13581): Se confirma Acknowledgement del suscriptor:1
+[DEBUG] 00:42:40:234 log/(4308:4308): 127.0.0.1
+[DEBUG] 00:42:40:234 log/(4308:4308): 5001
+[DEBUG] 00:42:40:235 log/(4308:4308): TAMANIO MEMORIA:64
+[DEBUG] 00:42:40:235 log/(4308:4308): TAMANIO MINIMO PARTICION:4
+[DEBUG] 00:42:40:235 log/(4308:4308): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 00:42:40:235 log/(4308:4308): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 00:42:40:236 log/(4308:4308): ALGORITMO MEMORIA:BS
+[DEBUG] 00:42:40:236 log/(4308:4308): FRECUENCIA COMPACTACION:1
+[DEBUG] 00:42:40:236 log/(4308:4308): Socket: 4, escuchando
+[DEBUG] 00:42:42:237 log/(4308:4308): Recibi al cliente
+[DEBUG] 00:43:07:722 log/(4308:4496): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 00:43:07:723 log/(4308:4496): Se suscribe proceso id:12 a la cola:GET
+[DEBUG] 00:43:07:723 log/(4308:4497): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 00:43:07:724 log/(4308:4497): Se suscribe proceso id:12 a la cola:CATCH
+[DEBUG] 00:43:07:724 log/(4308:4498): Se conecta un proceso con socket:8 al Broker
+[DEBUG] 00:43:07:724 log/(4308:4498): Se suscribe proceso id:12 a la cola:NEW
+[DEBUG] 00:45:28:830 log/(4308:5124): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 00:45:28:831 log/(4308:5124): Se suscribe proceso id:1 a la cola:CAUGHT
+[DEBUG] 00:45:28:831 log/(4308:5126): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 00:45:28:832 log/(4308:5126): Se suscribe proceso id:1 a la cola:LOCALIZED
+[DEBUG] 00:45:28:832 log/(4308:5127): Se conecta un proceso con socket:11 al Broker
+[DEBUG] 00:45:28:832 log/(4308:5127): Llega mensaje de socket:11 con id:1 a la cola:GET
+[DEBUG] 00:45:28:837 log/(4308:5127): Se almacena mensaje id:1 de tipo:GET en ubicacion 0 de la memoria
+[DEBUG] 00:45:28:837 log/(4308:5127): Se envia mensaje al suscriptor id:12 de la cola:GET
+[DEBUG] 00:45:28:837 log/(4308:5127): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 00:45:28:837 log/(4308:5128): Se conecta un proceso con socket:12 al Broker
+[DEBUG] 00:45:28:837 log/(4308:5128): Llega mensaje de socket:12 con id:2 a la cola:GET
+[DEBUG] 00:45:28:840 log/(4308:5128): Se almacena mensaje id:2 de tipo:GET en ubicacion 16 de la memoria
+[DEBUG] 00:45:28:840 log/(4308:5128): Se envia mensaje al suscriptor id:12 de la cola:GET
+[DEBUG] 00:45:28:840 log/(4308:5128): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 00:45:28:840 log/(4308:5129): Se conecta un proceso con socket:13 al Broker
+[DEBUG] 00:45:28:840 log/(4308:5129): Llega mensaje de socket:13 con id:3 a la cola:GET
+[DEBUG] 00:45:28:841 log/(4308:5129): Se almacena mensaje id:3 de tipo:GET en ubicacion 32 de la memoria
+[DEBUG] 00:45:28:841 log/(4308:5129): Se envia mensaje al suscriptor id:12 de la cola:GET
+[DEBUG] 00:45:28:841 log/(4308:5129): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 00:45:28:841 log/(4308:5130): Se conecta un proceso con socket:11 al Broker
+[DEBUG] 00:45:28:841 log/(4308:5130): Llega mensaje de socket:11 con id:4 a la cola:GET
+[DEBUG] 00:45:28:842 log/(4308:5130): Se almacena mensaje id:4 de tipo:GET en ubicacion 48 de la memoria
+[DEBUG] 00:45:28:842 log/(4308:5130): Se envia mensaje al suscriptor id:12 de la cola:GET
+[DEBUG] 00:45:28:842 log/(4308:5130): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 00:45:28:842 log/(4308:5131): Se conecta un proceso con socket:12 al Broker
+[DEBUG] 00:45:28:842 log/(4308:5131): Se suscribe proceso id:1 a la cola:APPEARED
+[DEBUG] 00:49:04:391 log/(5231:5231): 127.0.0.1
+[DEBUG] 00:49:04:403 log/(5231:5231): 5001
+[DEBUG] 00:49:04:405 log/(5231:5231): TAMANIO MEMORIA:64
+[DEBUG] 00:49:04:406 log/(5231:5231): TAMANIO MINIMO PARTICION:4
+[DEBUG] 00:49:04:406 log/(5231:5231): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 00:49:04:408 log/(5231:5231): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 00:49:04:408 log/(5231:5231): ALGORITMO MEMORIA:BS
+[DEBUG] 00:49:04:409 log/(5231:5231): FRECUENCIA COMPACTACION:1
+[DEBUG] 00:49:04:420 log/(5231:5231): Socket: 4, escuchando
+[DEBUG] 00:49:06:434 log/(5231:5231): Recibi al cliente
+[DEBUG] 00:49:08:788 log/(5231:5244): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 00:49:08:793 log/(5231:5244): Se suscribe proceso id:12 a la cola:GET
+[DEBUG] 00:49:08:801 log/(5231:5245): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 00:49:08:809 log/(5231:5245): Se suscribe proceso id:12 a la cola:CATCH
+[DEBUG] 00:49:08:809 log/(5231:5246): Se conecta un proceso con socket:8 al Broker
+[DEBUG] 00:49:08:809 log/(5231:5246): Se suscribe proceso id:12 a la cola:NEW
+[DEBUG] 00:49:12:297 log/(5231:5260): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 00:49:12:299 log/(5231:5260): Se suscribe proceso id:1 a la cola:CAUGHT
+[DEBUG] 00:49:12:300 log/(5231:5261): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 00:49:12:302 log/(5231:5261): Se suscribe proceso id:1 a la cola:LOCALIZED
+[DEBUG] 00:49:12:302 log/(5231:5262): Se conecta un proceso con socket:11 al Broker
+[DEBUG] 00:49:12:317 log/(5231:5262): Llega mensaje de socket:11 con id:1 a la cola:GET
+[DEBUG] 00:49:12:332 log/(5231:5263): Se conecta un proceso con socket:12 al Broker
+[DEBUG] 00:49:12:333 log/(5231:5263): Llega mensaje de socket:12 con id:2 a la cola:GET
+[DEBUG] 00:49:12:337 log/(5231:5264): Se conecta un proceso con socket:13 al Broker
+[DEBUG] 00:49:12:344 log/(5231:5264): Llega mensaje de socket:13 con id:3 a la cola:GET
+[DEBUG] 00:49:12:350 log/(5231:5265): Se conecta un proceso con socket:11 al Broker
+[DEBUG] 00:49:12:351 log/(5231:5265): Llega mensaje de socket:11 con id:4 a la cola:GET
+[DEBUG] 00:49:12:355 log/(5231:5266): Se conecta un proceso con socket:12 al Broker
+[DEBUG] 00:49:12:355 log/(5231:5266): Se suscribe proceso id:1 a la cola:APPEARED
+[DEBUG] 00:49:12:393 log/(5231:5262): Se almacena mensaje id:1 de tipo:GET en ubicacion 0 de la memoria
+[DEBUG] 00:49:12:394 log/(5231:5262): Se envia mensaje al suscriptor id:12 de la cola:GET
+[DEBUG] 00:49:12:406 log/(5231:5262): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 00:49:12:422 log/(5231:5263): Se almacena mensaje id:2 de tipo:GET en ubicacion 16 de la memoria
+[DEBUG] 00:49:12:422 log/(5231:5263): Se envia mensaje al suscriptor id:12 de la cola:GET
+[DEBUG] 00:49:12:424 log/(5231:5263): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 00:49:12:443 log/(5231:5264): Se almacena mensaje id:3 de tipo:GET en ubicacion 32 de la memoria
+[DEBUG] 00:49:12:444 log/(5231:5264): Se envia mensaje al suscriptor id:12 de la cola:GET
+[DEBUG] 00:49:12:445 log/(5231:5264): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 00:49:12:447 log/(5231:5265): Se almacena mensaje id:4 de tipo:GET en ubicacion 48 de la memoria
+[DEBUG] 00:49:12:448 log/(5231:5265): Se envia mensaje al suscriptor id:12 de la cola:GET
+[DEBUG] 00:49:12:450 log/(5231:5265): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 00:49:42:349 log/(5231:5270): Se conecta un proceso con socket:11 al Broker
+[DEBUG] 00:49:42:353 log/(5231:5270): Llega mensaje de socket:11 con id:5 a la cola:NEW
+[DEBUG] 00:49:42:371 log/(5231:5270): Se elimina particion de la cola:GET con ubicacion:0
+[DEBUG] 00:49:42:385 log/(5231:5270): Se elimina particion de la cola:GET con ubicacion:16
+[DEBUG] 00:49:42:389 log/(5231:5270): Asocia particiones con inicio en:16 y 24
+[DEBUG] 00:49:42:390 log/(5231:5270): Asocia particiones con inicio en:0 y 16
+[DEBUG] 00:49:42:393 log/(5231:5270): Se almacena mensaje id:5 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 00:49:42:394 log/(5231:5270): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 00:49:42:397 log/(5231:5270): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 00:50:13:556 log/(5231:5279): Se conecta un proceso con socket:13 al Broker
+[DEBUG] 00:50:13:559 log/(5231:5279): Llega mensaje de socket:13 con id:6 a la cola:NEW
+[DEBUG] 00:50:13:566 log/(5231:5279): Se elimina particion de la cola:GET con ubicacion:32
+[DEBUG] 00:50:13:577 log/(5231:5279): Se elimina particion de la cola:GET con ubicacion:48
+[DEBUG] 00:50:13:578 log/(5231:5279): Asocia particiones con inicio en:32 y 48
+[DEBUG] 00:50:13:585 log/(5231:5279): Se almacena mensaje id:6 de tipo:NEW en ubicacion 32 de la memoria
+[DEBUG] 00:50:13:585 log/(5231:5279): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 00:50:15:955 log/(5231:5281): Se conecta un proceso con socket:11 al Broker
+[DEBUG] 00:50:15:957 log/(5231:5281): Llega mensaje de socket:11 con id:7 a la cola:NEW
+[DEBUG] 00:50:15:970 log/(5231:5281): Se elimina particion de la cola:NEW con ubicacion:0
+[DEBUG] 00:50:15:973 log/(5231:5281): Se almacena mensaje id:7 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 00:52:00:42 log/(5292:5292): 127.0.0.1
+[DEBUG] 00:52:01:53 log/(5292:5292): 5001
+[DEBUG] 00:52:01:55 log/(5292:5292): TAMANIO MEMORIA:64
+[DEBUG] 00:52:01:56 log/(5292:5292): TAMANIO MINIMO PARTICION:4
+[DEBUG] 00:52:01:56 log/(5292:5292): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 00:52:01:58 log/(5292:5292): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 00:52:01:58 log/(5292:5292): ALGORITMO MEMORIA:BS
+[DEBUG] 00:52:01:59 log/(5292:5292): FRECUENCIA COMPACTACION:1
+[DEBUG] 00:52:01:71 log/(5292:5292): Socket: 4, escuchando
+[DEBUG] 00:52:03:87 log/(5292:5292): Recibi al cliente
+[DEBUG] 00:54:12:918 log/(5325:5325): 127.0.0.1
+[DEBUG] 00:54:12:930 log/(5325:5325): 5001
+[DEBUG] 00:54:12:932 log/(5325:5325): TAMANIO MEMORIA:64
+[DEBUG] 00:54:12:933 log/(5325:5325): TAMANIO MINIMO PARTICION:4
+[DEBUG] 00:54:12:933 log/(5325:5325): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 00:54:12:935 log/(5325:5325): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 00:54:12:935 log/(5325:5325): ALGORITMO MEMORIA:BS
+[DEBUG] 00:54:12:936 log/(5325:5325): FRECUENCIA COMPACTACION:1
+[DEBUG] 00:54:12:952 log/(5325:5325): Socket: 4, escuchando
+[DEBUG] 00:54:14:963 log/(5325:5325): Recibi al cliente
+[DEBUG] 00:54:14:983 log/(5325:5332): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 00:54:14:988 log/(5325:5332): Se suscribe proceso id:12 a la cola:GET
+[DEBUG] 00:54:14:992 log/(5325:5333): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 00:54:14:2 log/(5325:5333): Se suscribe proceso id:12 a la cola:CATCH
+[DEBUG] 00:54:14:3 log/(5325:5334): Se conecta un proceso con socket:8 al Broker
+[DEBUG] 00:54:14:3 log/(5325:5334): Se suscribe proceso id:12 a la cola:NEW
+[DEBUG] 00:54:51:548 log/(5325:5346): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 00:54:51:561 log/(5325:5346): Llega mensaje de socket:9 con id:1 a la cola:NEW
+[DEBUG] 00:54:51:605 log/(5325:5346): Se almacena mensaje id:1 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 00:54:51:606 log/(5325:5346): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 00:54:51:620 log/(5325:5346): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 00:55:00:644 log/(5325:5348): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 00:55:00:647 log/(5325:5348): Llega mensaje de socket:10 con id:2 a la cola:NEW
+[DEBUG] 00:55:00:650 log/(5325:5348): Se almacena mensaje id:2 de tipo:NEW en ubicacion 32 de la memoria
+[DEBUG] 00:55:00:659 log/(5325:5348): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 00:55:05:954 log/(5325:5350): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 00:55:05:957 log/(5325:5350): Llega mensaje de socket:9 con id:3 a la cola:NEW
+[DEBUG] 00:56:08:785 log/(5325:5375): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 00:56:08:790 log/(5325:5375): Llega mensaje de socket:10 con id:4 a la cola:APPEARED
+[DEBUG] 00:56:10:160 log/(5325:5377): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 00:56:10:162 log/(5325:5377): Llega mensaje de socket:9 con id:5 a la cola:APPEARED
+[DEBUG] 00:56:10:651 log/(5325:5379): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 00:56:10:652 log/(5325:5379): Llega mensaje de socket:10 con id:6 a la cola:APPEARED
+[DEBUG] 00:56:11:50 log/(5325:5381): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 00:56:11:52 log/(5325:5381): Llega mensaje de socket:9 con id:7 a la cola:APPEARED
+[DEBUG] 00:56:11:440 log/(5325:5383): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 00:56:11:444 log/(5325:5383): Llega mensaje de socket:10 con id:8 a la cola:APPEARED
+[DEBUG] 00:56:11:893 log/(5325:5385): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 00:56:11:895 log/(5325:5385): Llega mensaje de socket:9 con id:9 a la cola:APPEARED
+[DEBUG] 00:56:13:676 log/(5325:5350): Se elimina particion de la cola:NEW con ubicacion:0
+[DEBUG] 00:56:13:688 log/(5325:5350): Se almacena mensaje id:3 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 00:56:13:695 log/(5325:5375): Se elimina particion de la cola:NEW con ubicacion:32
+[DEBUG] 00:56:13:699 log/(5325:5375): Se almacena mensaje id:4 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 00:56:13:702 log/(5325:5377): Se elimina particion de la cola:NEW con ubicacion:0
+[DEBUG] 00:56:13:703 log/(5325:5377): Se almacena mensaje id:5 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 00:56:13:706 log/(5325:5379): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 00:56:13:707 log/(5325:5379): Se almacena mensaje id:6 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 00:56:13:709 log/(5325:5381): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 00:56:13:713 log/(5325:5381): Se almacena mensaje id:7 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 00:56:13:715 log/(5325:5383): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 00:56:13:717 log/(5325:5383): Se almacena mensaje id:8 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 00:56:13:719 log/(5325:5385): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 00:56:13:721 log/(5325:5385): Se almacena mensaje id:9 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 00:56:29:381 log/(5325:5394): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 00:56:29:385 log/(5325:5394): Llega mensaje de socket:10 con id:10 a la cola:CATCH
+[DEBUG] 00:56:29:396 log/(5325:5394): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 00:56:29:399 log/(5325:5394): Se almacena mensaje id:10 de tipo:CATCH en ubicacion 32 de la memoria
+[DEBUG] 00:56:29:400 log/(5325:5394): Se envia mensaje al suscriptor id:12 de la cola:CATCH
+[DEBUG] 00:56:30:394 log/(5325:5396): Se conecta un proceso con socket:8 al Broker
+[DEBUG] 00:56:30:396 log/(5325:5396): Llega mensaje de socket:8 con id:11 a la cola:CATCH
+[DEBUG] 00:56:30:405 log/(5325:5396): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 00:56:30:408 log/(5325:5396): Se almacena mensaje id:11 de tipo:CATCH en ubicacion 0 de la memoria
+[DEBUG] 00:56:30:811 log/(5325:5398): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 00:56:30:814 log/(5325:5398): Llega mensaje de socket:7 con id:12 a la cola:CATCH
+[DEBUG] 00:56:30:821 log/(5325:5398): Se elimina particion de la cola:CATCH con ubicacion:32
+[DEBUG] 00:56:30:823 log/(5325:5398): Se almacena mensaje id:12 de tipo:CATCH en ubicacion 32 de la memoria
+[DEBUG] 00:56:31:197 log/(5325:5400): Se conecta un proceso con socket:8 al Broker
+[DEBUG] 00:56:31:199 log/(5325:5400): Llega mensaje de socket:8 con id:13 a la cola:CATCH
+[DEBUG] 00:56:31:216 log/(5325:5400): Se elimina particion de la cola:CATCH con ubicacion:0
+[DEBUG] 00:56:31:218 log/(5325:5400): Se almacena mensaje id:13 de tipo:CATCH en ubicacion 0 de la memoria
+[DEBUG] 00:56:31:581 log/(5325:5408): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 00:56:31:582 log/(5325:5408): Llega mensaje de socket:7 con id:14 a la cola:CATCH
+[DEBUG] 00:56:31:597 log/(5325:5408): Se elimina particion de la cola:CATCH con ubicacion:32
+[DEBUG] 00:56:31:600 log/(5325:5408): Se almacena mensaje id:14 de tipo:CATCH en ubicacion 32 de la memoria
+[DEBUG] 00:56:31:955 log/(5325:5410): Se conecta un proceso con socket:8 al Broker
+[DEBUG] 00:56:31:957 log/(5325:5410): Llega mensaje de socket:8 con id:15 a la cola:CATCH
+[DEBUG] 00:56:31:968 log/(5325:5410): Se elimina particion de la cola:CATCH con ubicacion:0
+[DEBUG] 00:56:31:970 log/(5325:5410): Se almacena mensaje id:15 de tipo:CATCH en ubicacion 0 de la memoria
+[DEBUG] 00:56:32:321 log/(5325:5413): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 00:56:32:324 log/(5325:5413): Llega mensaje de socket:7 con id:16 a la cola:CATCH
+[DEBUG] 00:56:32:337 log/(5325:5413): Se elimina particion de la cola:CATCH con ubicacion:32
+[DEBUG] 00:56:32:340 log/(5325:5413): Se almacena mensaje id:16 de tipo:CATCH en ubicacion 32 de la memoria
+[DEBUG] 00:56:32:681 log/(5325:5415): Se conecta un proceso con socket:8 al Broker
+[DEBUG] 00:56:32:683 log/(5325:5415): Llega mensaje de socket:8 con id:17 a la cola:CATCH
+[DEBUG] 00:56:32:694 log/(5325:5415): Se elimina particion de la cola:CATCH con ubicacion:0
+[DEBUG] 00:56:32:696 log/(5325:5415): Se almacena mensaje id:17 de tipo:CATCH en ubicacion 0 de la memoria
+[DEBUG] 00:56:33:50 log/(5325:5417): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 00:56:33:52 log/(5325:5417): Llega mensaje de socket:7 con id:18 a la cola:CATCH
+[DEBUG] 00:56:33:67 log/(5325:5417): Se elimina particion de la cola:CATCH con ubicacion:32
+[DEBUG] 00:56:33:69 log/(5325:5417): Se almacena mensaje id:18 de tipo:CATCH en ubicacion 32 de la memoria
+[DEBUG] 00:56:33:831 log/(5325:5419): Se conecta un proceso con socket:8 al Broker
+[DEBUG] 00:56:33:833 log/(5325:5419): Llega mensaje de socket:8 con id:19 a la cola:CATCH
+[DEBUG] 00:56:33:848 log/(5325:5419): Se elimina particion de la cola:CATCH con ubicacion:0
+[DEBUG] 00:56:33:851 log/(5325:5419): Se almacena mensaje id:19 de tipo:CATCH en ubicacion 0 de la memoria
+[DEBUG] 00:56:46:643 log/(5325:5421): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 00:56:46:826 log/(5325:5421): Llega mensaje de socket:7 con id:20 a la cola:
+[DEBUG] 00:56:46:832 log/(5325:5421): Se elimina particion de la cola:CATCH con ubicacion:32
+[DEBUG] 01:02:49:452 log/(5580:5580): 127.0.0.1
+[DEBUG] 01:02:49:464 log/(5580:5580): 5001
+[DEBUG] 01:02:49:466 log/(5580:5580): TAMANIO MEMORIA:64
+[DEBUG] 01:02:49:467 log/(5580:5580): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:02:49:467 log/(5580:5580): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:02:49:469 log/(5580:5580): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:02:49:469 log/(5580:5580): ALGORITMO MEMORIA:BS
+[DEBUG] 01:02:49:470 log/(5580:5580): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:02:49:481 log/(5580:5580): Socket: 4, escuchando
+[DEBUG] 01:02:51:509 log/(5580:5580): Recibi al cliente
+[DEBUG] 01:02:55:481 log/(5580:5589): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:02:55:498 log/(5580:5589): Llega mensaje de socket:5 con id:1 a la cola:NEW
+[DEBUG] 01:02:55:540 log/(5580:5589): Se almacena mensaje id:1 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 01:02:56:712 log/(5580:5591): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:02:56:794 log/(5580:5591): Llega mensaje de socket:7 con id:2 a la cola:
+[DEBUG] 01:05:54:378 log/(5723:5723): 127.0.0.1
+[DEBUG] 01:05:54:389 log/(5723:5723): 5001
+[DEBUG] 01:05:54:391 log/(5723:5723): TAMANIO MEMORIA:64
+[DEBUG] 01:05:54:394 log/(5723:5723): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:05:54:394 log/(5723:5723): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:05:54:396 log/(5723:5723): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:05:54:396 log/(5723:5723): ALGORITMO MEMORIA:BS
+[DEBUG] 01:05:54:397 log/(5723:5723): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:05:54:410 log/(5723:5723): Socket: 4, escuchando
+[DEBUG] 01:05:56:427 log/(5723:5723): Recibi al cliente
+[DEBUG] 01:05:56:447 log/(5723:5726): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:05:56:454 log/(5723:5726): Llega mensaje de socket:5 con id:1 a la cola:CATCH
+[DEBUG] 01:05:56:498 log/(5723:5726): Se almacena mensaje id:1 de tipo:CATCH en ubicacion 0 de la memoria
+[DEBUG] 01:05:57:533 log/(5723:5733): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:05:57:536 log/(5723:5733): Llega mensaje de socket:7 con id:2 a la cola:CATCH
+[DEBUG] 01:05:57:541 log/(5723:5733): Se almacena mensaje id:2 de tipo:CATCH en ubicacion 32 de la memoria
+[DEBUG] 01:05:58:148 log/(5723:5735): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:05:58:150 log/(5723:5735): Llega mensaje de socket:5 con id:3 a la cola:CATCH
+[DEBUG] 01:05:58:176 log/(5723:5735): Se elimina particion de la cola:CATCH con ubicacion:0
+[DEBUG] 01:05:58:183 log/(5723:5735): Se almacena mensaje id:3 de tipo:CATCH en ubicacion 0 de la memoria
+[DEBUG] 01:05:58:587 log/(5723:5738): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:05:58:588 log/(5723:5738): Llega mensaje de socket:7 con id:4 a la cola:CATCH
+[DEBUG] 01:05:58:600 log/(5723:5738): Se elimina particion de la cola:CATCH con ubicacion:32
+[DEBUG] 01:05:58:603 log/(5723:5738): Se almacena mensaje id:4 de tipo:CATCH en ubicacion 32 de la memoria
+[DEBUG] 01:06:00:98 log/(5723:5740): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:06:00:215 log/(5723:5740): Llega mensaje de socket:5 con id:5 a la cola:
+[DEBUG] 01:06:00:221 log/(5723:5740): Se elimina particion de la cola:CATCH con ubicacion:0
+[DEBUG] 01:06:10:705 log/(5746:5746): 127.0.0.1
+[DEBUG] 01:06:10:718 log/(5746:5746): 5001
+[DEBUG] 01:06:10:720 log/(5746:5746): TAMANIO MEMORIA:64
+[DEBUG] 01:06:10:721 log/(5746:5746): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:06:10:721 log/(5746:5746): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:06:10:722 log/(5746:5746): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:06:10:723 log/(5746:5746): ALGORITMO MEMORIA:BS
+[DEBUG] 01:06:10:723 log/(5746:5746): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:06:10:735 log/(5746:5746): Socket: 4, escuchando
+[DEBUG] 01:06:12:749 log/(5746:5746): Recibi al cliente
+[DEBUG] 01:06:17:297 log/(5746:5750): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:06:17:327 log/(5746:5750): Llega mensaje de socket:5 con id:1 a la cola:NEW
+[DEBUG] 01:06:17:356 log/(5746:5750): Se almacena mensaje id:1 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 01:06:18:800 log/(5746:5752): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:06:18:886 log/(5746:5752): Llega mensaje de socket:7 con id:2 a la cola:
+[DEBUG] 01:06:35:358 log/(5772:5772): 127.0.0.1
+[DEBUG] 01:06:35:369 log/(5772:5772): 5001
+[DEBUG] 01:06:35:372 log/(5772:5772): TAMANIO MEMORIA:64
+[DEBUG] 01:06:35:372 log/(5772:5772): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:06:35:373 log/(5772:5772): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:06:35:374 log/(5772:5772): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:06:35:375 log/(5772:5772): ALGORITMO MEMORIA:BS
+[DEBUG] 01:06:35:375 log/(5772:5772): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:06:35:388 log/(5772:5772): Socket: 4, escuchando
+[DEBUG] 01:06:37:402 log/(5772:5772): Recibi al cliente
+[DEBUG] 01:06:37:421 log/(5772:5774): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:06:37:429 log/(5772:5774): Llega mensaje de socket:5 con id:1 a la cola:NEW
+[DEBUG] 01:06:37:463 log/(5772:5774): Se almacena mensaje id:1 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 01:06:58:93 log/(5797:5797): 127.0.0.1
+[DEBUG] 01:06:58:106 log/(5797:5797): 5001
+[DEBUG] 01:06:58:108 log/(5797:5797): TAMANIO MEMORIA:64
+[DEBUG] 01:06:58:109 log/(5797:5797): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:06:58:109 log/(5797:5797): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:06:58:110 log/(5797:5797): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:06:58:111 log/(5797:5797): ALGORITMO MEMORIA:BS
+[DEBUG] 01:06:58:112 log/(5797:5797): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:06:58:123 log/(5797:5797): Socket: 4, escuchando
+[DEBUG] 01:07:00:137 log/(5797:5797): Recibi al cliente
+[DEBUG] 01:07:00:764 log/(5797:5804): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:07:00:772 log/(5797:5804): Llega mensaje de socket:5 con id:1 a la cola:CAUGHT
+[DEBUG] 01:07:00:820 log/(5797:5804): Se almacena mensaje id:1 de tipo:CAUGHT en ubicacion 0 de la memoria
+[DEBUG] 01:07:04:818 log/(5797:5807): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:07:04:824 log/(5797:5807): Llega mensaje de socket:7 con id:2 a la cola:CATCH
+[DEBUG] 01:07:04:832 log/(5797:5807): Se almacena mensaje id:2 de tipo:CATCH en ubicacion 32 de la memoria
+[DEBUG] 01:07:08:69 log/(5797:5814): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:07:08:72 log/(5797:5814): Llega mensaje de socket:5 con id:3 a la cola:APPEARED
+[DEBUG] 01:07:08:92 log/(5797:5814): Se elimina particion de la cola:CAUGHT con ubicacion:0
+[DEBUG] 01:07:08:102 log/(5797:5814): Asocia particiones con inicio en:0 y 4
+[DEBUG] 01:07:08:104 log/(5797:5814): Asocia particiones con inicio en:0 y 8
+[DEBUG] 01:07:08:105 log/(5797:5814): Asocia particiones con inicio en:0 y 16
+[DEBUG] 01:07:08:108 log/(5797:5814): Se almacena mensaje id:3 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 01:07:10:781 log/(5797:5816): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:07:10:787 log/(5797:5816): Llega mensaje de socket:7 con id:4 a la cola:NEW
+[DEBUG] 01:07:10:795 log/(5797:5816): Se elimina particion de la cola:CATCH con ubicacion:32
+[DEBUG] 01:07:10:798 log/(5797:5816): Se almacena mensaje id:4 de tipo:NEW en ubicacion 32 de la memoria
+[DEBUG] 01:07:13:838 log/(5797:5823): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:07:13:842 log/(5797:5823): Llega mensaje de socket:5 con id:5 a la cola:APPEARED
+[DEBUG] 01:07:13:858 log/(5797:5823): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 01:07:13:861 log/(5797:5823): Se almacena mensaje id:5 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 01:07:14:427 log/(5797:5825): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:07:14:428 log/(5797:5825): Llega mensaje de socket:7 con id:6 a la cola:APPEARED
+[DEBUG] 01:07:14:433 log/(5797:5825): Se elimina particion de la cola:NEW con ubicacion:32
+[DEBUG] 01:07:14:435 log/(5797:5825): Se almacena mensaje id:6 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 01:07:15:21 log/(5797:5827): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:07:15:24 log/(5797:5827): Llega mensaje de socket:5 con id:7 a la cola:APPEARED
+[DEBUG] 01:07:15:32 log/(5797:5827): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 01:07:15:42 log/(5797:5827): Se almacena mensaje id:7 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 01:07:15:544 log/(5797:5829): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:07:15:549 log/(5797:5829): Llega mensaje de socket:7 con id:8 a la cola:APPEARED
+[DEBUG] 01:07:15:556 log/(5797:5829): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 01:07:15:559 log/(5797:5829): Se almacena mensaje id:8 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 01:07:17:251 log/(5797:5831): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:07:17:253 log/(5797:5831): Llega mensaje de socket:5 con id:9 a la cola:NEW
+[DEBUG] 01:07:17:266 log/(5797:5831): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 01:07:17:269 log/(5797:5831): Se almacena mensaje id:9 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 01:07:17:738 log/(5797:5833): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:07:17:741 log/(5797:5833): Llega mensaje de socket:7 con id:10 a la cola:NEW
+[DEBUG] 01:07:17:749 log/(5797:5833): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 01:07:17:752 log/(5797:5833): Se almacena mensaje id:10 de tipo:NEW en ubicacion 32 de la memoria
+[DEBUG] 01:07:18:283 log/(5797:5835): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:07:18:286 log/(5797:5835): Llega mensaje de socket:5 con id:11 a la cola:NEW
+[DEBUG] 01:07:18:291 log/(5797:5835): Se elimina particion de la cola:NEW con ubicacion:0
+[DEBUG] 01:07:18:305 log/(5797:5835): Se almacena mensaje id:11 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 01:07:18:843 log/(5797:5837): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:07:18:845 log/(5797:5837): Llega mensaje de socket:7 con id:12 a la cola:NEW
+[DEBUG] 01:07:18:850 log/(5797:5837): Se elimina particion de la cola:NEW con ubicacion:32
+[DEBUG] 01:07:18:855 log/(5797:5837): Se almacena mensaje id:12 de tipo:NEW en ubicacion 32 de la memoria
+[DEBUG] 01:07:50:842 log/(5885:5885): 127.0.0.1
+[DEBUG] 01:07:50:853 log/(5885:5885): 5001
+[DEBUG] 01:07:50:856 log/(5885:5885): TAMANIO MEMORIA:64
+[DEBUG] 01:07:50:856 log/(5885:5885): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:07:50:857 log/(5885:5885): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:07:50:858 log/(5885:5885): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:07:50:858 log/(5885:5885): ALGORITMO MEMORIA:BS
+[DEBUG] 01:07:50:859 log/(5885:5885): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:07:50:874 log/(5885:5885): Socket: 4, escuchando
+[DEBUG] 01:07:52:888 log/(5885:5885): Recibi al cliente
+[DEBUG] 01:07:52:909 log/(5885:5888): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:07:52:930 log/(5885:5888): Llega mensaje de socket:5 con id:1 a la cola:NEW
+[DEBUG] 01:07:52:967 log/(5885:5888): Se almacena mensaje id:1 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 01:07:53:183 log/(5885:5890): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:07:53:184 log/(5885:5890): Llega mensaje de socket:7 con id:2 a la cola:NEW
+[DEBUG] 01:07:53:189 log/(5885:5890): Se almacena mensaje id:2 de tipo:NEW en ubicacion 32 de la memoria
+[DEBUG] 01:07:53:735 log/(5885:5892): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:07:53:737 log/(5885:5892): Llega mensaje de socket:5 con id:3 a la cola:NEW
+[DEBUG] 01:07:53:749 log/(5885:5892): Se elimina particion de la cola:NEW con ubicacion:0
+[DEBUG] 01:07:53:772 log/(5885:5892): Se almacena mensaje id:3 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 01:07:54:204 log/(5885:5894): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:07:54:207 log/(5885:5894): Llega mensaje de socket:7 con id:4 a la cola:NEW
+[DEBUG] 01:07:54:217 log/(5885:5894): Se elimina particion de la cola:NEW con ubicacion:32
+[DEBUG] 01:07:54:219 log/(5885:5894): Se almacena mensaje id:4 de tipo:NEW en ubicacion 32 de la memoria
+[DEBUG] 01:07:54:789 log/(5885:5896): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:07:54:792 log/(5885:5896): Llega mensaje de socket:5 con id:5 a la cola:NEW
+[DEBUG] 01:07:54:796 log/(5885:5896): Se elimina particion de la cola:NEW con ubicacion:0
+[DEBUG] 01:07:54:801 log/(5885:5896): Se almacena mensaje id:5 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 01:07:55:979 log/(5885:5899): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:07:55:987 log/(5885:5899): Llega mensaje de socket:7 con id:6 a la cola:APPEARED
+[DEBUG] 01:07:55:993 log/(5885:5899): Se elimina particion de la cola:NEW con ubicacion:32
+[DEBUG] 01:07:55:6 log/(5885:5899): Se almacena mensaje id:6 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 01:07:56:520 log/(5885:5901): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:07:56:524 log/(5885:5901): Llega mensaje de socket:5 con id:7 a la cola:APPEARED
+[DEBUG] 01:07:56:531 log/(5885:5901): Se elimina particion de la cola:NEW con ubicacion:0
+[DEBUG] 01:07:56:542 log/(5885:5901): Se almacena mensaje id:7 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 01:07:56:981 log/(5885:5903): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:07:56:985 log/(5885:5903): Llega mensaje de socket:7 con id:8 a la cola:APPEARED
+[DEBUG] 01:07:56:1 log/(5885:5903): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 01:07:56:3 log/(5885:5903): Se almacena mensaje id:8 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 01:08:24:924 log/(5885:5910): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:24:927 log/(5885:5910): Llega mensaje de socket:5 con id:9 a la cola:APPEARED
+[DEBUG] 01:08:24:941 log/(5885:5910): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 01:08:24:944 log/(5885:5910): Se almacena mensaje id:9 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 01:08:25:428 log/(5885:5912): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:25:432 log/(5885:5912): Llega mensaje de socket:7 con id:10 a la cola:APPEARED
+[DEBUG] 01:08:25:440 log/(5885:5912): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 01:08:25:450 log/(5885:5912): Se almacena mensaje id:10 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 01:08:25:888 log/(5885:5914): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:25:892 log/(5885:5914): Llega mensaje de socket:5 con id:11 a la cola:APPEARED
+[DEBUG] 01:08:25:906 log/(5885:5914): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 01:08:25:909 log/(5885:5914): Se almacena mensaje id:11 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 01:08:26:341 log/(5885:5916): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:26:344 log/(5885:5916): Llega mensaje de socket:7 con id:12 a la cola:APPEARED
+[DEBUG] 01:08:26:359 log/(5885:5916): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 01:08:26:362 log/(5885:5916): Se almacena mensaje id:12 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 01:08:26:745 log/(5885:5918): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:26:757 log/(5885:5918): Llega mensaje de socket:5 con id:13 a la cola:APPEARED
+[DEBUG] 01:08:26:762 log/(5885:5918): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 01:08:26:764 log/(5885:5918): Se almacena mensaje id:13 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 01:08:27:96 log/(5885:5920): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:27:100 log/(5885:5920): Llega mensaje de socket:7 con id:14 a la cola:APPEARED
+[DEBUG] 01:08:27:107 log/(5885:5920): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 01:08:27:110 log/(5885:5920): Se almacena mensaje id:14 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 01:08:27:422 log/(5885:5922): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:27:424 log/(5885:5922): Llega mensaje de socket:5 con id:15 a la cola:APPEARED
+[DEBUG] 01:08:27:429 log/(5885:5922): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 01:08:27:440 log/(5885:5922): Se almacena mensaje id:15 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 01:08:28:284 log/(5885:5924): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:28:287 log/(5885:5924): Llega mensaje de socket:7 con id:16 a la cola:APPEARED
+[DEBUG] 01:08:28:291 log/(5885:5924): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 01:08:28:296 log/(5885:5924): Se almacena mensaje id:16 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 01:08:28:613 log/(5885:5927): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:28:616 log/(5885:5927): Llega mensaje de socket:5 con id:17 a la cola:APPEARED
+[DEBUG] 01:08:28:631 log/(5885:5927): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 01:08:28:634 log/(5885:5927): Se almacena mensaje id:17 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 01:08:28:929 log/(5885:5929): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:28:938 log/(5885:5929): Llega mensaje de socket:7 con id:18 a la cola:APPEARED
+[DEBUG] 01:08:28:942 log/(5885:5929): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 01:08:28:945 log/(5885:5929): Se almacena mensaje id:18 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 01:08:29:228 log/(5885:5931): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:29:232 log/(5885:5931): Llega mensaje de socket:5 con id:19 a la cola:APPEARED
+[DEBUG] 01:08:29:236 log/(5885:5931): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 01:08:29:240 log/(5885:5931): Se almacena mensaje id:19 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 01:08:30:77 log/(5885:5935): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:30:82 log/(5885:5935): Llega mensaje de socket:7 con id:20 a la cola:APPEARED
+[DEBUG] 01:08:30:90 log/(5885:5935): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 01:08:30:92 log/(5885:5935): Se almacena mensaje id:20 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 01:08:30:350 log/(5885:5937): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:30:353 log/(5885:5937): Llega mensaje de socket:5 con id:21 a la cola:APPEARED
+[DEBUG] 01:08:30:370 log/(5885:5937): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 01:08:30:372 log/(5885:5937): Se almacena mensaje id:21 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 01:08:30:553 log/(5885:5939): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:30:557 log/(5885:5939): Llega mensaje de socket:7 con id:22 a la cola:APPEARED
+[DEBUG] 01:08:30:563 log/(5885:5939): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 01:08:30:572 log/(5885:5939): Se almacena mensaje id:22 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 01:08:30:736 log/(5885:5941): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:30:738 log/(5885:5941): Llega mensaje de socket:5 con id:23 a la cola:APPEARED
+[DEBUG] 01:08:30:745 log/(5885:5941): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 01:08:30:750 log/(5885:5941): Se almacena mensaje id:23 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 01:08:30:897 log/(5885:5943): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:30:900 log/(5885:5943): Llega mensaje de socket:7 con id:24 a la cola:APPEARED
+[DEBUG] 01:08:30:913 log/(5885:5943): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 01:08:30:916 log/(5885:5943): Se almacena mensaje id:24 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 01:08:31:75 log/(5885:5945): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:31:77 log/(5885:5945): Llega mensaje de socket:5 con id:25 a la cola:APPEARED
+[DEBUG] 01:08:31:86 log/(5885:5945): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 01:08:31:89 log/(5885:5945): Se almacena mensaje id:25 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 01:08:31:259 log/(5885:5947): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:31:261 log/(5885:5947): Llega mensaje de socket:7 con id:26 a la cola:APPEARED
+[DEBUG] 01:08:31:277 log/(5885:5947): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 01:08:31:280 log/(5885:5947): Se almacena mensaje id:26 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 01:08:31:460 log/(5885:5949): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:31:464 log/(5885:5949): Llega mensaje de socket:5 con id:27 a la cola:APPEARED
+[DEBUG] 01:08:31:479 log/(5885:5949): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 01:08:31:482 log/(5885:5949): Se almacena mensaje id:27 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 01:08:31:668 log/(5885:5951): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:31:673 log/(5885:5951): Llega mensaje de socket:7 con id:28 a la cola:APPEARED
+[DEBUG] 01:08:31:687 log/(5885:5951): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 01:08:31:689 log/(5885:5951): Se almacena mensaje id:28 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 01:08:31:867 log/(5885:5953): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:31:869 log/(5885:5953): Llega mensaje de socket:5 con id:29 a la cola:APPEARED
+[DEBUG] 01:08:31:885 log/(5885:5953): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 01:08:31:888 log/(5885:5953): Se almacena mensaje id:29 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 01:08:32:29 log/(5885:5955): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:32:31 log/(5885:5955): Llega mensaje de socket:7 con id:30 a la cola:APPEARED
+[DEBUG] 01:08:32:39 log/(5885:5955): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 01:08:32:42 log/(5885:5955): Se almacena mensaje id:30 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 01:08:32:214 log/(5885:5958): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:32:220 log/(5885:5958): Llega mensaje de socket:5 con id:31 a la cola:APPEARED
+[DEBUG] 01:08:32:227 log/(5885:5958): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 01:08:32:229 log/(5885:5958): Se almacena mensaje id:31 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 01:08:32:403 log/(5885:5960): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:32:406 log/(5885:5960): Llega mensaje de socket:7 con id:32 a la cola:APPEARED
+[DEBUG] 01:08:32:412 log/(5885:5960): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 01:08:32:415 log/(5885:5960): Se almacena mensaje id:32 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 01:08:34:442 log/(5885:5962): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:34:444 log/(5885:5962): Llega mensaje de socket:5 con id:33 a la cola:NEW
+[DEBUG] 01:08:34:448 log/(5885:5962): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 01:08:34:460 log/(5885:5962): Se almacena mensaje id:33 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 01:08:34:793 log/(5885:5964): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:34:796 log/(5885:5964): Llega mensaje de socket:7 con id:34 a la cola:NEW
+[DEBUG] 01:08:34:810 log/(5885:5964): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 01:08:34:813 log/(5885:5964): Se almacena mensaje id:34 de tipo:NEW en ubicacion 32 de la memoria
+[DEBUG] 01:08:34:989 log/(5885:5966): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:34:993 log/(5885:5966): Llega mensaje de socket:5 con id:35 a la cola:NEW
+[DEBUG] 01:08:34:8 log/(5885:5966): Se elimina particion de la cola:NEW con ubicacion:0
+[DEBUG] 01:08:34:11 log/(5885:5966): Se almacena mensaje id:35 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 01:08:35:194 log/(5885:5968): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:35:196 log/(5885:5968): Llega mensaje de socket:7 con id:36 a la cola:NEW
+[DEBUG] 01:08:35:203 log/(5885:5968): Se elimina particion de la cola:NEW con ubicacion:32
+[DEBUG] 01:08:35:206 log/(5885:5968): Se almacena mensaje id:36 de tipo:NEW en ubicacion 32 de la memoria
+[DEBUG] 01:08:35:396 log/(5885:5970): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:35:401 log/(5885:5970): Llega mensaje de socket:5 con id:37 a la cola:NEW
+[DEBUG] 01:08:35:413 log/(5885:5970): Se elimina particion de la cola:NEW con ubicacion:0
+[DEBUG] 01:08:35:416 log/(5885:5970): Se almacena mensaje id:37 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 01:08:35:581 log/(5885:5972): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:35:584 log/(5885:5972): Llega mensaje de socket:7 con id:38 a la cola:NEW
+[DEBUG] 01:08:35:596 log/(5885:5972): Se elimina particion de la cola:NEW con ubicacion:32
+[DEBUG] 01:08:35:599 log/(5885:5972): Se almacena mensaje id:38 de tipo:NEW en ubicacion 32 de la memoria
+[DEBUG] 01:08:35:745 log/(5885:5974): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:35:748 log/(5885:5974): Llega mensaje de socket:5 con id:39 a la cola:NEW
+[DEBUG] 01:08:35:757 log/(5885:5974): Se elimina particion de la cola:NEW con ubicacion:0
+[DEBUG] 01:08:35:766 log/(5885:5974): Se almacena mensaje id:39 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 01:08:35:947 log/(5885:5976): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:35:949 log/(5885:5976): Llega mensaje de socket:7 con id:40 a la cola:NEW
+[DEBUG] 01:08:35:954 log/(5885:5976): Se elimina particion de la cola:NEW con ubicacion:32
+[DEBUG] 01:08:35:960 log/(5885:5976): Se almacena mensaje id:40 de tipo:NEW en ubicacion 32 de la memoria
+[DEBUG] 01:08:41:445 log/(5885:5978): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:41:449 log/(5885:5978): Llega mensaje de socket:5 con id:41 a la cola:CAUGHT
+[DEBUG] 01:08:41:460 log/(5885:5978): Se elimina particion de la cola:NEW con ubicacion:0
+[DEBUG] 01:08:41:485 log/(5885:5978): Se almacena mensaje id:41 de tipo:CAUGHT en ubicacion 0 de la memoria
+[DEBUG] 01:08:42:306 log/(5885:5980): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:42:308 log/(5885:5980): Llega mensaje de socket:7 con id:42 a la cola:CAUGHT
+[DEBUG] 01:08:42:311 log/(5885:5980): Se almacena mensaje id:42 de tipo:CAUGHT en ubicacion 4 de la memoria
+[DEBUG] 01:08:42:529 log/(5885:5982): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:42:533 log/(5885:5982): Llega mensaje de socket:5 con id:43 a la cola:CAUGHT
+[DEBUG] 01:08:42:548 log/(5885:5982): Se almacena mensaje id:43 de tipo:CAUGHT en ubicacion 8 de la memoria
+[DEBUG] 01:08:42:750 log/(5885:5984): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:42:755 log/(5885:5984): Llega mensaje de socket:7 con id:44 a la cola:CAUGHT
+[DEBUG] 01:08:42:758 log/(5885:5984): Se almacena mensaje id:44 de tipo:CAUGHT en ubicacion 12 de la memoria
+[DEBUG] 01:08:42:939 log/(5885:5986): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:42:940 log/(5885:5986): Llega mensaje de socket:5 con id:45 a la cola:CAUGHT
+[DEBUG] 01:08:42:959 log/(5885:5986): Se almacena mensaje id:45 de tipo:CAUGHT en ubicacion 16 de la memoria
+[DEBUG] 01:08:43:160 log/(5885:5988): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:43:164 log/(5885:5988): Llega mensaje de socket:7 con id:46 a la cola:CAUGHT
+[DEBUG] 01:08:43:167 log/(5885:5988): Se almacena mensaje id:46 de tipo:CAUGHT en ubicacion 20 de la memoria
+[DEBUG] 01:08:43:362 log/(5885:5990): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:43:364 log/(5885:5990): Llega mensaje de socket:5 con id:47 a la cola:CAUGHT
+[DEBUG] 01:08:43:376 log/(5885:5990): Se almacena mensaje id:47 de tipo:CAUGHT en ubicacion 24 de la memoria
+[DEBUG] 01:08:43:568 log/(5885:5992): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:43:571 log/(5885:5992): Llega mensaje de socket:7 con id:48 a la cola:CAUGHT
+[DEBUG] 01:08:43:574 log/(5885:5992): Se almacena mensaje id:48 de tipo:CAUGHT en ubicacion 28 de la memoria
+[DEBUG] 01:08:43:777 log/(5885:5994): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:43:781 log/(5885:5994): Llega mensaje de socket:5 con id:49 a la cola:CAUGHT
+[DEBUG] 01:08:43:792 log/(5885:5994): Se elimina particion de la cola:NEW con ubicacion:32
+[DEBUG] 01:08:43:806 log/(5885:5994): Se almacena mensaje id:49 de tipo:CAUGHT en ubicacion 32 de la memoria
+[DEBUG] 01:08:43:958 log/(5885:5996): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:43:961 log/(5885:5996): Llega mensaje de socket:7 con id:50 a la cola:CAUGHT
+[DEBUG] 01:08:43:967 log/(5885:5996): Se almacena mensaje id:50 de tipo:CAUGHT en ubicacion 36 de la memoria
+[DEBUG] 01:08:44:124 log/(5885:5998): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:44:126 log/(5885:5998): Llega mensaje de socket:5 con id:51 a la cola:CAUGHT
+[DEBUG] 01:08:44:134 log/(5885:5998): Se almacena mensaje id:51 de tipo:CAUGHT en ubicacion 40 de la memoria
+[DEBUG] 01:08:44:329 log/(5885:6000): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:44:332 log/(5885:6000): Llega mensaje de socket:7 con id:52 a la cola:CAUGHT
+[DEBUG] 01:08:44:336 log/(5885:6000): Se almacena mensaje id:52 de tipo:CAUGHT en ubicacion 44 de la memoria
+[DEBUG] 01:08:44:519 log/(5885:6002): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:44:522 log/(5885:6002): Llega mensaje de socket:5 con id:53 a la cola:CAUGHT
+[DEBUG] 01:08:44:547 log/(5885:6002): Se almacena mensaje id:53 de tipo:CAUGHT en ubicacion 48 de la memoria
+[DEBUG] 01:08:44:701 log/(5885:6004): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:44:703 log/(5885:6004): Llega mensaje de socket:7 con id:54 a la cola:CAUGHT
+[DEBUG] 01:08:44:709 log/(5885:6004): Se almacena mensaje id:54 de tipo:CAUGHT en ubicacion 52 de la memoria
+[DEBUG] 01:08:44:886 log/(5885:6006): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:44:888 log/(5885:6006): Llega mensaje de socket:5 con id:55 a la cola:CAUGHT
+[DEBUG] 01:08:44:899 log/(5885:6006): Se almacena mensaje id:55 de tipo:CAUGHT en ubicacion 56 de la memoria
+[DEBUG] 01:08:45:71 log/(5885:6008): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:45:74 log/(5885:6008): Llega mensaje de socket:7 con id:56 a la cola:CAUGHT
+[DEBUG] 01:08:45:78 log/(5885:6008): Se almacena mensaje id:56 de tipo:CAUGHT en ubicacion 60 de la memoria
+[DEBUG] 01:08:45:275 log/(5885:6010): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:45:279 log/(5885:6010): Llega mensaje de socket:5 con id:57 a la cola:CAUGHT
+[DEBUG] 01:08:45:295 log/(5885:6010): Se elimina particion de la cola:CAUGHT con ubicacion:0
+[DEBUG] 01:08:45:297 log/(5885:6010): Se almacena mensaje id:57 de tipo:CAUGHT en ubicacion 0 de la memoria
+[DEBUG] 01:08:45:462 log/(5885:6012): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:45:464 log/(5885:6012): Llega mensaje de socket:7 con id:58 a la cola:CAUGHT
+[DEBUG] 01:08:45:480 log/(5885:6012): Se elimina particion de la cola:CAUGHT con ubicacion:4
+[DEBUG] 01:08:45:484 log/(5885:6012): Se almacena mensaje id:58 de tipo:CAUGHT en ubicacion 4 de la memoria
+[DEBUG] 01:08:45:666 log/(5885:6014): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:45:670 log/(5885:6014): Llega mensaje de socket:5 con id:59 a la cola:CAUGHT
+[DEBUG] 01:08:45:682 log/(5885:6014): Se elimina particion de la cola:CAUGHT con ubicacion:8
+[DEBUG] 01:08:45:696 log/(5885:6014): Se almacena mensaje id:59 de tipo:CAUGHT en ubicacion 8 de la memoria
+[DEBUG] 01:08:45:846 log/(5885:6016): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:45:850 log/(5885:6016): Llega mensaje de socket:7 con id:60 a la cola:CAUGHT
+[DEBUG] 01:08:45:862 log/(5885:6016): Se elimina particion de la cola:CAUGHT con ubicacion:12
+[DEBUG] 01:08:45:864 log/(5885:6016): Se almacena mensaje id:60 de tipo:CAUGHT en ubicacion 12 de la memoria
+[DEBUG] 01:08:46:37 log/(5885:6018): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:46:40 log/(5885:6018): Llega mensaje de socket:5 con id:61 a la cola:CAUGHT
+[DEBUG] 01:08:46:50 log/(5885:6018): Se elimina particion de la cola:CAUGHT con ubicacion:16
+[DEBUG] 01:08:46:53 log/(5885:6018): Se almacena mensaje id:61 de tipo:CAUGHT en ubicacion 16 de la memoria
+[DEBUG] 01:08:46:221 log/(5885:6020): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:46:225 log/(5885:6020): Llega mensaje de socket:7 con id:62 a la cola:CAUGHT
+[DEBUG] 01:08:46:242 log/(5885:6020): Se elimina particion de la cola:CAUGHT con ubicacion:20
+[DEBUG] 01:08:46:245 log/(5885:6020): Se almacena mensaje id:62 de tipo:CAUGHT en ubicacion 20 de la memoria
+[DEBUG] 01:08:46:422 log/(5885:6022): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:46:424 log/(5885:6022): Llega mensaje de socket:5 con id:63 a la cola:CAUGHT
+[DEBUG] 01:08:46:441 log/(5885:6022): Se elimina particion de la cola:CAUGHT con ubicacion:24
+[DEBUG] 01:08:46:445 log/(5885:6022): Se almacena mensaje id:63 de tipo:CAUGHT en ubicacion 24 de la memoria
+[DEBUG] 01:08:46:627 log/(5885:6024): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:46:631 log/(5885:6024): Llega mensaje de socket:7 con id:64 a la cola:CAUGHT
+[DEBUG] 01:08:46:646 log/(5885:6024): Se elimina particion de la cola:CAUGHT con ubicacion:28
+[DEBUG] 01:08:46:649 log/(5885:6024): Se almacena mensaje id:64 de tipo:CAUGHT en ubicacion 28 de la memoria
+[DEBUG] 01:08:46:816 log/(5885:6026): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:46:818 log/(5885:6026): Llega mensaje de socket:5 con id:65 a la cola:CAUGHT
+[DEBUG] 01:08:46:837 log/(5885:6026): Se elimina particion de la cola:CAUGHT con ubicacion:32
+[DEBUG] 01:08:46:840 log/(5885:6026): Se almacena mensaje id:65 de tipo:CAUGHT en ubicacion 32 de la memoria
+[DEBUG] 01:08:50:674 log/(5885:6033): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:50:676 log/(5885:6033): Llega mensaje de socket:7 con id:66 a la cola:CATCH
+[DEBUG] 01:08:50:693 log/(5885:6033): Se elimina particion de la cola:CAUGHT con ubicacion:36
+[DEBUG] 01:08:50:696 log/(5885:6033): Se elimina particion de la cola:CAUGHT con ubicacion:40
+[DEBUG] 01:08:50:713 log/(5885:6033): Se elimina particion de la cola:CAUGHT con ubicacion:44
+[DEBUG] 01:08:50:716 log/(5885:6033): Asocia particiones con inicio en:40 y 44
+[DEBUG] 01:08:50:720 log/(5885:6033): Se elimina particion de la cola:CAUGHT con ubicacion:48
+[DEBUG] 01:08:50:723 log/(5885:6033): Se elimina particion de la cola:CAUGHT con ubicacion:52
+[DEBUG] 01:08:50:724 log/(5885:6033): Asocia particiones con inicio en:48 y 52
+[DEBUG] 01:08:50:727 log/(5885:6033): Se elimina particion de la cola:CAUGHT con ubicacion:56
+[DEBUG] 01:08:50:730 log/(5885:6033): Se elimina particion de la cola:CAUGHT con ubicacion:60
+[DEBUG] 01:08:50:731 log/(5885:6033): Asocia particiones con inicio en:56 y 60
+[DEBUG] 01:08:50:732 log/(5885:6033): Asocia particiones con inicio en:48 y 56
+[DEBUG] 01:08:50:735 log/(5885:6033): Se elimina particion de la cola:CAUGHT con ubicacion:0
+[DEBUG] 01:08:50:744 log/(5885:6033): Se elimina particion de la cola:CAUGHT con ubicacion:4
+[DEBUG] 01:08:50:744 log/(5885:6033): Asocia particiones con inicio en:0 y 4
+[DEBUG] 01:08:50:748 log/(5885:6033): Se elimina particion de la cola:CAUGHT con ubicacion:8
+[DEBUG] 01:08:50:751 log/(5885:6033): Se elimina particion de la cola:CAUGHT con ubicacion:12
+[DEBUG] 01:08:50:751 log/(5885:6033): Asocia particiones con inicio en:8 y 12
+[DEBUG] 01:08:50:752 log/(5885:6033): Asocia particiones con inicio en:0 y 8
+[DEBUG] 01:08:50:755 log/(5885:6033): Se elimina particion de la cola:CAUGHT con ubicacion:16
+[DEBUG] 01:08:50:780 log/(5885:6033): Se elimina particion de la cola:CAUGHT con ubicacion:20
+[DEBUG] 01:08:50:781 log/(5885:6033): Asocia particiones con inicio en:16 y 20
+[DEBUG] 01:08:50:785 log/(5885:6033): Se elimina particion de la cola:CAUGHT con ubicacion:24
+[DEBUG] 01:08:50:789 log/(5885:6033): Se elimina particion de la cola:CAUGHT con ubicacion:28
+[DEBUG] 01:08:50:789 log/(5885:6033): Asocia particiones con inicio en:24 y 28
+[DEBUG] 01:08:50:790 log/(5885:6033): Asocia particiones con inicio en:16 y 24
+[DEBUG] 01:08:50:790 log/(5885:6033): Asocia particiones con inicio en:0 y 16
+[DEBUG] 01:08:50:792 log/(5885:6033): Se almacena mensaje id:66 de tipo:CATCH en ubicacion 0 de la memoria
+[DEBUG] 01:08:51:216 log/(5885:6035): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:51:220 log/(5885:6035): Llega mensaje de socket:5 con id:67 a la cola:CATCH
+[DEBUG] 01:08:51:227 log/(5885:6035): Se elimina particion de la cola:CAUGHT con ubicacion:32
+[DEBUG] 01:08:51:228 log/(5885:6035): Asocia particiones con inicio en:32 y 36
+[DEBUG] 01:08:51:229 log/(5885:6035): Asocia particiones con inicio en:32 y 40
+[DEBUG] 01:08:51:231 log/(5885:6035): Asocia particiones con inicio en:32 y 48
+[DEBUG] 01:08:51:233 log/(5885:6035): Se almacena mensaje id:67 de tipo:CATCH en ubicacion 32 de la memoria
+[DEBUG] 01:08:51:437 log/(5885:6042): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:51:438 log/(5885:6042): Llega mensaje de socket:7 con id:68 a la cola:CATCH
+[DEBUG] 01:08:51:454 log/(5885:6042): Se elimina particion de la cola:CATCH con ubicacion:0
+[DEBUG] 01:08:51:458 log/(5885:6042): Se almacena mensaje id:68 de tipo:CATCH en ubicacion 0 de la memoria
+[DEBUG] 01:08:51:641 log/(5885:6044): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:51:643 log/(5885:6044): Llega mensaje de socket:5 con id:69 a la cola:CATCH
+[DEBUG] 01:08:51:652 log/(5885:6044): Se elimina particion de la cola:CATCH con ubicacion:32
+[DEBUG] 01:08:51:654 log/(5885:6044): Se almacena mensaje id:69 de tipo:CATCH en ubicacion 32 de la memoria
+[DEBUG] 01:08:51:822 log/(5885:6046): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:51:824 log/(5885:6046): Llega mensaje de socket:7 con id:70 a la cola:CATCH
+[DEBUG] 01:08:51:841 log/(5885:6046): Se elimina particion de la cola:CATCH con ubicacion:0
+[DEBUG] 01:08:51:843 log/(5885:6046): Se almacena mensaje id:70 de tipo:CATCH en ubicacion 0 de la memoria
+[DEBUG] 01:08:52:27 log/(5885:6048): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:52:28 log/(5885:6048): Llega mensaje de socket:5 con id:71 a la cola:CATCH
+[DEBUG] 01:08:52:35 log/(5885:6048): Se elimina particion de la cola:CATCH con ubicacion:32
+[DEBUG] 01:08:52:41 log/(5885:6048): Se almacena mensaje id:71 de tipo:CATCH en ubicacion 32 de la memoria
+[DEBUG] 01:08:52:200 log/(5885:6050): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:52:204 log/(5885:6050): Llega mensaje de socket:7 con id:72 a la cola:CATCH
+[DEBUG] 01:08:52:210 log/(5885:6050): Se elimina particion de la cola:CATCH con ubicacion:0
+[DEBUG] 01:08:52:213 log/(5885:6050): Se almacena mensaje id:72 de tipo:CATCH en ubicacion 0 de la memoria
+[DEBUG] 01:08:52:375 log/(5885:6052): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:52:377 log/(5885:6052): Llega mensaje de socket:5 con id:73 a la cola:CATCH
+[DEBUG] 01:08:52:382 log/(5885:6052): Se elimina particion de la cola:CATCH con ubicacion:32
+[DEBUG] 01:08:52:387 log/(5885:6052): Se almacena mensaje id:73 de tipo:CATCH en ubicacion 32 de la memoria
+[DEBUG] 01:08:52:595 log/(5885:6054): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:52:596 log/(5885:6054): Llega mensaje de socket:7 con id:74 a la cola:CATCH
+[DEBUG] 01:08:52:603 log/(5885:6054): Se elimina particion de la cola:CATCH con ubicacion:0
+[DEBUG] 01:08:52:607 log/(5885:6054): Se almacena mensaje id:74 de tipo:CATCH en ubicacion 0 de la memoria
+[DEBUG] 01:08:52:812 log/(5885:6056): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:52:814 log/(5885:6056): Llega mensaje de socket:5 con id:75 a la cola:CATCH
+[DEBUG] 01:08:52:830 log/(5885:6056): Se elimina particion de la cola:CATCH con ubicacion:32
+[DEBUG] 01:08:52:836 log/(5885:6056): Se almacena mensaje id:75 de tipo:CATCH en ubicacion 32 de la memoria
+[DEBUG] 01:08:52:993 log/(5885:6058): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:52:996 log/(5885:6058): Llega mensaje de socket:7 con id:76 a la cola:CATCH
+[DEBUG] 01:08:52:2 log/(5885:6058): Se elimina particion de la cola:CATCH con ubicacion:0
+[DEBUG] 01:08:52:5 log/(5885:6058): Se almacena mensaje id:76 de tipo:CATCH en ubicacion 0 de la memoria
+[DEBUG] 01:08:53:198 log/(5885:6060): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:53:199 log/(5885:6060): Llega mensaje de socket:5 con id:77 a la cola:CATCH
+[DEBUG] 01:08:53:205 log/(5885:6060): Se elimina particion de la cola:CATCH con ubicacion:32
+[DEBUG] 01:08:53:210 log/(5885:6060): Se almacena mensaje id:77 de tipo:CATCH en ubicacion 32 de la memoria
+[DEBUG] 01:08:53:418 log/(5885:6062): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:53:420 log/(5885:6062): Llega mensaje de socket:7 con id:78 a la cola:CATCH
+[DEBUG] 01:08:53:430 log/(5885:6062): Se elimina particion de la cola:CATCH con ubicacion:0
+[DEBUG] 01:08:53:433 log/(5885:6062): Se almacena mensaje id:78 de tipo:CATCH en ubicacion 0 de la memoria
+[DEBUG] 01:08:53:627 log/(5885:6064): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:53:630 log/(5885:6064): Llega mensaje de socket:5 con id:79 a la cola:CATCH
+[DEBUG] 01:08:53:644 log/(5885:6064): Se elimina particion de la cola:CATCH con ubicacion:32
+[DEBUG] 01:08:53:647 log/(5885:6064): Se almacena mensaje id:79 de tipo:CATCH en ubicacion 32 de la memoria
+[DEBUG] 01:08:53:827 log/(5885:6066): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:08:53:829 log/(5885:6066): Llega mensaje de socket:7 con id:80 a la cola:CATCH
+[DEBUG] 01:08:53:840 log/(5885:6066): Se elimina particion de la cola:CATCH con ubicacion:0
+[DEBUG] 01:08:53:842 log/(5885:6066): Se almacena mensaje id:80 de tipo:CATCH en ubicacion 0 de la memoria
+[DEBUG] 01:08:55:10 log/(5885:6068): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:08:55:13 log/(5885:6068): Llega mensaje de socket:5 con id:81 a la cola:CATCH
+[DEBUG] 01:08:55:27 log/(5885:6068): Se elimina particion de la cola:CATCH con ubicacion:32
+[DEBUG] 01:08:55:29 log/(5885:6068): Se almacena mensaje id:81 de tipo:CATCH en ubicacion 32 de la memoria
+[DEBUG] 01:19:36:472 log/(6358:6358): 127.0.0.1
+[DEBUG] 01:19:36:488 log/(6358:6358): 5001
+[DEBUG] 01:19:36:491 log/(6358:6358): TAMANIO MEMORIA:64
+[DEBUG] 01:19:36:491 log/(6358:6358): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:19:36:492 log/(6358:6358): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:19:36:493 log/(6358:6358): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:19:36:493 log/(6358:6358): ALGORITMO MEMORIA:BS
+[DEBUG] 01:19:36:494 log/(6358:6358): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:19:36:510 log/(6358:6358): Socket: 4, escuchando
+[DEBUG] 01:19:38:517 log/(6358:6358): Recibi al cliente
+[DEBUG] 01:19:42:653 log/(6358:6366): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:19:42:662 log/(6358:6366): Se suscribe proceso id:12 a la cola:GET
+[DEBUG] 01:19:42:666 log/(6358:6367): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:19:42:668 log/(6358:6367): Se suscribe proceso id:12 a la cola:CATCH
+[DEBUG] 01:19:42:668 log/(6358:6368): Se conecta un proceso con socket:8 al Broker
+[DEBUG] 01:19:42:669 log/(6358:6368): Se suscribe proceso id:12 a la cola:NEW
+[DEBUG] 01:19:46:731 log/(6358:6370): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 01:19:46:745 log/(6358:6370): Llega mensaje de socket:9 con id:1 a la cola:NEW
+[DEBUG] 01:19:46:787 log/(6358:6370): Se almacena mensaje id:1 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 01:19:46:792 log/(6358:6370): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 01:19:46:800 log/(6358:6370): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 01:23:18:412 log/(6409:6409): 127.0.0.1
+[DEBUG] 01:23:18:423 log/(6409:6409): 5001
+[DEBUG] 01:23:18:426 log/(6409:6409): TAMANIO MEMORIA:64
+[DEBUG] 01:23:18:426 log/(6409:6409): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:23:18:427 log/(6409:6409): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:23:18:428 log/(6409:6409): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:23:18:428 log/(6409:6409): ALGORITMO MEMORIA:BS
+[DEBUG] 01:23:18:429 log/(6409:6409): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:23:18:442 log/(6409:6409): Socket: 4, escuchando
+[DEBUG] 01:23:20:457 log/(6409:6409): Recibi al cliente
+[DEBUG] 01:28:06:81 log/(6550:6550): 127.0.0.1
+[DEBUG] 01:28:06:93 log/(6550:6550): 5001
+[DEBUG] 01:28:06:95 log/(6550:6550): TAMANIO MEMORIA:64
+[DEBUG] 01:28:06:96 log/(6550:6550): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:28:06:96 log/(6550:6550): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:28:06:97 log/(6550:6550): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:28:06:98 log/(6550:6550): ALGORITMO MEMORIA:BS
+[DEBUG] 01:28:06:99 log/(6550:6550): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:28:06:110 log/(6550:6550): Socket: 4, escuchando
+[DEBUG] 01:28:08:130 log/(6550:6550): Recibi al cliente
+[DEBUG] 01:28:17:731 log/(6550:6656): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:28:17:737 log/(6550:6656): Se suscribe proceso id:12 a la cola:GET
+[DEBUG] 01:28:17:744 log/(6550:6657): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:28:17:746 log/(6550:6657): Se suscribe proceso id:12 a la cola:CATCH
+[DEBUG] 01:28:17:747 log/(6550:6658): Se conecta un proceso con socket:8 al Broker
+[DEBUG] 01:28:17:747 log/(6550:6658): Se suscribe proceso id:12 a la cola:NEW
+[DEBUG] 01:30:41:334 log/(6931:6931): 127.0.0.1
+[DEBUG] 01:30:41:348 log/(6931:6931): 5001
+[DEBUG] 01:30:41:351 log/(6931:6931): TAMANIO MEMORIA:64
+[DEBUG] 01:30:41:352 log/(6931:6931): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:30:41:352 log/(6931:6931): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:30:41:353 log/(6931:6931): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:30:41:354 log/(6931:6931): ALGORITMO MEMORIA:BS
+[DEBUG] 01:30:41:354 log/(6931:6931): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:30:41:366 log/(6931:6931): Socket: 4, escuchando
+[DEBUG] 01:30:43:382 log/(6931:6931): Recibi al cliente
+[DEBUG] 01:34:43:716 log/(7029:7029): 127.0.0.1
+[DEBUG] 01:34:43:728 log/(7029:7029): 5001
+[DEBUG] 01:34:43:730 log/(7029:7029): TAMANIO MEMORIA:64
+[DEBUG] 01:34:43:731 log/(7029:7029): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:34:43:731 log/(7029:7029): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:34:43:732 log/(7029:7029): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:34:43:733 log/(7029:7029): ALGORITMO MEMORIA:BS
+[DEBUG] 01:34:43:734 log/(7029:7029): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:34:43:746 log/(7029:7029): Socket: 4, escuchando
+[DEBUG] 01:34:45:760 log/(7029:7029): Recibi al cliente
+[DEBUG] 01:34:45:909 log/(7029:7036): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:34:45:916 log/(7029:7036): Se suscribe proceso id:12 a la cola:GET
+[DEBUG] 01:34:45:922 log/(7029:7037): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:34:45:923 log/(7029:7037): Se suscribe proceso id:12 a la cola:CATCH
+[DEBUG] 01:34:45:925 log/(7029:7038): Se conecta un proceso con socket:8 al Broker
+[DEBUG] 01:34:45:926 log/(7029:7038): Se suscribe proceso id:12 a la cola:NEW
+[DEBUG] 01:34:49:937 log/(7029:7040): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 01:34:49:958 log/(7029:7040): Llega mensaje de socket:9 con id:1 a la cola:NEW
+[DEBUG] 01:34:49:995 log/(7029:7040): Se almacena mensaje id:1 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 01:34:49:996 log/(7029:7040): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 01:34:50:36 log/(7029:7040): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 01:35:12:243 log/(7044:7044): 127.0.0.1
+[DEBUG] 01:35:12:266 log/(7044:7044): 5001
+[DEBUG] 01:35:12:268 log/(7044:7044): TAMANIO MEMORIA:64
+[DEBUG] 01:35:12:269 log/(7044:7044): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:35:12:269 log/(7044:7044): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:35:12:270 log/(7044:7044): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:35:12:271 log/(7044:7044): ALGORITMO MEMORIA:BS
+[DEBUG] 01:35:12:282 log/(7044:7044): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:35:12:294 log/(7044:7044): Socket: 4, escuchando
+[DEBUG] 01:35:14:312 log/(7044:7044): Recibi al cliente
+[DEBUG] 01:35:14:338 log/(7044:7051): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:35:14:342 log/(7044:7051): Se suscribe proceso id:12 a la cola:GET
+[DEBUG] 01:35:14:357 log/(7044:7052): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:35:14:362 log/(7044:7052): Se suscribe proceso id:12 a la cola:CATCH
+[DEBUG] 01:35:14:363 log/(7044:7053): Se conecta un proceso con socket:8 al Broker
+[DEBUG] 01:35:14:363 log/(7044:7053): Se suscribe proceso id:12 a la cola:NEW
+[DEBUG] 01:35:16:947 log/(7044:7055): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 01:35:16:956 log/(7044:7055): Llega mensaje de socket:9 con id:1 a la cola:NEW
+[DEBUG] 01:35:16:0 log/(7044:7055): Se almacena mensaje id:1 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 01:35:16:1 log/(7044:7055): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 01:35:16:14 log/(7044:7055): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 01:35:48:390 log/(7076:7076): 127.0.0.1
+[DEBUG] 01:35:48:402 log/(7076:7076): 5001
+[DEBUG] 01:35:48:405 log/(7076:7076): TAMANIO MEMORIA:64
+[DEBUG] 01:35:48:405 log/(7076:7076): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:35:48:405 log/(7076:7076): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:35:48:406 log/(7076:7076): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:35:48:407 log/(7076:7076): ALGORITMO MEMORIA:BS
+[DEBUG] 01:35:48:408 log/(7076:7076): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:35:48:420 log/(7076:7076): Socket: 4, escuchando
+[DEBUG] 01:35:50:430 log/(7076:7076): Recibi al cliente
+[DEBUG] 01:35:50:450 log/(7076:7083): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:35:50:455 log/(7076:7083): Se suscribe proceso id:12 a la cola:GET
+[DEBUG] 01:35:50:459 log/(7076:7084): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:35:50:461 log/(7076:7084): Se suscribe proceso id:12 a la cola:CATCH
+[DEBUG] 01:35:50:462 log/(7076:7085): Se conecta un proceso con socket:8 al Broker
+[DEBUG] 01:35:50:462 log/(7076:7085): Se suscribe proceso id:12 a la cola:NEW
+[DEBUG] 01:35:57:826 log/(7086:7086): 127.0.0.1
+[DEBUG] 01:35:57:838 log/(7086:7086): 5001
+[DEBUG] 01:35:57:841 log/(7086:7086): TAMANIO MEMORIA:64
+[DEBUG] 01:35:57:842 log/(7086:7086): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:35:57:842 log/(7086:7086): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:35:57:844 log/(7086:7086): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:35:57:845 log/(7086:7086): ALGORITMO MEMORIA:BS
+[DEBUG] 01:35:57:845 log/(7086:7086): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:35:57:858 log/(7086:7086): Socket: 4, escuchando
+[DEBUG] 01:35:59:870 log/(7086:7086): Recibi al cliente
+[DEBUG] 01:36:08:210 log/(7091:7091): 127.0.0.1
+[DEBUG] 01:36:08:222 log/(7091:7091): 5001
+[DEBUG] 01:36:08:225 log/(7091:7091): TAMANIO MEMORIA:64
+[DEBUG] 01:36:08:225 log/(7091:7091): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:36:08:226 log/(7091:7091): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:36:08:227 log/(7091:7091): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:36:08:228 log/(7091:7091): ALGORITMO MEMORIA:BS
+[DEBUG] 01:36:08:228 log/(7091:7091): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:36:08:261 log/(7091:7091): Socket: 4, escuchando
+[DEBUG] 01:36:10:271 log/(7091:7091): Recibi al cliente
+[DEBUG] 01:36:10:296 log/(7091:7098): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 01:36:10:304 log/(7091:7098): Se suscribe proceso id:12 a la cola:GET
+[DEBUG] 01:36:10:308 log/(7091:7099): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 01:36:10:311 log/(7091:7099): Se suscribe proceso id:12 a la cola:CATCH
+[DEBUG] 01:36:10:311 log/(7091:7100): Se conecta un proceso con socket:8 al Broker
+[DEBUG] 01:36:10:311 log/(7091:7100): Se suscribe proceso id:12 a la cola:NEW
+[DEBUG] 01:36:12:435 log/(7091:7108): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 01:36:12:444 log/(7091:7108): Llega mensaje de socket:9 con id:1 a la cola:NEW
+[DEBUG] 01:36:12:495 log/(7091:7108): Se almacena mensaje id:1 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 01:36:12:495 log/(7091:7108): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 01:36:12:515 log/(7091:7108): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 01:36:13:506 log/(7091:7111): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 01:36:13:510 log/(7091:7111): Llega mensaje de socket:10 con id:2 a la cola:APPEARED
+[DEBUG] 01:36:13:520 log/(7091:7111): Se almacena mensaje id:2 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 01:36:33:483 log/(7091:7120): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 01:36:33:486 log/(7091:7120): Llega mensaje de socket:9 con id:3 a la cola:NEW
+[DEBUG] 01:36:33:500 log/(7091:7120): Se elimina particion de la cola:NEW con ubicacion:0
+[DEBUG] 01:36:33:514 log/(7091:7120): Se almacena mensaje id:3 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 01:36:33:515 log/(7091:7120): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 01:36:33:517 log/(7091:7120): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 01:36:34:516 log/(7091:7121): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 01:36:34:517 log/(7091:7121): Llega mensaje de socket:10 con id:4 a la cola:APPEARED
+[DEBUG] 01:36:34:524 log/(7091:7121): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 01:36:34:531 log/(7091:7121): Se almacena mensaje id:4 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 01:37:05:747 log/(7122:7122): 127.0.0.1
+[DEBUG] 01:37:05:758 log/(7122:7122): 5001
+[DEBUG] 01:37:05:760 log/(7122:7122): TAMANIO MEMORIA:64
+[DEBUG] 01:37:05:761 log/(7122:7122): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:37:05:761 log/(7122:7122): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:37:05:763 log/(7122:7122): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:37:05:763 log/(7122:7122): ALGORITMO MEMORIA:BS
+[DEBUG] 01:37:05:764 log/(7122:7122): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:37:05:776 log/(7122:7122): Socket: 4, escuchando
+[DEBUG] 01:37:07:785 log/(7122:7122): Recibi al cliente
+[DEBUG] 01:37:23:885 log/(7129:7129): 127.0.0.1
+[DEBUG] 01:37:23:897 log/(7129:7129): 5001
+[DEBUG] 01:37:23:899 log/(7129:7129): TAMANIO MEMORIA:64
+[DEBUG] 01:37:23:900 log/(7129:7129): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:37:23:900 log/(7129:7129): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:37:23:901 log/(7129:7129): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:37:23:902 log/(7129:7129): ALGORITMO MEMORIA:BS
+[DEBUG] 01:37:23:903 log/(7129:7129): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:37:23:915 log/(7129:7129): Socket: 4, escuchando
+[DEBUG] 01:37:28:673 log/(7135:7135): 127.0.0.1
+[DEBUG] 01:37:28:684 log/(7135:7135): 5001
+[DEBUG] 01:37:28:687 log/(7135:7135): TAMANIO MEMORIA:64
+[DEBUG] 01:37:28:687 log/(7135:7135): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:37:28:688 log/(7135:7135): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:37:28:689 log/(7135:7135): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:37:28:689 log/(7135:7135): ALGORITMO MEMORIA:BS
+[DEBUG] 01:37:28:690 log/(7135:7135): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:37:28:702 log/(7135:7135): Socket: 4, escuchando
+[DEBUG] 01:37:30:717 log/(7135:7135): Recibi al cliente
+[DEBUG] 01:42:55:891 log/(7394:7394): 127.0.0.1
+[DEBUG] 01:42:55:902 log/(7394:7394): 5001
+[DEBUG] 01:42:55:904 log/(7394:7394): TAMANIO MEMORIA:64
+[DEBUG] 01:42:55:905 log/(7394:7394): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:42:55:906 log/(7394:7394): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:42:55:907 log/(7394:7394): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:42:55:907 log/(7394:7394): ALGORITMO MEMORIA:BS
+[DEBUG] 01:42:55:908 log/(7394:7394): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:42:55:921 log/(7394:7394): Socket: 4, escuchando
+[DEBUG] 01:42:57:935 log/(7394:7394): Recibi al cliente
+[DEBUG] 01:44:13:478 log/(7420:7420): 127.0.0.1
+[DEBUG] 01:44:13:491 log/(7420:7420): 5001
+[DEBUG] 01:44:13:493 log/(7420:7420): TAMANIO MEMORIA:64
+[DEBUG] 01:44:13:494 log/(7420:7420): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:44:13:494 log/(7420:7420): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:44:13:496 log/(7420:7420): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:44:13:496 log/(7420:7420): ALGORITMO MEMORIA:BS
+[DEBUG] 01:44:13:497 log/(7420:7420): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:44:13:509 log/(7420:7420): Socket: 4, escuchando
+[DEBUG] 01:44:15:523 log/(7420:7420): Recibi al cliente
+[DEBUG] 01:45:16:384 log/(7452:7452): 127.0.0.1
+[DEBUG] 01:45:16:396 log/(7452:7452): 5001
+[DEBUG] 01:45:16:398 log/(7452:7452): TAMANIO MEMORIA:64
+[DEBUG] 01:45:16:398 log/(7452:7452): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:45:16:399 log/(7452:7452): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:45:16:400 log/(7452:7452): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:45:16:401 log/(7452:7452): ALGORITMO MEMORIA:BS
+[DEBUG] 01:45:16:401 log/(7452:7452): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:45:16:413 log/(7452:7452): Socket: 4, escuchando
+[DEBUG] 01:45:18:430 log/(7452:7452): Recibi al cliente
+[DEBUG] 01:46:20:39 log/(7468:7468): 127.0.0.1
+[DEBUG] 01:46:21:57 log/(7468:7468): 5001
+[DEBUG] 01:46:21:59 log/(7468:7468): TAMANIO MEMORIA:64
+[DEBUG] 01:46:21:60 log/(7468:7468): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:46:21:60 log/(7468:7468): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:46:21:61 log/(7468:7468): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:46:21:62 log/(7468:7468): ALGORITMO MEMORIA:BS
+[DEBUG] 01:46:21:63 log/(7468:7468): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:46:21:81 log/(7468:7468): Socket: 4, escuchando
+[DEBUG] 01:46:23:95 log/(7468:7468): Recibi al cliente
+[DEBUG] 01:46:41:828 log/(7498:7498): 127.0.0.1
+[DEBUG] 01:46:41:839 log/(7498:7498): 5001
+[DEBUG] 01:46:41:841 log/(7498:7498): TAMANIO MEMORIA:64
+[DEBUG] 01:46:41:842 log/(7498:7498): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:46:41:842 log/(7498:7498): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:46:41:843 log/(7498:7498): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:46:41:844 log/(7498:7498): ALGORITMO MEMORIA:BS
+[DEBUG] 01:46:41:845 log/(7498:7498): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:46:41:857 log/(7498:7498): Socket: 4, escuchando
+[DEBUG] 01:46:43:871 log/(7498:7498): Recibi al cliente
+[DEBUG] 01:47:12:236 log/(7541:7541): 127.0.0.1
+[DEBUG] 01:47:12:249 log/(7541:7541): 5001
+[DEBUG] 01:47:12:251 log/(7541:7541): TAMANIO MEMORIA:64
+[DEBUG] 01:47:12:252 log/(7541:7541): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:47:12:252 log/(7541:7541): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:47:12:253 log/(7541:7541): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:47:12:254 log/(7541:7541): ALGORITMO MEMORIA:BS
+[DEBUG] 01:47:12:255 log/(7541:7541): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:47:12:268 log/(7541:7541): Socket: 4, escuchando
+[DEBUG] 01:47:14:276 log/(7541:7541): Recibi al cliente
+[DEBUG] 01:48:05:600 log/(7582:7582): 127.0.0.1
+[DEBUG] 01:48:05:612 log/(7582:7582): 5001
+[DEBUG] 01:48:05:614 log/(7582:7582): TAMANIO MEMORIA:64
+[DEBUG] 01:48:05:615 log/(7582:7582): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:48:05:615 log/(7582:7582): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:48:05:616 log/(7582:7582): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:48:05:617 log/(7582:7582): ALGORITMO MEMORIA:BS
+[DEBUG] 01:48:05:618 log/(7582:7582): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:48:05:629 log/(7582:7582): Socket: 4, escuchando
+[DEBUG] 01:48:07:638 log/(7582:7582): Recibi al cliente
+[DEBUG] 01:48:41:111 log/(7604:7604): 127.0.0.1
+[DEBUG] 01:48:41:123 log/(7604:7604): 5001
+[DEBUG] 01:48:41:126 log/(7604:7604): TAMANIO MEMORIA:64
+[DEBUG] 01:48:41:126 log/(7604:7604): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:48:41:127 log/(7604:7604): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:48:41:134 log/(7604:7604): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:48:41:135 log/(7604:7604): ALGORITMO MEMORIA:BS
+[DEBUG] 01:48:41:136 log/(7604:7604): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:48:41:147 log/(7604:7604): Socket: 4, escuchando
+[DEBUG] 01:48:43:161 log/(7604:7604): Recibi al cliente
+[DEBUG] 01:49:08:962 log/(7606:7606): 127.0.0.1
+[DEBUG] 01:49:08:979 log/(7606:7606): 5001
+[DEBUG] 01:49:08:981 log/(7606:7606): TAMANIO MEMORIA:64
+[DEBUG] 01:49:08:986 log/(7606:7606): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:49:08:987 log/(7606:7606): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:49:08:990 log/(7606:7606): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:49:08:990 log/(7606:7606): ALGORITMO MEMORIA:BS
+[DEBUG] 01:49:08:991 log/(7606:7606): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:49:09:3 log/(7606:7606): Socket: 4, escuchando
+[DEBUG] 01:49:11:15 log/(7606:7606): Recibi al cliente
+[DEBUG] 01:56:50:332 log/(7855:7855): 127.0.0.1
+[DEBUG] 01:56:50:350 log/(7855:7855): 5001
+[DEBUG] 01:56:50:358 log/(7855:7855): TAMANIO MEMORIA:64
+[DEBUG] 01:56:50:359 log/(7855:7855): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:56:50:359 log/(7855:7855): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:56:50:361 log/(7855:7855): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:56:50:361 log/(7855:7855): ALGORITMO MEMORIA:BS
+[DEBUG] 01:56:50:362 log/(7855:7855): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:56:50:382 log/(7855:7855): Socket: 4, escuchando
+[DEBUG] 01:56:52:409 log/(7855:7855): Recibi al cliente
+[DEBUG] 01:57:33:926 log/(7898:7898): 127.0.0.1
+[DEBUG] 01:57:33:944 log/(7898:7898): 5001
+[DEBUG] 01:57:33:947 log/(7898:7898): TAMANIO MEMORIA:64
+[DEBUG] 01:57:33:947 log/(7898:7898): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:57:33:948 log/(7898:7898): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:57:33:949 log/(7898:7898): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:57:33:950 log/(7898:7898): ALGORITMO MEMORIA:BS
+[DEBUG] 01:57:33:950 log/(7898:7898): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:57:33:962 log/(7898:7898): Socket: 4, escuchando
+[DEBUG] 01:57:35:973 log/(7898:7898): Recibi al cliente
+[DEBUG] 01:58:42:347 log/(8002:8002): 127.0.0.1
+[DEBUG] 01:58:42:359 log/(8002:8002): 5001
+[DEBUG] 01:58:42:361 log/(8002:8002): TAMANIO MEMORIA:64
+[DEBUG] 01:58:42:362 log/(8002:8002): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:58:42:366 log/(8002:8002): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:58:42:368 log/(8002:8002): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:58:42:369 log/(8002:8002): ALGORITMO MEMORIA:BS
+[DEBUG] 01:58:42:370 log/(8002:8002): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:58:42:381 log/(8002:8002): Socket: 4, escuchando
+[DEBUG] 01:58:44:396 log/(8002:8002): Recibi al cliente
+[DEBUG] 01:59:24:663 log/(8038:8038): 127.0.0.1
+[DEBUG] 01:59:24:698 log/(8038:8038): 5001
+[DEBUG] 01:59:24:700 log/(8038:8038): TAMANIO MEMORIA:64
+[DEBUG] 01:59:24:703 log/(8038:8038): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:59:24:703 log/(8038:8038): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:59:24:704 log/(8038:8038): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:59:24:705 log/(8038:8038): ALGORITMO MEMORIA:BS
+[DEBUG] 01:59:24:706 log/(8038:8038): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:59:24:732 log/(8038:8038): Socket: 4, escuchando
+[DEBUG] 01:59:26:742 log/(8038:8038): Recibi al cliente
+[DEBUG] 01:59:58:62 log/(8076:8076): 127.0.0.1
+[DEBUG] 01:59:58:74 log/(8076:8076): 5001
+[DEBUG] 01:59:58:77 log/(8076:8076): TAMANIO MEMORIA:64
+[DEBUG] 01:59:58:82 log/(8076:8076): TAMANIO MINIMO PARTICION:4
+[DEBUG] 01:59:58:83 log/(8076:8076): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 01:59:58:85 log/(8076:8076): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 01:59:58:86 log/(8076:8076): ALGORITMO MEMORIA:BS
+[DEBUG] 01:59:58:86 log/(8076:8076): FRECUENCIA COMPACTACION:1
+[DEBUG] 01:59:58:97 log/(8076:8076): Socket: 4, escuchando
+[DEBUG] 02:00:00:110 log/(8076:8076): Recibi al cliente
+[DEBUG] 02:00:54:702 log/(8117:8117): 127.0.0.1
+[DEBUG] 02:00:54:724 log/(8117:8117): 5001
+[DEBUG] 02:00:54:727 log/(8117:8117): TAMANIO MEMORIA:64
+[DEBUG] 02:00:54:727 log/(8117:8117): TAMANIO MINIMO PARTICION:4
+[DEBUG] 02:00:54:728 log/(8117:8117): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 02:00:54:729 log/(8117:8117): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 02:00:54:730 log/(8117:8117): ALGORITMO MEMORIA:BS
+[DEBUG] 02:00:54:730 log/(8117:8117): FRECUENCIA COMPACTACION:1
+[DEBUG] 02:00:54:762 log/(8117:8117): Socket: 4, escuchando
+[DEBUG] 02:00:56:779 log/(8117:8117): Recibi al cliente
+[DEBUG] 02:02:13:943 log/(8194:8194): 127.0.0.1
+[DEBUG] 02:02:13:961 log/(8194:8194): 5001
+[DEBUG] 02:02:13:964 log/(8194:8194): TAMANIO MEMORIA:64
+[DEBUG] 02:02:13:964 log/(8194:8194): TAMANIO MINIMO PARTICION:4
+[DEBUG] 02:02:13:965 log/(8194:8194): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 02:02:13:966 log/(8194:8194): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 02:02:13:967 log/(8194:8194): ALGORITMO MEMORIA:BS
+[DEBUG] 02:02:13:968 log/(8194:8194): FRECUENCIA COMPACTACION:1
+[DEBUG] 02:02:13:979 log/(8194:8194): Socket: 4, escuchando
+[DEBUG] 02:02:15:991 log/(8194:8194): Recibi al cliente
+[DEBUG] 02:12:42:410 log/(8567:8567): 127.0.0.1
+[DEBUG] 02:12:42:422 log/(8567:8567): 5001
+[DEBUG] 02:12:42:428 log/(8567:8567): TAMANIO MEMORIA:64
+[DEBUG] 02:12:42:428 log/(8567:8567): TAMANIO MINIMO PARTICION:4
+[DEBUG] 02:12:42:429 log/(8567:8567): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 02:12:42:430 log/(8567:8567): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 02:12:42:431 log/(8567:8567): ALGORITMO MEMORIA:BS
+[DEBUG] 02:12:42:431 log/(8567:8567): FRECUENCIA COMPACTACION:1
+[DEBUG] 02:12:42:443 log/(8567:8567): Socket: 4, escuchando
+[DEBUG] 02:12:44:456 log/(8567:8567): Recibi al cliente
+[DEBUG] 02:13:32:592 log/(8623:8623): 127.0.0.1
+[DEBUG] 02:13:32:608 log/(8623:8623): 5001
+[DEBUG] 02:13:32:610 log/(8623:8623): TAMANIO MEMORIA:64
+[DEBUG] 02:13:32:611 log/(8623:8623): TAMANIO MINIMO PARTICION:4
+[DEBUG] 02:13:32:611 log/(8623:8623): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 02:13:32:613 log/(8623:8623): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 02:13:32:613 log/(8623:8623): ALGORITMO MEMORIA:BS
+[DEBUG] 02:13:32:614 log/(8623:8623): FRECUENCIA COMPACTACION:1
+[DEBUG] 02:13:32:630 log/(8623:8623): Socket: 4, escuchando
+[DEBUG] 02:13:34:646 log/(8623:8623): Recibi al cliente
+[DEBUG] 02:15:04:598 log/(8683:8683): 127.0.0.1
+[DEBUG] 02:15:04:610 log/(8683:8683): 5001
+[DEBUG] 02:15:04:613 log/(8683:8683): TAMANIO MEMORIA:64
+[DEBUG] 02:15:04:613 log/(8683:8683): TAMANIO MINIMO PARTICION:4
+[DEBUG] 02:15:04:618 log/(8683:8683): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 02:15:04:620 log/(8683:8683): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 02:15:04:620 log/(8683:8683): ALGORITMO MEMORIA:BS
+[DEBUG] 02:15:04:621 log/(8683:8683): FRECUENCIA COMPACTACION:1
+[DEBUG] 02:15:04:635 log/(8683:8683): Socket: 4, escuchando
+[DEBUG] 02:15:06:649 log/(8683:8683): Recibi al cliente
+[DEBUG] 02:15:24:608 log/(8716:8716): 127.0.0.1
+[DEBUG] 02:15:24:625 log/(8716:8716): 5001
+[DEBUG] 02:15:24:627 log/(8716:8716): TAMANIO MEMORIA:64
+[DEBUG] 02:15:24:628 log/(8716:8716): TAMANIO MINIMO PARTICION:4
+[DEBUG] 02:15:24:628 log/(8716:8716): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 02:15:24:629 log/(8716:8716): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 02:15:24:630 log/(8716:8716): ALGORITMO MEMORIA:BS
+[DEBUG] 02:15:24:631 log/(8716:8716): FRECUENCIA COMPACTACION:1
+[DEBUG] 02:15:24:642 log/(8716:8716): Socket: 4, escuchando
+[DEBUG] 02:15:26:655 log/(8716:8716): Recibi al cliente
+[DEBUG] 02:16:24:539 log/(8782:8782): 127.0.0.1
+[DEBUG] 02:16:24:569 log/(8782:8782): 5001
+[DEBUG] 02:16:24:572 log/(8782:8782): TAMANIO MEMORIA:64
+[DEBUG] 02:16:24:573 log/(8782:8782): TAMANIO MINIMO PARTICION:4
+[DEBUG] 02:16:24:573 log/(8782:8782): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 02:16:24:575 log/(8782:8782): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 02:16:24:575 log/(8782:8782): ALGORITMO MEMORIA:BS
+[DEBUG] 02:16:24:576 log/(8782:8782): FRECUENCIA COMPACTACION:1
+[DEBUG] 02:16:24:606 log/(8782:8782): Socket: 4, escuchando
+[DEBUG] 02:16:26:624 log/(8782:8782): Recibi al cliente
+[DEBUG] 02:16:43:994 log/(8825:8825): 127.0.0.1
+[DEBUG] 02:16:43:6 log/(8825:8825): 5001
+[DEBUG] 02:16:44:12 log/(8825:8825): TAMANIO MEMORIA:64
+[DEBUG] 02:16:44:13 log/(8825:8825): TAMANIO MINIMO PARTICION:4
+[DEBUG] 02:16:44:13 log/(8825:8825): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 02:16:44:14 log/(8825:8825): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 02:16:44:15 log/(8825:8825): ALGORITMO MEMORIA:BS
+[DEBUG] 02:16:44:16 log/(8825:8825): FRECUENCIA COMPACTACION:1
+[DEBUG] 02:16:44:35 log/(8825:8825): Socket: 4, escuchando
+[DEBUG] 02:16:46:51 log/(8825:8825): Recibi al cliente
+[DEBUG] 02:17:28:284 log/(8868:8868): 127.0.0.1
+[DEBUG] 02:17:28:304 log/(8868:8868): 5001
+[DEBUG] 02:17:28:306 log/(8868:8868): TAMANIO MEMORIA:64
+[DEBUG] 02:17:28:307 log/(8868:8868): TAMANIO MINIMO PARTICION:4
+[DEBUG] 02:17:28:307 log/(8868:8868): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 02:17:28:308 log/(8868:8868): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 02:17:28:312 log/(8868:8868): ALGORITMO MEMORIA:BS
+[DEBUG] 02:17:28:312 log/(8868:8868): FRECUENCIA COMPACTACION:1
+[DEBUG] 02:17:28:328 log/(8868:8868): Socket: 4, escuchando
+[DEBUG] 02:17:30:345 log/(8868:8868): Recibi al cliente
+[DEBUG] 02:18:24:42 log/(8923:8923): 127.0.0.1
+[DEBUG] 02:18:24:58 log/(8923:8923): 5001
+[DEBUG] 02:18:24:60 log/(8923:8923): TAMANIO MEMORIA:64
+[DEBUG] 02:18:24:61 log/(8923:8923): TAMANIO MINIMO PARTICION:4
+[DEBUG] 02:18:24:61 log/(8923:8923): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 02:18:24:62 log/(8923:8923): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 02:18:24:63 log/(8923:8923): ALGORITMO MEMORIA:BS
+[DEBUG] 02:18:24:64 log/(8923:8923): FRECUENCIA COMPACTACION:1
+[DEBUG] 02:18:24:75 log/(8923:8923): Socket: 4, escuchando
+[DEBUG] 02:18:26:88 log/(8923:8923): Recibi al cliente
+[DEBUG] 02:19:50:673 log/(8981:8981): 127.0.0.1
+[DEBUG] 02:19:50:685 log/(8981:8981): 5001
+[DEBUG] 02:19:50:687 log/(8981:8981): TAMANIO MEMORIA:64
+[DEBUG] 02:19:50:692 log/(8981:8981): TAMANIO MINIMO PARTICION:4
+[DEBUG] 02:19:50:692 log/(8981:8981): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 02:19:50:694 log/(8981:8981): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 02:19:50:695 log/(8981:8981): ALGORITMO MEMORIA:BS
+[DEBUG] 02:19:50:695 log/(8981:8981): FRECUENCIA COMPACTACION:1
+[DEBUG] 02:19:50:707 log/(8981:8981): Socket: 4, escuchando
+[DEBUG] 02:19:52:717 log/(8981:8981): Recibi al cliente
+[DEBUG] 02:20:27:21 log/(9012:9012): 127.0.0.1
+[DEBUG] 02:20:28:37 log/(9012:9012): 5001
+[DEBUG] 02:20:28:40 log/(9012:9012): TAMANIO MEMORIA:64
+[DEBUG] 02:20:28:41 log/(9012:9012): TAMANIO MINIMO PARTICION:4
+[DEBUG] 02:20:28:41 log/(9012:9012): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 02:20:28:42 log/(9012:9012): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 02:20:28:43 log/(9012:9012): ALGORITMO MEMORIA:BS
+[DEBUG] 02:20:28:44 log/(9012:9012): FRECUENCIA COMPACTACION:1
+[DEBUG] 02:20:28:58 log/(9012:9012): Socket: 4, escuchando
+[DEBUG] 02:20:30:71 log/(9012:9012): Recibi al cliente
+[DEBUG] 02:21:51:842 log/(9056:9056): 127.0.0.1
+[DEBUG] 02:21:51:858 log/(9056:9056): 5001
+[DEBUG] 02:21:51:861 log/(9056:9056): TAMANIO MEMORIA:64
+[DEBUG] 02:21:51:861 log/(9056:9056): TAMANIO MINIMO PARTICION:4
+[DEBUG] 02:21:51:862 log/(9056:9056): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 02:21:51:863 log/(9056:9056): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 02:21:51:864 log/(9056:9056): ALGORITMO MEMORIA:BS
+[DEBUG] 02:21:51:865 log/(9056:9056): FRECUENCIA COMPACTACION:1
+[DEBUG] 02:21:51:884 log/(9056:9056): Socket: 4, escuchando
+[DEBUG] 02:21:53:892 log/(9056:9056): Recibi al cliente
+[DEBUG] 02:21:58:623 log/(9058:9058): 127.0.0.1
+[DEBUG] 02:21:58:636 log/(9058:9058): 5001
+[DEBUG] 02:21:58:638 log/(9058:9058): TAMANIO MEMORIA:64
+[DEBUG] 02:21:58:638 log/(9058:9058): TAMANIO MINIMO PARTICION:4
+[DEBUG] 02:21:58:639 log/(9058:9058): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 02:21:58:641 log/(9058:9058): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 02:21:58:641 log/(9058:9058): ALGORITMO MEMORIA:BS
+[DEBUG] 02:21:58:642 log/(9058:9058): FRECUENCIA COMPACTACION:1
+[DEBUG] 02:21:58:659 log/(9058:9058): Socket: 4, escuchando
+[DEBUG] 02:22:00:672 log/(9058:9058): Recibi al cliente
+[DEBUG] 02:23:02:313 log/(9066:9066): 127.0.0.1
+[DEBUG] 02:23:02:325 log/(9066:9066): 5001
+[DEBUG] 02:23:02:327 log/(9066:9066): TAMANIO MEMORIA:64
+[DEBUG] 02:23:02:331 log/(9066:9066): TAMANIO MINIMO PARTICION:4
+[DEBUG] 02:23:02:332 log/(9066:9066): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 02:23:02:334 log/(9066:9066): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 02:23:02:334 log/(9066:9066): ALGORITMO MEMORIA:BS
+[DEBUG] 02:23:02:335 log/(9066:9066): FRECUENCIA COMPACTACION:1
+[DEBUG] 02:23:02:347 log/(9066:9066): Socket: 4, escuchando
+[DEBUG] 02:23:04:358 log/(9066:9066): Recibi al cliente
+[DEBUG] 02:23:04:380 log/(9066:9073): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 02:23:04:385 log/(9066:9073): Se suscribe proceso id:12 a la cola:GET
+[DEBUG] 02:23:04:388 log/(9066:9074): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 02:23:04:388 log/(9066:9074): Se suscribe proceso id:12 a la cola:CATCH
+[DEBUG] 02:23:04:390 log/(9066:9075): Se conecta un proceso con socket:8 al Broker
+[DEBUG] 02:23:04:391 log/(9066:9075): Se suscribe proceso id:12 a la cola:NEW
+[DEBUG] 02:23:07:958 log/(9066:9077): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 02:23:07:970 log/(9066:9077): Llega mensaje de socket:9 con id:1 a la cola:NEW
+[DEBUG] 02:23:07:12 log/(9066:9077): Se almacena mensaje id:1 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 02:23:07:13 log/(9066:9077): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 02:23:08:26 log/(9066:9077): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 02:23:09:24 log/(9066:9078): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 02:23:09:29 log/(9066:9078): Llega mensaje de socket:10 con id:2 a la cola:APPEARED
+[DEBUG] 02:23:09:38 log/(9066:9078): Se almacena mensaje id:2 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 02:23:10:117 log/(9066:9080): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 02:23:10:119 log/(9066:9080): Llega mensaje de socket:9 con id:3 a la cola:NEW
+[DEBUG] 02:23:10:137 log/(9066:9080): Se elimina particion de la cola:NEW con ubicacion:0
+[DEBUG] 02:23:10:141 log/(9066:9080): Se almacena mensaje id:3 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 02:23:10:142 log/(9066:9080): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 02:23:10:150 log/(9066:9080): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 02:23:11:145 log/(9066:9081): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 02:23:11:150 log/(9066:9081): Llega mensaje de socket:10 con id:4 a la cola:APPEARED
+[DEBUG] 02:23:11:162 log/(9066:9081): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 02:23:11:165 log/(9066:9081): Se almacena mensaje id:4 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 02:26:15:571 log/(9182:9182): 127.0.0.1
+[DEBUG] 02:26:15:571 log/(9182:9182): 5001
+[DEBUG] 02:26:15:571 log/(9182:9182): TAMANIO MEMORIA:64
+[DEBUG] 02:26:15:571 log/(9182:9182): TAMANIO MINIMO PARTICION:4
+[DEBUG] 02:26:15:572 log/(9182:9182): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 02:26:15:572 log/(9182:9182): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 02:26:15:572 log/(9182:9182): ALGORITMO MEMORIA:BS
+[DEBUG] 02:26:15:572 log/(9182:9182): FRECUENCIA COMPACTACION:1
+[DEBUG] 02:26:15:573 log/(9182:9182): Socket: 4, escuchando
+[DEBUG] 02:26:17:578 log/(9182:9182): Recibi al cliente
+[DEBUG] 02:26:22:903 log/(9182:9189): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 02:26:22:903 log/(9182:9189): Se suscribe proceso id:12 a la cola:GET
+[DEBUG] 02:26:22:904 log/(9182:9190): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 02:26:22:904 log/(9182:9190): Se suscribe proceso id:12 a la cola:CATCH
+[DEBUG] 02:26:22:904 log/(9182:9191): Se conecta un proceso con socket:8 al Broker
+[DEBUG] 02:26:22:905 log/(9182:9191): Se suscribe proceso id:12 a la cola:NEW
+[DEBUG] 02:26:25:566 log/(9182:9193): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 02:26:25:569 log/(9182:9193): Llega mensaje de socket:9 con id:1 a la cola:NEW
+[DEBUG] 02:26:25:582 log/(9182:9193): Se almacena mensaje id:1 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 02:26:25:582 log/(9182:9193): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 02:26:25:582 log/(9182:9193): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 02:26:26:417 log/(9182:9195): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 02:26:26:419 log/(9182:9195): Llega mensaje de socket:10 con id:2 a la cola:NEW
+[DEBUG] 02:26:26:421 log/(9182:9195): Se almacena mensaje id:2 de tipo:NEW en ubicacion 32 de la memoria
+[DEBUG] 02:26:26:421 log/(9182:9195): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 02:26:26:584 log/(9182:9196): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 02:26:26:587 log/(9182:9195): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 02:26:26:588 log/(9182:9196): Llega mensaje de socket:9 con id:3 a la cola:APPEARED
+[DEBUG] 02:26:26:589 log/(9182:9196): Se elimina particion de la cola:NEW con ubicacion:0
+[DEBUG] 02:26:26:590 log/(9182:9196): Se almacena mensaje id:3 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 02:26:26:936 log/(9182:9198): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 02:26:26:938 log/(9182:9198): Llega mensaje de socket:10 con id:4 a la cola:NEW
+[DEBUG] 02:26:26:940 log/(9182:9198): Se elimina particion de la cola:NEW con ubicacion:32
+[DEBUG] 02:26:26:941 log/(9182:9198): Se almacena mensaje id:4 de tipo:NEW en ubicacion 32 de la memoria
+[DEBUG] 02:26:26:941 log/(9182:9198): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 02:26:27:391 log/(9182:9200): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 02:26:27:393 log/(9182:9200): Llega mensaje de socket:9 con id:5 a la cola:NEW
+[DEBUG] 02:26:27:587 log/(9182:9201): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 02:26:27:588 log/(9182:9198): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 02:26:27:588 log/(9182:9200): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 02:26:27:589 log/(9182:9200): Se almacena mensaje id:5 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 02:26:27:589 log/(9182:9200): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 02:26:27:589 log/(9182:9201): Llega mensaje de socket:10 con id:6 a la cola:APPEARED
+[DEBUG] 02:26:27:815 log/(9182:9203): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 02:26:27:816 log/(9182:9203): Llega mensaje de socket:9 con id:7 a la cola:NEW
+[DEBUG] 02:26:28:199 log/(9182:9205): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 02:26:28:202 log/(9182:9205): Llega mensaje de socket:10 con id:8 a la cola:NEW
+[DEBUG] 02:26:28:593 log/(9182:9206): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 02:26:28:596 log/(9182:9200): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 02:26:28:596 log/(9182:9201): Se elimina particion de la cola:NEW con ubicacion:32
+[DEBUG] 02:26:28:596 log/(9182:9201): Se almacena mensaje id:6 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 02:26:28:597 log/(9182:9203): Se elimina particion de la cola:NEW con ubicacion:0
+[DEBUG] 02:26:28:597 log/(9182:9203): Se almacena mensaje id:7 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 02:26:28:597 log/(9182:9203): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 02:26:28:598 log/(9182:9206): Llega mensaje de socket:9 con id:9 a la cola:APPEARED
+[DEBUG] 02:26:28:600 log/(9182:9208): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 02:26:28:601 log/(9182:9208): Llega mensaje de socket:10 con id:10 a la cola:NEW
+[DEBUG] 02:26:29:17 log/(9182:9210): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 02:26:29:20 log/(9182:9210): Llega mensaje de socket:9 con id:11 a la cola:NEW
+[DEBUG] 02:26:29:426 log/(9182:9212): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 02:26:29:427 log/(9182:9212): Llega mensaje de socket:10 con id:12 a la cola:NEW
+[DEBUG] 02:26:29:600 log/(9182:9213): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 02:26:29:602 log/(9182:9203): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 02:26:29:603 log/(9182:9205): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 02:26:29:604 log/(9182:9205): Se almacena mensaje id:8 de tipo:NEW en ubicacion 32 de la memoria
+[DEBUG] 02:26:29:604 log/(9182:9205): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 02:26:29:604 log/(9182:9213): Llega mensaje de socket:9 con id:13 a la cola:APPEARED
+[DEBUG] 02:26:30:605 log/(9182:9214): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 02:26:30:605 log/(9182:9205): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 02:26:30:606 log/(9182:9206): Se elimina particion de la cola:NEW con ubicacion:0
+[DEBUG] 02:26:30:606 log/(9182:9206): Se almacena mensaje id:9 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 02:26:30:606 log/(9182:9208): Se elimina particion de la cola:NEW con ubicacion:32
+[DEBUG] 02:26:30:606 log/(9182:9208): Se almacena mensaje id:10 de tipo:NEW en ubicacion 32 de la memoria
+[DEBUG] 02:26:30:607 log/(9182:9208): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 02:26:30:607 log/(9182:9214): Llega mensaje de socket:10 con id:14 a la cola:APPEARED
+[DEBUG] 02:26:31:607 log/(9182:9220): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 02:26:31:610 log/(9182:9208): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 02:26:31:611 log/(9182:9210): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 02:26:31:613 log/(9182:9210): Se almacena mensaje id:11 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 02:26:31:614 log/(9182:9210): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 02:26:31:614 log/(9182:9220): Llega mensaje de socket:9 con id:15 a la cola:APPEARED
+[DEBUG] 02:26:32:616 log/(9182:9221): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 02:26:32:616 log/(9182:9210): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 02:26:32:616 log/(9182:9212): Se elimina particion de la cola:NEW con ubicacion:32
+[DEBUG] 02:26:32:617 log/(9182:9212): Se almacena mensaje id:12 de tipo:NEW en ubicacion 32 de la memoria
+[DEBUG] 02:26:32:617 log/(9182:9212): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 02:26:32:617 log/(9182:9221): Llega mensaje de socket:10 con id:16 a la cola:APPEARED
+[DEBUG] 02:26:33:618 log/(9182:9222): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 02:26:33:621 log/(9182:9212): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 02:26:33:622 log/(9182:9213): Se elimina particion de la cola:NEW con ubicacion:0
+[DEBUG] 02:26:33:624 log/(9182:9213): Se almacena mensaje id:13 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 02:26:33:624 log/(9182:9214): Se elimina particion de la cola:NEW con ubicacion:32
+[DEBUG] 02:26:33:624 log/(9182:9214): Se almacena mensaje id:14 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 02:26:33:624 log/(9182:9220): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 02:26:33:625 log/(9182:9220): Se almacena mensaje id:15 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 02:26:33:625 log/(9182:9221): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 02:26:33:625 log/(9182:9221): Se almacena mensaje id:16 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 02:26:33:625 log/(9182:9222): Llega mensaje de socket:9 con id:17 a la cola:APPEARED
+[DEBUG] 02:26:33:625 log/(9182:9222): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 02:26:33:625 log/(9182:9222): Se almacena mensaje id:17 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 02:26:34:625 log/(9182:9223): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 02:26:34:628 log/(9182:9223): Llega mensaje de socket:10 con id:18 a la cola:APPEARED
+[DEBUG] 02:26:34:631 log/(9182:9223): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 02:26:34:632 log/(9182:9223): Se almacena mensaje id:18 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 02:26:49:537 log/(9226:9226): 127.0.0.1
+[DEBUG] 02:26:49:548 log/(9226:9226): 5001
+[DEBUG] 02:26:49:551 log/(9226:9226): TAMANIO MEMORIA:64
+[DEBUG] 02:26:49:551 log/(9226:9226): TAMANIO MINIMO PARTICION:4
+[DEBUG] 02:26:49:552 log/(9226:9226): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 02:26:49:553 log/(9226:9226): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 02:26:49:554 log/(9226:9226): ALGORITMO MEMORIA:BS
+[DEBUG] 02:26:49:554 log/(9226:9226): FRECUENCIA COMPACTACION:1
+[DEBUG] 02:27:30:503 log/(9227:9227): 127.0.0.1
+[DEBUG] 02:27:30:515 log/(9227:9227): 5001
+[DEBUG] 02:27:30:517 log/(9227:9227): TAMANIO MEMORIA:64
+[DEBUG] 02:27:30:518 log/(9227:9227): TAMANIO MINIMO PARTICION:4
+[DEBUG] 02:27:30:518 log/(9227:9227): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 02:27:30:519 log/(9227:9227): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 02:27:30:520 log/(9227:9227): ALGORITMO MEMORIA:BS
+[DEBUG] 02:27:30:521 log/(9227:9227): FRECUENCIA COMPACTACION:1
+[DEBUG] 02:27:40:83 log/(9230:9230): 127.0.0.1
+[DEBUG] 02:27:40:104 log/(9230:9230): 5001
+[DEBUG] 02:27:40:107 log/(9230:9230): TAMANIO MEMORIA:64
+[DEBUG] 02:27:40:107 log/(9230:9230): TAMANIO MINIMO PARTICION:4
+[DEBUG] 02:27:40:107 log/(9230:9230): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 02:27:40:109 log/(9230:9230): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 02:27:40:109 log/(9230:9230): ALGORITMO MEMORIA:BS
+[DEBUG] 02:27:40:110 log/(9230:9230): FRECUENCIA COMPACTACION:1
+[DEBUG] 02:28:48:897 log/(9245:9245): 127.0.0.1
+[DEBUG] 02:28:48:909 log/(9245:9245): 5001
+[DEBUG] 02:28:48:912 log/(9245:9245): TAMANIO MEMORIA:64
+[DEBUG] 02:28:48:912 log/(9245:9245): TAMANIO MINIMO PARTICION:4
+[DEBUG] 02:28:48:913 log/(9245:9245): ALGORITMO PARTICION LIBRE:BF
+[DEBUG] 02:28:48:915 log/(9245:9245): ALGORITMO REEMPLAZO:FIFO
+[DEBUG] 02:28:48:915 log/(9245:9245): ALGORITMO MEMORIA:BS
+[DEBUG] 02:28:48:916 log/(9245:9245): FRECUENCIA COMPACTACION:1
+[DEBUG] 02:28:48:935 log/(9245:9245): Socket: 4, escuchando
+[DEBUG] 02:28:50:942 log/(9245:9245): Recibi al cliente
+[DEBUG] 02:28:53:65 log/(9245:9252): Se conecta un proceso con socket:5 al Broker
+[DEBUG] 02:28:53:71 log/(9245:9252): Se suscribe proceso id:12 a la cola:GET
+[DEBUG] 02:28:53:83 log/(9245:9253): Se conecta un proceso con socket:7 al Broker
+[DEBUG] 02:28:53:83 log/(9245:9253): Se suscribe proceso id:12 a la cola:CATCH
+[DEBUG] 02:28:53:87 log/(9245:9254): Se conecta un proceso con socket:8 al Broker
+[DEBUG] 02:28:53:91 log/(9245:9254): Se suscribe proceso id:12 a la cola:NEW
+[DEBUG] 02:28:54:828 log/(9245:9256): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 02:28:54:835 log/(9245:9256): Llega mensaje de socket:9 con id:1 a la cola:NEW
+[DEBUG] 02:28:54:894 log/(9245:9256): Se almacena mensaje id:1 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 02:28:54:896 log/(9245:9256): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 02:28:54:905 log/(9245:9256): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 02:28:55:902 log/(9245:9257): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 02:28:55:909 log/(9245:9257): Llega mensaje de socket:10 con id:2 a la cola:APPEARED
+[DEBUG] 02:28:55:916 log/(9245:9257): Se almacena mensaje id:2 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 02:28:56:13 log/(9245:9259): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 02:28:56:16 log/(9245:9259): Llega mensaje de socket:9 con id:3 a la cola:NEW
+[DEBUG] 02:28:56:33 log/(9245:9259): Se elimina particion de la cola:NEW con ubicacion:0
+[DEBUG] 02:28:56:40 log/(9245:9259): Se almacena mensaje id:3 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 02:28:56:41 log/(9245:9259): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 02:28:56:43 log/(9245:9259): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 02:28:56:831 log/(9245:9261): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 02:28:56:833 log/(9245:9261): Llega mensaje de socket:10 con id:4 a la cola:NEW
+[DEBUG] 02:28:56:844 log/(9245:9261): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 02:28:56:847 log/(9245:9261): Se almacena mensaje id:4 de tipo:NEW en ubicacion 32 de la memoria
+[DEBUG] 02:28:56:848 log/(9245:9261): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 02:28:57:43 log/(9245:9262): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 02:28:57:48 log/(9245:9261): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 02:28:57:51 log/(9245:9262): Llega mensaje de socket:9 con id:5 a la cola:APPEARED
+[DEBUG] 02:28:57:62 log/(9245:9262): Se elimina particion de la cola:NEW con ubicacion:0
+[DEBUG] 02:28:57:65 log/(9245:9262): Se almacena mensaje id:5 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 02:28:57:247 log/(9245:9264): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 02:28:57:249 log/(9245:9264): Llega mensaje de socket:10 con id:6 a la cola:NEW
+[DEBUG] 02:28:57:253 log/(9245:9264): Se elimina particion de la cola:NEW con ubicacion:32
+[DEBUG] 02:28:57:256 log/(9245:9264): Se almacena mensaje id:6 de tipo:NEW en ubicacion 32 de la memoria
+[DEBUG] 02:28:57:259 log/(9245:9264): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 02:28:57:714 log/(9245:9266): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 02:28:57:716 log/(9245:9266): Llega mensaje de socket:9 con id:7 a la cola:NEW
+[DEBUG] 02:28:58:47 log/(9245:9267): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 02:28:58:53 log/(9245:9264): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 02:28:58:61 log/(9245:9266): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 02:28:58:61 log/(9245:9267): Llega mensaje de socket:10 con id:8 a la cola:APPEARED
+[DEBUG] 02:28:58:66 log/(9245:9266): Se almacena mensaje id:7 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 02:28:58:67 log/(9245:9266): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 02:28:58:193 log/(9245:9269): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 02:28:58:196 log/(9245:9269): Llega mensaje de socket:9 con id:9 a la cola:NEW
+[DEBUG] 02:28:58:696 log/(9245:9271): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 02:28:58:698 log/(9245:9271): Llega mensaje de socket:10 con id:10 a la cola:NEW
+[DEBUG] 02:28:59:55 log/(9245:9272): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 02:28:59:64 log/(9245:9266): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 02:28:59:67 log/(9245:9267): Se elimina particion de la cola:NEW con ubicacion:32
+[DEBUG] 02:28:59:69 log/(9245:9267): Se almacena mensaje id:8 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 02:28:59:72 log/(9245:9269): Se elimina particion de la cola:NEW con ubicacion:0
+[DEBUG] 02:28:59:73 log/(9245:9269): Se almacena mensaje id:9 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 02:28:59:73 log/(9245:9269): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 02:28:59:74 log/(9245:9272): Llega mensaje de socket:9 con id:11 a la cola:APPEARED
+[DEBUG] 02:28:59:186 log/(9245:9274): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 02:28:59:188 log/(9245:9274): Llega mensaje de socket:10 con id:12 a la cola:NEW
+[DEBUG] 02:28:59:641 log/(9245:9276): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 02:28:59:645 log/(9245:9276): Llega mensaje de socket:9 con id:13 a la cola:NEW
+[DEBUG] 02:29:00:65 log/(9245:9277): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 02:29:00:69 log/(9245:9269): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 02:29:00:74 log/(9245:9271): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 02:29:00:79 log/(9245:9277): Llega mensaje de socket:10 con id:14 a la cola:APPEARED
+[DEBUG] 02:29:00:80 log/(9245:9271): Se almacena mensaje id:10 de tipo:NEW en ubicacion 32 de la memoria
+[DEBUG] 02:29:00:80 log/(9245:9271): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 02:29:01:70 log/(9245:9278): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 02:29:01:79 log/(9245:9271): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 02:29:01:83 log/(9245:9272): Se elimina particion de la cola:NEW con ubicacion:0
+[DEBUG] 02:29:01:87 log/(9245:9272): Se almacena mensaje id:11 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 02:29:01:87 log/(9245:9278): Llega mensaje de socket:9 con id:15 a la cola:APPEARED
+[DEBUG] 02:29:01:90 log/(9245:9274): Se elimina particion de la cola:NEW con ubicacion:32
+[DEBUG] 02:29:01:92 log/(9245:9274): Se almacena mensaje id:12 de tipo:NEW en ubicacion 32 de la memoria
+[DEBUG] 02:29:01:92 log/(9245:9274): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 02:29:02:78 log/(9245:9279): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 02:29:02:85 log/(9245:9274): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 02:29:02:91 log/(9245:9276): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 02:29:02:95 log/(9245:9279): Llega mensaje de socket:10 con id:16 a la cola:APPEARED
+[DEBUG] 02:29:02:96 log/(9245:9276): Se almacena mensaje id:13 de tipo:NEW en ubicacion 0 de la memoria
+[DEBUG] 02:29:02:96 log/(9245:9276): Se envia mensaje al suscriptor id:12 de la cola:NEW
+[DEBUG] 02:29:03:83 log/(9245:9280): Se conecta un proceso con socket:9 al Broker
+[DEBUG] 02:29:03:86 log/(9245:9276): Se confirma Acknowledgement del suscriptor:12
+[DEBUG] 02:29:03:92 log/(9245:9277): Se elimina particion de la cola:NEW con ubicacion:32
+[DEBUG] 02:29:03:98 log/(9245:9280): Llega mensaje de socket:9 con id:17 a la cola:APPEARED
+[DEBUG] 02:29:03:99 log/(9245:9277): Se almacena mensaje id:14 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 02:29:03:101 log/(9245:9278): Se elimina particion de la cola:NEW con ubicacion:0
+[DEBUG] 02:29:03:102 log/(9245:9278): Se almacena mensaje id:15 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 02:29:03:104 log/(9245:9279): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 02:29:03:105 log/(9245:9279): Se almacena mensaje id:16 de tipo:APPEARED en ubicacion 32 de la memoria
+[DEBUG] 02:29:03:115 log/(9245:9280): Se elimina particion de la cola:APPEARED con ubicacion:0
+[DEBUG] 02:29:03:116 log/(9245:9280): Se almacena mensaje id:17 de tipo:APPEARED en ubicacion 0 de la memoria
+[DEBUG] 02:29:04:86 log/(9245:9281): Se conecta un proceso con socket:10 al Broker
+[DEBUG] 02:29:04:89 log/(9245:9281): Llega mensaje de socket:10 con id:18 a la cola:APPEARED
+[DEBUG] 02:29:04:101 log/(9245:9281): Se elimina particion de la cola:APPEARED con ubicacion:32
+[DEBUG] 02:29:04:103 log/(9245:9281): Se almacena mensaje id:18 de tipo:APPEARED en ubicacion 32 de la memoria

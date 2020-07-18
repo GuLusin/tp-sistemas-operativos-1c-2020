@@ -47,6 +47,7 @@ pthread_mutex_t* mutex_administracion_colas;
 sem_t sem_recibir;
 sem_t sem_memoria;
 sem_t sem_suscriptores;
+sem_t esperar;
 
 //========================PARTICIONES DINAMICAS===============================
 

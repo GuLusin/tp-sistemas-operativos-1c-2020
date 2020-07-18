@@ -206,6 +206,9 @@ void recibir_mensaje(int *socket_cliente){
 	printear_mensaje(mensaje);
 	//sem_post(&sem_recibir);
 	manejar_mensaje(*socket_cliente,mensaje);
+	liberar_mensaje(mensaje);
+	free(stream);
+
 }
 
 
@@ -461,6 +464,11 @@ void envio_mensaje(){
 				mensaje_aux = crear_mensaje(4,CATCH_POKEMON,pokemon->nombre,pokemon->pos_x,pokemon->pos_y);
 				mensaje_aux->id = ++id_mensajes_globales;
 				cachear_mensaje(mensaje_aux);
+				break;
+			case 'z':
+				//liberar_recursos_globales();
+				sem_post(&esperar);
+				return;
 				break;
 			default:
 				break;
@@ -1721,8 +1729,6 @@ void bitmap_actualizar_particion(t_partition* particion){
 	particion_a_bitmap(particion,&indice,&pos);
 	printf("indice:%d pos:%d\n", indice, pos);
 	bitmap_liberar_particion(bitmap, indice, pos);
-
-
 }
 
 void partir_particion(t_bitmap* bitmap, int indice, int pos){
@@ -1759,7 +1765,75 @@ int bitmap_a_puntero(int indice,int pos){
 	return ((int)pow(2,bitmap->peso_maximo)/(int)pow(2,indice))*pos;
 }
 
-//================================================================
+//===========================LIBERACION DE RECURSOS================
+
+
+
+void liberar_bitarray(t_bitarray* bitarray){
+	free(bitarray->bitarray);
+	free(bitarray);
+}
+
+void liberar_bitmap(t_bitmap* bitmap){
+	for(int i=0;i<=bitmap->largo;i++)
+		liberar_bitarray(bitmap->bitmap_array[i]);
+	free(bitmap->bitmap_array);
+	free(bitmap);
+}
+
+void liberar_listas_globales(){
+	void liberar_suscriptor_aux(void* stream){
+		t_suscriptor* suscriptor = (t_suscriptor*)stream;
+		liberar_suscriptor(suscriptor);
+	}
+
+	for(int i=0;i<CANTIDAD_COLAS;i++)
+		list_destroy_and_destroy_elements(suscriptores[i],liberar_suscriptor_aux);
+	free(suscriptores);
+}
+
+void liberar_semaforos(){
+	free(mutex_administracion_colas);
+	free(mutex_cola_suscriptores);
+}
+
+
+void liberar_memoria(){
+	void liberar_particion(void* stream){
+		t_partition* particion = (t_partition*)stream;
+		list_destroy(particion->suscriptores_confirmados);
+		free(particion);
+	}
+
+	void liberar_particion_libre(void* stream){
+		t_partition* particion = (t_partition*)stream;
+		free(particion);
+	}
+	free(mem_alloc);
+	list_destroy(lista_algoritmo_reemplazo);
+	list_destroy_and_destroy_elements(particiones_libres,liberar_particion_libre);
+
+	for(int i=0;i<CANTIDAD_COLAS;i++)
+		list_destroy_and_destroy_elements(administracion_colas[i].particiones,liberar_particion);
+	free(administracion_colas);
+}
+
+void liberar_recursos_globales(){//Agregar todo lo que hay que liberar al finalizar
+
+	config_destroy(config);
+	log_destroy(logger);
+
+	liberar_listas_globales();
+	liberar_semaforos();
+	liberar_memoria();
+
+	if(AM==BS)
+		liberar_bitmap(bitmap);
+
+	close(socket_broker);
+}
+
+//=========================================DUMPING=======================
 
 
 void memory_dump(int signum){
@@ -2034,13 +2108,17 @@ int main(void) {
 	inicializar_broker();
 	sleep(2);
 	signal(SIGUSR1,memory_dump);
-	pthread_t envio_mensaje_t;
-	pthread_create(&envio_mensaje_t, NULL, (void*)envio_mensaje, NULL);
-	sem_t esperar;
+	//pthread_t envio_mensaje_t;
+	//pthread_create(&envio_mensaje_t, NULL, (void*)envio_mensaje, NULL);
+
 	sem_init(&esperar, 0,0);
+	envio_mensaje();
+
+
 	sem_wait(&esperar);
+	liberar_recursos_globales();
 	//printf("cola appeared: %d\ncola caught: %d\ncola localized: %d\n", (int)list_get(sockets_cola_appeared,0),(int)list_get(sockets_cola_caught,0),(int)list_get(sockets_cola_localized,0));
-	close(socket_broker);
+	//close(socket_broker);
 
 
 	return EXIT_SUCCESS;
