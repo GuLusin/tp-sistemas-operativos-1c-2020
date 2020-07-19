@@ -787,10 +787,10 @@ void planificacionSJF_CD(){
 			sem_post(&(ejecutar_entrenador[entrenador->id]));
 			sem_wait(&activar_algoritmo);
 			if(llego_uno_nuevo()){ //variable global tamaño_list para ver si cambio la lista
-				if(llego_entrenador(entrenador)){
-                break;
-				} //todo logs de cambiar entrenador
-
+				//if(llego_entrenador(entrenador)){
+               //
+				//} //todo logs de cambiar entrenador
+			    break;
 				//pthread_mutex_lock(&mutex_lista_corto_plazo);
 				//ordenar_lista();
 				//entrenador2 = list_get(lista_corto_plazo,0);
@@ -1076,6 +1076,8 @@ void crear_hilos_planificar_recursos(){
 
 t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos,int i){
 	t_entrenador* entrenador = malloc(sizeof(t_entrenador));
+	char** aux;
+
 
 	entrenador->id = i;
 	entrenador->objetivo_temporal=NULL;
@@ -1093,20 +1095,22 @@ t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos,
 
 	free(auxiliar[0]);
 	free(auxiliar[1]);
-    //free(auxiliar); todo se podran usar los free de auxiliares o por lo menos usar el mismo
+    free(auxiliar);// todo se podran usar los free de auxiliares o por lo menos usar el mismo
 
 	entrenador->pokemones = list_create();
 	if(pokemones){
 		char **auxiliar3 = string_split(pokemones,"|"); //ultima posicion tiene null
-
+		aux = auxiliar3;
 		while(*auxiliar3){
 			list_add(entrenador->pokemones,*auxiliar3);
-	     	auxiliar3++;
+			auxiliar3++;
+
 		}
-		//free(auxiliar3);
+		free(aux);
 	}
 
 	char **auxiliar2 = string_split(objetivos,"|"); //ultima posicion tiene null
+	aux = auxiliar2;
 
 	entrenador->objetivos = list_create();
 	while(*auxiliar2){
@@ -1114,7 +1118,7 @@ t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos,
 		auxiliar2++;
 	}
 
-	//free(auxiliar2);
+	free(aux);
 	return entrenador;
 }
 

@@ -33,9 +33,6 @@ bool check_ack(int socket_cliente, uint32_t value){
  */
 
 bool send_ack(int socket_cliente, uint32_t ack){
-	//puts("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-	printf("ID: %d",ack);
-	//puts("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 	return ((send(socket_cliente,&ack,sizeof(uint32_t), MSG_NOSIGNAL))>0);
 }
 
@@ -49,9 +46,6 @@ bool send_ack(int socket_cliente, uint32_t ack){
 uint32_t wait_ack(int socket_cliente){
 	uint32_t ack;
 	recv(socket_cliente, &(ack),sizeof(uint32_t), MSG_WAITALL);
-	//puts("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-	printf("ACK: %d\n",ack);
-	//puts("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 	return ack;
 }
 
@@ -169,7 +163,7 @@ void esperar_cliente(int socket_servidor,void* funcion_recibir){
 
 	int socket_cliente = accept(socket_servidor, (void*) &dir_cliente, &tam_direccion);
 
-	printf("Se lee el socket_cliente: %d\n",socket_cliente);
+	//printf("Se lee el socket_cliente: %d\n",socket_cliente);
 
 	pthread_create(&pthread, NULL,funcion_recibir, &socket_cliente);
 	pthread_detach(pthread);
@@ -197,14 +191,14 @@ int listen_to(char* ip,char* puerto){
 		perror("No se pudo crear socket");
 		return -1;
 	}
-	printf("El socket que se creo es %d\n", socket_servidor);
+	//printf("El socket que se creo es %d\n", socket_servidor);
 	if (bind(socket_servidor, servinfo->ai_addr, servinfo->ai_addrlen) == -1) {
 		perror("No se pudo bindear el socket");
 		close(socket_servidor);
 		return -1;
 	}
 
-	puts("Empieza listening\n");
+	//puts("Empieza listening\n");
 	if(listen(socket_servidor, 10)==-1){
 		perror("No se pudo poner en listen al socket");
 		close(socket_servidor);

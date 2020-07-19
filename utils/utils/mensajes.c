@@ -189,7 +189,6 @@ void logear_llegada_mensaje(t_log* logger, t_mensaje* mensaje){
 	log_debug(logger,"Llegada mensaje tipo: %s, %s",tipo,info);
 	free(tipo);
 	free(info);
-	//free(aux);
 }
 
 
@@ -353,9 +352,7 @@ t_localized_pokemon deserializar_localized_pokemon(void* stream){
 	int offset = 0;
 	memcpy(&localized_pokemon.id_correlativo, stream, sizeof(uint32_t));
 	offset += sizeof(uint32_t);
-	puts("adasdsaddada");
 	localized_pokemon.pokemon_especie = deserializar_pokemon_especie((stream + offset));
-	puts("adasdsaddada");
 	return localized_pokemon;
 }
 
@@ -696,7 +693,7 @@ int cant_coordenadas_especie_pokemon(t_pokemon_especie *pokemon_especie){
 		contador_aux += 1;
 	}
 	dictionary_iterator(pokemon_especie->posiciones_especie, contador);
-    printf("Contador devuelve:%d\n",contador_aux);
+    //printf("Contador devuelve:%d\n",contador_aux);
     return contador_aux;
 }
 
@@ -729,7 +726,7 @@ t_pokemon_especie* string_a_pokemon_especie(char* string){
 	t_pokemon pokemon_aux;
 	int i = 1;
 	char** posiciones;
-	puts("entra a poke a especie");
+	//puts("entra a poke a especie");
 	char* str_aux = string_new();
 	int int_aux;
 	while(main_str[i]!=NULL){
@@ -742,11 +739,13 @@ t_pokemon_especie* string_a_pokemon_especie(char* string){
 		for(int j = 0; j<int_aux;j++)
 			agregar_pokemon_a_especie(especie_pokemon, &pokemon_aux);
 		i++;
+
+		//free(posiciones[2]); todo arcor
+		free(posiciones[1]);
+		free(posiciones[0]);
+		free(posiciones);
 	}
-	i=0;
 	free(str_aux);
-	while(posiciones[i]!=NULL)
-		free(posiciones[i++]);
 	i=0;
 	while(main_str[i]!=NULL)
 		free(main_str[i++]);
