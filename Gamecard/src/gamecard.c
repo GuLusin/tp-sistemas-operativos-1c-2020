@@ -866,15 +866,14 @@ void inicializar_gamecard() {
     pthread_mutex_init(&mutex_metadata, NULL);
     pthread_mutex_init(&mutex_subscripcion, NULL);
 
+	pthread_create(&pthread_cola_get, NULL,(void*)protocolo_recibir_mensaje,(void*) COLA_GET_POKEMON);
+	pthread_detach(pthread_cola_get);
 
 	pthread_create(&pthread_cola_new, NULL,(void*)protocolo_recibir_mensaje,(void*) COLA_NEW_POKEMON);
 	pthread_detach(pthread_cola_new);
 
 	pthread_create(&pthread_cola_catch, NULL,(void*)protocolo_recibir_mensaje,(void*) COLA_CATCH_POKEMON);
 	pthread_detach(pthread_cola_catch);
-
-	pthread_create(&pthread_cola_get, NULL,(void*)protocolo_recibir_mensaje,(void*) COLA_GET_POKEMON);
-	pthread_detach(pthread_cola_get);
 
 	pthread_create(&escuchar_gameboy, NULL, (void*)protocolo_escuchar_gameboy,NULL);
 	pthread_detach(escuchar_gameboy);
