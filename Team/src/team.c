@@ -333,7 +333,7 @@ void deadlock(){
 	}
 
 	printf("Lista de entrenadores bloquedos:\n");
-	leer_lista_entrenadores(entrenadores_bloqueados);
+	//leer_lista_entrenadores(entrenadores_bloqueados);
 
 
 	bool puedeIntercambiarConAux(void* unEntrenador){
@@ -550,6 +550,9 @@ void entrenador(int id){
 	pthread_mutex_lock(&mutex_lista_entrenadores);
     entrenador->bloq_exec = 1;
     pthread_mutex_unlock(&mutex_lista_entrenadores);
+
+    if(cumplio_objetivo_entrenador(id))
+    	entrenador->exit=1;
 
     sem_post(&entrenador_bloqueado);
 
@@ -1481,8 +1484,16 @@ void inicializar_team(){
 
     //------------------
 
-	logger = log_create("../team.log","log",1,LOG_LEVEL_DEBUG);
+    //"../team.log"
+
+    char* aux;
+
+
 	config = config_create("../config");
+
+
+	aux = config_get_string_value(config,"LOG_FILE");
+    logger = log_create(aux,"log",1,LOG_LEVEL_DEBUG);
 	retardo = config_get_int_value(config,"RETARDO_CICLO_CPU");
 
 	obtener_entrenadores();
@@ -1608,7 +1619,7 @@ int main(void) {
 	//sem_wait(&sem_debug); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	liberar_recursos_globales();
-	log_destroy(logger);
+	//log_destroy(logger);
 
 	return EXIT_SUCCESS;
 }
