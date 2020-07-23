@@ -147,13 +147,12 @@ t_metadata* leer_metadata(char* ruta){
 	t_metadata* metadata = leer_archivo_metadata_y_notificar_apertura(ruta);
 	pthread_mutex_unlock(&mutex_metadata);
 	while(!metadata){
-		printf("Sleep de %d segundos para volver a intentar abrir...\n",tiempo_reintento_operacion);
+		log_debug(logger,"El archivo de ruta: %s, estaba abierto, se espera %d segundos para volver a intentar abrir...",ruta,tiempo_reintento_operacion);
 		sleep(tiempo_reintento_operacion);
 		pthread_mutex_lock(&mutex_metadata);
 		metadata = leer_archivo_metadata_y_notificar_apertura(ruta);
 		pthread_mutex_unlock(&mutex_metadata);
 	}
-	printf("Se logro leer el metadata %s\n",ruta);
 	return metadata;
 }
 
@@ -177,7 +176,7 @@ void escribir_archivo_metadata_y_cerrar(t_metadata* metadata, char* ruta){
 
 	//debug_print_metadata(metadata);
 
-	printf("Sleep de %d segundos para simular tiempo de operacion...\n",tiempo_retardo_operacion);
+	log_debug(logger,"Sleep de %d segundos para simular tiempo de operacion...",tiempo_retardo_operacion);
 	sleep(tiempo_retardo_operacion);
 
 	t_config* aux_metadata = config_create(aux);
@@ -252,18 +251,16 @@ int bitarray_pedir_bloque(){
 		}
 	}
 	pthread_mutex_unlock(&mutex_bitmap);
-	printf("No hay bloques libres!\n");
+	log_debug(logger,"No hay bloques libres!!!");
 	return -1;
 }
 
 void bitarray_devolver_bloque(int bloque){
 	pthread_mutex_lock(&mutex_bitmap);
-	bitarray_set_bit(bitmap,bloque);
+	bitarray_clean_bit(bitmap,bloque);
 	msync(bitmap, global_metadata->blocks,MS_SYNC);
 	pthread_mutex_unlock(&mutex_bitmap);
 }
-
-
 
 char* mensaje_to_pokedata(t_mensaje* mensaje){
 	char* pokedata = string_new();
@@ -500,7 +497,7 @@ bool agregar_pokemones(t_mensaje* mensaje){
 
 	t_metadata* metadata;
 	metadata = leer_metadata(ruta);
-	//debug_print_metadata(metadata);
+	log_debug(logger,"Se leyo correctamente los datos de: %s, de size: %d",ruta,metadata->size);
 
 	//["22-4=1",""]
 	t_list* poke_strings_list = pokemon_data_de_bloques(metadata->blocks);
@@ -518,13 +515,14 @@ bool agregar_pokemones(t_mensaje* mensaje){
 	if(cant_bloq_necesarios > list_size(metadata->blocks))
 		list_add(metadata->blocks,(void*)bitarray_pedir_bloque());
 
-	else if(cant_bloq_necesarios < list_size(metadata->blocks))
+	else if(cant_bloq_necesarios < list_size(metadata->blocks)){
 		bitarray_devolver_bloque( (int) list_remove(metadata->blocks,list_size(metadata->blocks)-1));
-
+	}
 	escribir_bloques(metadata->blocks,poke_string);
 	metadata->size = strlen(poke_string);
 
 	escribir_archivo_metadata_y_cerrar(metadata,ruta);
+	log_debug(logger,"Se escribio correctamente los datos de: %s, de tamaño: &d",ruta,metadata->size);
 
 	free(poke_string);
 	list_destroy_and_destroy_elements(poke_strings_list,free);
@@ -613,13 +611,12 @@ void recibir_catch(t_mensaje *mensaje){
 
 void recibir_get(t_mensaje *mensaje){
 
-	printf("recibo mensaje\n");
 	//printear_mensaje(mensaje);
 
 	char* ruta = generar_ruta(mensaje);
 
 	if(!directorioExiste(ruta)){
-		printf("El archivo pokemon no se encuentra en el FILE SYSTEM!! :c\n");
+		log_debug(logger,"El archivo pokemon no se encuentra en el FILE SYSTEM!! :c");
 		//liberar_mensaje(mensaje);
 
 		free(ruta);
@@ -630,11 +627,8 @@ void recibir_get(t_mensaje *mensaje){
 	metadata = leer_metadata(ruta);
 
 	if(!metadata->blocks){ //Cash archivo vacio
-		printf("El archivo esta vacio!\n");
-
-		//TODO
-		// ...
-		//hay que volver a cerrar el archivo tambien ojo
+		log_debug(logger,"El archivo en cuestion no tenia bloques asignados");
+		escribir_archivo_metadata_y_cerrar(metadata,ruta);
 
 		free(mensaje);
 		free(ruta);
@@ -670,8 +664,7 @@ void recibir_get(t_mensaje *mensaje){
 		close(socket_broker);
 	}
 	else{
-		//todo logear que no se pudo conectar con el broker
-		printf("No se pudo establecer la conexion con el broker para enviarle el mensaje LOCALIZED_POKEMON\n");
+		log_debug(logger,"No se pudo establecer la conexion con el broker para enviarle el mensaje LOCALIZED_POKEMON");
 	}
 
 	pthread_mutex_unlock(&mutex_envio_mensaje);
@@ -734,7 +727,7 @@ void protocolo_recibir_mensaje(cola_code cola){
 		pthread_mutex_lock(&mutex_subscripcion);
 		int socket_cola = subscribirse_a_cola(cola);
 		pthread_mutex_unlock(&mutex_subscripcion);
-		printf("socket_suscripcion:%d\n",socket_cola);
+		//printf("socket_suscripcion:%d\n",socket_cola);
 		while(recibir_mensaje(socket_cola));
 		close(socket_cola);
 	}
@@ -770,7 +763,7 @@ void crear_bloques(){
 		fclose(f);
 	}
 	free(path);
-	printf("Se crearon los bloques!\n");
+	log_debug(logger,"Se crearon los bloques!");
 }
 
 
@@ -853,7 +846,7 @@ void inicializar_gamecard() {
 	logger = log_create("../gamecard.log","log",1,LOG_LEVEL_DEBUG);
 	leer_config();
 	leer_metadata_global();
-	//crear_bloques();
+	crear_bloques();
 	bitmap = crear_bitarray_y_mapear();
 
 	pthread_t pthread_cola_new;

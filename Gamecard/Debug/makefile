@@ -26,7 +26,7 @@ endif
 all: Gamecard
 
 dependents:
-	-cd /home/utnso/workspace/tp-2020-1c-cumpleDeFabian/utils/Debug && $(MAKE) clean all
+	-cd /home/utnso/workspace/tp-2020-1c-cumpleDeFabian/utils/Debug && $(MAKE) all
 
 # Tool invocations
 Gamecard: $(OBJS) $(USER_OBJS) /home/utnso/workspace/tp-2020-1c-cumpleDeFabian/utils/Debug/libutils.so

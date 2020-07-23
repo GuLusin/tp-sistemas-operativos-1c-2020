@@ -1253,8 +1253,8 @@ void esperar_mensaje(int *socket){
 
 void protocolo_escuchar_gameboy(){
 
-	char* ip_gameboy_escucha = config_get_string_value(config,"RE");
-	char* puerto_gameboy_escucha = config_get_string_value(config,"RETA");
+	char* ip_gameboy_escucha = config_get_string_value(config,"IP_GAMEBOY");
+	char* puerto_gameboy_escucha = config_get_string_value(config,"PUERTO_GAMEBOY");
 	int socket_escucha = listen_to(ip_gameboy_escucha,puerto_gameboy_escucha);
 
 	while(1)
