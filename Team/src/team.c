@@ -171,6 +171,7 @@ void liberar_recursos_globales(){
 	list_destroy_and_destroy_elements(entrenadores,(void *)liberar_entrenador);
 	//puts("10");
 	list_destroy_and_destroy_elements(lista_corto_plazo,(void *)liberar_entrenador);
+	list_destroy(orden_entrenadores_solucionados);
 }
 
 //--------------------------------------------------- DEADLOCK ---------------------------------------
@@ -272,15 +273,16 @@ void intercambiar_pokemones(t_entrenador* un_entrenador, t_entrenador* otro_entr
 	while(list_size(trade)){
 
 		log_debug(logger,"Operacion de intercambio en x:%d y:%d, entre los entrenadores id:%d y id:%d",un_entrenador->posicion_x,un_entrenador->posicion_y,un_entrenador->id,otro_entrenador->id);
+		cantidad_de_intercambios++;
 		remover_de_lista_si_esta(otro_entrenador->pokemones,list_get(trade,0));
 		list_add(un_entrenador->pokemones,list_get(trade,0));
 
 		remover_de_lista_si_esta(un_entrenador->pokemones,list_get(pok_devolucion,0));
 		list_add(otro_entrenador->pokemones,list_get(pok_devolucion,0));
 
-		printf("Espera de 5 ciclos para realizar el intercambio...\n");
+		log_debug(logger,"Espera de 5 ciclos para realizar el intercambio...\n");
 		sleep(retardo*5);
-		printf("Se realizo el intercambio!\n");
+		log_debug(logger,"Se realizo el intercambio!\n");
 
 		remover_de_lista_si_esta(pok_des,list_get(trade,0));
 		remover_de_lista_si_esta(pok_dis,list_get(pok_devolucion,0));
@@ -298,11 +300,6 @@ void intercambiar_pokemones(t_entrenador* un_entrenador, t_entrenador* otro_entr
 
 		sem_post(&deadlock_entrenadores[un_entrenador->id]);
 		sem_post(&deadlock_entrenadores[otro_entrenador->id]);
-
-
-
-
-
 
 		trade = intersectar_listas(pok_dis,pok_des);
 	}
@@ -332,9 +329,9 @@ void deadlock(){
 			list_add(entrenadores_bloqueados,aux);
 	}
 
-	printf("Lista de entrenadores bloquedos:\n");
-	//leer_lista_entrenadores(entrenadores_bloqueados);
 
+	//printf("Lista de entrenadores bloquedos:\n");
+	//leer_lista_entrenadores(entrenadores_bloqueados);
 
 	bool puedeIntercambiarConAux(void* unEntrenador){
 		bool auxLoQuiere(void* un_pokemon){
@@ -381,9 +378,13 @@ void deadlock(){
 
 		if(!aux->exit)
 			list_add(entrenadores_bloqueados,aux);
+		else
+            list_add(orden_entrenadores_solucionados,(void*)aux->id);
 
 		if(!aux1->exit)
 			list_add(entrenadores_bloqueados,aux1);
+		else
+            list_add(orden_entrenadores_solucionados,(void*)aux1->id);
 
 		list_destroy(pokemones_que_quiere_aux);
 
@@ -526,6 +527,7 @@ void entrenador(int id){
 
 		pthread_mutex_lock(&mutex_logger);
 		log_debug(logger,"Se mueve el entredor id:%d a las coordenadas x:%d y:%d",entrenador->id,entrenador->posicion_x,entrenador->posicion_y);
+		entrenador->cantidad_ciclos++;
 		pthread_mutex_unlock(&mutex_logger);
 
 		if(llego_al_objetivo(entrenador)){
@@ -688,7 +690,7 @@ void planificacionFIFO(){
 		pthread_mutex_lock(&mutex_lista_corto_plazo);
 		t_entrenador *entrenador = list_get(lista_corto_plazo,0);
 		pthread_mutex_unlock(&mutex_lista_corto_plazo);
-
+		log_debug(logger,"SE AGREGA AL ENTRENADOR CON ID:%d A LA COLA DE EXEC",entrenador->id);
 		//puts("------------------------------------------------------------------------------------------");
 		//mostrar_entrenador(entrenador);
 		//puts("------------------------------------------------------------------------------------------");
@@ -700,6 +702,8 @@ void planificacionFIFO(){
 		pthread_mutex_lock(&mutex_lista_corto_plazo);
 		list_remove(lista_corto_plazo,0);
 		pthread_mutex_unlock(&mutex_lista_corto_plazo);
+		log_debug(logger,"SE SACA DE PLANIFICAR AL ENTRENADOR ID:%d POR ALCANZAR SU OBJETIVO",entrenador->id);
+		cambio_de_contexto++;
 	}
 }
 
@@ -712,6 +716,7 @@ void planificacionRR(){
 		pthread_mutex_lock(&mutex_lista_corto_plazo);
 		t_entrenador *entrenador = list_get(lista_corto_plazo,0);
 		pthread_mutex_unlock(&mutex_lista_corto_plazo);
+		log_debug(logger,"SE AGREGA AL ENTRENADOR CON ID:%d A LA COLA DE EXEC",entrenador->id);
 		//puts("------------------------------------------------------------------------------------------");
 		//mostrar_entrenador(entrenador);
 		//puts("------------------------------------------------------------------------------------------");
@@ -726,6 +731,8 @@ void planificacionRR(){
 			pthread_mutex_lock(&mutex_lista_corto_plazo);
 			list_remove(lista_corto_plazo,0);
 			pthread_mutex_unlock(&mutex_lista_corto_plazo);
+			log_debug(logger,"SE SACA DE PLANIFICAR AL ENTRENADOR ID:%d POR ALCANZAR SU OBJETIVO",entrenador->id);
+
 		}
 
 		else{
@@ -734,7 +741,10 @@ void planificacionRR(){
 				list_add(lista_corto_plazo,entrenador);
 			pthread_mutex_unlock(&mutex_lista_corto_plazo);
 			sem_post(&hay_entrenador_corto_plazo);
+			log_debug(logger,"SE SACA DE PLANIFICAR AL ENTRENADOR ID:%d POR FIN DE QUANTUM",entrenador->id);
+
 		}
+		cambio_de_contexto++;
 	}
 }
 
@@ -782,7 +792,7 @@ void planificacionSJF_CD(){
 		entrenador = list_get(lista_corto_plazo,0);
 		//puts("4");
 		pthread_mutex_unlock(&mutex_lista_corto_plazo);
-
+		log_debug(logger,"SE AGREGA AL ENTRENADOR CON ELIJE ID:%d A LA COLA DE EXEC",entrenador->id);
 		//puts("------------------------------------------------------------------------------------------");
 		//mostrar_entrenador(entrenador);
 		//puts("------------------------------------------------------------------------------------------");
@@ -822,6 +832,8 @@ void planificacionSJF_CD(){
 			entrenador->estimacion_anterior = entrenador->estimacion_actual;
 			list_remove(lista_corto_plazo,0);
 			pthread_mutex_unlock(&mutex_lista_corto_plazo);
+			log_debug(logger,"SE SACA DE PLANIFICAR AL ENTRENADOR ID:%d POR ALCANZAR SU OBJETIVO",entrenador->id);
+
 		}
 		else{
 			pthread_mutex_lock(&mutex_lista_corto_plazo);
@@ -829,7 +841,10 @@ void planificacionSJF_CD(){
 			list_add(lista_corto_plazo,entrenador);
 			pthread_mutex_unlock(&mutex_lista_corto_plazo);
 			sem_post(&hay_entrenador_corto_plazo);
+			log_debug(logger,"SE SACA DE PLANIFICAR AL ENTRENADOR ID:%d POR DESALOJO",entrenador->id);
+
 		}
+		cambio_de_contexto++;
 	}
 }
 
@@ -842,6 +857,7 @@ void planificacionSJF_SD(){
 		ordenar_lista();
 		t_entrenador *entrenador = list_get(lista_corto_plazo,0);
 		pthread_mutex_unlock(&mutex_lista_corto_plazo);
+		log_debug(logger,"SE AGREGA AL ENTRENADOR CON ID:%d A LA COLA DE EXEC",entrenador->id);
 		//puts("------------------------------------------------------------------------------------------");
 		//mostrar_entrenador(entrenador);
 	    //printf("Estimacion anterior: %f,Real anterior: %d,Distancia actual: %d,Estimacion actual: %f",((t_entrenador *)entrenador)->estimacion_anterior,((t_entrenador *)entrenador)->real_anterior,((t_entrenador *)entrenador)->distancia_actual,((t_entrenador *)entrenador)->estimacion_actual);
@@ -855,6 +871,9 @@ void planificacionSJF_SD(){
 		entrenador->estimacion_anterior = entrenador->estimacion_actual;
 		list_remove(lista_corto_plazo,0);
 		pthread_mutex_unlock(&mutex_lista_corto_plazo);
+		cambio_de_contexto++;
+		log_debug(logger,"SE SACA DE PLANIFICAR AL ENTRENADOR ID:%d POR ALCANZAR SU OBJETIVO",entrenador->id);
+
 	}
 }
 
@@ -1081,11 +1100,11 @@ t_entrenador* crear_entrenador(char* posicion, char* pokemones, char* objetivos,
 	t_entrenador* entrenador = malloc(sizeof(t_entrenador));
 	char** aux;
 
-
 	entrenador->id = i;
 	entrenador->objetivo_temporal=NULL;
 	entrenador->bloq_exec = 0;
 	entrenador->exit = 0;
+	entrenador->cantidad_ciclos=0;
 
 	int variable_sjf = config_get_int_value(config,"ESTIMACION_INICIAL"); //todo tendria q ser un float para la estimacion anterior, pero igual va a ser para todos lo mismo
     entrenador->estimacion_anterior = variable_sjf;
@@ -1487,7 +1506,9 @@ void inicializar_team(){
     //"../team.log"
 
     char* aux;
-
+    cambio_de_contexto=0;
+    cantidad_de_intercambios=0;
+    orden_entrenadores_solucionados=list_create();
 
 	config = config_create("../config");
 
@@ -1594,6 +1615,24 @@ void debug(sem_t* sem){
 	}
 }
 
+int ciclos_totales(){
+	int cantidad=0;
+	t_entrenador *entrenador;
+	for(int i=0;i<list_size(entrenadores);i++){
+		entrenador = list_get(entrenadores,i);
+		cantidad = cantidad + entrenador->cantidad_ciclos;
+	}
+	return cantidad;
+}
+
+void metricas_individuales(){
+	t_entrenador *entrenador;
+	for(int i=0;i<list_size(entrenadores);i++){
+		entrenador= list_get(entrenadores,i);
+		log_debug(logger,"EL ENTRENADOR %d HA REALIZADO LA SIGUIENTE CANTIDAD DE CICLOS DURANTE LA COMPETENCIA: %d",entrenador->id,entrenador->cantidad_ciclos);
+	}
+}
+
 int main(void) {
 
 	inicializar_team();
@@ -1610,11 +1649,39 @@ int main(void) {
 	for (int i = 0; i<list_size(entrenadores); i++)
 		sem_wait(&entrenador_bloqueado);
 
-	puts("El team ya atrapo a todos los pokemones posibles!!!");
-	puts("---------------------------------------------------");
-
+	log_debug(logger,"--------------------------------");
+	log_debug(logger,"EL TEAM ATRAPO SU CANTIDAD TOTAL");
+	log_debug(logger,"--------------------------------");
 	deadlock();
-
+	//METRICAS
+	log_debug(logger,"INICIO DE METRICAS");
+	log_debug(logger,"CANTIDAD DE CICLOS TOTALES PRODUCIDOS EN COMPETENCIA: %d",ciclos_totales());
+	log_debug(logger,"   CANTIDADES INDIVIDUALES   ");
+    metricas_individuales();
+    log_debug(logger,"CANTIDAD DE CAMBIOS DE CONTEXTO PRODUCIDOS: %d",cambio_de_contexto);
+    if(list_size(orden_entrenadores_solucionados)){
+    	log_debug(logger,"   OCURRIO DEADLOCK EN EL PROCESO   ");
+    }else{
+    	log_debug(logger,"   NO OCURRIO DEADLOCK EN EL PROCESO   ");
+    }
+    log_debug(logger,"CANTIDAD DE ENTRENADORES EN DEADLOCKS: %d",list_size(orden_entrenadores_solucionados));
+    log_debug(logger,"   ENTRENADORES EN DEADLOCK   ");
+    t_list *interseccion = list_duplicate(orden_entrenadores_solucionados);
+    bool comparar(int num1, int num2){
+    	return num1 < num2;
+    }
+    list_sort(interseccion,comparar);
+	for(int i=0;i<list_size(orden_entrenadores_solucionados);i++){
+		log_debug(logger," *ID_ENTRENADOR: %d",(int) list_get(interseccion,i));
+	}
+	log_debug(logger,"CANTIDAD DE INTERCAMBIOS: %d",cantidad_de_intercambios);
+	log_debug(logger,"   ORDEN DE ENTRENADORES SOLUCIONADOS POR DEADLOCKS   ");
+	for(int i=0;i<list_size(orden_entrenadores_solucionados);i++){
+		log_debug(logger," *ID ENTRENADOR: %d",(int) list_get(orden_entrenadores_solucionados,i));
+	}
+	log_debug(logger,"--------------------------------------------");
+	log_debug(logger,"FIN DE EJECUCION, FINALIZA EL TEAM CON EXITO");
+	log_debug(logger,"--------------------------------------------");
 	//puts("F para finalizar");
 	//sem_wait(&sem_debug); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

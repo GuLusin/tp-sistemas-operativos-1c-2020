@@ -557,8 +557,7 @@ void recibir_new(t_mensaje *mensaje){
 
 	}
 	else{
-		//todo logear que no se pudo conectar con el broker
-		printf("No se pudo establecer la conexion con el broker para enviarle el mensaje appeared\n");
+		log_debug(logger,"No se pudo establecer la conexion con el broker para enviarle el mensaje appeared");
 	}
 
 	pthread_mutex_unlock(&mutex_envio_mensaje);
@@ -598,8 +597,7 @@ void recibir_catch(t_mensaje *mensaje){
 		close(socket_broker);
 	}
 	else{
-		//todo logear que no se pudo conectar con el broker
-		printf("No se pudo establecer la conexion con el broker para enviarle el mensaje caught\n");
+		log_debug(logger,"No se pudo establecer la conexion con el broker para enviarle el mensaje caught");
 	}
 
 	pthread_mutex_unlock(&mutex_envio_mensaje);
@@ -672,7 +670,7 @@ void recibir_get(t_mensaje *mensaje){
 	list_destroy(metadata->blocks);
 	free(metadata);
 	liberar_mensaje(mensajeAEnviar);
-	//liberar_mensaje(mensaje); //todo revisar
+	//liberar_mensaje(mensaje);
 }
 
 void manejar_mensaje(t_mensaje* mensaje){

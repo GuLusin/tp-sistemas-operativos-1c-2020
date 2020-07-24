@@ -27,13 +27,20 @@ typedef struct {
    t_pokemon *objetivo_temporal;
    t_list *pokemones;
    t_list *objetivos;
+   int cantidad_ciclos;
 }t_entrenador;
+
 t_config* config;
 t_log* logger;
 
 char *ip_broker,*puerto_broker;
 int wait_time,id_team;
 bool broker_conectado;
+
+int cambio_de_contexto;
+int cantidad_de_intercambios;
+t_list *orden_entrenadores_solucionados;
+
 
 //---------------------------------- PLANIFICACION -----------------------------------------------
 
