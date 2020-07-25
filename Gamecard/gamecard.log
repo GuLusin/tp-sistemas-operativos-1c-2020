@@ -1,0 +1,21 @@
+[DEBUG] 13:44:18:626 log/(6472:6472): 30
+[DEBUG] 13:44:18:626 log/(6472:6472): 5
+[DEBUG] 13:44:18:626 log/(6472:6472): 1
+[DEBUG] 13:44:18:626 log/(6472:6472): 127.0.0.1
+[DEBUG] 13:44:18:627 log/(6472:6472): 5001
+[DEBUG] 13:44:18:627 log/(6472:6472): ../mnt/TALL_GRASS
+[DEBUG] 13:44:18:627 log/(6472:6472): 12
+[DEBUG] 13:44:18:628 log/(6472:6476): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 13:50:40:881 log/(6802:6802): 30
+[DEBUG] 13:50:40:881 log/(6802:6802): 5
+[DEBUG] 13:50:40:882 log/(6802:6802): 1
+[DEBUG] 13:50:40:882 log/(6802:6802): 127.0.0.1
+[DEBUG] 13:50:40:882 log/(6802:6802): 5001
+[DEBUG] 13:50:40:882 log/(6802:6802): ../mnt/TALL_GRASS
+[DEBUG] 13:50:40:882 log/(6802:6802): 12
+[DEBUG] 13:50:40:897 log/(6802:6802): Se crearon los bloques!
+[DEBUG] 13:50:40:899 log/(6802:6805): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 13:50:49:437 log/(6802:6802): Se leyo correctamente los datos de: ../mnt/TALL_GRASS/Files/Squirtle, de size: 0
+[DEBUG] 13:50:49:439 log/(6802:6802): Sleep de 1 segundos para simular tiempo de operacion...
+[DEBUG] 13:50:50:440 log/(6802:6802): Se escribio correctamente los datos de: ../mnt/TALL_GRASS/Files/Squirtle, de tamaño: 6
+[DEBUG] 13:50:50:441 log/(6802:6802): No se pudo establecer la conexion con el broker para enviarle el mensaje appeared
