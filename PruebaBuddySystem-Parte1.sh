@@ -4,7 +4,7 @@ clear
 
 cd Broker
 
-mv config-Prueba3-BuddySystem-Parte1 config
+mv config-Prueba4-BuddySystem-Parte1 config
 
 echo ""
 echo "Prueba 4, parte 1: config realizada."
@@ -17,6 +17,6 @@ echo "Prueba 4, parte 1 realizada."
 
 cd ..
 
-mv config config-Prueba3-BuddySystem-Parte1
+mv config config-Prueba4-BuddySystem-Parte1
 echo ""
 echo "Prueba 4 parte 1: config actualizada."

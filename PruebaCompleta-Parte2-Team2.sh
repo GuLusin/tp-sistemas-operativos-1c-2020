@@ -4,6 +4,7 @@ clear
 
 cd Team
 
+mv config config-PruebaCompleta-Parte2-Team1 
 mv config-PruebaCompleta-Parte2-Team2 config
 
 echo ""

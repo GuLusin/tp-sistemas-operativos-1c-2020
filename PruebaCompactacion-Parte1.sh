@@ -4,7 +4,7 @@ clear
 
 cd Broker
 
-mv config-Prueba2-Compactacion-Parte1 config
+mv config-Prueba3-Compactacion-Parte1 config
 
 echo ""
 echo "Prueba 3, parte 1: config realizada."
@@ -17,6 +17,6 @@ echo "Prueba 3, parte 1 realizada."
 
 cd ..
 
-mv config config-Prueba2-Compactacion-Parte1
+mv config config-Prueba3-Compactacion-Parte1
 echo ""
 echo "Prueba 3 parte 1: config actualizada."

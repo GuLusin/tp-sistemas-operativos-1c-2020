@@ -139,39 +139,27 @@ void inicializar_estructuras_globales(){
 
 void liberar_pokemon(t_pokemon *pokemon){
 	free(pokemon->nombre);
-	free(pokemon); //PREGUNTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAR
+	free(pokemon);
 }
 
 void liberar_entrenador(t_entrenador *entrenador){
 	list_destroy(entrenador->pokemones);
 	list_destroy(entrenador->objetivos);
-	free(entrenador); //fPREGUNTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAR
+	free(entrenador);
 }
 
 void liberar_recursos_globales(){
-    //puts("1");
 	dictionary_destroy(dic_pok_obj);
-	//puts("2");
 	dictionary_destroy(dic_pok_ready_o_exec);
-	//puts("3");
 	dictionary_destroy(ids_a_esperar_localized);
-	//puts("4");
 	dictionary_destroy(ids_a_esperar_catch);
-	//puts("4.1");
 	free(ejecutar_entrenador);
-	//puts("5");
 	free(deadlock_entrenadores);
-	//puts("6");
 	free(hilo_entrenador);
-	//puts("7");
 	list_destroy_and_destroy_elements(list_pok_new,(void *)liberar_pokemon);
-	//puts("8");
 	list_destroy_and_destroy_elements(list_pok_ready,(void *)liberar_pokemon);
-	//puts("9");
 	list_destroy_and_destroy_elements(entrenadores,(void *)liberar_entrenador);
-	//puts("10");
 	list_destroy_and_destroy_elements(lista_corto_plazo,(void *)liberar_entrenador);
-	list_destroy(orden_entrenadores_solucionados);
 }
 
 //--------------------------------------------------- DEADLOCK ---------------------------------------
@@ -800,29 +788,7 @@ void planificacionSJF_CD(){
 			sem_post(&(ejecutar_entrenador[entrenador->id]));
 			sem_wait(&activar_algoritmo);
 			if(llego_uno_nuevo()){ //variable global tamaño_list para ver si cambio la lista
-				//if(llego_entrenador(entrenador)){
-               //
-				//} //todo logs de cambiar entrenador
 			    break;
-				//pthread_mutex_lock(&mutex_lista_corto_plazo);
-				//ordenar_lista();
-				//entrenador2 = list_get(lista_corto_plazo,0);
-				//pthread_mutex_unlock(&mutex_lista_corto_plazo);
-
-				////puts("----");
-				////printf("ID1: %d,ID2: %d",entrenador->id,entrenador2->id);
-				////puts("----");
-				//if(entrenador->id != entrenador2->id){
-				////puts("                               CAMBIO A UN ENTRENADOR");
-				////puts("------------------------------------------------------------------------------------------");
-				////mostrar_entrenador(entrenador);
-				////puts("------------------------------------------------------------------------------------------");
-				////puts("                               POR ESTE ENTRENADOR");
-				////puts("------------------------------------------------------------------------------------------");
-				////mostrar_entrenador(entrenador2);
-				////puts("------------------------------------------------------------------------------------------");
-				//entrenador = entrenador2;
-				//}
 			}
         }while(!llego_entrenador(entrenador));
 
@@ -1666,13 +1632,13 @@ int main(void) {
     }
     log_debug(logger,"CANTIDAD DE ENTRENADORES EN DEADLOCKS: %d",list_size(orden_entrenadores_solucionados));
     log_debug(logger,"   ENTRENADORES EN DEADLOCK   ");
-    t_list *interseccion = list_duplicate(orden_entrenadores_solucionados);
+    t_list *lista_ordenada = list_duplicate(orden_entrenadores_solucionados);
     bool comparar(int num1, int num2){
     	return num1 < num2;
     }
-    list_sort(interseccion,comparar);
+    list_sort(lista_ordenada,comparar);
 	for(int i=0;i<list_size(orden_entrenadores_solucionados);i++){
-		log_debug(logger," *ID_ENTRENADOR: %d",(int) list_get(interseccion,i));
+		log_debug(logger," *ID_ENTRENADOR: %d",(int) list_get(lista_ordenada,i));
 	}
 	log_debug(logger,"CANTIDAD DE INTERCAMBIOS: %d",cantidad_de_intercambios);
 	log_debug(logger,"   ORDEN DE ENTRENADORES SOLUCIONADOS POR DEADLOCKS   ");
@@ -1680,13 +1646,16 @@ int main(void) {
 		log_debug(logger," *ID ENTRENADOR: %d",(int) list_get(orden_entrenadores_solucionados,i));
 	}
 	log_debug(logger,"--------------------------------------------");
-	log_debug(logger,"FIN DE EJECUCION, FINALIZA EL TEAM CON EXITO");
+	log_debug(logger,"FINALIZA EL TEAM CON EXITO");
 	log_debug(logger,"--------------------------------------------");
 	//puts("F para finalizar");
 	//sem_wait(&sem_debug); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	liberar_recursos_globales();
-	//log_destroy(logger);
+	////log_destroy(logger);
+
+	log_debug(logger,"FIN DE EJECUCION, SE LIBERAN LOS RECURSOS");
+	log_debug(logger,"--------------------------------------------");
 
 	return EXIT_SUCCESS;
 }

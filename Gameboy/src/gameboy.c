@@ -129,7 +129,7 @@ void manejar_mensaje(int argc, char** args){
 			mensaje = crear_mensaje(5,NEW_POKEMON,args[3],atoi(args[4]),atoi(args[5]),atoi(args[6]));
 			break;
 		case APPEARED_POKEMON:
-			mensaje = crear_mensaje(5,APPEARED_POKEMON,args[3],atoi(args[4]),atoi(args[5]),atoi(args[6]));
+			mensaje = crear_mensaje(5,APPEARED_POKEMON,args[3],atoi(args[4]),atoi(args[5]),999);
 			break;
 		case CATCH_POKEMON:
 			mensaje = crear_mensaje(4,CATCH_POKEMON,args[3],atoi(args[4]),atoi(args[5]));

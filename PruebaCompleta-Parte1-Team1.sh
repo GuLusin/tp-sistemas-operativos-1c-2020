@@ -14,9 +14,3 @@ cd Debug
 
 echo ""
 echo "Prueba Final, parte 1 realizada."
-
-cd ..
-
-mv config config-PruebaCompleta-Parte1-Team1 
-echo ""
-echo "Prueba Final, parte 1: config actualizada."

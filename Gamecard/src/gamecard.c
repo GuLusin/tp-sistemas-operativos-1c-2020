@@ -522,7 +522,7 @@ bool agregar_pokemones(t_mensaje* mensaje){
 	metadata->size = strlen(poke_string);
 
 	escribir_archivo_metadata_y_cerrar(metadata,ruta);
-	log_debug(logger,"Se escribio correctamente los datos de: %s, de tamaño: &d",ruta,metadata->size);
+	log_debug(logger,"Se escribio correctamente los datos de: %s, de tamaño: %d",ruta,metadata->size);
 
 	free(poke_string);
 	list_destroy_and_destroy_elements(poke_strings_list,free);
@@ -888,7 +888,7 @@ void mostrar_menu(){
 	puts("M -> MOSTRAR MENU");
 	puts("N -> SIMULAR NEW SQUIRTLE 4-7=455");
 	puts("R -> SIMULAR NEW SQUIRTLE DATOS RANDOM");
-	puts("X -> BITARRAY CLEAN, OJO CON ESTO QUE ESTA MAPEADO A MEMORIA NO APRETAR 'C' SI NO ESTAS SEGURO DE LO QUE HACES LCDTM");
+	puts("X -> BITARRAY CLEAN");
 	puts("Z -> SALIR");
 	puts("---------------------------");
 }
