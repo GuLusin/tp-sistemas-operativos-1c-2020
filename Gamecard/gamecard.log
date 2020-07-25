@@ -19,3 +19,77 @@
 [DEBUG] 13:50:49:439 log/(6802:6802): Sleep de 1 segundos para simular tiempo de operacion...
 [DEBUG] 13:50:50:440 log/(6802:6802): Se escribio correctamente los datos de: ../mnt/TALL_GRASS/Files/Squirtle, de tamaño: 6
 [DEBUG] 13:50:50:441 log/(6802:6802): No se pudo establecer la conexion con el broker para enviarle el mensaje appeared
+[DEBUG] 14:03:53:213 log/(7122:7122): 30
+[DEBUG] 14:03:53:213 log/(7122:7122): 5
+[DEBUG] 14:03:53:214 log/(7122:7122): 1
+[DEBUG] 14:03:53:214 log/(7122:7122): 127.0.0.1
+[DEBUG] 14:03:53:214 log/(7122:7122): 5001
+[DEBUG] 14:03:53:214 log/(7122:7122): ../mnt/TALL_GRASS
+[DEBUG] 14:03:53:214 log/(7122:7122): 12
+[DEBUG] 14:03:53:224 log/(7122:7122): Se crearon los bloques!
+[DEBUG] 14:03:53:227 log/(7122:7125): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 14:03:55:820 log/(7122:7122): Se leyo correctamente los datos de: ../mnt/TALL_GRASS/Files/Squirtle, de size: 0
+[DEBUG] 14:03:55:821 log/(7122:7122): Sleep de 1 segundos para simular tiempo de operacion...
+[DEBUG] 14:03:56:821 log/(7122:7122): Se escribio correctamente los datos de: ../mnt/TALL_GRASS/Files/Squirtle, de tamaño: 6
+[DEBUG] 14:03:56:822 log/(7122:7122): No se pudo establecer la conexion con el broker para enviarle el mensaje appeared
+[DEBUG] 14:04:23:227 log/(7122:7125): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 14:04:39:95 log/(7148:7148): 30
+[DEBUG] 14:04:39:95 log/(7148:7148): 5
+[DEBUG] 14:04:39:95 log/(7148:7148): 1
+[DEBUG] 14:04:39:95 log/(7148:7148): 127.0.0.1
+[DEBUG] 14:04:39:95 log/(7148:7148): 5001
+[DEBUG] 14:04:39:95 log/(7148:7148): ../mnt/TALL_GRASS
+[DEBUG] 14:04:39:95 log/(7148:7148): 12
+[DEBUG] 14:05:04:404 log/(7167:7167): 30
+[DEBUG] 14:05:04:404 log/(7167:7167): 5
+[DEBUG] 14:05:04:405 log/(7167:7167): 1
+[DEBUG] 14:05:04:405 log/(7167:7167): 127.0.0.1
+[DEBUG] 14:05:04:405 log/(7167:7167): 5001
+[DEBUG] 14:05:04:405 log/(7167:7167): ../mnt/TALL_GRASS
+[DEBUG] 14:05:04:405 log/(7167:7167): 12
+[DEBUG] 14:05:38:393 log/(7209:7209): 30
+[DEBUG] 14:05:38:393 log/(7209:7209): 5
+[DEBUG] 14:05:38:394 log/(7209:7209): 1
+[DEBUG] 14:05:38:394 log/(7209:7209): 127.0.0.1
+[DEBUG] 14:05:38:394 log/(7209:7209): 5001
+[DEBUG] 14:05:38:394 log/(7209:7209): ../mnt/TALL_GRASS
+[DEBUG] 14:05:38:394 log/(7209:7209): 12
+[DEBUG] 14:05:38:405 log/(7209:7209): Se crearon los bloques!
+[DEBUG] 14:05:38:408 log/(7209:7213): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 14:05:50:182 log/(7219:7219): 30
+[DEBUG] 14:05:50:183 log/(7219:7219): 5
+[DEBUG] 14:05:50:183 log/(7219:7219): 1
+[DEBUG] 14:05:50:183 log/(7219:7219): 127.0.0.1
+[DEBUG] 14:05:50:183 log/(7219:7219): 5001
+[DEBUG] 14:05:50:183 log/(7219:7219): ../mnt/TALL_GRASS
+[DEBUG] 14:05:50:183 log/(7219:7219): 12
+[DEBUG] 14:05:50:186 log/(7219:7219): Se crearon los bloques!
+[DEBUG] 14:05:50:188 log/(7219:7223): Fallo conexion, reintentando en 30 segundos...
+[DEBUG] 14:05:51:670 log/(7219:7219): Se leyo correctamente los datos de: ../mnt/TALL_GRASS/Files/Squirtle, de size: 0
+[DEBUG] 14:05:51:671 log/(7219:7219): Sleep de 1 segundos para simular tiempo de operacion...
+[DEBUG] 14:05:52:672 log/(7219:7219): Se escribio correctamente los datos de: ../mnt/TALL_GRASS/Files/Squirtle, de tamaño: 6
+[DEBUG] 14:05:52:672 log/(7219:7219): No se pudo establecer la conexion con el broker para enviarle el mensaje appeared
+[DEBUG] 14:05:52:880 log/(7219:7219): Se leyo correctamente los datos de: ../mnt/TALL_GRASS/Files/Squirtle, de size: 6
+[DEBUG] 14:05:52:881 log/(7219:7219): Sleep de 1 segundos para simular tiempo de operacion...
+[DEBUG] 14:05:53:885 log/(7219:7219): Se escribio correctamente los datos de: ../mnt/TALL_GRASS/Files/Squirtle, de tamaño: 12
+[DEBUG] 14:05:53:885 log/(7219:7219): No se pudo establecer la conexion con el broker para enviarle el mensaje appeared
+[DEBUG] 14:05:53:885 log/(7219:7219): Se leyo correctamente los datos de: ../mnt/TALL_GRASS/Files/Squirtle, de size: 12
+[DEBUG] 14:05:53:885 log/(7219:7219): Sleep de 1 segundos para simular tiempo de operacion...
+[DEBUG] 14:05:54:886 log/(7219:7219): Se escribio correctamente los datos de: ../mnt/TALL_GRASS/Files/Squirtle, de tamaño: 18
+[DEBUG] 14:05:54:886 log/(7219:7219): No se pudo establecer la conexion con el broker para enviarle el mensaje appeared
+[DEBUG] 14:05:54:887 log/(7219:7219): Se leyo correctamente los datos de: ../mnt/TALL_GRASS/Files/Squirtle, de size: 18
+[DEBUG] 14:05:54:887 log/(7219:7219): Sleep de 1 segundos para simular tiempo de operacion...
+[DEBUG] 14:05:55:888 log/(7219:7219): Se escribio correctamente los datos de: ../mnt/TALL_GRASS/Files/Squirtle, de tamaño: 24
+[DEBUG] 14:05:55:888 log/(7219:7219): No se pudo establecer la conexion con el broker para enviarle el mensaje appeared
+[DEBUG] 14:05:55:889 log/(7219:7219): Se leyo correctamente los datos de: ../mnt/TALL_GRASS/Files/Squirtle, de size: 24
+[DEBUG] 14:05:55:889 log/(7219:7219): Sleep de 1 segundos para simular tiempo de operacion...
+[DEBUG] 14:05:56:890 log/(7219:7219): Se escribio correctamente los datos de: ../mnt/TALL_GRASS/Files/Squirtle, de tamaño: 30
+[DEBUG] 14:05:56:890 log/(7219:7219): No se pudo establecer la conexion con el broker para enviarle el mensaje appeared
+[DEBUG] 14:05:56:890 log/(7219:7219): Se leyo correctamente los datos de: ../mnt/TALL_GRASS/Files/Squirtle, de size: 30
+[DEBUG] 14:05:56:891 log/(7219:7219): Sleep de 1 segundos para simular tiempo de operacion...
+[DEBUG] 14:05:57:892 log/(7219:7219): Se escribio correctamente los datos de: ../mnt/TALL_GRASS/Files/Squirtle, de tamaño: 36
+[DEBUG] 14:05:57:892 log/(7219:7219): No se pudo establecer la conexion con el broker para enviarle el mensaje appeared
+[DEBUG] 14:05:57:892 log/(7219:7219): Se leyo correctamente los datos de: ../mnt/TALL_GRASS/Files/Squirtle, de size: 36
+[DEBUG] 14:05:57:892 log/(7219:7219): Sleep de 1 segundos para simular tiempo de operacion...
+[DEBUG] 14:05:58:893 log/(7219:7219): Se escribio correctamente los datos de: ../mnt/TALL_GRASS/Files/Squirtle, de tamaño: 42
+[DEBUG] 14:05:58:893 log/(7219:7219): No se pudo establecer la conexion con el broker para enviarle el mensaje appeared

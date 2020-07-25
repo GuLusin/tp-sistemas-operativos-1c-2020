@@ -750,8 +750,8 @@ void crear_bloques(){
 	char* path = string_new();
 	string_append_with_format(&path, "%s/Blocks", punto_montaje);
 	if(!directorioExiste(path)){
-		printf("No se crean los bloques porque no existe el directorio %s\n",path);
-		return;
+		printf("Se crea el directorio%s\n",path);
+		mkdir(path,0700);
 	}
 	for(int i=0; i < global_metadata->blocks ;i++){
 		char* path_relative = string_duplicate(path);
